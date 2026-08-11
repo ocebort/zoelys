@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events — Zoélys</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { cream: '#FAF7F2', card: '#F4EFEA', terracotta: '#D07358', dark: '#1C1917', muted: '#78716C' } },
+          fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans antialiased">
+  <header class="w-full border-b border-stone-200/80 bg-brand-cream/90 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="index.html" class="font-serif text-2xl tracking-[0.2em] uppercase">ZOÉLYS</a>
+      <nav class="hidden md:flex space-x-8 text-xs tracking-widest uppercase font-medium text-stone-600">
+        <a href="find-a-sitter.html" class="hover:text-brand-dark">Find a Sitter</a>
+        <a href="map.html" class="hover:text-brand-dark">The Map</a>
+        <a href="events.html" class="text-brand-terracotta">Events</a>
+        <a href="partners.html" class="hover:text-brand-dark">Partners</a>
+        <a href="journal.html" class="hover:text-brand-dark">Journal</a>
+      </nav>
+      <a href="find-a-sitter.html" class="bg-brand-terracotta text-white px-5 py-2.5 rounded-full text-xs tracking-widest uppercase font-medium">Join Zoélys</a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-16">
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+      <p class="text-xs uppercase tracking-[0.3em] text-brand-muted">— Community Gathering</p>
+      <h1 class="font-serif text-5xl font-normal">Zoélys Playdates & Events</h1>
+      <p class="text-sm text-brand-muted font-light">Thoughtfully curated small-group gatherings for pet companions and their owners.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-brand-card p-8 rounded-2xl border border-stone-200 space-y-4">
+        <p class="text-xs font-mono text-brand-terracotta font-semibold uppercase">SATURDAY • AUG 22, 2026</p>
+        <h3 class="font-serif text-3xl">Sunset Walk & Social in Coconut Grove</h3>
+        <p class="text-xs text-brand-muted">Coconut Grove Waterfront Park • 6:00 PM</p>
+        <p class="text-sm font-light text-stone-600">A calm, leashed evening walk followed by complimentary organic pet treats and cold refreshments for owners.</p>
+        <button onclick="alert('RSVP Confirmed!')" class="bg-brand-terracotta text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium">RSVP Free</button>
+      </div>
+
+      <div class="bg-brand-card p-8 rounded-2xl border border-stone-200 space-y-4">
+        <p class="text-xs font-mono text-brand-terracotta font-semibold uppercase">SUNDAY • SEP 06, 2026</p>
+        <h3 class="font-serif text-3xl">Pet First-Aid & Wellness Workshop</h3>
+        <p class="text-xs text-brand-muted">Zoélys Lounge, Brickell • 10:30 AM</p>
+        <p class="text-sm font-light text-stone-600">Hosted alongside holistic vet Dr. Clara Vance. Learn basic CPR, emergency care, and nutrition fundamentals.</p>
+        <button onclick="alert('RSVP Confirmed!')" class="bg-brand-terracotta text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium">RSVP Free</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

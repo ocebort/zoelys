@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sitter Map — Zoélys</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { cream: '#FAF7F2', card: '#F4EFEA', terracotta: '#D07358', dark: '#1C1917', muted: '#78716C' } },
+          fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans antialiased">
+  <header class="w-full border-b border-stone-200/80 bg-brand-cream/90 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="index.html" class="font-serif text-2xl tracking-[0.2em] uppercase">ZOÉLYS</a>
+      <nav class="hidden md:flex space-x-8 text-xs tracking-widest uppercase font-medium text-stone-600">
+        <a href="find-a-sitter.html" class="hover:text-brand-dark">Find a Sitter</a>
+        <a href="map.html" class="text-brand-terracotta">The Map</a>
+        <a href="events.html" class="hover:text-brand-dark">Events</a>
+        <a href="partners.html" class="hover:text-brand-dark">Partners</a>
+        <a href="journal.html" class="hover:text-brand-dark">Journal</a>
+      </nav>
+      <a href="find-a-sitter.html" class="bg-brand-terracotta text-white px-5 py-2.5 rounded-full text-xs tracking-widest uppercase font-medium">Join Zoélys</a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <div class="mb-8">
+      <p class="text-xs uppercase tracking-[0.3em] text-brand-muted">— Verified Community</p>
+      <h1 class="font-serif text-4xl font-normal">Explore Verified Sitters Near You</h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[600px]">
+      <div id="map" class="lg:col-span-2 h-full rounded-2xl border border-stone-200 shadow-sm z-10"></div>
+      <div class="space-y-4 overflow-y-auto pr-2">
+        <div class="bg-brand-card p-6 rounded-xl border border-stone-200 space-y-2">
+          <div class="flex justify-between items-start">
+            <h3 class="font-serif text-xl">Elena Rostova</h3>
+            <span class="text-[10px] uppercase font-mono bg-stone-200 text-stone-700 px-2 py-0.5 rounded">Verified Meet</span>
+          </div>
+          <p class="text-xs text-brand-muted">Brickell, Miami • Dog Specialist</p>
+          <p class="text-xs font-light text-stone-600">"5 years of equine & canine care experience. Quiet home environment."</p>
+        </div>
+
+        <div class="bg-brand-card p-6 rounded-xl border border-stone-200 space-y-2">
+          <div class="flex justify-between items-start">
+            <h3 class="font-serif text-xl">Julian Vance</h3>
+            <span class="text-[10px] uppercase font-mono bg-stone-200 text-stone-700 px-2 py-0.5 rounded">Verified Meet</span>
+          </div>
+          <p class="text-xs text-brand-muted">Coconut Grove, Miami • Feline Specialist</p>
+          <p class="text-xs font-light text-stone-600">"Gentle approach for anxious cats and senior pets needing medicine."</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const map = L.map('map').setView([25.7617, -80.1918], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    L.marker([25.7617, -80.1918]).addTo(map).bindPopup('<b>Elena Rostova</b><br>Brickell, Miami');
+    L.marker([25.7132, -80.2575]).addTo(map).bindPopup('<b>Julian Vance</b><br>Coconut Grove');
+  </script>
+</body>
+</html>

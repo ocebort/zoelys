@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Journal — Zoélys</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { cream: '#FAF7F2', card: '#F4EFEA', terracotta: '#D07358', dark: '#1C1917', muted: '#78716C' } },
+          fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans antialiased">
+  <header class="w-full border-b border-stone-200/80 bg-brand-cream/90 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="index.html" class="font-serif text-2xl tracking-[0.2em] uppercase">ZOÉLYS</a>
+      <nav class="hidden md:flex space-x-8 text-xs tracking-widest uppercase font-medium text-stone-600">
+        <a href="find-a-sitter.html" class="hover:text-brand-dark">Find a Sitter</a>
+        <a href="map.html" class="hover:text-brand-dark">The Map</a>
+        <a href="events.html" class="hover:text-brand-dark">Events</a>
+        <a href="partners.html" class="hover:text-brand-dark">Partners</a>
+        <a href="journal.html" class="text-brand-terracotta">Journal</a>
+      </nav>
+      <a href="find-a-sitter.html" class="bg-brand-terracotta text-white px-5 py-2.5 rounded-full text-xs tracking-widest uppercase font-medium">Join Zoélys</a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-16">
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+      <p class="text-xs uppercase tracking-[0.3em] text-brand-muted">— Editorial</p>
+      <h1 class="font-serif text-5xl font-normal">The Zoélys Journal</h1>
+      <p class="text-sm text-brand-muted font-light">Quiet reflections, training guides, and care philosophy.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <article class="bg-brand-card rounded-xl p-8 border border-stone-200 space-y-3">
+        <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Behind Zoélys</p>
+        <h3 class="font-serif text-2xl">What actually makes a great pet sitter</h3>
+        <p class="text-xs text-brand-muted font-light leading-relaxed">It's rarely the longest résumé. It's the small, quiet attentions — and we know how to spot them.</p>
+        <p class="text-[10px] text-stone-400 font-mono pt-2">6 MIN READ</p>
+      </article>
+
+      <article class="bg-brand-card rounded-xl p-8 border border-stone-200 space-y-3">
+        <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Training</p>
+        <h3 class="font-serif text-2xl">How to train your puppy — the first 90 days</h3>
+        <p class="text-xs text-brand-muted font-light leading-relaxed">Three months that shape the next fifteen years. A gentle, structured guide to early weeks at home.</p>
+        <p class="text-[10px] text-stone-400 font-mono pt-2">12 MIN READ</p>
+      </article>
+
+      <article class="bg-brand-card rounded-xl p-8 border border-stone-200 space-y-3">
+        <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Nutrition</p>
+        <h3 class="font-serif text-2xl">How to choose the right food for your dog</h3>
+        <p class="text-xs text-brand-muted font-light leading-relaxed">Forget the marketing. Three principles, one label-reading habit, and a vet on speed-dial.</p>
+        <p class="text-[10px] text-stone-400 font-mono pt-2">10 MIN READ</p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
