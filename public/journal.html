@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Journal — Zoélys</title>
+  <title>Journal — Zoélys</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: { brand: { cream: '#FAF7F2', card: '#F4EFEA', terracotta: '#D07358', dark: '#1C1917', muted: '#78716C' } },
+          colors: { brand: { cream: '#FAF6EE', card: '#FFFFFF', terracotta: '#D07358', dark: '#1F1916', muted: '#8A827A' } },
           fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
         }
       }
@@ -18,49 +18,64 @@
   </script>
 </head>
 <body class="bg-brand-cream text-brand-dark font-sans antialiased">
-  <header class="w-full border-b border-stone-200/80 bg-brand-cream/90 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <a href="index.html" class="font-serif text-2xl tracking-[0.2em] uppercase">ZOÉLYS</a>
-      <nav class="hidden md:flex space-x-8 text-xs tracking-widest uppercase font-medium text-stone-600">
-        <a href="find-a-sitter.html" class="hover:text-brand-dark">Find a Sitter</a>
-        <a href="map.html" class="hover:text-brand-dark">The Map</a>
-        <a href="events.html" class="hover:text-brand-dark">Events</a>
-        <a href="partners.html" class="hover:text-brand-dark">Partners</a>
+
+  <header class="w-full bg-brand-cream border-b border-stone-200/60 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="font-serif text-2xl tracking-[0.25em] font-normal uppercase">ZOÉLYS</a>
+      <nav class="hidden lg:flex items-center space-x-10 text-[11px] tracking-[0.2em] uppercase font-medium text-stone-600">
+        <a href="get-matched.html">Find a Sitter</a>
+        <a href="how-it-works.html">How It Works</a>
         <a href="journal.html" class="text-brand-terracotta">Journal</a>
+        <a href="map.html">Explore ▾</a>
       </nav>
-      <a href="find-a-sitter.html" class="bg-brand-terracotta text-white px-5 py-2.5 rounded-full text-xs tracking-widest uppercase font-medium">Join Zoélys</a>
+      <a href="get-matched.html" class="bg-brand-terracotta text-white px-6 py-3 rounded-full text-[11px] tracking-[0.2em] uppercase font-medium">Join Zoélys</a>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-6 py-16">
+  <main class="max-w-6xl mx-auto px-6 py-16">
     <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-      <p class="text-xs uppercase tracking-[0.3em] text-brand-muted">— Editorial</p>
-      <h1 class="font-serif text-5xl font-normal">The Zoélys Journal</h1>
-      <p class="text-sm text-brand-muted font-light">Quiet reflections, training guides, and care philosophy.</p>
+      <p class="text-[10px] uppercase tracking-[0.3em] text-brand-terracotta">— The Journal —</p>
+      <h1 class="font-serif text-6xl font-normal">Quiet reading. Considered care.</h1>
+      <p class="text-xs text-brand-muted font-light leading-relaxed">Notes from our team and our partner vets — on the rituals, decisions and small attentions that keep pets well.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <article class="bg-brand-card rounded-xl p-8 border border-stone-200 space-y-3">
-        <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Behind Zoélys</p>
-        <h3 class="font-serif text-2xl">What actually makes a great pet sitter</h3>
+    <!-- Featured Article Card -->
+    <div class="bg-brand-card rounded-2xl border border-stone-200/80 overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 shadow-sm">
+      <div class="h-80 md:h-full">
+        <img src="https://images.unsplash.com/photo-1534361960057-19889db98d18?q=80&w=1200&auto=format&fit=crop" alt="Pet owners with dog" class="w-full h-full object-cover" />
+      </div>
+      <div class="p-8 md:p-12 flex flex-col justify-center space-y-4">
+        <p class="text-[10px] uppercase tracking-[0.2em] text-brand-terracotta">— Featured • Behind Zoélys</p>
+        <h2 class="font-serif text-4xl font-normal leading-snug">What actually makes a great pet sitter</h2>
         <p class="text-xs text-brand-muted font-light leading-relaxed">It's rarely the longest résumé. It's the small, quiet attentions — and we know how to spot them.</p>
-        <p class="text-[10px] text-stone-400 font-mono pt-2">6 MIN READ</p>
+        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-mono pt-2">Océane Bort • June 6, 2026 • 6 min read</p>
+        <a href="#" class="inline-block text-xs uppercase tracking-[0.2em] text-brand-terracotta font-medium hover:underline pt-2">Read The Piece ↗</a>
+      </div>
+    </div>
+
+    <!-- Article Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <article class="bg-brand-card rounded-2xl border border-stone-200/80 overflow-hidden shadow-sm">
+        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=800&auto=format&fit=crop" alt="Dog with toy" class="w-full h-64 object-cover" />
+        <div class="p-8 space-y-3">
+          <p class="text-[10px] uppercase tracking-[0.2em] text-brand-terracotta">— Training</p>
+          <h3 class="font-serif text-2xl font-normal">How to train your puppy — the first 90 days</h3>
+          <p class="text-xs text-brand-muted font-light leading-relaxed">Three months that shape the next fifteen years. A gentle, structured guide to those early weeks at home.</p>
+          <p class="text-[10px] uppercase tracking-widest text-stone-400 font-mono">Océane Bort • 12 min read</p>
+        </div>
       </article>
 
-      <article class="bg-brand-card rounded-xl p-8 border border-stone-200 space-y-3">
-        <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Training</p>
-        <h3 class="font-serif text-2xl">How to train your puppy — the first 90 days</h3>
-        <p class="text-xs text-brand-muted font-light leading-relaxed">Three months that shape the next fifteen years. A gentle, structured guide to early weeks at home.</p>
-        <p class="text-[10px] text-stone-400 font-mono pt-2">12 MIN READ</p>
-      </article>
-
-      <article class="bg-brand-card rounded-xl p-8 border border-stone-200 space-y-3">
-        <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Nutrition</p>
-        <h3 class="font-serif text-2xl">How to choose the right food for your dog</h3>
-        <p class="text-xs text-brand-muted font-light leading-relaxed">Forget the marketing. Three principles, one label-reading habit, and a vet on speed-dial.</p>
-        <p class="text-[10px] text-stone-400 font-mono pt-2">10 MIN READ</p>
+      <article class="bg-brand-card rounded-2xl border border-stone-200/80 overflow-hidden shadow-sm">
+        <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?q=80&w=800&auto=format&fit=crop" alt="Dog food bowl" class="w-full h-64 object-cover" />
+        <div class="p-8 space-y-3">
+          <p class="text-[10px] uppercase tracking-[0.2em] text-brand-terracotta">— Nutrition</p>
+          <h3 class="font-serif text-2xl font-normal">How to choose the right food for your dog</h3>
+          <p class="text-xs text-brand-muted font-light leading-relaxed">Forget the marketing. Three principles, one label-reading habit, and a vet on speed-dial.</p>
+          <p class="text-[10px] uppercase tracking-widest text-stone-400 font-mono">Océane Bort • 10 min read</p>
+        </div>
       </article>
     </div>
   </main>
+
 </body>
 </html>
