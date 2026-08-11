@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zoélys — Concierge Pet Care</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Cormorant Garamond + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cream: '#FAF7F2',
+              card: '#F4EFEA',
+              terracotta: '#D07358',
+              terracottaHover: '#B85E45',
+              dark: '#1C1917',
+              muted: '#78716C'
+            }
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF7F2;
+      color: #1C1917;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-terracotta selection:text-white">
+
+  <!-- Header / Navigation -->
+  <header class="w-full border-b border-stone-200/80 bg-brand-cream/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="font-serif text-2xl tracking-[0.2em] uppercase font-normal text-brand-dark">ZOÉLYS</a>
+      
+      <nav class="hidden md:flex items-center space-x-8 text-xs tracking-widest uppercase font-medium text-stone-600">
+        <a href="#find-sitter" class="hover:text-brand-dark transition-colors">Find a Sitter</a>
+        <a href="#how-it-works" class="hover:text-brand-dark transition-colors">How It Works</a>
+        <a href="#journal" class="hover:text-brand-dark transition-colors">Journal</a>
+        <a href="#explore" class="hover:text-brand-dark transition-colors">Explore ▾</a>
+      </nav>
+
+      <div class="flex items-center space-x-6 text-xs tracking-widest uppercase">
+        <a href="#signin" class="hidden sm:inline-block text-stone-600 hover:text-brand-dark transition-colors">Sign In</a>
+        <a href="#join" class="bg-brand-terracotta hover:bg-brand-terracottaHover text-white px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-sm">
+          Join Zoélys
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-20 px-6">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=2000&auto=format&fit=crop" 
+           alt="Golden Retriever and Cat" 
+           class="w-full h-full object-cover brightness-[0.75] contrast-[1.05]" />
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/30 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto text-center text-white space-y-6">
+      <p class="text-xs uppercase tracking-[0.3em] font-light text-stone-300">— Concierge Pet Care</p>
+      <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.08] italic">
+        Your pet, <br class="hidden sm:inline" />cared for like family.
+      </h1>
+      <p class="max-w-xl mx-auto text-sm md:text-base text-stone-200 font-light leading-relaxed">
+        Tell us about your companion. We handpick the perfect sitter within 24 hours — no scrolling, no guessing.
+      </p>
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#find-sitter" class="w-full sm:w-auto bg-brand-terracotta hover:bg-brand-terracottaHover text-white px-8 py-3.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-300 shadow-lg text-center">
+          Find a Sitter ↗
+        </a>
+        <a href="#how-it-works" class="w-full sm:w-auto border border-white/40 hover:bg-white/10 text-white px-8 py-3.5 rounded-full text-xs uppercase tracking-widest font-medium backdrop-blur-sm transition-all duration-300 text-center">
+          How It Works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Section -->
+  <section class="bg-brand-cream py-20 px-6 text-center border-b border-stone-200">
+    <div class="max-w-3xl mx-auto space-y-4">
+      <blockquote class="font-serif text-2xl md:text-3xl lg:text-4xl text-brand-dark font-light italic leading-snug">
+        "Zoélys is the platform built for the moment you walk out the door — and the peace of mind you deserve until you walk back in."
+      </blockquote>
+      <p class="text-xs uppercase tracking-[0.2em] text-brand-muted">— The Journey</p>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section id="how-it-works" class="py-24 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-16 space-y-2">
+      <p class="text-xs uppercase tracking-[0.3em] text-brand-muted">— Process</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-normal text-brand-dark">How Zoélys works</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-brand-card p-10 rounded-2xl border border-stone-200/80 space-y-4">
+        <span class="text-xs font-mono text-brand-terracotta font-semibold uppercase tracking-widest">01</span>
+        <h3 class="font-serif text-2xl text-brand-dark">Tell us about your pet</h3>
+        <p class="text-sm text-brand-muted font-light leading-relaxed">
+          A detailed care brief — habits, quirks, fears, the things only you know.
+        </p>
+      </div>
+
+      <div class="bg-brand-card p-10 rounded-2xl border border-stone-200/80 space-y-4">
+        <span class="text-xs font-mono text-brand-terracotta font-semibold uppercase tracking-widest">02</span>
+        <h3 class="font-serif text-2xl text-brand-dark">We find your match</h3>
+        <p class="text-sm text-brand-muted font-light leading-relaxed">
+          Our team hand-picks the perfect sitter within 24 hours. One proposal, not ten.
+        </p>
+      </div>
+
+      <div class="bg-brand-card p-10 rounded-2xl border border-stone-200/80 space-y-4">
+        <span class="text-xs font-mono text-brand-terracotta font-semibold uppercase tracking-widest">03</span>
+        <h3 class="font-serif text-2xl text-brand-dark">Meet, approve, relax</h3>
+        <p class="text-sm text-brand-muted font-light leading-relaxed">
+          An in-person meet-and-greet earns the Verified Meet badge. Then breathe.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journal Section -->
+  <section id="journal" class="py-20 px-6 bg-brand-card border-t border-stone-200/80">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex justify-between items-end mb-12">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-brand-muted">— The Journal</p>
+          <h2 class="font-serif text-4xl font-normal text-brand-dark">Quiet reading on care.</h2>
+        </div>
+        <a href="#" class="hidden sm:inline-block text-xs uppercase tracking-widest text-brand-terracotta hover:underline">All pieces ↗</a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <article class="bg-brand-cream rounded-xl p-6 border border-stone-200/60 space-y-3">
+          <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Behind Zoélys</p>
+          <h3 class="font-serif text-xl font-normal text-brand-dark">What actually makes a great pet sitter</h3>
+          <p class="text-xs text-brand-muted font-light">It's rarely the longest résumé. It's the small, quiet attentions — and we know how to spot them.</p>
+          <p class="text-[10px] text-stone-400 font-mono pt-2">6 MIN READ</p>
+        </article>
+
+        <article class="bg-brand-cream rounded-xl p-6 border border-stone-200/60 space-y-3">
+          <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Training</p>
+          <h3 class="font-serif text-xl font-normal text-brand-dark">How to train your puppy — the first 90 days</h3>
+          <p class="text-xs text-brand-muted font-light">Three months that shape the next fifteen years. A gentle, structured guide to those early weeks at home.</p>
+          <p class="text-[10px] text-stone-400 font-mono pt-2">12 MIN READ</p>
+        </article>
+
+        <article class="bg-brand-cream rounded-xl p-6 border border-stone-200/60 space-y-3">
+          <p class="text-[10px] uppercase tracking-widest text-brand-muted">— Nutrition</p>
+          <h3 class="font-serif text-xl font-normal text-brand-dark">How to choose the right food for your dog</h3>
+          <p class="text-xs text-brand-muted font-light">Forget the marketing. Three principles, one label-reading habit, and a vet on speed-dial.</p>
+          <p class="text-[10px] text-stone-400 font-mono pt-2">10 MIN READ</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-brand-dark text-stone-300 py-16 px-6 border-t border-stone-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+      <div class="space-y-4">
+        <a href="#" class="font-serif text-2xl tracking-[0.2em] uppercase text-white">ZOÉLYS</a>
+        <p class="text-xs font-light text-stone-400 italic">"Pets aren't a side note — they're family. We treat them that way."</p>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-stone-400">Explore</p>
+        <ul class="space-y-2 text-xs font-light">
+          <li><a href="#" class="hover:text-white transition-colors">Find a Sitter</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">The Map</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Events</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Partners</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Journal</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-stone-400">Zoélys</p>
+        <ul class="space-y-2 text-xs font-light">
+          <li><a href="#" class="hover:text-white transition-colors">How It Works</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Join</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Sign In</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-xs uppercase tracking-[0.2em] text-stone-400">Stay Close</p>
+        <p class="text-xs font-light text-stone-400">Quiet letters, real care. No spam, ever.</p>
+        <form onsubmit="event.preventDefault(); alert('Thank you for subscribing!');" class="flex">
+          <input type="email" placeholder="your@email.com" required class="bg-stone-800 border border-stone-700 text-xs text-white px-3 py-2 rounded-l-md w-full focus:outline-none focus:border-brand-terracotta" />
+          <button type="submit" class="bg-brand-terracotta hover:bg-brand-terracottaHover text-white px-4 py-2 rounded-r-md text-xs font-medium uppercase tracking-wider">Join</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col sm:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-stone-500">
+      <p>© 2026 Zoélys. Crafted with care in Miami.</p>
+      <div class="flex space-x-6 mt-4 sm:mt-0">
+        <a href="#" class="hover:text-stone-300">TikTok</a>
+        <a href="#" class="hover:text-stone-300">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
