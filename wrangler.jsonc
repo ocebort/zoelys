@@ -1,9 +1,0 @@
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "zoelys",
-  "compatibility_date": "2026-08-11",
-  "assets": {
-    "directory": "public",
-    "html_handling": "drop-trailing-slash"
-  }
-}
