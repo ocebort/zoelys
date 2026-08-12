@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
 
     // -------------------------------------------------------------
-    // AUTHENTICATION
+    // AUTHENTICATION (WITH ADMIN DETECTION FOR ocebort@gmail.com)
     // -------------------------------------------------------------
     if (request.method === 'POST' && url.pathname === '/api/auth/register') {
       try {
@@ -23,11 +23,12 @@ export default {
           const petId = 'pet-' + crypto.randomUUID().slice(0, 8);
           await env.zoelys_db.prepare(`
             INSERT INTO pets (id, user_id, pet_name, species, breed, medical_needs, feeding_instructions, behavioral_quirks)
-            VALUES (?, ?, ?, 'Dog', 'Golden Retriever / Mix', 'Daily vitamins with morning meal', '1.5 cups kibble morning/evening', 'Friendly, loves swimming')
+            VALUES (?, ?, ?, 'Dog', 'Golden Retriever / Mix', 'Daily vitamins', '1.5 cups kibble @ 8am & 6pm', 'Friendly, loves swimming')
           `).bind(petId, id, body.pet_name).run();
         }
 
-        return new Response(JSON.stringify({ success: true, userId: id, full_name: body.full_name }), {
+        const isAdmin = emailClean === 'ocebort@gmail.com' ? 1 : 0;
+        return new Response(JSON.stringify({ success: true, userId: id, full_name: body.full_name, is_admin: isAdmin }), {
           status: 200, headers: { 'Content-Type': 'application/json' }
         });
       } catch (e) {
@@ -50,7 +51,8 @@ export default {
           return new Response(JSON.stringify({ error: 'Invalid email or password' }), { status: 401 });
         }
 
-        return new Response(JSON.stringify({ success: true, user }), {
+        const isAdmin = user.email.toLowerCase() === 'ocebort@gmail.com' ? 1 : 0;
+        return new Response(JSON.stringify({ success: true, user: { ...user, is_admin: isAdmin } }), {
           status: 200, headers: { 'Content-Type': 'application/json' }
         });
       } catch (e) {
@@ -59,7 +61,32 @@ export default {
     }
 
     // -------------------------------------------------------------
-    // RICH USER PROFILE & CONCIERGE DATA
+    // REAL-TIME CLOUDFLARE D1 ADMIN STATS
+    // -------------------------------------------------------------
+    if (request.method === 'GET' && url.pathname === '/api/admin/stats') {
+      try {
+        const usersCount = await env.zoelys_db.prepare(`SELECT COUNT(*) as count FROM users`).first();
+        const sittersCount = await env.zoelys_db.prepare(`SELECT COUNT(*) as count FROM sitters`).first();
+        const requestsCount = await env.zoelys_db.prepare(`SELECT COUNT(*) as count FROM client_requests`).first();
+        const eventsCount = await env.zoelys_db.prepare(`SELECT COUNT(*) as count FROM events`).first();
+        const partnersCount = await env.zoelys_db.prepare(`SELECT COUNT(*) as count FROM partners`).first();
+
+        return new Response(JSON.stringify({
+          total_members: usersCount ? usersCount.count : 0,
+          total_sitters: sittersCount ? sittersCount.count : 0,
+          total_requests: requestsCount ? requestsCount.count : 0,
+          total_events: eventsCount ? eventsCount.count : 0,
+          total_partners: partnersCount ? partnersCount.count : 0
+        }), {
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // USER PROFILE & CONCIERGE DATA
     // -------------------------------------------------------------
     if (request.method === 'GET' && url.pathname === '/api/user/profile') {
       try {
@@ -68,9 +95,9 @@ export default {
 
         const user = await env.zoelys_db.prepare(`SELECT id, email, full_name, subscription_tier, credit_balance FROM users WHERE id = ?`).bind(userId).first();
         const { results: pets } = await env.zoelys_db.prepare(`SELECT * FROM pets WHERE user_id = ?`).bind(userId).all();
-        const { results: requests } = await env.zoelys_db.prepare(`SELECT * FROM client_requests ORDER BY created_at DESC LIMIT 3`).all();
 
-        // Sample rich sitting matches & assigned sitters
+        const isAdmin = user && user.email.toLowerCase() === 'ocebort@gmail.com' ? 1 : 0;
+
         const sampleSittings = [
           {
             id: 'sit-101',
@@ -82,31 +109,13 @@ export default {
             credits_used: 9,
             match_score: '98% Match',
             location: 'Brickell Heights, Miami'
-          },
-          {
-            id: 'sit-102',
-            sitter_name: 'Mateo Silva',
-            role: 'Zoélys Vetted Sitter',
-            service_type: 'Home Visit & Walk (1h)',
-            dates: 'August 28, 2026',
-            status: 'Completed',
-            credits_used: 3,
-            match_score: '95% Match',
-            location: 'Coconut Grove, Miami'
           }
         ];
 
-        // Sample upcoming RSVPs & Partner Perks
-        const sampleRSVPs = [
-          { title: 'Paws & Prosecco Rooftop Mixer', date: 'Sat, Sept 19 • 18:00', location: 'Brickell Heights Rooftop' }
-        ];
-
         return new Response(JSON.stringify({
-          user,
+          user: { ...user, is_admin: isAdmin },
           pets: pets || [],
-          requests: requests || [],
-          sittings: sampleSittings,
-          rsvps: sampleRSVPs
+          sittings: sampleSittings
         }), {
           headers: { 'Content-Type': 'application/json' }
         });
@@ -118,14 +127,36 @@ export default {
     // -------------------------------------------------------------
     // GENERAL API ENDPOINTS
     // -------------------------------------------------------------
-    if (url.pathname === '/api/events' && request.method === 'GET') {
-      const { results } = await env.zoelys_db.prepare(`SELECT * FROM events WHERE is_published = 1 ORDER BY event_date ASC`).all();
-      return new Response(JSON.stringify(results || []), { headers: { 'Content-Type': 'application/json' } });
+    if (url.pathname === '/api/events') {
+      if (request.method === 'GET') {
+        const { results } = await env.zoelys_db.prepare(`SELECT * FROM events WHERE is_published = 1 ORDER BY event_date ASC`).all();
+        return new Response(JSON.stringify(results || []), { headers: { 'Content-Type': 'application/json' } });
+      }
+      if (request.method === 'POST') {
+        const body = await request.json();
+        const id = 'event-' + crypto.randomUUID().slice(0, 8);
+        await env.zoelys_db.prepare(`
+          INSERT INTO events (id, title, event_date, location, description, is_published)
+          VALUES (?, ?, ?, ?, ?, 1)
+        `).bind(id, body.title, body.event_date, body.location || '', body.description || '').run();
+        return new Response(JSON.stringify({ success: true, id }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
     }
 
-    if (url.pathname === '/api/partners' && request.method === 'GET') {
-      const { results } = await env.zoelys_db.prepare(`SELECT * FROM partners WHERE is_active = 1`).all();
-      return new Response(JSON.stringify(results || []), { headers: { 'Content-Type': 'application/json' } });
+    if (url.pathname === '/api/partners') {
+      if (request.method === 'GET') {
+        const { results } = await env.zoelys_db.prepare(`SELECT * FROM partners WHERE is_active = 1`).all();
+        return new Response(JSON.stringify(results || []), { headers: { 'Content-Type': 'application/json' } });
+      }
+      if (request.method === 'POST') {
+        const body = await request.json();
+        const id = 'partner-' + crypto.randomUUID().slice(0, 8);
+        await env.zoelys_db.prepare(`
+          INSERT INTO partners (id, name, category, website_url, is_active)
+          VALUES (?, ?, ?, ?, 1)
+        `).bind(id, body.name, body.category || 'Luxury Partner', body.website_url || '#').run();
+        return new Response(JSON.stringify({ success: true, id }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
     }
 
     return env.ASSETS.fetch(request);

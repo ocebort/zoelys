@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Member Concierge Portal</title>
+  <title>Zoélys — Concierge Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -56,10 +56,7 @@
     .btn-logout { background: #1C1613; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 2rem; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
 
     /* AUTH OVERLAY MODAL */
-    #authOverlay {
-      position: fixed; inset: 0; background: rgba(28, 22, 19, 0.95); display: flex; align-items: center; justify-content: center; z-index: 1000;
-    }
-
+    #authOverlay { position: fixed; inset: 0; background: rgba(28, 22, 19, 0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .auth-card { background: white; padding: 3rem 2.5rem; border-radius: 1rem; max-width: 440px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     .auth-card h2 { font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 0.5rem; text-align: center; }
     .form-group { margin-bottom: 1rem; }
@@ -75,12 +72,42 @@
     .credit-badge { background: var(--accent-coral); padding: 1.2rem 2rem; border-radius: 0.8rem; text-align: center; }
     .credit-count { font-size: 2.4rem; font-weight: bold; line-height: 1; }
 
+    /* ADMIN STATS BAR */
+    #adminStatsBar {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+    }
+
+    .stat-number { font-size: 2.2rem; font-weight: bold; color: var(--accent-coral); font-family: var(--font-sans); }
+    .stat-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-top: 0.3rem; }
+
+    /* ADMIN CMS MANAGEMENT PANEL */
+    #adminCmsPanel {
+      display: none;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
     .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
 
     .dashboard-card { background: white; border: 1px solid var(--border-color); border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.02); margin-bottom: 2rem; }
     .dashboard-card h3 { font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; }
 
-    /* PET MANUAL CARD */
     .pet-manual-box { background: var(--bg-cream); border: 1px solid var(--border-color); border-radius: 0.8rem; padding: 1.5rem; margin-bottom: 1rem; }
     .pet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
     .pet-name { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 500; }
@@ -90,7 +117,6 @@
     .pet-detail-item label { font-weight: 600; color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
     .pet-detail-item span { color: var(--text-dark); font-weight: 500; }
 
-    /* SITTER CARD */
     .sitter-card { background: var(--bg-cream); border-left: 4px solid var(--accent-coral); padding: 1.5rem; border-radius: 0.8rem; margin-bottom: 1rem; }
     .sitter-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem; }
     .sitter-name { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; }
@@ -103,7 +129,7 @@
     .sidebar-card h4 { font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
     .perk-pill { font-size: 0.8rem; padding: 0.6rem 0; border-bottom: 1px dashed var(--border-color); display: flex; justify-content: space-between; }
 
-    @media (max-width: 850px) { .grid-3 { grid-template-columns: 1fr; } .pet-details-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 850px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -122,7 +148,7 @@
 
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" id="authEmail" placeholder="oceane@zoelys.com" required>
+          <input type="email" id="authEmail" placeholder="ocebort@gmail.com" required>
         </div>
 
         <div class="form-group">
@@ -159,17 +185,18 @@
     <div class="nav-actions">
       <a href="/events" class="nav-link">EVENTS</a>
       <a href="/partners" class="nav-link">PARTNERS</a>
-      <a href="/get-matched" class="nav-link" style="color: var(--accent-coral);">REQUEST SITTER</a>
+      <a href="/admin" class="nav-link" id="adminCmsLink" style="display:none; color: var(--accent-coral);">CMS ADMIN ⚙️</a>
       <button onclick="logout()" class="btn-logout">LOG OUT</button>
     </div>
   </header>
 
   <main class="container">
+    <!-- MEMBER BANNER -->
     <div class="profile-banner">
       <div>
-        <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">MEMBER CONCIERGE PORTAL</div>
-        <h1 class="profile-title" id="welcomeMsg">Welcome, Océane</h1>
-        <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.4rem;" id="tierMsg">Gold Membership • Miami Member</p>
+        <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;" id="adminTag">MEMBER CONCIERGE PORTAL</div>
+        <h1 class="profile-title" id="welcomeMsg">Welcome, Océane Bort</h1>
+        <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.4rem;" id="tierMsg">Gold Membership • Active Member</p>
       </div>
       <div class="credit-badge">
         <div class="credit-count" id="creditCount">5</div>
@@ -177,20 +204,68 @@
       </div>
     </div>
 
+    <!-- ADMIN STATS BAR (VISIBLE ONLY TO ocebort@gmail.com) -->
+    <div id="adminStatsBar">
+      <div class="stat-card">
+        <div class="stat-number" id="statSitters">12</div>
+        <div class="stat-label">Vetted Pet Sitters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statMembers">8</div>
+        <div class="stat-label">Platform Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statRequests">15</div>
+        <div class="stat-label">Client Requests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statEvents">1</div>
+        <div class="stat-label">Active Events</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statPartners">1</div>
+        <div class="stat-label">Active Partners</div>
+      </div>
+    </div>
+
+    <!-- ADMIN CMS QUICK PUBLISH PANEL -->
+    <div id="adminCmsPanel">
+      <h3 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 1.5rem; color: var(--text-dark);">Admin CMS — Publish Live Content to D1</h3>
+      <div class="grid-2">
+        <div style="background: var(--bg-cream); padding: 1.5rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+          <h4 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 1rem;">Publish New Event 📅</h4>
+          <form onsubmit="adminAddEvent(event)">
+            <div class="form-group"><label>Event Title</label><input type="text" id="evtTitle" placeholder="e.g. Sunset Dog Yoga" required></div>
+            <div class="form-group"><label>Date & Time</label><input type="text" id="evtDate" placeholder="Sun, Oct 12 • 17:00" required></div>
+            <div class="form-group"><label>Location</label><input type="text" id="evtLoc" placeholder="South Beach, Miami" required></div>
+            <button type="submit" class="btn-action">PUBLISH EVENT TO D1 &rarr;</button>
+          </form>
+        </div>
+
+        <div style="background: var(--bg-cream); padding: 1.5rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+          <h4 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 1rem;">Publish New Partner 🤝</h4>
+          <form onsubmit="adminAddPartner(event)">
+            <div class="form-group"><label>Partner Name</label><input type="text" id="prtName" placeholder="e.g. Brickell Veterinary Care" required></div>
+            <div class="form-group"><label>Category</label><input type="text" id="prtCat" placeholder="Medical & Wellness" required></div>
+            <div class="form-group"><label>Website URL</label><input type="text" id="prtUrl" placeholder="https://brickellvet.com" required></div>
+            <button type="submit" class="btn-action">PUBLISH PARTNER TO D1 &rarr;</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="grid-3">
       <div>
-        <!-- PET INSTRUCTION MANUAL -->
         <div class="dashboard-card">
           <h3>
             <span>My Pet Care Manual 📖</span>
             <a href="/get-matched" class="btn-sm-action">+ Add Pet</a>
           </h3>
           <div id="petsContainer">
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Loading pet instructions from Cloudflare D1...</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Loading pet instructions...</p>
           </div>
         </div>
 
-        <!-- ASSIGNED SITTERS & SITTING HISTORY -->
         <div class="dashboard-card">
           <h3>
             <span>Assigned Sitters & Sitting History 🐕</span>
@@ -215,32 +290,12 @@
 
         <div class="sidebar-card">
           <h4>My Event RSVPs 📅</h4>
-          <div id="rsvpsContainer">
-            <div class="perk-pill">
-              <div>
-                <strong>Paws & Prosecco Mixer</strong>
-                <div style="font-size: 0.7rem; color: var(--text-muted);">Sat, Sept 19 • Brickell Heights</div>
-              </div>
-              <span style="color: var(--accent-coral); font-weight: bold; font-size: 0.7rem;">CONFIRMED</span>
+          <div class="perk-pill">
+            <div>
+              <strong>Paws & Prosecco Mixer</strong>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Sat, Sept 19 • Brickell Heights</div>
             </div>
-          </div>
-          <div style="margin-top: 1rem;">
-            <a href="/events" style="font-size: 0.75rem; color: var(--text-dark); font-weight: bold; text-decoration: none;">Browse All Events &rarr;</a>
-          </div>
-        </div>
-
-        <div class="sidebar-card">
-          <h4>Partner VIP Perks 💎</h4>
-          <div class="perk-pill">
-            <span>Equinox Hotels Miami</span>
-            <span style="color: var(--accent-coral); font-weight: bold;">15% OFF</span>
-          </div>
-          <div class="perk-pill">
-            <span>Brickell Vet Care</span>
-            <span style="color: var(--accent-coral); font-weight: bold;">Free Consult</span>
-          </div>
-          <div style="margin-top: 1rem;">
-            <a href="/partners" style="font-size: 0.75rem; color: var(--text-dark); font-weight: bold; text-decoration: none;">Explore Partner Directory &rarr;</a>
+            <span style="color: var(--accent-coral); font-weight: bold; font-size: 0.7rem;">CONFIRMED</span>
           </div>
         </div>
       </div>
@@ -253,13 +308,10 @@
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
       document.getElementById('authTitle').innerText = isRegisterMode ? 'Join Zoélys' : 'Member Sign In';
-      document.getElementById('authSubtitle').innerText = isRegisterMode ? 'Choose your subscription tier & create account' : 'Access your Zoélys Concierge Account';
       document.getElementById('nameGroup').style.display = isRegisterMode ? 'block' : 'none';
       document.getElementById('tierGroup').style.display = isRegisterMode ? 'block' : 'none';
       document.getElementById('petGroup').style.display = isRegisterMode ? 'block' : 'none';
       document.getElementById('authBtn').innerText = isRegisterMode ? 'REGISTER & SUBSCRIBE' : 'SIGN IN';
-      document.getElementById('toggleText').innerText = isRegisterMode ? 'Already have an account?' : "Don't have a concierge membership?";
-      document.getElementById('toggleLink').innerText = isRegisterMode ? 'Sign In Here' : 'Register Here';
     }
 
     async function handleAuth(e) {
@@ -308,6 +360,15 @@
         document.getElementById('creditCount').innerText = data.user.credit_balance;
         document.getElementById('sidePlan').innerText = data.user.subscription_tier;
 
+        // ADMIN DETECTION
+        if (data.user.is_admin) {
+          document.getElementById('adminTag').innerText = 'SUPER-ADMIN CONCIERGE CONTROL';
+          document.getElementById('adminStatsBar').style.display = 'grid';
+          document.getElementById('adminCmsPanel').style.display = 'block';
+          document.getElementById('adminCmsLink').style.display = 'inline-block';
+          fetchAdminStats();
+        }
+
         const petsDiv = document.getElementById('petsContainer');
         if (!data.pets || data.pets.length === 0) {
           petsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No registered pets yet.</p>`;
@@ -320,11 +381,9 @@
               </div>
               <div class="pet-details-grid">
                 <div class="pet-detail-item"><label>Breed</label><span>${p.breed || 'Golden Retriever Mix'}</span></div>
-                <div class="pet-detail-item"><label>Microchip No.</label><span>#985141029482</span></div>
                 <div class="pet-detail-item"><label>Feeding Schedule</label><span>${p.feeding_instructions || '1.5 cups kibble @ 8am & 6pm'}</span></div>
                 <div class="pet-detail-item"><label>Medical / Allergies</label><span>${p.medical_needs || 'Daily joint supplement'}</span></div>
-                <div class="pet-detail-item" style="grid-column: 1/-1;"><label>Behavioral Quirks & Routine</label><span>${p.behavioral_quirks || 'Loves water, needs 30 min park walks daily.'}</span></div>
-                <div class="pet-detail-item" style="grid-column: 1/-1;"><label>Emergency Vet</label><span>Brickell Veterinary Center (+1 305-555-0192)</span></div>
+                <div class="pet-detail-item"><label>Emergency Vet</label><span>Brickell Vet (+1 305-555-0192)</span></div>
               </div>
             </div>
           `).join('');
@@ -344,19 +403,49 @@
                 <span class="sitter-badge">${s.match_score}</span>
               </div>
               <div class="sitter-meta">
-                <div><strong>📅 Service & Dates:</strong> ${s.service_type} (${s.dates})</div>
-                <div><strong>📍 Location:</strong> ${s.location}</div>
-                <div><strong>💳 Cost:</strong> ${s.credits_used} Credits deducted</div>
+                <div><strong>📅 Dates:</strong> ${s.service_type} (${s.dates})</div>
                 <div><strong>📡 Status:</strong> <span style="color: var(--accent-coral); font-weight: bold;">${s.status}</span></div>
-              </div>
-              <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-                <a href="#" onclick="alert('Connecting to live sitter chat & photo updates...')" class="btn-sm-action">Live Updates 📸</a>
-                <a href="#" onclick="alert('Live GPS collar feed active.')" class="btn-sm-action" style="background: transparent; color: var(--text-dark); border: 1px solid var(--border-color);">GPS Track 📍</a>
               </div>
             </div>
           `).join('');
         }
       }
+    }
+
+    async function fetchAdminStats() {
+      try {
+        const res = await fetch('/api/admin/stats');
+        const stats = await res.json();
+        document.getElementById('statMembers').innerText = stats.total_members;
+        document.getElementById('statSitters').innerText = stats.total_sitters;
+        document.getElementById('statRequests').innerText = stats.total_requests;
+        document.getElementById('statEvents').innerText = stats.total_events;
+        document.getElementById('statPartners').innerText = stats.total_partners;
+      } catch (err) { console.error(err); }
+    }
+
+    async function adminAddEvent(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('evtTitle').value,
+        event_date: document.getElementById('evtDate').value,
+        location: document.getElementById('evtLoc').value
+      };
+      const res = await fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (data.success) { alert('✨ Event Published Live to Cloudflare D1!'); fetchAdminStats(); }
+    }
+
+    async function adminAddPartner(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('prtName').value,
+        category: document.getElementById('prtCat').value,
+        website_url: document.getElementById('prtUrl').value
+      };
+      const res = await fetch('/api/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (data.success) { alert('✨ Partner Published Live to Cloudflare D1!'); fetchAdminStats(); }
     }
 
     function logout() {
