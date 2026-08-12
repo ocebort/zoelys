@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Zoélys — Zoélys</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { cream: '#FAF6EE', card: '#FFFFFF', terracotta: '#D07358', terracottaHover: '#B85E45', dark: '#1F1916', muted: '#8A827A' } },
+          fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans antialiased">
+
+  <!-- Header -->
+  <header class="w-full bg-brand-cream border-b border-stone-200/60 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+      <a href="/" class="font-serif text-2xl tracking-[0.25em] font-normal uppercase">ZOÉLYS</a>
+      <nav class="hidden lg:flex items-center space-x-10 text-[11px] tracking-[0.2em] uppercase font-medium text-stone-600">
+        <a href="/get-matched" class="hover:text-brand-dark">Find a Sitter</a>
+        <a href="/how-it-works" class="hover:text-brand-dark">How It Works</a>
+        <a href="/journal" class="hover:text-brand-dark">Journal</a>
+        <a href="/map" class="hover:text-brand-dark">Explore ▾</a>
+      </nav>
+      <div class="flex items-center space-x-8 text-[11px] tracking-[0.2em] uppercase font-medium">
+        <a href="#" class="text-stone-600 hover:text-brand-dark">Sign In</a>
+        <a href="/join" class="bg-brand-terracotta text-white px-6 py-3 rounded-full">Join Zoélys</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dark Banner Header -->
+  <section class="bg-brand-dark text-white py-20 text-center px-6">
+    <p class="text-[10px] uppercase tracking-[0.3em] text-brand-terracotta mb-3">— Join Zoélys —</p>
+    <h1 class="font-serif text-5xl font-normal">Choose your path</h1>
+  </section>
+
+  <!-- Path Selection Cards -->
+  <main class="max-w-4xl mx-auto px-6 -mt-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Owner Path Card -->
+      <div class="bg-brand-card p-10 rounded-2xl border border-stone-200/80 shadow-sm space-y-6 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-full bg-brand-cream flex items-center justify-center text-brand-terracotta text-xl">
+            ♥
+          </div>
+          <h2 class="font-serif text-3xl font-normal">I am looking for a sitter for my pet</h2>
+          <p class="text-xs text-brand-muted font-light leading-relaxed">
+            Create your owner account, build your pet's profile, and unlock concierge matching.
+          </p>
+        </div>
+        <a href="/get-matched" class="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.2em] text-brand-terracotta font-medium hover:underline pt-4">
+          <span>Continue as Owner</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <!-- Sitter Path Card -->
+      <div class="bg-brand-card p-10 rounded-2xl border border-stone-200/80 shadow-sm space-y-6 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-full bg-brand-cream flex items-center justify-center text-brand-terracotta text-xl">
+            🐾
+          </div>
+          <h2 class="font-serif text-3xl font-normal">I want to become a Zoélys sitter</h2>
+          <p class="text-xs text-brand-muted font-light leading-relaxed">
+            Apply to our 5-step vetting process. Only those who pass every stage earn the Certified badge.
+          </p>
+        </div>
+        <a href="#" class="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.2em] text-brand-terracotta font-medium hover:underline pt-4">
+          <span>Apply as Sitter</span>
+          <span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

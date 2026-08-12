@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events — Zoélys</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>tailwind.config = { theme: { extend: { colors: { brand: { cream: '#FAF6EE', card: '#FFFFFF', terracotta: '#D07358', dark: '#1F1916', muted: '#8A827A' } }, fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] } } } }</script>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans antialiased">
+  <header class="w-full bg-brand-cream border-b border-stone-200/60 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+      <a href="/" class="font-serif text-2xl tracking-[0.25em] uppercase">ZOÉLYS</a>
+      <a href="/get-matched" class="bg-brand-terracotta text-white px-6 py-3 rounded-full text-[11px] uppercase tracking-[0.2em]">Join Zoélys</a>
+    </div>
+  </header>
+  <main class="max-w-4xl mx-auto px-6 py-16">
+    <div class="text-center mb-12"><h1 class="font-serif text-5xl">Zoélys Playdates & Events</h1></div>
+    <div class="bg-brand-card p-8 rounded-2xl border border-stone-200 space-y-3">
+      <p class="text-xs font-mono text-brand-terracotta uppercase">Saturday • Aug 22, 2026</p>
+      <h3 class="font-serif text-3xl">Sunset Walk & Social in Coconut Grove</h3>
+      <p class="text-xs text-brand-muted">Coconut Grove Waterfront Park • 6:00 PM</p>
+    </div>
+  </main>
+</body>
+</html>

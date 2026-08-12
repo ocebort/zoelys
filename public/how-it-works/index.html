@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys — How It Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-cream: #FDFBF7;
+      --bg-card: #FFFFFF;
+      --hero-dark: #1F1916;
+      --text-dark: #1F1916;
+      --text-muted: #6B6560;
+      --accent-coral: #D97757;
+      --accent-coral-hover: #C56546;
+      --line-color: #E2DDD5;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 4rem;
+      background: var(--bg-cream);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    nav a.active, nav a:hover {
+      color: var(--accent-coral);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .btn-sign-in {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .btn-join {
+      background-color: var(--accent-coral);
+      color: white;
+      padding: 0.6rem 1.4rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: background 0.2s ease;
+    }
+
+    .btn-join:hover {
+      background-color: var(--accent-coral-hover);
+    }
+
+    .hero-section {
+      background-color: var(--hero-dark);
+      color: #FFFFFF;
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+    }
+
+    .eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-coral);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-subtitle {
+      max-width: 580px;
+      margin: 0 auto;
+      color: #B5AFA8;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .section-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 2.75rem;
+      font-weight: 400;
+      margin-bottom: 3.5rem;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 580px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      bottom: 15px;
+      left: 17px;
+      width: 1px;
+      background-color: var(--line-color);
+      z-index: 1;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      z-index: 2;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: var(--hero-dark);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      color: var(--text-dark);
+    }
+
+    .step-content p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .meet-section {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .paw-badge {
+      width: 60px;
+      height: 60px;
+      background-color: var(--accent-coral);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+    }
+
+    .paw-badge svg {
+      width: 28px;
+      height: 28px;
+      fill: #FFFFFF;
+    }
+
+    .meet-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--text-dark);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 850px;
+      margin: 0 auto 4rem;
+      text-align: left;
+    }
+
+    .feature-card {
+      background-color: var(--bg-card);
+      padding: 2rem;
+      border-radius: 1rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: var(--hero-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: #FFFFFF;
+    }
+
+    .feature-text h4 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-text p {
+      color: var(--text-muted);
+      font-size: 0.825rem;
+      line-height: 1.5;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--hero-dark);
+      color: #FFFFFF;
+      padding: 1rem 2rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: opacity 0.2s ease;
+    }
+
+    .cta-button:hover {
+      opacity: 0.9;
+    }
+
+    footer {
+      background-color: var(--hero-dark);
+      color: #FFFFFF;
+      padding: 5rem 4rem 2rem;
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 2fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-brand .logo {
+      color: #FFFFFF;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      color: #8C857B;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .footer-column h5 {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-coral);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-column ul {
+      list-style: none;
+    }
+
+    .footer-column li {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-column a {
+      color: #B5AFA8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-column a:hover {
+      color: #FFFFFF;
+    }
+
+    .newsletter-box {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .newsletter-box input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.6rem 1rem;
+      border-radius: 1.5rem;
+      color: white;
+      font-size: 0.85rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .newsletter-box button {
+      background-color: var(--accent-coral);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 1.5rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      color: #6B6560;
+      font-size: 0.75rem;
+    }
+
+    .social-links a {
+      color: #6B6560;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      letter-spacing: 0.1em;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 1rem 1.5rem; }
+      nav { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .footer-content { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-title { font-size: 2.5rem; }
+      .section-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">ZOÉLYS</a>
+    <nav>
+      <a href="#">Find a Sitter</a>
+      <a href="how-it-works.html" class="active">How It Works</a>
+      <a href="#">Journal</a>
+      <a href="#">Explore ▾</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="#" class="btn-sign-in">Sign In</a>
+      <a href="#" class="btn-join">Join Zoélys</a>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="eyebrow">The Zoélys Standard</div>
+    <h1 class="hero-title">How it works</h1>
+    <p class="hero-subtitle">Two principles guide every decision: rigorous vetting, and a personal introduction before any pet is ever entrusted.</p>
+  </section>
+
+  <section class="section-container">
+    <div class="eyebrow">The Vetting Process</div>
+    <h2 class="section-title">Five stages. One badge.</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Application</h3>
+          <p>Detailed profile, experience, references and a complete home setup review.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Background check</h3>
+          <p>Full identity verification and criminal record check — no exceptions.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Zoélys interview</h3>
+          <p>A personal video interview assessing values, empathy and fit with our standards.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Trial period</h3>
+          <p>Monitored first sittings with continuous ratings review.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h3>Certified badge awarded</h3>
+          <p>Only those who pass every stage earn the Zoélys Certified badge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="meet-section">
+    <div class="paw-badge">
+      <svg viewBox="0 0 24 24"><path d="M12 11.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5zm-5 1c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-8.5-4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    </div>
+    <div class="eyebrow">The Meet-and-Greet</div>
+    <h2 class="section-title">No booking until your pet approves</h2>
+    <p class="meet-desc">Before any booking is confirmed, the sitter meets your pet in person. Once complete, they earn a <strong>Zoélys Verified Meet</strong> badge for that pet.</p>
+    <p class="quote">"This is what makes Zoélys different. No booking is confirmed until your pet approves."</p>
+  </section>
+
+  <section class="section-container" style="background-color: rgba(0,0,0,0.015); max-width: 100%; border-top: 1px solid rgba(0,0,0,0.03);">
+    <div class="eyebrow">During the Sitting</div>
+    <h2 class="section-title">Four premium features</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Structured pet profile</h4>
+          <p>A full briefing sent to your sitter before day one — every critical detail flagged by priority.</p>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Live updates on demand</h4>
+          <p>Photos and videos at the frequency you choose, not your sitter.</p>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Partner vet on standby</h4>
+          <p>A trusted vet is one call away if anything goes wrong.</p>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Post-sitting report</h4>
+          <p>A full summary, so you come home informed — not anxious.</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="#" class="cta-button">Find the perfect sitter for my pet &rarr;</a>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="logo">ZOÉLYS</span>
+        <p>"Pets aren't a side note — they're family. We treat them that way."</p>
+      </div>
+
+      <div class="footer-column">
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="#">Find a Sitter</a></li>
+          <li><a href="#">The Map</a></li>
+          <li><a href="#">Events</a></li>
+          <li><a href="#">Partners</a></li>
+          <li><a href="#">Journal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="#">Join</a></li>
+          <li><a href="#">Sign In</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h5>Stay Close</h5>
+        <p style="color: #8C857B; font-size: 0.8rem; margin-bottom: 0.75rem;">Quiet letters, real care. No spam, ever.</p>
+        <div class="newsletter-box">
+          <input type="email" placeholder="your@email.com">
+          <button>Join</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div class="social-links">
+        <a href="#">TikTok</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
