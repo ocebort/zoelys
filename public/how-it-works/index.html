@@ -6,15 +6,15 @@
   <title>Zoélys — How It Works</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-cream: #FDFBF7;
+      --bg-cream: #FAF7F2;
       --bg-card: #FFFFFF;
-      --hero-dark: #1F1916;
-      --text-dark: #1F1916;
-      --text-muted: #6B6560;
+      --hero-dark: #1C1613;
+      --text-dark: #1C1613;
+      --text-muted: #706A63;
       --accent-coral: #D97757;
       --accent-coral-hover: #C56546;
       --line-color: #E2DDD5;
@@ -22,26 +22,23 @@
       --font-sans: 'Inter', -apple-system, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-cream);
       color: var(--text-dark);
       font-family: var(--font-sans);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* --- Navigation Bar --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1.25rem 4rem;
       background: var(--bg-cream);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -49,8 +46,8 @@
 
     .logo {
       font-family: var(--font-serif);
-      font-size: 1.75rem;
-      letter-spacing: 0.18em;
+      font-size: 1.5rem;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
       font-weight: 500;
       color: var(--text-dark);
@@ -66,29 +63,23 @@
     nav a {
       text-decoration: none;
       color: var(--text-dark);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       transition: color 0.2s ease;
     }
 
-    nav a.active, nav a:hover {
-      color: var(--accent-coral);
-    }
+    nav a.active, nav a:hover { color: var(--accent-coral); }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
+    .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
 
     .btn-sign-in {
       text-decoration: none;
       color: var(--text-dark);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
     }
 
@@ -98,51 +89,49 @@
       padding: 0.6rem 1.4rem;
       border-radius: 2rem;
       text-decoration: none;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      transition: background 0.2s ease;
     }
 
-    .btn-join:hover {
-      background-color: var(--accent-coral-hover);
-    }
-
+    /* --- Hero Section --- */
     .hero-section {
       background-color: var(--hero-dark);
       color: #FFFFFF;
       text-align: center;
-      padding: 6rem 2rem 5rem;
+      padding: 6.5rem 2rem 5.5rem;
     }
 
     .eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
       color: var(--accent-coral);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
     }
 
     .hero-title {
       font-family: var(--font-serif);
-      font-size: 3.5rem;
+      font-size: 3.75rem;
       font-weight: 400;
       letter-spacing: -0.01em;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
     }
 
     .hero-subtitle {
       max-width: 580px;
       margin: 0 auto;
-      color: #B5AFA8;
+      color: #A39D95;
       font-size: 0.95rem;
       font-weight: 300;
       line-height: 1.7;
     }
 
+    /* --- Vetting Timeline Section --- */
     .section-container {
-      max-width: 900px;
+      max-width: 850px;
       margin: 0 auto;
       padding: 6rem 2rem;
       text-align: center;
@@ -152,12 +141,12 @@
       font-family: var(--font-serif);
       font-size: 2.75rem;
       font-weight: 400;
-      margin-bottom: 3.5rem;
+      margin-bottom: 4rem;
     }
 
     .timeline {
       position: relative;
-      max-width: 580px;
+      max-width: 550px;
       margin: 0 auto;
       text-align: left;
     }
@@ -166,35 +155,34 @@
       content: '';
       position: absolute;
       top: 15px;
-      bottom: 15px;
-      left: 17px;
+      bottom: 25px;
+      left: 14px;
       width: 1px;
-      background-color: var(--line-color);
+      background-color: var(--accent-coral);
+      opacity: 0.4;
       z-index: 1;
     }
 
     .timeline-item {
       position: relative;
       display: flex;
-      gap: 2rem;
-      margin-bottom: 3rem;
+      gap: 1.75rem;
+      margin-bottom: 3.5rem;
       z-index: 2;
     }
 
-    .timeline-item:last-child {
-      margin-bottom: 0;
-    }
+    .timeline-item:last-child { margin-bottom: 0; }
 
     .step-number {
-      width: 35px;
-      height: 35px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       background-color: var(--hero-dark);
       color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 500;
       flex-shrink: 0;
     }
@@ -209,38 +197,36 @@
 
     .step-content p {
       color: var(--text-muted);
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       line-height: 1.6;
     }
 
+    /* --- Meet and Greet Section --- */
     .meet-section {
       text-align: center;
       max-width: 700px;
       margin: 0 auto;
-      padding: 5rem 2rem;
+      padding: 6rem 2rem;
     }
 
     .paw-badge {
-      width: 60px;
-      height: 60px;
+      width: 64px;
+      height: 64px;
       background-color: var(--accent-coral);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 2rem;
+      margin: 0 auto 2.25rem;
     }
 
-    .paw-badge svg {
-      width: 28px;
-      height: 28px;
-      fill: #FFFFFF;
-    }
+    .paw-badge svg { width: 30px; height: 30px; fill: #FFFFFF; }
 
     .meet-desc {
       color: var(--text-muted);
       font-size: 0.95rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
     }
 
     .quote {
@@ -250,10 +236,11 @@
       color: var(--text-dark);
     }
 
+    /* --- Premium Features Section --- */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      gap: 1.25rem;
       max-width: 850px;
       margin: 0 auto 4rem;
       text-align: left;
@@ -261,17 +248,18 @@
 
     .feature-card {
       background-color: var(--bg-card);
-      padding: 2rem;
-      border-radius: 1rem;
+      padding: 2.25rem 2rem;
+      border-radius: 1.25rem;
       display: flex;
       gap: 1.25rem;
       align-items: flex-start;
       border: 1px solid rgba(0,0,0,0.02);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.015);
     }
 
     .feature-icon {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background-color: var(--hero-dark);
       display: flex;
@@ -280,15 +268,11 @@
       flex-shrink: 0;
     }
 
-    .feature-icon svg {
-      width: 20px;
-      height: 20px;
-      fill: #FFFFFF;
-    }
+    .feature-icon svg { width: 20px; height: 20px; fill: #FFFFFF; }
 
     .feature-text h4 {
       font-family: var(--font-serif);
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 500;
       margin-bottom: 0.4rem;
     }
@@ -296,7 +280,7 @@
     .feature-text p {
       color: var(--text-muted);
       font-size: 0.825rem;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .cta-button {
@@ -305,63 +289,51 @@
       gap: 0.5rem;
       background-color: var(--hero-dark);
       color: #FFFFFF;
-      padding: 1rem 2rem;
+      padding: 1.1rem 2.25rem;
       border-radius: 2rem;
       text-decoration: none;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      transition: opacity 0.2s ease;
     }
 
-    .cta-button:hover {
-      opacity: 0.9;
-    }
-
+    /* --- Footer Section --- */
     footer {
       background-color: var(--hero-dark);
       color: #FFFFFF;
-      padding: 5rem 4rem 2rem;
+      padding: 5rem 4rem 2.5rem;
     }
 
     .footer-content {
       max-width: 1100px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 2fr;
-      gap: 3rem;
-      margin-bottom: 4rem;
+      grid-template-columns: 2fr 1fr 1fr 2.2fr;
+      gap: 3.5rem;
+      margin-bottom: 5rem;
     }
 
-    .footer-brand .logo {
-      color: #FFFFFF;
-      display: block;
-      margin-bottom: 1rem;
-    }
+    .footer-brand .logo { color: #FFFFFF; display: block; margin-bottom: 1.25rem; }
 
     .footer-brand p {
       color: #8C857B;
       font-family: var(--font-serif);
       font-style: italic;
       font-size: 0.95rem;
+      line-height: 1.6;
     }
 
     .footer-column h5 {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--accent-coral);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
-    .footer-column ul {
-      list-style: none;
-    }
-
-    .footer-column li {
-      margin-bottom: 0.75rem;
-    }
+    .footer-column ul { list-style: none; }
+    .footer-column li { margin-bottom: 0.85rem; }
 
     .footer-column a {
       color: #B5AFA8;
@@ -370,21 +342,15 @@
       transition: color 0.2s ease;
     }
 
-    .footer-column a:hover {
-      color: #FFFFFF;
-    }
+    .footer-column a:hover { color: #FFFFFF; }
 
-    .newsletter-box {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
+    .newsletter-box { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
 
     .newsletter-box input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.6rem 1rem;
-      border-radius: 1.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.75rem 1.25rem;
+      border-radius: 2rem;
       color: white;
       font-size: 0.85rem;
       width: 100%;
@@ -395,11 +361,11 @@
       background-color: var(--accent-coral);
       color: white;
       border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 2rem;
       cursor: pointer;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
@@ -417,9 +383,9 @@
     .social-links a {
       color: #6B6560;
       text-decoration: none;
-      margin-left: 1.5rem;
-      letter-spacing: 0.1em;
-      font-size: 0.7rem;
+      margin-left: 1.75rem;
+      letter-spacing: 0.12em;
+      font-size: 0.65rem;
       text-transform: uppercase;
     }
 
@@ -427,36 +393,39 @@
       header { padding: 1rem 1.5rem; }
       nav { display: none; }
       .features-grid { grid-template-columns: 1fr; }
-      .footer-content { grid-template-columns: 1fr; gap: 2rem; }
-      .hero-title { font-size: 2.5rem; }
-      .section-title { font-size: 2rem; }
+      .footer-content { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-title { font-size: 2.75rem; }
+      .section-title { font-size: 2.25rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Header Navigation -->
   <header>
-    <a href="index.html" class="logo">ZOÉLYS</a>
+    <a href="/" class="logo">ZOÉLYS</a>
     <nav>
-      <a href="#">Find a Sitter</a>
-      <a href="how-it-works.html" class="active">How It Works</a>
-      <a href="#">Journal</a>
-      <a href="#">Explore ▾</a>
+      <a href="/find-a-sitter">Find a Sitter</a>
+      <a href="/how-it-works" class="active">How It Works</a>
+      <a href="/journal">Journal</a>
+      <a href="/explore">Explore ▾</a>
     </nav>
     <div class="nav-actions">
-      <a href="#" class="btn-sign-in">Sign In</a>
-      <a href="#" class="btn-join">Join Zoélys</a>
+      <a href="/sign-in" class="btn-sign-in">Sign In</a>
+      <a href="/join" class="btn-join">Join Zoélys</a>
     </div>
   </header>
 
+  <!-- Hero Section -->
   <section class="hero-section">
-    <div class="eyebrow">The Zoélys Standard</div>
+    <div class="eyebrow">THE ZOÉLYS STANDARD</div>
     <h1 class="hero-title">How it works</h1>
     <p class="hero-subtitle">Two principles guide every decision: rigorous vetting, and a personal introduction before any pet is ever entrusted.</p>
   </section>
 
+  <!-- Vetting Timeline Section -->
   <section class="section-container">
-    <div class="eyebrow">The Vetting Process</div>
+    <div class="eyebrow">THE VETTING PROCESS</div>
     <h2 class="section-title">Five stages. One badge.</h2>
 
     <div class="timeline">
@@ -502,18 +471,20 @@
     </div>
   </section>
 
+  <!-- Meet and Greet Section -->
   <section class="meet-section">
     <div class="paw-badge">
       <svg viewBox="0 0 24 24"><path d="M12 11.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5zm-5 1c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-8.5-4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
     </div>
-    <div class="eyebrow">The Meet-and-Greet</div>
+    <div class="eyebrow">THE MEET-AND-GREET</div>
     <h2 class="section-title">No booking until your pet approves</h2>
     <p class="meet-desc">Before any booking is confirmed, the sitter meets your pet in person. Once complete, they earn a <strong>Zoélys Verified Meet</strong> badge for that pet.</p>
     <p class="quote">"This is what makes Zoélys different. No booking is confirmed until your pet approves."</p>
   </section>
 
-  <section class="section-container" style="background-color: rgba(0,0,0,0.015); max-width: 100%; border-top: 1px solid rgba(0,0,0,0.03);">
-    <div class="eyebrow">During the Sitting</div>
+  <!-- Premium Features Grid Section -->
+  <section class="section-container" style="max-width: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.015) 100%); padding-bottom: 6rem;">
+    <div class="eyebrow">DURING THE SITTING</div>
     <h2 class="section-title">Four premium features</h2>
 
     <div class="features-grid">
@@ -558,9 +529,10 @@
       </div>
     </div>
 
-    <a href="#" class="cta-button">Find the perfect sitter for my pet &rarr;</a>
+    <a href="/find-a-sitter" class="cta-button">FIND THE PERFECT SITTER FOR MY PET &rarr;</a>
   </section>
 
+  <!-- Footer -->
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
@@ -569,31 +541,31 @@
       </div>
 
       <div class="footer-column">
-        <h5>Explore</h5>
+        <h5>EXPLORE</h5>
         <ul>
-          <li><a href="#">Find a Sitter</a></li>
-          <li><a href="#">The Map</a></li>
-          <li><a href="#">Events</a></li>
-          <li><a href="#">Partners</a></li>
-          <li><a href="#">Journal</a></li>
+          <li><a href="/find-a-sitter">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
         </ul>
       </div>
 
       <div class="footer-column">
-        <h5>Zoélys</h5>
+        <h5>ZOÉLYS</h5>
         <ul>
-          <li><a href="how-it-works.html">How It Works</a></li>
-          <li><a href="#">Join</a></li>
-          <li><a href="#">Sign In</a></li>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/sign-in">Sign In</a></li>
         </ul>
       </div>
 
       <div class="footer-column">
-        <h5>Stay Close</h5>
+        <h5>STAY CLOSE</h5>
         <p style="color: #8C857B; font-size: 0.8rem; margin-bottom: 0.75rem;">Quiet letters, real care. No spam, ever.</p>
         <div class="newsletter-box">
           <input type="email" placeholder="your@email.com">
-          <button>Join</button>
+          <button>JOIN</button>
         </div>
       </div>
     </div>
@@ -601,8 +573,8 @@
     <div class="footer-bottom">
       <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
       <div class="social-links">
-        <a href="#">TikTok</a>
-        <a href="#">Contact</a>
+        <a href="#">TIKTOK</a>
+        <a href="#">CONTACT</a>
       </div>
     </div>
   </footer>
