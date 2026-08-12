@@ -216,7 +216,7 @@
             <th>Client Name</th>
             <th>Pet Info</th>
             <th>Neighbourhood</th>
-            <th>Submitted</th>
+            <th>Submitted (Local Time)</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -274,7 +274,16 @@
 
         requests.forEach(req => {
           const tr = document.createElement('tr');
-          const dateStr = new Date(req.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          
+          // Append 'Z' so JS treats UTC string correctly and parses into local browser time zone
+          const utcDateStr = req.created_at.includes('Z') ? req.created_at : req.created_at.replace(' ', 'T') + 'Z';
+          const dateStr = new Date(utcDateStr).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true
+          });
           
           tr.innerHTML = `
             <td><strong>${req.full_name || 'Anonymous'}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${req.email}</span></td>
