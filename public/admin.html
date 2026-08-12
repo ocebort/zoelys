@@ -8,8 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
     :root {
       --bg-dark: #1C1613;
@@ -32,6 +30,55 @@
       line-height: 1.5;
     }
 
+    #authOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 12, 10, 0.96);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      background: #120E0C;
+      color: var(--text-main);
+      font-size: 1.25rem;
+      text-align: center;
+      letter-spacing: 0.3em;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+
+    .btn-unlock {
+      width: 100%;
+      background-color: var(--accent-coral);
+      color: white;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
     header {
       display: flex;
       justify-content: space-between;
@@ -46,7 +93,6 @@
       font-size: 1.75rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--text-main);
     }
 
     .badge {
@@ -55,8 +101,6 @@
       padding: 0.25rem 0.75rem;
       border-radius: 1rem;
       font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
       font-weight: 600;
     }
 
@@ -77,7 +121,6 @@
       font-family: var(--font-serif);
       font-size: 1.5rem;
       margin-bottom: 1.25rem;
-      color: var(--text-main);
     }
 
     table {
@@ -92,19 +135,12 @@
       border-bottom: 1px solid var(--border-color);
       color: var(--text-muted);
       font-size: 0.7rem;
-      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
     td {
       padding: 1rem;
       border-bottom: 1px solid var(--border-color);
-      color: var(--text-main);
-    }
-
-    tr:hover {
-      background-color: rgba(255, 255, 255, 0.02);
-      cursor: pointer;
     }
 
     .btn-match {
@@ -115,8 +151,6 @@
       border-radius: 1.5rem;
       font-size: 0.7rem;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
       cursor: pointer;
     }
 
@@ -155,12 +189,22 @@
 </head>
 <body>
 
+  <div id="authOverlay">
+    <div class="auth-card">
+      <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 0.5rem;">ZOÉLYS</h2>
+      <p style="color: var(--text-muted); font-size:0.8rem; margin-bottom:1.5rem;">Enter Concierge Passcode to Access Dashboard</p>
+      <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="6">
+      <button class="btn-unlock" onclick="unlockAdmin()">ACCESS PORTAL</button>
+      <p id="authError" style="color:#E53E3E; margin-top:0.75rem; display:none; font-size:0.8rem;">Invalid Passcode</p>
+    </div>
+  </div>
+
   <header>
     <div style="display: flex; align-items: center; gap: 1rem;">
       <span class="logo">ZOÉLYS</span>
-      <span class="badge">Concierge Admin</span>
+      <span class="badge">Cloudflare D1 Admin</span>
     </div>
-    <div style="font-size: 0.8rem; color: var(--text-muted);" id="requestCount">Loading requests...</div>
+    <div style="font-size: 0.8rem; color: var(--text-muted);" id="requestCount">Locked</div>
   </header>
 
   <div class="container">
@@ -177,7 +221,7 @@
           </tr>
         </thead>
         <tbody id="requestsTableBody">
-          <tr><td colspan="5" style="color: var(--text-muted);">Fetching requests from Supabase...</td></tr>
+          <tr><td colspan="5" style="color: var(--text-muted);">Please authenticate to view requests.</td></tr>
         </tbody>
       </table>
     </div>
@@ -185,62 +229,75 @@
     <div class="card">
       <h2>Matchmaking Results</h2>
       <div id="matchmakerNotice" style="font-size: 0.85rem; color: var(--text-muted);">
-        Select a client request on the left and click <strong>"RUN MATCH"</strong> to evaluate available sitters.
+        Select a client request on the left and click <strong>"RUN MATCH"</strong> to evaluate available sitters in D1.
       </div>
       <div id="matchesContainer" style="margin-top: 1rem;"></div>
     </div>
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://jowdczqmpunzqzjyfzsu.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_2comxcjifEM0qY7YbH9sTA_nBzh-APR';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const CONCIERGE_PIN = '2026';
+
+    function unlockAdmin() {
+      const enteredPin = document.getElementById('pinInput').value;
+      if (enteredPin === CONCIERGE_PIN) {
+        document.getElementById('authOverlay').style.display = 'none';
+        sessionStorage.setItem('zoelys_admin_auth', 'true');
+        loadRequests();
+      } else {
+        document.getElementById('authError').style.display = 'block';
+      }
+    }
+
+    document.getElementById('pinInput').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') unlockAdmin();
+    });
+
+    if (sessionStorage.getItem('zoelys_admin_auth') === 'true') {
+      document.getElementById('authOverlay').style.display = 'none';
+      loadRequests();
+    }
 
     async function loadRequests() {
-      const { data: requests, error } = await supabaseClient
-        .from('client_requests')
-        .select('*')
-        .order('created_at', { ascending: false });
+      try {
+        const res = await fetch('/api/requests');
+        const requests = await res.json();
 
-      if (error) {
-        console.error('Error fetching requests:', error);
-        return;
+        document.getElementById('requestCount').innerText = `${requests.length} Total Requests in Cloudflare D1`;
+        const tbody = document.getElementById('requestsTableBody');
+        tbody.innerHTML = '';
+
+        if (requests.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="color: var(--text-muted);">No requests recorded in D1 database.</td></tr>';
+          return;
+        }
+
+        requests.forEach(req => {
+          const tr = document.createElement('tr');
+          const dateStr = new Date(req.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          
+          tr.innerHTML = `
+            <td><strong>${req.full_name || 'Anonymous'}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${req.email}</span></td>
+            <td>${req.pet_name ? req.pet_name + ' (' + (req.pet_type || 'Pet') + ')' : 'Unspecified'}</td>
+            <td>${req.neighbourhood || 'Not specified'}</td>
+            <td style="font-size:0.75rem; color:var(--text-muted);">${dateStr}</td>
+            <td><button class="btn-match" onclick="runMatch('${req.id}', '${req.full_name}')">RUN MATCH</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error fetching D1 requests:', err);
       }
-
-      document.getElementById('requestCount').innerText = `${requests.length} Total Requests Recorded`;
-      const tbody = document.getElementById('requestsTableBody');
-      tbody.innerHTML = '';
-
-      if (requests.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="color: var(--text-muted);">No requests found.</td></tr>';
-        return;
-      }
-
-      requests.forEach(req => {
-        const tr = document.createElement('tr');
-        const dateStr = new Date(req.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        
-        tr.innerHTML = `
-          <td><strong>${req.full_name || 'Anonymous'}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${req.email}</span></td>
-          <td>${req.pet_name ? req.pet_name + ' (' + (req.breed || req.pet_type || 'Pet') + ')' : 'Unspecified'}</td>
-          <td>${req.neighbourhood || 'Not specified'}</td>
-          <td style="font-size:0.75rem; color:var(--text-muted);">${dateStr}</td>
-          <td><button class="btn-match" onclick="runMatch('${req.id}', '${req.full_name}')">RUN MATCH</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
     }
 
     async function runMatch(requestId, clientName) {
-      document.getElementById('matchmakerNotice').innerHTML = `Calculating best sitter matches for <strong>${clientName}</strong>...`;
+      document.getElementById('matchmakerNotice').innerHTML = `Executing D1 edge matchmaker for <strong>${clientName}</strong>...`;
       const matchesContainer = document.getElementById('matchesContainer');
       matchesContainer.innerHTML = '';
 
       try {
-        const { data: matches, error } = await supabaseClient
-          .rpc('match_sitters_for_request', { request_id: requestId });
-
-        if (error) throw error;
+        const res = await fetch(`/api/match?requestId=${requestId}`);
+        const matches = await res.json();
 
         document.getElementById('matchmakerNotice').innerHTML = `Top Sitter Matches for <strong>${clientName}</strong>:`;
 
@@ -253,8 +310,6 @@
             m.match_reasons.forEach(r => {
               reasonsHtml += `<span class="tag">${r}</span>`;
             });
-          } else {
-            reasonsHtml = '<span style="font-size:0.75rem; color:var(--text-muted);">Standard profile match</span>';
           }
 
           div.innerHTML = `
@@ -272,11 +327,8 @@
 
       } catch (err) {
         console.error('Match error:', err);
-        matchesContainer.innerHTML = `<div style="color:#E53E3E; font-size:0.85rem;">Error running match: ${err.message}</div>`;
       }
     }
-
-    loadRequests();
   </script>
 
 </body>
