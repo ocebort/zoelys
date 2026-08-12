@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --bg-cream: #F7F3EC;
@@ -31,7 +34,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Header Navigation */
     header {
       display: flex;
       justify-content: space-between;
@@ -91,7 +93,6 @@
       text-transform: uppercase;
     }
 
-    /* Progress Tracker */
     .progress-wrapper {
       max-width: 650px;
       margin: 2.5rem auto 1.5rem;
@@ -123,7 +124,6 @@
       transition: width 0.3s ease;
     }
 
-    /* Form Container */
     .form-container {
       max-width: 650px;
       margin: 0 auto 5rem;
@@ -276,7 +276,6 @@
       cursor: pointer;
     }
 
-    /* Footer */
     footer {
       background-color: var(--hero-dark);
       color: #FFFFFF;
@@ -333,7 +332,6 @@
 </head>
 <body>
 
-  <!-- Navigation Header with Map, Events, Partners -->
   <header>
     <a href="/" class="logo">ZOÉLYS</a>
     <nav>
@@ -350,7 +348,6 @@
     </div>
   </header>
 
-  <!-- Progress Tracker -->
   <div class="progress-wrapper">
     <div class="progress-info">
       <span id="stepProgressText">STEP 1 OF 7</span>
@@ -361,7 +358,6 @@
     </div>
   </div>
 
-  <!-- Form Container -->
   <div class="form-container">
     <div class="form-card">
       <form id="matchmakingForm" onsubmit="event.preventDefault();">
@@ -371,19 +367,19 @@
           <h2 class="step-title">Step 1. About You</h2>
           <div class="field-group">
             <label>Full name</label>
-            <input type="text" placeholder="e.g. Eleanor Vance">
+            <input type="text" id="full_name" placeholder="e.g. Eleanor Vance">
           </div>
           <div class="field-group">
             <label>Email</label>
-            <input type="email" placeholder="eleanor@example.com">
+            <input type="email" id="email" placeholder="eleanor@example.com">
           </div>
           <div class="field-group">
             <label>Phone</label>
-            <input type="tel" placeholder="+1 (555) 000-0000">
+            <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
           </div>
           <div class="field-group">
             <label>Neighbourhood / area</label>
-            <input type="text" placeholder="e.g. Brickell, Miami">
+            <input type="text" id="neighbourhood" placeholder="e.g. Brickell, Miami">
             <p class="sublabel">We use this to tailor your match to sitters in your area.</p>
           </div>
         </div>
@@ -393,34 +389,34 @@
           <h2 class="step-title">Step 2. Your Pet</h2>
           <div class="field-group">
             <label>Animal type</label>
-            <select>
+            <select id="pet_type">
               <option value="">Select...</option>
-              <option value="dog">Dog</option>
-              <option value="cat">Cat</option>
-              <option value="other">Other companion</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Other">Other companion</option>
             </select>
           </div>
           <div class="field-grid-2">
             <div class="field-group">
-              <label>Breed</label>
-              <input type="text" placeholder="e.g. Golden Retriever">
+              <label>Pet name</label>
+              <input type="text" id="pet_name" placeholder="e.g. Milo">
             </div>
             <div class="field-group">
-              <label>Pet name</label>
-              <input type="text" placeholder="e.g. Milo">
+              <label>Breed</label>
+              <input type="text" id="breed" placeholder="e.g. Golden Retriever">
             </div>
           </div>
           <div class="field-grid-2">
             <div class="field-group">
               <label>Age</label>
-              <input type="text" placeholder="e.g. 3 years">
+              <input type="text" id="age" placeholder="e.g. 3 years">
             </div>
             <div class="field-group">
               <label>Size / weight</label>
-              <input type="text" placeholder="e.g. 25 lbs">
+              <input type="text" id="weight" placeholder="e.g. 25 lbs">
             </div>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="sex">
             <label>Sex</label>
             <div class="pill-group">
               <div class="pill">Male</div>
@@ -429,14 +425,14 @@
           </div>
           <div class="field-group">
             <label>Temperament</label>
-            <select>
+            <select id="temperament">
               <option value="">Select...</option>
-              <option value="calm">Calm & Gentle</option>
-              <option value="energetic">Playful & Energetic</option>
-              <option value="shy">Shy or Anxious</option>
+              <option value="Calm & Gentle">Calm & Gentle</option>
+              <option value="Playful & Energetic">Playful & Energetic</option>
+              <option value="Shy or Anxious">Shy or Anxious</option>
             </select>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="house_trained">
             <label>House-trained</label>
             <div class="pill-group">
               <div class="pill">Yes</div>
@@ -444,9 +440,9 @@
               <div class="pill">In progress</div>
             </div>
           </div>
-          <div class="field-group">
-            <label>Behavioural traits</label>
-            <div class="pill-group">
+          <div class="field-group" data-key="behavioral_traits">
+            <label>Behavioural traits (Select all that apply)</label>
+            <div class="pill-group multi-select">
               <div class="pill">Pulls on lead</div>
               <div class="pill">Separation anxiety</div>
               <div class="pill">Food aggressive</div>
@@ -462,7 +458,7 @@
         <!-- STEP 3 -->
         <div class="step-panel" data-step="3" data-name="HEALTH & CARE">
           <h2 class="step-title">Step 3. Health & Care</h2>
-          <div class="field-group">
+          <div class="field-group" data-key="medical_conditions">
             <label>Medical conditions</label>
             <div class="pill-group">
               <div class="pill">No</div>
@@ -471,55 +467,55 @@
           </div>
           <div class="field-group">
             <label>Vaccination status</label>
-            <select>
+            <select id="vaccination_status">
               <option value="">Select...</option>
-              <option value="up-to-date">Up to date</option>
-              <option value="partial">Partially vaccinated</option>
+              <option value="Up to date">Up to date</option>
+              <option value="Partially vaccinated">Partially vaccinated</option>
             </select>
           </div>
           <div class="field-group">
             <label>Parasite prevention</label>
-            <select>
+            <select id="parasite_prevention">
               <option value="">Select...</option>
-              <option value="active">Active (monthly treatment)</option>
-              <option value="none">None</option>
+              <option value="Active">Active (monthly treatment)</option>
+              <option value="None">None</option>
             </select>
           </div>
           <div class="field-group">
             <label>Diet type</label>
-            <select>
+            <select id="diet_type">
               <option value="">Select...</option>
-              <option value="dry">Dry kibble</option>
-              <option value="wet">Wet food</option>
-              <option value="raw">Raw diet</option>
+              <option value="Dry kibble">Dry kibble</option>
+              <option value="Wet food">Wet food</option>
+              <option value="Raw diet">Raw diet</option>
             </select>
           </div>
           <div class="field-group">
             <label>Food allergies (optional)</label>
-            <input type="text" placeholder="e.g. Chicken, grains">
+            <input type="text" id="food_allergies" placeholder="e.g. Chicken, grains">
           </div>
           <div class="field-grid-2">
             <div class="field-group">
               <label>Meals per day</label>
-              <input type="text" placeholder="e.g. 2 times">
+              <input type="text" id="meals_per_day" placeholder="e.g. 2 times">
             </div>
             <div class="field-group">
               <label>Exercise needs</label>
-              <select>
+              <select id="exercise_needs">
                 <option value="">Select...</option>
-                <option value="low">Low (1 short walk)</option>
-                <option value="moderate">Moderate (2 walks)</option>
-                <option value="high">High (active running)</option>
+                <option value="Low">Low (1 short walk)</option>
+                <option value="Moderate">Moderate (2 walks)</option>
+                <option value="High">High (active running)</option>
               </select>
             </div>
           </div>
           <div class="field-group">
             <label>Sleeping arrangement</label>
-            <select>
+            <select id="sleeping_arrangement">
               <option value="">Select...</option>
-              <option value="crate">Crate</option>
-              <option value="own-bed">Pet bed</option>
-              <option value="human-bed">On the bed with sitter</option>
+              <option value="Crate">Crate</option>
+              <option value="Pet bed">Pet bed</option>
+              <option value="On the bed with sitter">On the bed with sitter</option>
             </select>
           </div>
         </div>
@@ -527,7 +523,7 @@
         <!-- STEP 4 -->
         <div class="step-panel" data-step="4" data-name="SERVICE NEEDED">
           <h2 class="step-title">Step 4. Service Needed</h2>
-          <div class="field-group">
+          <div class="field-group" data-key="service_type">
             <label>Service type</label>
             <div class="pill-group">
               <div class="pill">Home visit</div>
@@ -539,14 +535,14 @@
           <div class="field-grid-2">
             <div class="field-group">
               <label>Start date</label>
-              <input type="date">
+              <input type="date" id="start_date">
             </div>
             <div class="field-group">
               <label>End date</label>
-              <input type="date">
+              <input type="date" id="end_date">
             </div>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="recurring">
             <label>Recurring need</label>
             <div class="pill-group">
               <div class="pill">No</div>
@@ -555,7 +551,7 @@
           </div>
           <div class="field-group">
             <label>Hours per day</label>
-            <input type="text" placeholder="e.g. Full day (8-10 hours)">
+            <input type="text" id="hours_per_day" placeholder="e.g. Full day (8-10 hours)">
           </div>
         </div>
 
@@ -564,35 +560,35 @@
           <h2 class="step-title">Step 5. Sitter Preferences</h2>
           <div class="field-group">
             <label>Experience level</label>
-            <select>
+            <select id="experience_level">
               <option value="">Select...</option>
-              <option value="senior">Senior Sitter (5+ yrs)</option>
-              <option value="vet-tech">Vet Tech Background</option>
-              <option value="standard">Standard Verified</option>
+              <option value="Senior Sitter (5+ yrs)">Senior Sitter (5+ yrs)</option>
+              <option value="Vet Tech Background">Vet Tech Background</option>
+              <option value="Standard Verified">Standard Verified</option>
             </select>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="outdoor_space">
             <label>Outdoor space needed</label>
             <div class="pill-group">
               <div class="pill">No</div>
               <div class="pill">Yes</div>
             </div>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="other_pets">
             <label>Other pets allowed</label>
             <div class="pill-group">
               <div class="pill">No</div>
               <div class="pill">Yes</div>
             </div>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="children_present">
             <label>Children in home</label>
             <div class="pill-group">
               <div class="pill">No</div>
               <div class="pill">Yes</div>
             </div>
           </div>
-          <div class="field-group">
+          <div class="field-group" data-key="gender_preference">
             <label>Gender preference</label>
             <div class="pill-group">
               <div class="pill selected">No preference</div>
@@ -602,27 +598,27 @@
           </div>
           <div class="field-group">
             <label>Language preference</label>
-            <input type="text" placeholder="e.g. English, Spanish">
+            <input type="text" id="language_preference" placeholder="e.g. English, Spanish">
           </div>
           <div class="field-group">
             <label>Update frequency preference</label>
-            <select>
+            <select id="update_frequency">
               <option value="">Select...</option>
-              <option value="daily">Daily summary</option>
-              <option value="frequent">2-3 times per day</option>
-              <option value="on-demand">On demand</option>
+              <option value="Daily summary">Daily summary</option>
+              <option value="2-3 times per day">2-3 times per day</option>
+              <option value="On demand">On demand</option>
             </select>
           </div>
           <div class="field-group">
-            <label>Other qualities you'd value (free text)</label>
-            <textarea rows="3" placeholder="Quiet home, experience with senior dogs..."></textarea>
+            <label>Other qualities you'd value</label>
+            <textarea id="qualities_valued" rows="3" placeholder="Quiet home, experience with senior dogs..."></textarea>
           </div>
         </div>
 
         <!-- STEP 6 -->
         <div class="step-panel" data-step="6" data-name="BUDGET & EXPERIENCE">
           <h2 class="step-title">Step 6. Budget & Experience</h2>
-          <div class="field-group">
+          <div class="field-group" data-key="used_sitter_before">
             <label>Have you used a pet sitter before?</label>
             <div class="pill-group">
               <div class="pill">No</div>
@@ -639,20 +635,20 @@
           <h2 class="step-title">Step 7. Final Details</h2>
           <div class="field-group">
             <label>How did you hear about Zoélys?</label>
-            <select>
+            <select id="referral_source">
               <option value="">Select...</option>
-              <option value="recommendation">Friend / Word of mouth</option>
-              <option value="instagram">Instagram / TikTok</option>
-              <option value="google">Google Search</option>
+              <option value="Friend / Word of mouth">Friend / Word of mouth</option>
+              <option value="Instagram / TikTok">Instagram / TikTok</option>
+              <option value="Google Search">Google Search</option>
             </select>
           </div>
           <div class="field-group">
             <label>Anything else you'd like to share (optional)</label>
-            <textarea rows="4" placeholder="Any additional notes for our concierge team..."></textarea>
+            <textarea id="additional_notes" rows="4" placeholder="Any additional notes for our concierge team..."></textarea>
           </div>
           <div class="field-group" style="display: flex; gap: 0.75rem; align-items: flex-start; margin-top: 1.5rem;">
-            <input type="checkbox" id="consent" style="margin-top: 0.25rem;">
-            <label for="consent" style="font-weight: 400; font-size: 0.75rem; color: var(--text-muted);">
+            <input type="checkbox" id="consent_given" style="margin-top: 0.25rem;">
+            <label for="consent_given" style="font-weight: 400; font-size: 0.75rem; color: var(--text-muted);">
               I agree to be contacted by the Zoélys team and consent to my information being used to find my tailored match.
             </label>
           </div>
@@ -669,7 +665,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
@@ -709,6 +704,11 @@
   </footer>
 
   <script>
+    // Initialize Supabase Client
+    const SUPABASE_URL = 'https://jowdczqmpunzqzjyfzsu.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_2comxcjifEM0qY7YbH9sTA_nBzh-APR';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     let currentStep = 1;
     const totalSteps = 7;
 
@@ -733,11 +733,7 @@
       progressBar.style.width = fillPercentage + '%';
       stepProgressText.innerText = `STEP ${step} OF ${totalSteps}`;
 
-      if (step === 1) {
-        btnBack.style.visibility = 'hidden';
-      } else {
-        btnBack.style.visibility = 'visible';
-      }
+      btnBack.style.visibility = (step === 1) ? 'hidden' : 'visible';
 
       if (step === totalSteps) {
         btnContinue.style.display = 'none';
@@ -764,18 +760,110 @@
       }
     });
 
-    btnSubmit.addEventListener('click', () => {
-      alert('Thank you! Your matchmaking request has been sent to our concierge team. We will reach out within 24 hours.');
-      window.location.href = '/';
-    });
-
+    // Pill Group Selectors
     document.querySelectorAll('.pill-group').forEach(group => {
       group.addEventListener('click', (e) => {
         if (e.target.classList.contains('pill')) {
-          group.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
-          e.target.classList.add('selected');
+          if (group.classList.contains('multi-select')) {
+            e.target.classList.toggle('selected');
+          } else {
+            group.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+            e.target.classList.add('selected');
+          }
         }
       });
+    });
+
+    // Helper to get single pill value
+    function getPillValue(fieldGroupKey) {
+      const group = document.querySelector(`.field-group[data-key="${fieldGroupKey}"]`);
+      if (!group) return null;
+      const selected = group.querySelector('.pill.selected');
+      return selected ? selected.innerText.trim() : null;
+    }
+
+    // Helper to get multi-pill array
+    function getMultiPillValues(fieldGroupKey) {
+      const group = document.querySelector(`.field-group[data-key="${fieldGroupKey}"]`);
+      if (!group) return [];
+      const selected = group.querySelectorAll('.pill.selected');
+      return Array.from(selected).map(p => p.innerText.trim());
+    }
+
+    // Submit handler - Saves to Supabase!
+    btnSubmit.addEventListener('click', async () => {
+      const fullName = document.getElementById('full_name').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (!fullName || !email) {
+        alert('Please fill in your name and email address before submitting.');
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = 'SAVING REQUEST...';
+
+      const formData = {
+        full_name: fullName,
+        email: email,
+        phone: document.getElementById('phone').value.trim(),
+        neighbourhood: document.getElementById('neighbourhood').value.trim(),
+        
+        pet_type: document.getElementById('pet_type').value,
+        pet_name: document.getElementById('pet_name').value.trim(),
+        breed: document.getElementById('breed').value.trim(),
+        age: document.getElementById('age').value.trim(),
+        weight: document.getElementById('weight').value.trim(),
+        sex: getPillValue('sex'),
+        temperament: document.getElementById('temperament').value,
+        house_trained: getPillValue('house_trained'),
+        behavioral_traits: getMultiPillValues('behavioral_traits'),
+        
+        medical_conditions: getPillValue('medical_conditions'),
+        vaccination_status: document.getElementById('vaccination_status').value,
+        parasite_prevention: document.getElementById('parasite_prevention').value,
+        diet_type: document.getElementById('diet_type').value,
+        food_allergies: document.getElementById('food_allergies').value.trim(),
+        meals_per_day: document.getElementById('meals_per_day').value.trim(),
+        exercise_needs: document.getElementById('exercise_needs').value,
+        sleeping_arrangement: document.getElementById('sleeping_arrangement').value,
+        
+        service_type: getPillValue('service_type'),
+        start_date: document.getElementById('start_date').value || null,
+        end_date: document.getElementById('end_date').value || null,
+        recurring: getPillValue('recurring'),
+        hours_per_day: document.getElementById('hours_per_day').value.trim(),
+        
+        experience_level: document.getElementById('experience_level').value,
+        outdoor_space: getPillValue('outdoor_space'),
+        other_pets: getPillValue('other_pets'),
+        children_present: getPillValue('children_present'),
+        gender_preference: getPillValue('gender_preference'),
+        language_preference: document.getElementById('language_preference').value.trim(),
+        update_frequency: document.getElementById('update_frequency').value,
+        qualities_valued: document.getElementById('qualities_valued').value.trim(),
+        
+        used_sitter_before: getPillValue('used_sitter_before'),
+        referral_source: document.getElementById('referral_source').value,
+        additional_notes: document.getElementById('additional_notes').value.trim(),
+        consent_given: document.getElementById('consent_given').checked
+      };
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('client_requests')
+          .insert([formData]);
+
+        if (error) throw error;
+
+        alert('Thank you! Your pet concierge request has been successfully recorded. Our team will reach out within 24 hours!');
+        window.location.href = '/';
+      } catch (err) {
+        console.error('Submission error:', err);
+        alert('There was an error saving your request: ' + err.message);
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = 'SEND MY REQUEST \u2192';
+      }
     });
   </script>
 
