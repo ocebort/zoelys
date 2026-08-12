@@ -2,7 +2,9 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 1. API Route: Submit request
+    // -------------------------------------------------------------
+    // 1. API Route: Submit New Client Request
+    // -------------------------------------------------------------
     if (request.method === 'POST' && url.pathname === '/api/requests') {
       try {
         const body = await request.json();
@@ -35,7 +37,45 @@ export default {
       }
     }
 
-    // 2. API Route: Get all requests
+    // -------------------------------------------------------------
+    // 2. API Route: Submit New Sitter Application (NEW!)
+    // -------------------------------------------------------------
+    if (request.method === 'POST' && url.pathname === '/api/sitters') {
+      try {
+        const body = await request.json();
+        const id = 'sitter-' + crypto.randomUUID().slice(0, 8);
+        
+        await env.zoelys_db.prepare(`
+          INSERT INTO sitters (
+            id, full_name, neighbourhood, experience_years, vet_tech_background,
+            accepted_pet_types, can_handle_anxiety, can_handle_medication,
+            has_outdoor_space, nightly_rate_usd, is_active
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+        `).bind(
+          id,
+          body.full_name,
+          body.neighbourhood,
+          parseInt(body.experience_years) || 1,
+          body.vet_tech_background ? 1 : 0,
+          body.accepted_pet_types || 'Dog,Cat',
+          body.can_handle_anxiety ? 1 : 0,
+          body.can_handle_medication ? 1 : 0,
+          body.has_outdoor_space ? 1 : 0,
+          parseFloat(body.nightly_rate_usd) || 75.00
+        ).run();
+
+        return new Response(JSON.stringify({ success: true, id }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 3. API Route: Get All Client Requests (Admin)
+    // -------------------------------------------------------------
     if (request.method === 'GET' && url.pathname === '/api/requests') {
       try {
         const { results } = await env.zoelys_db.prepare(
@@ -49,7 +89,9 @@ export default {
       }
     }
 
-    // 3. API Route: Run Matchmaker Algorithm
+    // -------------------------------------------------------------
+    // 4. API Route: Run Matchmaker Algorithm
+    // -------------------------------------------------------------
     if (request.method === 'GET' && url.pathname === '/api/match') {
       try {
         const requestId = url.searchParams.get('requestId');
@@ -114,7 +156,9 @@ export default {
       }
     }
 
-    // 4. Default: Hand off to Cloudflare Assets for static pages
+    // -------------------------------------------------------------
+    // 5. Default: Pass to Cloudflare Static Assets
+    // -------------------------------------------------------------
     return env.ASSETS.fetch(request);
   }
 };
