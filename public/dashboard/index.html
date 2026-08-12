@@ -51,13 +51,33 @@
       text-decoration: none;
     }
 
-    .back-link {
+    .nav-actions {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-link {
       color: var(--text-dark);
       text-decoration: none;
       font-size: 0.75rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-logout {
+      background: #1C1613;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     /* AUTH MODAL */
@@ -225,7 +245,10 @@
 
   <header class="navbar">
     <a href="/" class="brand-logo">ZOÉLYS</a>
-    <a href="/" class="back-link">&larr; BACK TO HOME</a>
+    <div class="nav-actions">
+      <a href="/" class="nav-link">&larr; BACK TO HOME</a>
+      <button onclick="logout()" class="btn-logout">LOG OUT</button>
+    </div>
   </header>
 
   <main class="container">
@@ -246,7 +269,7 @@
       <div class="dashboard-card">
         <h3>My Pet Profiles 🐾</h3>
         <div id="petsContainer">
-          <p style="color: var(--text-muted); font-size: 0.85rem;">No pets linked yet.</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">No registered pets linked yet.</p>
         </div>
       </div>
 
@@ -340,10 +363,18 @@
       }
     }
 
+    function logout() {
+      localStorage.removeItem('zoelys_user_id');
+      document.getElementById('authOverlay').style.display = 'flex';
+      window.location.reload();
+    }
+
     const existingUserId = localStorage.getItem('zoelys_user_id');
     if (existingUserId) {
       document.getElementById('authOverlay').style.display = 'none';
       loadDashboard(existingUserId);
+    } else {
+      document.getElementById('authOverlay').style.display = 'flex';
     }
   </script>
 </body>
