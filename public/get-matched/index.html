@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys — Get Matched</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-cream: #FAF6F0;
+      --card-white: #FFFFFF;
+      --text-dark: #1C1613;
+      --text-muted: #8E8883;
+      --accent-coral: #D97757;
+      --accent-dark: #231C18;
+      --border-color: #EFEAE3;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP NAVBAR */
+    header.navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: transparent;
+    }
+
+    .brand-logo {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .btn-join {
+      background: var(--accent-coral);
+      color: white !important;
+      padding: 0.6rem 1.25rem;
+      border-radius: 2rem;
+    }
+
+    /* MAIN CONTENT & PROGRESS */
+    main.container {
+      flex: 1;
+      max-width: 680px;
+      width: 100%;
+      margin: 1rem auto 4rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-coral);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 3px;
+      background: #EAE3D9;
+      border-radius: 2px;
+      margin-bottom: 2.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 14%;
+      background: var(--accent-coral);
+      transition: width 0.4s ease;
+    }
+
+    /* FORM CARD */
+    .card-box {
+      background: var(--card-white);
+      border-radius: 1rem;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border-color);
+    }
+
+    .step-pane { display: none; }
+    .step-pane.active { display: block; }
+
+    h2.step-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group.half {
+      display: inline-block;
+      width: 48%;
+    }
+
+    .form-group.half:nth-child(even) {
+      margin-left: 3%;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-dark);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border-radius: 0.6rem;
+      border: 1px solid #E5DFD5;
+      background: #FFFFFF;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      outline: none;
+      font-family: var(--font-sans);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-coral);
+    }
+
+    /* PILLS */
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .pill {
+      background: #FFFFFF;
+      border: 1px solid #E5DFD5;
+      color: var(--text-dark);
+      padding: 0.5rem 1.1rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .pill.selected {
+      background: var(--accent-coral);
+      border-color: var(--accent-coral);
+      color: white;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+
+    .btn-back-text {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-continue {
+      background: var(--accent-dark);
+      color: white;
+      border: none;
+      padding: 0.85rem 1.75rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .btn-continue.coral {
+      background: var(--accent-coral);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <a href="/" class="brand-logo">ZOÉLYS</a>
+    <ul class="nav-links">
+      <li><a href="/get-matched">FIND A SITTER</a></li>
+      <li><a href="/how-it-works">HOW IT WORKS</a></li>
+      <li><a href="/journal">JOURNAL</a></li>
+      <li><a href="/join" class="btn-join">JOIN ZOÉLYS</a></li>
+    </ul>
+  </header>
+
+  <main class="container">
+    <div class="progress-header">
+      <span id="stepLabel">STEP 1 OF 7</span>
+      <span id="stepName">ABOUT YOU</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+
+    <div class="card-box">
+      <form id="lovableForm">
+
+        <!-- STEP 1: ABOUT YOU -->
+        <div class="step-pane active" id="pane1">
+          <h2 class="step-title">Step 1. About You</h2>
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" id="fullName" placeholder="Océane Bort-Aponte" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="oceane@zoelys.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
+          </div>
+          <div class="form-group">
+            <label>Neighbourhood / area</label>
+            <input type="text" id="neighbourhood" placeholder="e.g. Brickell, Miami">
+            <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top:0.3rem;">We use this to tailor your match to sitters in your area.</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-continue" onclick="goToStep(2)">CONTINUE &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: YOUR PET -->
+        <div class="step-pane" id="pane2">
+          <h2 class="step-title">Step 2. Your Pet</h2>
+          <div class="form-group">
+            <label>Animal type</label>
+            <select id="petType">
+              <option value="">Select...</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Bird">Bird</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <label>Breed</label>
+            <input type="text" id="breed" placeholder="e.g. French Bulldog">
+          </div>
+          <div class="form-group half">
+            <label>Pet name</label>
+            <input type="text" id="petName" placeholder="e.g. Bella">
+          </div>
+          <div class="form-group half">
+            <label>Age</label>
+            <input type="text" id="age" placeholder="e.g. 3 years">
+          </div>
+          <div class="form-group half">
+            <label>Size / weight</label>
+            <input type="text" id="sizeWeight" placeholder="e.g. 22 lbs">
+          </div>
+          <div class="form-group">
+            <label>Sex</label>
+            <div class="pill-group" id="sexGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'sexGroup')">Male</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'sexGroup')">Female</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Temperament</label>
+            <select id="temperament">
+              <option value="">Select...</option>
+              <option value="Calm & Gentle">Calm & Gentle</option>
+              <option value="Energetic">Energetic</option>
+              <option value="Shy / Anxious">Shy / Anxious</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>House-trained</label>
+            <div class="pill-group" id="houseTrainedGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'houseTrainedGroup')">Yes</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'houseTrainedGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'houseTrainedGroup')">In progress</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Behavioural traits</label>
+            <div class="pill-group" id="traitsGroup">
+              <div class="pill" onclick="toggleMultiPill(this)">Pulls on lead</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Separation anxiety</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Food aggressive</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Good with kids</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Good with other animals</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Escape artist</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Needs constant attention</div>
+              <div class="pill" onclick="toggleMultiPill(this)">Very independent</div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="goToStep(1)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="goToStep(3)">CONTINUE &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: HEALTH & CARE -->
+        <div class="step-pane" id="pane3">
+          <h2 class="step-title">Step 3. Health & Care</h2>
+          <div class="form-group">
+            <label>Medical conditions</label>
+            <div class="pill-group" id="medicalGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'medicalGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'medicalGroup')">Yes</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Vaccination status</label>
+            <select id="vaccinationStatus">
+              <option value="">Select...</option>
+              <option value="Up to date">Up to date</option>
+              <option value="Incomplete">Incomplete</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Parasite prevention</label>
+            <select id="parasitePrevention">
+              <option value="">Select...</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Diet type</label>
+            <select id="dietType">
+              <option value="">Select...</option>
+              <option value="Dry kibble">Dry kibble</option>
+              <option value="Wet food">Wet food</option>
+              <option value="Raw diet">Raw diet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Food allergies (optional)</label>
+            <input type="text" id="allergies" placeholder="e.g. Chicken, Grain">
+          </div>
+          <div class="form-group half">
+            <label>Meals per day</label>
+            <input type="text" id="mealsPerDay" placeholder="e.g. 2">
+          </div>
+          <div class="form-group half">
+            <label>Exercise needs</label>
+            <select id="exerciseNeeds">
+              <option value="">Select...</option>
+              <option value="High">High (2+ hours/day)</option>
+              <option value="Moderate">Moderate (1 hour/day)</option>
+              <option value="Low">Low (Light walks)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sleeping arrangement</label>
+            <select id="sleepingArrangement">
+              <option value="">Select...</option>
+              <option value="Own bed">Own bed</option>
+              <option value="In bed with sitter">In bed with sitter</option>
+              <option value="Crate">Crate</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="goToStep(2)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="goToStep(4)">CONTINUE &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: SERVICE NEEDED -->
+        <div class="step-pane" id="pane4">
+          <h2 class="step-title">Step 4. Service Needed</h2>
+          <div class="form-group">
+            <label>Service type</label>
+            <div class="pill-group" id="serviceTypeGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'serviceTypeGroup')">Home visit</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'serviceTypeGroup')">Overnight stay</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'serviceTypeGroup')">Day care</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'serviceTypeGroup')">Dog walking</div>
+            </div>
+          </div>
+          <div class="form-group half">
+            <label>Start date</label>
+            <input type="date" id="startDate">
+          </div>
+          <div class="form-group half">
+            <label>End date</label>
+            <input type="date" id="endDate">
+          </div>
+          <div class="form-group">
+            <label>Recurring need</label>
+            <div class="pill-group" id="recurringGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'recurringGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'recurringGroup')">Yes</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Hours per day</label>
+            <input type="text" id="hoursPerDay" placeholder="e.g. 8 hours">
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="goToStep(3)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="goToStep(5)">CONTINUE &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: SITTER PREFERENCES -->
+        <div class="step-pane" id="pane5">
+          <h2 class="step-title">Step 5. Sitter Preferences</h2>
+          <div class="form-group">
+            <label>Experience level</label>
+            <select id="experienceLevel">
+              <option value="">Select...</option>
+              <option value="Senior (5+ yrs)">Senior (5+ Years)</option>
+              <option value="Vet Tech">Certified Vet Tech</option>
+              <option value="Standard">Standard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Outdoor space needed</label>
+            <div class="pill-group" id="outdoorSpaceGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'outdoorSpaceGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'outdoorSpaceGroup')">Yes</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Other pets allowed</label>
+            <div class="pill-group" id="otherPetsGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'otherPetsGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'otherPetsGroup')">Yes</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Children in home</label>
+            <div class="pill-group" id="childrenGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'childrenGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'childrenGroup')">Yes</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Gender preference</label>
+            <div class="pill-group" id="genderGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'genderGroup')">No preference</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'genderGroup')">Female</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'genderGroup')">Male</div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="goToStep(4)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="goToStep(6)">CONTINUE &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 6: BUDGET & EXPERIENCE -->
+        <div class="step-pane" id="pane6">
+          <h2 class="step-title">Step 6. Budget & Experience</h2>
+          <div class="form-group">
+            <label>Have you used a pet sitter before?</label>
+            <div class="pill-group" id="usedBeforeGroup">
+              <div class="pill" onclick="selectPillInGroup(this, 'usedBeforeGroup')">No</div>
+              <div class="pill" onclick="selectPillInGroup(this, 'usedBeforeGroup')">Yes</div>
+            </div>
+          </div>
+          <div style="background: #F8F4EE; padding: 1.25rem; border-radius: 0.6rem; color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; margin-bottom: 1.5rem;">
+            <em>Pricing is tailored to your pet's needs and your chosen sitter. We'll include a full transparent quote in your match proposal.</em>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="goToStep(5)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="goToStep(7)">CONTINUE &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 7: FINAL DETAILS -->
+        <div class="step-pane" id="pane7">
+          <h2 class="step-title">Step 7. Final Details</h2>
+          <div class="form-group">
+            <label>How did you hear about Zoélys?</label>
+            <select id="referralSource">
+              <option value="">Select...</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Word of Mouth">Word of Mouth</option>
+              <option value="Google">Google Search</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Anything else you'd like to share (optional)</label>
+            <textarea id="notes" rows="4" placeholder="Share special routines, medical details, or sitter notes..."></textarea>
+          </div>
+          <div class="form-group" style="display:flex; gap:0.5rem; align-items:center;">
+            <input type="checkbox" id="consent" required>
+            <label for="consent" style="margin:0; font-size:0.75rem; font-weight:400; color:var(--text-muted);">I agree to be contacted by the Zoélys team and consent to my information being used to find my tailored match.</label>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="goToStep(6)">&larr; Back</button>
+            <button type="button" class="btn-continue coral" id="submitBtn" onclick="submitToD1()">SEND MY REQUEST &rarr;</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const stepNames = ["ABOUT YOU", "YOUR PET", "HEALTH & CARE", "SERVICE NEEDED", "SITTER PREFERENCES", "BUDGET & EXPERIENCE", "FINAL DETAILS"];
+    let selectedTraits = [];
+
+    function goToStep(num) {
+      document.querySelectorAll('.step-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById(`pane${num}`).classList.add('active');
+
+      document.getElementById('stepLabel').innerText = `STEP ${num} OF 7`;
+      document.getElementById('stepName').innerText = stepNames[num - 1];
+      
+      const fillPercent = Math.round((num / 7) * 100);
+      document.getElementById('progressFill').style.width = `${fillPercent}%`;
+      window.scrollTo(0, 0);
+    }
+
+    function selectPillInGroup(el, groupId) {
+      document.querySelectorAll(`#${groupId} .pill`).forEach(p => p.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function toggleMultiPill(el) {
+      el.classList.toggle('selected');
+      const val = el.innerText.trim();
+      if (selectedTraits.includes(val)) {
+        selectedTraits = selectedTraits.filter(t => t !== val);
+      } else {
+        selectedTraits.push(val);
+      }
+    }
+
+    function getSelectedPillText(groupId) {
+      const selected = document.querySelector(`#${groupId} .pill.selected`);
+      return selected ? selected.innerText.trim() : null;
+    }
+
+    async function submitToD1() {
+      const btn = document.getElementById('submitBtn');
+      btn.innerText = 'SENDING...';
+      btn.disabled = true;
+
+      const payload = {
+        full_name: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        neighbourhood: document.getElementById('neighbourhood').value,
+        pet_type: document.getElementById('petType').value,
+        pet_name: document.getElementById('petName').value,
+        breed: document.getElementById('breed').value,
+        behavioral_traits: selectedTraits,
+        medical_conditions: getSelectedPillText('medicalGroup'),
+        exercise_needs: document.getElementById('exerciseNeeds').value,
+        outdoor_space: getSelectedPillText('outdoorSpaceGroup'),
+        experience_level: document.getElementById('experienceLevel').value
+      };
+
+      try {
+        const res = await fetch('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          alert('✨ Request received! Our concierge team is evaluating your D1 sitter match.');
+          window.location.href = '/admin';
+        } else {
+          alert('Error submitting to Cloudflare D1.');
+          btn.innerText = 'SEND MY REQUEST →';
+          btn.disabled = false;
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error.');
+        btn.innerText = 'SEND MY REQUEST →';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
