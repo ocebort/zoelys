@@ -32,7 +32,6 @@
       flex-direction: column;
     }
 
-    /* TOP NAVBAR */
     header.navbar {
       display: flex;
       justify-content: space-between;
@@ -74,7 +73,6 @@
       border-radius: 2rem;
     }
 
-    /* HERO BANNER */
     .hero-banner {
       background-color: #1C1613;
       color: #F7F3EC;
@@ -97,7 +95,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* CARDS CONTAINER */
     .path-container {
       max-width: 900px;
       margin: -2.5rem auto 4rem auto;
@@ -159,11 +156,6 @@
       text-transform: uppercase;
       font-weight: 600;
       color: var(--accent-coral);
-      transition: color 0.2s ease;
-    }
-
-    .btn-path:hover {
-      color: var(--accent-dark);
     }
 
     @media (max-width: 650px) {
@@ -176,40 +168,33 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <header class="navbar">
     <a href="/" class="brand-logo">ZOÉLYS</a>
     <ul class="nav-links">
       <li><a href="/get-matched">FIND A SITTER</a></li>
       <li><a href="/how-it-works">HOW IT WORKS</a></li>
-      <li><a href="/journal">JOURNAL</a></li>
       <li><a href="/admin">SIGN IN</a></li>
       <li><a href="/join" class="btn-join">JOIN ZOÉLYS</a></li>
     </ul>
   </header>
 
-  <!-- HERO SECTION -->
   <div class="hero-banner">
     <div class="hero-tag">— JOIN ZOÉLYS —</div>
     <h1 class="hero-title">Choose your path</h1>
   </div>
 
-  <!-- CHOICES CONTAINER -->
   <main class="path-container">
-    
-    <!-- PET OWNER PATH -->
     <div class="path-card">
       <div>
         <div class="icon-badge">🤎</div>
         <h2 class="card-title">I am looking for a sitter for my pet</h2>
-        <p class="card-desc">Create your owner profile, build your pet's intake parameters, and unlock precision concierge matching in Cloudflare D1.</p>
+        <p class="card-desc">Create your owner profile, build your pet's intake parameters, and unlock concierge matching in Cloudflare D1.</p>
       </div>
       <div>
         <a href="/get-matched" class="btn-path">CONTINUE AS OWNER &rarr;</a>
       </div>
     </div>
 
-    <!-- SITTER PATH -->
     <div class="path-card">
       <div>
         <div class="icon-badge">🐾</div>
@@ -220,7 +205,6 @@
         <a href="/apply" class="btn-path">APPLY AS SITTER &rarr;</a>
       </div>
     </div>
-
   </main>
 
 </body>
