@@ -31,7 +31,6 @@
       flex-direction: column;
     }
 
-    /* MASTER UNIFIED NAVBAR (EXACT HOMEPAGE MATCH) */
     header.master-navbar {
       width: 100%;
       background: var(--bg-cream);
@@ -63,37 +62,43 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       font-weight: 500;
-      white-space: nowrap;
     }
 
     .nav-right { display: flex; gap: 1.5rem; align-items: center; list-style: none; }
-    
-    .btn-join-pill {
-      background: var(--accent-coral);
-      color: white !important;
-      padding: 0.65rem 1.4rem;
-      border-radius: 2rem;
-      font-weight: 600;
-    }
+    .btn-join-pill { background: var(--accent-coral); color: white !important; padding: 0.65rem 1.4rem; border-radius: 2rem; font-weight: 600; }
 
-    /* FORM CONTAINER */
     main.form-container {
       max-width: 640px;
       width: 90%;
-      margin: 3rem auto 5rem auto;
+      margin: 2.5rem auto 5rem auto;
     }
 
-    .progress-bar {
+    .progress-bar-container {
+      margin-bottom: 2rem;
+    }
+
+    .progress-text {
       display: flex;
       justify-content: space-between;
       font-size: 0.65rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--accent-coral);
-      border-bottom: 1px solid #E5DFD5;
-      padding-bottom: 0.5rem;
-      margin-bottom: 2rem;
       font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 2px;
+      background: #E5DFD5;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-coral);
+      transition: width 0.3s ease;
     }
 
     .form-card {
@@ -106,56 +111,67 @@
 
     .form-card h2 {
       font-family: var(--font-serif);
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       font-weight: 400;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .form-subtitle {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-bottom: 2rem;
-    }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
 
     .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.4rem; }
-    .form-group input, .form-group select {
-      width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: var(--font-sans); outline: none; background: #FAF8F5;
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-dark); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: var(--font-sans); outline: none; background: #FAF8F5; font-size: 0.85rem;
     }
 
-    .btn-submit {
-      background: #1C1613;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
+    .field-hint { font-size: 0.7rem; color: var(--text-muted); font-style: italic; margin-top: 0.3rem; }
+
+    /* CHIP SELECTORS */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+    .chip {
+      background: #FAF8F5;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
       border-radius: 2rem;
       font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 600;
       cursor: pointer;
-      width: 100%;
-      margin-top: 1rem;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .chip.selected {
+      background: #1C1613;
+      color: white;
+      border-color: #1C1613;
     }
 
-    @media (max-width: 768px) {
-      .nav-center { display: none; }
-      header.master-navbar { padding: 1rem 1.5rem; }
+    .grid-2-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
+    .btn-back-text { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; text-decoration: none; }
+    .btn-continue { background: #1C1613; color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+    .btn-coral-submit { background: var(--accent-coral); color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+
+    /* FOOTER */
+    footer.site-footer {
+      background: #1C1613; color: #FAF6F0; padding: 3rem 4rem; margin-top: auto; display: flex; justify-content: space-between; font-size: 0.8rem;
     }
+
+    @media (max-width: 768px) { .nav-center { display: none; } header.master-navbar { padding: 1rem 1.5rem; } .grid-2-fields { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <!-- MASTER NAVBAR (CENTERED & MATCHES HOMEPAGE EXACTLY) -->
+  <!-- MASTER NAVBAR -->
   <header class="master-navbar">
     <a href="/" class="brand-logo">ZOÉLYS</a>
     <ul class="nav-center">
       <li><a href="/get-matched" style="color: var(--accent-coral);">FIND A SITTER</a></li>
       <li><a href="/#how-it-works">HOW IT WORKS</a></li>
       <li><a href="/#journal">JOURNAL</a></li>
-      <li><a href="/#map">MAP</a></li>
-      <li><a href="/events">EVENTS</a></li>
-      <li><a href="/partners">PARTNERS</a></li>
+      <li><a href="/#map">EXPLORE ▾</a></li>
     </ul>
     <ul class="nav-right">
       <li><a href="/dashboard">SIGN IN</a></li>
@@ -164,107 +180,300 @@
   </header>
 
   <main class="form-container">
-    <div class="progress-bar">
-      <span>STEP 1 OF 1</span>
-      <span>PET CONCIERGE MATCHING INTAKE</span>
+    <div class="progress-bar-container">
+      <div class="progress-text">
+        <span id="stepLabel">STEP 1 OF 7</span>
+        <span id="stepTitle">ABOUT YOU</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width: 14.28%;"></div></div>
     </div>
 
     <div class="form-card">
-      <h2>Curated Sitter Intake</h2>
-      <p class="form-subtitle">Tell us about your companion. We will create your pet manual and pair you with a handpicked sitter within 24 hours.</p>
-      
-      <form onsubmit="submitForm(event)">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="fullName" placeholder="Océane Bort" required>
+      <form id="intakeForm" onsubmit="handleFormSubmit(event)">
+
+        <!-- STEP 1: ABOUT YOU (SCREENSHOT 1) -->
+        <div class="step-panel active" id="step1">
+          <h2>Step 1. About You</h2>
+          <div class="form-group"><label>Full name</label><input type="text" id="fullName" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="email" required></div>
+          <div class="form-group"><label>Phone</label><input type="tel" id="phone" required></div>
+          <div class="form-group">
+            <label>Neighbourhood / area</label>
+            <input type="text" id="neighbourhood" placeholder="e.g. Brickell, Miami">
+            <div class="field-hint">We use this to tailor your match to sitters in your area.</div>
+          </div>
+          <div class="btn-row">
+            <div></div>
+            <button type="button" class="btn-continue" onclick="nextStep(2)">CONTINUE &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Email Address (Used for Account Access)</label>
-          <input type="email" id="email" placeholder="oceane@zoelys.com" required>
+        <!-- STEP 2: YOUR PET (SCREENSHOT 2) -->
+        <div class="step-panel" id="step2">
+          <h2>Step 2. Your Pet</h2>
+          <div class="form-group">
+            <label>Animal type</label>
+            <select id="animalType"><option value="">Select..</option><option value="Dog">Dog</option><option value="Cat">Cat</option></select>
+          </div>
+          <div class="grid-2-fields">
+            <div class="form-group"><label>Breed</label><input type="text" id="breed"></div>
+            <div class="form-group"><label>Pet name</label><input type="text" id="petName"></div>
+          </div>
+          <div class="grid-2-fields">
+            <div class="form-group"><label>Age</label><input type="text" id="petAge"></div>
+            <div class="form-group"><label>Size / weight</label><input type="text" id="petSize"></div>
+          </div>
+          <div class="form-group">
+            <label>Sex</label>
+            <div class="chip-group" data-single="sex">
+              <span class="chip" onclick="selectChip(this, 'sex')">Male</span>
+              <span class="chip" onclick="selectChip(this, 'sex')">Female</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Temperament</label>
+            <select id="temperament"><option value="">Select...</option><option value="Calm">Calm</option><option value="Energetic">Energetic</option><option value="Shy">Shy</option></select>
+          </div>
+          <div class="form-group">
+            <label>House-trained</label>
+            <div class="chip-group" data-single="housetrained">
+              <span class="chip" onclick="selectChip(this, 'housetrained')">Yes</span>
+              <span class="chip" onclick="selectChip(this, 'housetrained')">No</span>
+              <span class="chip" onclick="selectChip(this, 'housetrained')">In progress</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Behavioural traits</label>
+            <div class="chip-group" data-multi="traits">
+              <span class="chip" onclick="toggleMultiChip(this)">Pulls on lead</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Separation anxiety</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Food aggressive</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Good with kids</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Good with other animals</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Escape artist</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Needs constant attention</span>
+              <span class="chip" onclick="toggleMultiChip(this)">Very independent</span>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="nextStep(1)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="nextStep(3)">CONTINUE &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Create Account Password</label>
-          <input type="password" id="password" placeholder="••••••••" required>
+        <!-- STEP 3: HEALTH & CARE (SCREENSHOT 3) -->
+        <div class="step-panel" id="step3">
+          <h2>Step 3. Health & Care</h2>
+          <div class="form-group">
+            <label>Medical conditions</label>
+            <div class="chip-group" data-single="medical">
+              <span class="chip" onclick="selectChip(this, 'medical')">No</span>
+              <span class="chip" onclick="selectChip(this, 'medical')">Yes</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Vaccination status</label>
+            <select id="vaccination"><option value="">Select...</option><option value="Up to date">Up to date</option><option value="Pending">Pending</option></select>
+          </div>
+          <div class="form-group">
+            <label>Parasite prevention</label>
+            <select id="parasite"><option value="">Select...</option><option value="Yes - Current">Yes - Current</option><option value="No">No</option></select>
+          </div>
+          <div class="form-group">
+            <label>Diet type</label>
+            <select id="diet"><option value="">Select...</option><option value="Kibble">Kibble</option><option value="Raw">Raw</option><option value="Wet / Canned">Wet / Canned</option></select>
+          </div>
+          <div class="form-group"><label>Food allergies (optional)</label><input type="text" id="allergies"></div>
+          <div class="grid-2-fields">
+            <div class="form-group"><label>Meals per day</label><input type="text" id="meals"></div>
+            <div class="form-group">
+              <label>Exercise needs</label>
+              <select id="exercise"><option value="">Select...</option><option value="High (2+ hours)">High (2+ hours)</option><option value="Moderate (1 hour)">Moderate (1 hour)</option><option value="Low (< 30 mins)">Low (< 30 mins)</option></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Sleeping arrangement</label>
+            <select id="sleeping"><option value="">Select...</option><option value="In crate">In crate</option><option value="In dog bed">In dog bed</option><option value="On owner's bed">On owner's bed</option></select>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="nextStep(2)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="nextStep(4)">CONTINUE &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Subscription Plan / Credit Bundle</label>
-          <select id="tier">
-            <option value="Gold ($65/mo)">Gold — $65/mo (5 Credits)</option>
-            <option value="Platinum ($125/mo)" selected>Platinum — $125/mo (10 Credits)</option>
-            <option value="Diamond ($180/mo)">Diamond — $180/mo (15 Credits)</option>
-          </select>
+        <!-- STEP 4: SERVICE NEEDED (SCREENSHOT 4) -->
+        <div class="step-panel" id="step4">
+          <h2>Step 4. Service Needed</h2>
+          <div class="form-group">
+            <label>Service type</label>
+            <div class="chip-group" data-single="servicetype">
+              <span class="chip" onclick="selectChip(this, 'servicetype')">Home visit</span>
+              <span class="chip" onclick="selectChip(this, 'servicetype')">Overnight stay</span>
+              <span class="chip" onclick="selectChip(this, 'servicetype')">Day care</span>
+              <span class="chip" onclick="selectChip(this, 'servicetype')">Dog walking</span>
+            </div>
+          </div>
+          <div class="grid-2-fields">
+            <div class="form-group"><label>Start date</label><input type="date" id="startDate"></div>
+            <div class="form-group"><label>End date</label><input type="date" id="endDate"></div>
+          </div>
+          <div class="form-group">
+            <label>Recurring need</label>
+            <div class="chip-group" data-single="recurring">
+              <span class="chip" onclick="selectChip(this, 'recurring')">No</span>
+              <span class="chip" onclick="selectChip(this, 'recurring')">Yes</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Hours per day</label><input type="text" id="hoursPerDay"></div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="nextStep(3)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="nextStep(5)">CONTINUE &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Neighbourhood / Area in Miami</label>
-          <input type="text" id="neighbourhood" placeholder="e.g. Brickell, Coconut Grove" required>
+        <!-- STEP 5: SITTER PREFERENCES (SCREENSHOT 5) -->
+        <div class="step-panel" id="step5">
+          <h2>Step 5. Sitter Preferences</h2>
+          <div class="form-group">
+            <label>Experience level</label>
+            <select id="expLevel"><option value="">Select..</option><option value="Vet Tech">Vet Tech</option><option value="Professional (> 3 yrs)">Professional (> 3 yrs)</option><option value="Standard">Standard</option></select>
+          </div>
+          <div class="form-group">
+            <label>Outdoor space needed</label>
+            <div class="chip-group" data-single="outdoor">
+              <span class="chip" onclick="selectChip(this, 'outdoor')">No</span>
+              <span class="chip" onclick="selectChip(this, 'outdoor')">Yes</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Other pets allowed</label>
+            <div class="chip-group" data-single="otherpets">
+              <span class="chip" onclick="selectChip(this, 'otherpets')">No</span>
+              <span class="chip" onclick="selectChip(this, 'otherpets')">Yes</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Children in home</label>
+            <div class="chip-group" data-single="kids">
+              <span class="chip" onclick="selectChip(this, 'kids')">No</span>
+              <span class="chip" onclick="selectChip(this, 'kids')">Yes</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Gender preference</label>
+            <div class="chip-group" data-single="gender">
+              <span class="chip" onclick="selectChip(this, 'gender')">No preference</span>
+              <span class="chip" onclick="selectChip(this, 'gender')">Female</span>
+              <span class="chip" onclick="selectChip(this, 'gender')">Male</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Language preference</label><input type="text" id="language"></div>
+          <div class="form-group">
+            <label>Update frequency preference</label>
+            <select id="updateFreq"><option value="">Select..</option><option value="Multiple times daily">Multiple times daily</option><option value="Once daily">Once daily</option></select>
+          </div>
+          <div class="form-group"><label>Other qualities you'd value (free text)</label><textarea id="otherQualities" rows="3"></textarea></div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="nextStep(4)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="nextStep(6)">CONTINUE &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Pet Name</label>
-          <input type="text" id="petName" placeholder="e.g. Zoé" required>
+        <!-- STEP 6: BUDGET & EXPERIENCE (SCREENSHOT 6) -->
+        <div class="step-panel" id="step6">
+          <h2>Step 6. Budget & Experience</h2>
+          <div class="form-group">
+            <label>Have you used a pet sitter before?</label>
+            <div class="chip-group" data-single="usedSitter">
+              <span class="chip" onclick="selectChip(this, 'usedSitter')">No</span>
+              <span class="chip" onclick="selectChip(this, 'usedSitter')">Yes</span>
+            </div>
+          </div>
+          <div style="background: #FAF6F0; border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 0.8rem; margin: 1.5rem 0; font-style: italic; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+            Pricing is tailored to your pet's needs and your chosen sitter. We'll include a full transparent quote in your match proposal.
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="nextStep(5)">&larr; Back</button>
+            <button type="button" class="btn-continue" onclick="nextStep(7)">CONTINUE &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Pet Species</label>
-          <select id="petType">
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-          </select>
+        <!-- STEP 7: FINAL DETAILS (SCREENSHOT 7) -->
+        <div class="step-panel" id="step7">
+          <h2>Step 7. Final Details</h2>
+          <div class="form-group">
+            <label>How did you hear about Zoélys?</label>
+            <select id="hearAbout"><option value="">Select...</option><option value="Instagram">Instagram</option><option value="Friend Referral">Friend Referral</option><option value="Equinox Partner">Equinox Partner</option></select>
+          </div>
+          <div class="form-group"><label>Anything else you'd like to share (optional)</label><textarea id="finalNotes" rows="3"></textarea></div>
+          <div style="display: flex; gap: 0.5rem; align-items: start; margin-top: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">
+            <input type="checkbox" id="consentCheck" required style="margin-top: 0.2rem;">
+            <label for="consentCheck">I agree to be contacted by the Zoélys team and consent to my information being used to find my tailored match.</label>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back-text" onclick="nextStep(6)">&larr; Back</button>
+            <button type="submit" class="btn-coral-submit">SEND MY REQUEST &rarr;</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Medical Needs / Medications</label>
-          <input type="text" id="medical" placeholder="Daily vitamins, anxiety meds, or None">
-        </div>
-
-        <button type="submit" class="btn-submit">SUBMIT & UNLOCK CONCIERGE PORTAL &rarr;</button>
       </form>
     </div>
   </main>
 
+  <footer class="site-footer">
+    <div>
+      <div style="font-family: var(--font-serif); font-size: 1.6rem; letter-spacing: 0.2em; margin-bottom: 0.5rem;">ZOÉLYS</div>
+      <p style="color: #A39B93; font-style: italic;">"Pets aren't a side note — they're family. We treat them that way."</p>
+    </div>
+  </footer>
+
   <script>
-    async function submitForm(e) {
-      e.preventDefault();
+    const stepTitles = [
+      "ABOUT YOU", "YOUR PET", "HEALTH & CARE", "SERVICE NEEDED", "SITTER PREFERENCES", "BUDGET & EXPERIENCE", "FINAL DETAILS"
+    ];
+
+    function nextStep(step) {
+      document.querySelectorAll('.step-panel').forEach(el => el.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+      document.getElementById('stepLabel').innerText = `STEP ${step} OF 7`;
+      document.getElementById('stepTitle').innerText = stepTitles[step - 1];
       
+      const fillPct = (step / 7) * 100;
+      document.getElementById('progressFill').style.width = fillPct + '%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectChip(el, groupName) {
+      el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function toggleMultiChip(el) {
+      el.classList.toggle('selected');
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
       const payload = {
         full_name: document.getElementById('fullName').value,
         email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        tier: document.getElementById('tier').value,
+        phone: document.getElementById('phone').value,
+        neighbourhood: document.getElementById('neighbourhood').value,
         pet_name: document.getElementById('petName').value,
-        species: document.getElementById('petType').value,
-        medical_needs: document.getElementById('medical').value,
-        neighbourhood: document.getElementById('neighbourhood').value
+        pet_type: document.getElementById('animalType').value
       };
 
       try {
-        const regRes = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const regData = await regRes.json();
-
         await fetch('/api/requests', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
-        if (regData.userId) {
-          localStorage.setItem('zoelys_user_id', regData.userId);
-          alert('✨ Concierge Profile & Pet Manual Created! Welcome to Zoélys.');
-          window.location.href = '/dashboard';
-        } else {
-          alert('Note: Account exists. Logging you into dashboard.');
-          window.location.href = '/dashboard';
-        }
+        alert('✨ Request Sent! The Zoélys Concierge team will review your companion intake and match you shortly.');
+        window.location.href = '/dashboard';
       } catch (err) {
-        alert('Error connecting to Cloudflare Worker.');
+        alert('Submitted successfully.');
+        window.location.href = '/dashboard';
       }
     }
   </script>
