@@ -32,16 +32,17 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* --- Navigation Bar --- */
+    /* Navigation */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 4rem;
+      padding: 1.25rem 3rem;
       background: var(--bg-cream);
       position: sticky;
       top: 0;
       z-index: 100;
+      border-bottom: 1px solid rgba(0,0,0,0.03);
     }
 
     .logo {
@@ -54,48 +55,44 @@
       text-decoration: none;
     }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
+    nav { display: flex; align-items: center; gap: 1.75rem; }
 
     nav a {
       text-decoration: none;
       color: var(--text-dark);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 500;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       transition: color 0.2s ease;
     }
 
     nav a.active, nav a:hover { color: var(--accent-coral); }
 
-    .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-actions { display: flex; align-items: center; gap: 1.25rem; }
 
     .btn-sign-in {
       text-decoration: none;
       color: var(--text-dark);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 500;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
     .btn-join {
       background-color: var(--accent-coral);
       color: white;
-      padding: 0.6rem 1.4rem;
+      padding: 0.6rem 1.3rem;
       border-radius: 2rem;
       text-decoration: none;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 500;
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    /* --- Hero Section --- */
+    /* Hero */
     .hero-section {
       background-color: var(--hero-dark);
       color: #FFFFFF;
@@ -129,7 +126,6 @@
       line-height: 1.7;
     }
 
-    /* --- Vetting Timeline Section --- */
     .section-container {
       max-width: 850px;
       margin: 0 auto;
@@ -201,88 +197,6 @@
       line-height: 1.6;
     }
 
-    /* --- Meet and Greet Section --- */
-    .meet-section {
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 6rem 2rem;
-    }
-
-    .paw-badge {
-      width: 64px;
-      height: 64px;
-      background-color: var(--accent-coral);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 2.25rem;
-    }
-
-    .paw-badge svg { width: 30px; height: 30px; fill: #FFFFFF; }
-
-    .meet-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 2.5rem;
-      line-height: 1.7;
-    }
-
-    .quote {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 1.2rem;
-      color: var(--text-dark);
-    }
-
-    /* --- Premium Features Section --- */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-      max-width: 850px;
-      margin: 0 auto 4rem;
-      text-align: left;
-    }
-
-    .feature-card {
-      background-color: var(--bg-card);
-      padding: 2.25rem 2rem;
-      border-radius: 1.25rem;
-      display: flex;
-      gap: 1.25rem;
-      align-items: flex-start;
-      border: 1px solid rgba(0,0,0,0.02);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.015);
-    }
-
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background-color: var(--hero-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .feature-icon svg { width: 20px; height: 20px; fill: #FFFFFF; }
-
-    .feature-text h4 {
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-    }
-
-    .feature-text p {
-      color: var(--text-muted);
-      font-size: 0.825rem;
-      line-height: 1.6;
-    }
-
     .cta-button {
       display: inline-flex;
       align-items: center;
@@ -298,7 +212,7 @@
       text-transform: uppercase;
     }
 
-    /* --- Footer Section --- */
+    /* Footer */
     footer {
       background-color: var(--hero-dark);
       color: #FFFFFF;
@@ -321,7 +235,6 @@
       font-family: var(--font-serif);
       font-style: italic;
       font-size: 0.95rem;
-      line-height: 1.6;
     }
 
     .footer-column h5 {
@@ -335,39 +248,7 @@
     .footer-column ul { list-style: none; }
     .footer-column li { margin-bottom: 0.85rem; }
 
-    .footer-column a {
-      color: #B5AFA8;
-      text-decoration: none;
-      font-size: 0.85rem;
-      transition: color 0.2s ease;
-    }
-
-    .footer-column a:hover { color: #FFFFFF; }
-
-    .newsletter-box { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
-
-    .newsletter-box input {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 0.75rem 1.25rem;
-      border-radius: 2rem;
-      color: white;
-      font-size: 0.85rem;
-      width: 100%;
-      outline: none;
-    }
-
-    .newsletter-box button {
-      background-color: var(--accent-coral);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 2rem;
-      cursor: pointer;
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
+    .footer-column a { color: #B5AFA8; text-decoration: none; font-size: 0.85rem; }
 
     .footer-bottom {
       max-width: 1100px;
@@ -380,45 +261,33 @@
       font-size: 0.75rem;
     }
 
-    .social-links a {
-      color: #6B6560;
-      text-decoration: none;
-      margin-left: 1.75rem;
-      letter-spacing: 0.12em;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 768px) {
-      header { padding: 1rem 1.5rem; }
+    @media (max-width: 900px) {
       nav { display: none; }
-      .features-grid { grid-template-columns: 1fr; }
-      .footer-content { grid-template-columns: 1fr; gap: 2.5rem; }
-      .hero-title { font-size: 2.75rem; }
-      .section-title { font-size: 2.25rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header Navigation -->
+  <!-- Navigation Header with Map, Events, Partners -->
   <header>
     <a href="/" class="logo">ZOÉLYS</a>
     <nav>
-      <a href="/find-a-sitter">Find a Sitter</a>
+      <a href="/get-matched">Find a Sitter</a>
       <a href="/how-it-works" class="active">How It Works</a>
       <a href="/journal">Journal</a>
-      <a href="/explore">Explore ▾</a>
+      <a href="/map">Map</a>
+      <a href="/events">Events</a>
+      <a href="/partners">Partners</a>
     </nav>
     <div class="nav-actions">
-      <a href="/sign-in" class="btn-sign-in">Sign In</a>
+      <a href="/join" class="btn-sign-in">Sign In</a>
       <a href="/join" class="btn-join">Join Zoélys</a>
     </div>
   </header>
 
   <!-- Hero Section -->
   <section class="hero-section">
-    <div class="eyebrow">THE ZOÉLYS STANDARD</div>
+    <div class="eyebrow">— THE ZOÉLYS STANDARD —</div>
     <h1 class="hero-title">How it works</h1>
     <p class="hero-subtitle">Two principles guide every decision: rigorous vetting, and a personal introduction before any pet is ever entrusted.</p>
   </section>
@@ -469,67 +338,10 @@
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Meet and Greet Section -->
-  <section class="meet-section">
-    <div class="paw-badge">
-      <svg viewBox="0 0 24 24"><path d="M12 11.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5zm-5 1c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-8.5-4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    <div style="margin-top: 4rem;">
+      <a href="/get-matched" class="cta-button">FIND THE PERFECT SITTER FOR MY PET &rarr;</a>
     </div>
-    <div class="eyebrow">THE MEET-AND-GREET</div>
-    <h2 class="section-title">No booking until your pet approves</h2>
-    <p class="meet-desc">Before any booking is confirmed, the sitter meets your pet in person. Once complete, they earn a <strong>Zoélys Verified Meet</strong> badge for that pet.</p>
-    <p class="quote">"This is what makes Zoélys different. No booking is confirmed until your pet approves."</p>
-  </section>
-
-  <!-- Premium Features Grid Section -->
-  <section class="section-container" style="max-width: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.015) 100%); padding-bottom: 6rem;">
-    <div class="eyebrow">DURING THE SITTING</div>
-    <h2 class="section-title">Four premium features</h2>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        </div>
-        <div class="feature-text">
-          <h4>Structured pet profile</h4>
-          <p>A full briefing sent to your sitter before day one — every critical detail flagged by priority.</p>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        </div>
-        <div class="feature-text">
-          <h4>Live updates on demand</h4>
-          <p>Photos and videos at the frequency you choose, not your sitter.</p>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        </div>
-        <div class="feature-text">
-          <h4>Partner vet on standby</h4>
-          <p>A trusted vet is one call away if anything goes wrong.</p>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-        </div>
-        <div class="feature-text">
-          <h4>Post-sitting report</h4>
-          <p>A full summary, so you come home informed — not anxious.</p>
-        </div>
-      </div>
-    </div>
-
-    <a href="/find-a-sitter" class="cta-button">FIND THE PERFECT SITTER FOR MY PET &rarr;</a>
   </section>
 
   <!-- Footer -->
@@ -543,7 +355,7 @@
       <div class="footer-column">
         <h5>EXPLORE</h5>
         <ul>
-          <li><a href="/find-a-sitter">Find a Sitter</a></li>
+          <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/map">The Map</a></li>
           <li><a href="/events">Events</a></li>
           <li><a href="/partners">Partners</a></li>
@@ -556,26 +368,18 @@
         <ul>
           <li><a href="/how-it-works">How It Works</a></li>
           <li><a href="/join">Join</a></li>
-          <li><a href="/sign-in">Sign In</a></li>
+          <li><a href="/join">Sign In</a></li>
         </ul>
       </div>
 
       <div class="footer-column">
         <h5>STAY CLOSE</h5>
         <p style="color: #8C857B; font-size: 0.8rem; margin-bottom: 0.75rem;">Quiet letters, real care. No spam, ever.</p>
-        <div class="newsletter-box">
-          <input type="email" placeholder="your@email.com">
-          <button>JOIN</button>
-        </div>
       </div>
     </div>
 
     <div class="footer-bottom">
       <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
-      <div class="social-links">
-        <a href="#">TIKTOK</a>
-        <a href="#">CONTACT</a>
-      </div>
     </div>
   </footer>
 

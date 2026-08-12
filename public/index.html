@@ -1,83 +1,420 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zoélys Concierge Care</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { brand: { cream: '#FAF6EE', card: '#F4EFEA', terracotta: '#D07358', terracottaHover: '#B85E45', dark: '#1F1916', muted: '#8A827A' } },
-          fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] }
-        }
-      }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys — Concierge Pet Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-cream: #F7F3EC;
+      --bg-cream-light: #FAF7F2;
+      --bg-card: #FFFFFF;
+      --hero-dark: #1C1613;
+      --text-dark: #1C1613;
+      --text-muted: #706A63;
+      --accent-coral: #D97757;
+      --accent-coral-hover: #C56546;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, sans-serif;
     }
-  </script>
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- Direct Navigation --- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: var(--bg-cream-light);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+
+    nav { display: flex; align-items: center; gap: 1.75rem; }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover, nav a.active { color: var(--accent-coral); }
+
+    .nav-actions { display: flex; align-items: center; gap: 1.25rem; }
+
+    .btn-sign-in {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .btn-join {
+      background-color: var(--accent-coral);
+      color: white;
+      padding: 0.6rem 1.3rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* --- Hero Section --- */
+    .hero-container {
+      position: relative;
+      height: 85vh;
+      min-height: 580px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 5rem;
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      z-index: 1;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(90deg, rgba(20,15,12,0.65) 0%, rgba(20,15,12,0.3) 50%, rgba(20,15,12,0.1) 100%);
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 580px;
+      color: #FFFFFF;
+    }
+
+    .eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-coral);
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 4.25rem;
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-subtitle {
+      color: #E2DDD5;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 2.25rem;
+      max-width: 480px;
+    }
+
+    .hero-buttons { display: flex; gap: 1rem; align-items: center; }
+
+    .btn-coral {
+      background-color: var(--accent-coral);
+      color: white;
+      padding: 0.9rem 1.8rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 0.9rem 1.8rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(4px);
+    }
+
+    /* --- Quote Section --- */
+    .quote-section {
+      text-align: center;
+      padding: 7rem 2rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .quote-mark {
+      color: var(--accent-coral);
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    .quote-text {
+      font-family: var(--font-serif);
+      font-size: 2.35rem;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--text-dark);
+      letter-spacing: -0.01em;
+    }
+
+    /* --- Steps --- */
+    .journey-section {
+      padding: 4rem 4rem 8rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .step-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 6rem;
+    }
+
+    .step-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      border-radius: 1.5rem;
+    }
+
+    .step-number-large {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      color: #E2DDD5;
+      margin-bottom: 1rem;
+    }
+
+    .step-text h3 {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-text p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* --- Footer --- */
+    footer {
+      background-color: var(--hero-dark);
+      color: #FFFFFF;
+      padding: 5rem 4rem 2.5rem;
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 2.2fr;
+      gap: 3.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .footer-brand .logo { color: #FFFFFF; display: block; margin-bottom: 1.25rem; }
+
+    .footer-brand p {
+      color: #8C857B;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .footer-column h5 {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-coral);
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-column ul { list-style: none; }
+    .footer-column li { margin-bottom: 0.85rem; }
+
+    .footer-column a { color: #B5AFA8; text-decoration: none; font-size: 0.85rem; }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      color: #6B6560;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 900px) {
+      nav { display: none; }
+    }
+  </style>
 </head>
-<body class="bg-brand-cream text-brand-dark font-sans antialiased">
-  <header class="w-full bg-brand-cream border-b border-stone-200/60 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
-      <a href="/" class="font-serif text-2xl tracking-[0.25em] font-normal uppercase">ZOÉLYS</a>
-      <nav class="hidden lg:flex items-center space-x-10 text-[11px] tracking-[0.2em] uppercase font-medium text-stone-600">
-        <a href="/get-matched" class="hover:text-brand-dark">Find a Sitter</a>
-        <a href="/how-it-works" class="hover:text-brand-dark">How It Works</a>
-        <a href="/journal" class="hover:text-brand-dark">Journal</a>
-        <div class="relative group py-6">
-          <button class="flex items-center space-x-1 hover:text-brand-dark uppercase">
-            <span>Explore</span>
-            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
-          <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-brand-cream border border-stone-200/80 rounded-2xl p-3 shadow-xl z-50 space-y-1">
-            <a href="/map" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-stone-200/50">
-              <span class="text-brand-terracotta">📍</span>
-              <div>
-                <p class="text-xs font-medium uppercase tracking-wider text-brand-dark">Map</p>
-                <p class="text-[10px] text-brand-muted normal-case font-light">Vetted pet spots near you</p>
-              </div>
-            </a>
-            <a href="/events" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-stone-200/50">
-              <span class="text-brand-terracotta">📅</span>
-              <div>
-                <p class="text-xs font-medium uppercase tracking-wider text-brand-dark">Events</p>
-                <p class="text-[10px] text-brand-muted normal-case font-light">Meetups & adoption days</p>
-              </div>
-            </a>
-            <a href="/partners" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-stone-200/50">
-              <span class="text-brand-terracotta">🏪</span>
-              <div>
-                <p class="text-xs font-medium uppercase tracking-wider text-brand-dark">Partners</p>
-                <p class="text-[10px] text-brand-muted normal-case font-light">Cafés, vets, groomers</p>
-              </div>
-            </a>
-          </div>
-        </div>
-      </nav>
-      <div class="flex items-center space-x-8 text-[11px] tracking-[0.2em] uppercase font-medium">
-        <a href="#" class="text-stone-600 hover:text-brand-dark">Sign In</a>
-        <a href="/get-matched" class="bg-brand-terracotta hover:bg-brand-terracottaHover text-white px-6 py-3 rounded-full shadow-sm">Join Zoélys</a>
-      </div>
+<body>
+
+  <!-- Header with standalone Map, Events, and Partners links -->
+  <header>
+    <a href="/" class="logo">ZOÉLYS</a>
+    <nav>
+      <a href="/get-matched">Find a Sitter</a>
+      <a href="/how-it-works">How It Works</a>
+      <a href="/journal">Journal</a>
+      <a href="/map">Map</a>
+      <a href="/events">Events</a>
+      <a href="/partners">Partners</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/join" class="btn-sign-in">Sign In</a>
+      <a href="/join" class="btn-join">Join Zoélys</a>
     </div>
   </header>
 
-  <section class="relative min-h-[90vh] flex items-center justify-center px-6 py-20 overflow-hidden">
-    <div class="absolute inset-0 z-0">
-      <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=2000&auto=format&fit=crop" alt="Golden retriever and cat" class="w-full h-full object-cover brightness-[0.7] contrast-[1.05]" />
-      <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-brand-dark/20 to-transparent"></div>
-    </div>
-    <div class="relative z-10 max-w-4xl mx-auto text-center text-white space-y-6">
-      <p class="text-[11px] uppercase tracking-[0.3em] font-light text-stone-300">— Concierge Pet Care</p>
-      <h1 class="font-serif text-6xl md:text-8xl font-normal italic leading-[1.05]">Your pet, <br />cared for like family.</h1>
-      <p class="max-w-xl mx-auto text-sm md:text-base text-stone-200 font-light leading-relaxed">Tell us about your companion. We handpick the perfect sitter within 24 hours — no scrolling, no guessing.</p>
-      <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="/get-matched" class="w-full sm:w-auto bg-brand-terracotta hover:bg-brand-terracottaHover text-white px-8 py-3.5 rounded-full text-xs uppercase tracking-[0.2em] font-medium shadow-lg flex items-center justify-center space-x-2">
-          <span>Find a Sitter</span><span>↗</span>
-        </a>
-        <a href="/how-it-works" class="w-full sm:w-auto border border-white/40 hover:bg-white/10 text-white px-8 py-3.5 rounded-full text-xs uppercase tracking-[0.2em] font-medium backdrop-blur-sm text-center">How It Works</a>
+  <!-- Hero Banner -->
+  <section class="hero-container">
+    <img class="hero-bg" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=1600" alt="Dog and Cat relaxing">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="eyebrow">— CONCIERGE PET CARE</div>
+      <h1 class="hero-title">Your pet,<br>cared for like family.</h1>
+      <p class="hero-subtitle">Tell us about your companion. We handpick the perfect sitter within 24 hours — no scrolling, no guessing.</p>
+      <div class="hero-buttons">
+        <a href="/get-matched" class="btn-coral">FIND A SITTER &nearr;</a>
+        <a href="/how-it-works" class="btn-outline">HOW IT WORKS</a>
       </div>
     </div>
   </section>
+
+  <!-- Quote Section -->
+  <section class="quote-section">
+    <span class="quote-mark">&ldquo;&rdquo;</span>
+    <blockquote class="quote-text">
+      &ldquo;Zoélys is the platform built for the moment you walk out the door — and the peace of mind you deserve until you walk back in.&rdquo;
+    </blockquote>
+  </section>
+
+  <!-- How Zoélys Works -->
+  <section class="journey-section">
+    <div style="margin-bottom: 4rem;">
+      <div class="eyebrow">— THE JOURNEY</div>
+      <h2 style="font-family: var(--font-serif); font-size: 2.75rem; font-weight: 400;">How Zoélys works</h2>
+    </div>
+
+    <div class="step-row">
+      <img class="step-img" src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800" alt="Tabby Cat resting">
+      <div class="step-text">
+        <div class="step-number-large">01</div>
+        <h3>Tell us about your pet</h3>
+        <p>A detailed care brief — habits, quirks, fears, the things only you know.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-text">
+        <div class="step-number-large">02</div>
+        <h3>We find your match</h3>
+        <p>Our team hand-picks the perfect sitter within 24 hours. One proposal, not ten.</p>
+      </div>
+      <img class="step-img" src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=800" alt="Dog collar">
+    </div>
+
+    <div class="step-row">
+      <img class="step-img" src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=800" alt="Whippet on stairs">
+      <div class="step-text">
+        <div class="step-number-large">03</div>
+        <h3>Meet, approve, relax</h3>
+        <p>An in-person meet-and-greet earns the Verified Meet badge. Then breathe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="logo">ZOÉLYS</span>
+        <p>&ldquo;Pets aren't a side note — they're family. We treat them that way.&rdquo;</p>
+      </div>
+
+      <div class="footer-column">
+        <h5>EXPLORE</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h5>ZOÉLYS</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/join">Sign In</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h5>STAY CLOSE</h5>
+        <p style="color: #8C857B; font-size: 0.8rem; margin-bottom: 0.75rem;">Quiet letters, real care. No spam, ever.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+    </div>
+  </footer>
+
 </body>
 </html>

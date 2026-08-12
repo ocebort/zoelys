@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partners — Zoélys</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script>tailwind.config = { theme: { extend: { colors: { brand: { cream: '#FAF6EE', card: '#FFFFFF', terracotta: '#D07358', dark: '#1F1916', muted: '#8A827A' } }, fontFamily: { serif: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] } } } }</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys — Partners</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body { background: #FAF7F2; color: #1C1613; font-family: 'Inter', sans-serif; margin: 0; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: #FAF7F2; border-bottom: 1px solid rgba(0,0,0,0.03); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 0.25em; text-transform: uppercase; color: #1C1613; text-decoration: none; }
+    .container { max-width: 800px; margin: 6rem auto; text-align: center; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 400; }
+  </style>
 </head>
-<body class="bg-brand-cream text-brand-dark font-sans antialiased">
-  <header class="w-full bg-brand-cream border-b border-stone-200/60 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
-      <a href="/" class="font-serif text-2xl tracking-[0.25em] uppercase">ZOÉLYS</a>
-      <a href="/get-matched" class="bg-brand-terracotta text-white px-6 py-3 rounded-full text-[11px] uppercase tracking-[0.2em]">Join Zoélys</a>
-    </div>
+<body>
+  <header>
+    <a href="/" class="logo">ZOÉLYS</a>
+    <a href="/journal" style="text-decoration:none; font-size:0.7rem; letter-spacing:0.15em; color:#1C1613; text-transform:uppercase;">&larr; Back</a>
   </header>
-  <main class="max-w-5xl mx-auto px-6 py-16">
-    <div class="text-center mb-12"><h1 class="font-serif text-5xl">Our Trusted Partners</h1></div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-brand-card p-6 rounded-2xl border border-stone-200"><h3 class="font-serif text-2xl">Brickell Animal Hospital</h3><p class="text-xs text-brand-terracotta uppercase mt-1">24/7 Emergency Partner</p></div>
-      <div class="bg-brand-card p-6 rounded-2xl border border-stone-200"><h3 class="font-serif text-2xl">Aura Organic Pet Food</h3><p class="text-xs text-brand-terracotta uppercase mt-1">Holistic Nutrition</p></div>
-    </div>
-  </main>
+  <div class="container">
+    <p style="color: #D97757; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;">NETWORK</p>
+    <h1>Our partner network</h1>
+    <p style="color: #706A63;">Curated veterinarians, groomers, and pet experiences.</p>
+  </div>
 </body>
 </html>
