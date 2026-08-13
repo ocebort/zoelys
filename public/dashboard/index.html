@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Concierge Portal</title>
+  <title>Zoélys — Portal Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -19,12 +19,6 @@
     .metric-val { font-size: 2.2rem; font-weight: bold; color: var(--accent-coral); }
     .metric-lbl { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-top: 0.3rem; }
 
-    .admin-nav { display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
-    .admin-tab { padding: 0.8rem 1.5rem; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-muted); border-bottom: 2px solid transparent; }
-    .admin-tab.active { color: var(--text-dark); border-bottom-color: var(--accent-coral); }
-
-    .panel { display: none; }
-    .panel.active { display: block; }
     .card-box { background: white; border: 1px solid var(--border-color); border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; }
     .card-box h3 { font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.25rem; }
 
@@ -38,99 +32,161 @@
     .form-label-style { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
     .form-input-style { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; box-sizing: border-box; }
 
-    /* PET SWITCHER TABS */
-    .pet-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
-    .pet-tab-btn { padding: 0.5rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--border-color); background: #FAF8F5; cursor: pointer; }
-    .pet-tab-btn.active { background: #1C1613; color: white; border-color: #1C1613; }
-
-    /* SUBSCRIPTION MODAL */
-    #subModal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 3000; }
-    .modal-card { background: white; border-radius: 1rem; padding: 2.5rem; max-width: 550px; width: 90%; }
+    .badge-pill { background: #FAF6F0; border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-dark); display: inline-flex; align-items: center; gap: 0.3rem; }
   </style>
 </head>
 <body>
 
-  <!-- SUBSCRIPTION MANAGEMENT MODAL -->
-  <div id="subModal">
-    <div class="modal-card">
-      <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 0.5rem;">Manage Subscription Tier</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Select your desired concierge membership plan or manage renewal status:</p>
-      
-      <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
-        <button style="background: #FAF6F0; border: 1px solid var(--border-color); padding: 1rem; border-radius: 0.8rem; text-align: left; cursor: pointer;" onclick="changeTier('Gold ($65/mo)')">
-          <strong>Gold Concierge ($65/mo)</strong>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">5 Credits/mo • Standard Match Priority</div>
-        </button>
-        <button style="background: #FAF6F0; border: 2px solid var(--accent-coral); padding: 1rem; border-radius: 0.8rem; text-align: left; cursor: pointer;" onclick="changeTier('Platinum ($125/mo)')">
-          <strong>Platinum Concierge ($125/mo) — Current Plan</strong>
-          <div style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">10 Credits/mo • Guaranteed Vet Tech Sitter</div>
-        </button>
-        <button style="background: #FAF6F0; border: 1px solid var(--border-color); padding: 1rem; border-radius: 0.8rem; text-align: left; cursor: pointer;" onclick="changeTier('Diamond ($195/mo)')">
-          <strong>Diamond Executive ($195/mo)</strong>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">15 Credits/mo • Priority VIP Events & Unlimited Emergency Rollover</div>
-        </button>
-      </div>
-
-      <div style="display: flex; gap: 1rem;">
-        <button style="background: #1C1613; color: white; border: none; padding: 0.8rem; border-radius: 2rem; flex: 1; font-weight: 600; cursor: pointer;" onclick="document.getElementById('subModal').style.display='none'">Close</button>
-        <button style="background: transparent; border: 1px solid red; color: red; padding: 0.8rem; border-radius: 2rem; font-weight: 600; cursor: pointer;" onclick="pauseSubscription()">Pause / Cancel Subscription</button>
-      </div>
-    </div>
-  </div>
-
   <main class="container">
 
     <!-- ================================================================= -->
-    <!-- 1. SUPER-ADMIN VIEW (ONLY FOR ocebort@gmail.com)                 -->
+    <!-- 1. PET SITTER OPERATIONAL HUB (FOR MARCUS, CAMILA & VET TECHS)   -->
     <!-- ================================================================= -->
-    <div id="adminMasterView" style="display: none;">
+    <div id="sitterMasterView" style="display: none;">
+      
+      <!-- SITTER HEADER & BADGES BANNER -->
       <div class="profile-banner">
         <div>
-          <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">SUPER-ADMIN CONCIERGE CONTROL</div>
-          <h1 class="profile-title">Welcome, Océane</h1>
-          <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;">Zoélys Executive Command Center • Miami Headquarters</p>
+          <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">VERIFIED VET TECH SITTER HUB</div>
+          <h1 class="profile-title" id="sitterWelcomeName">Welcome, Marcus</h1>
+          
+          <div style="display: flex; gap: 0.6rem; margin-top: 0.8rem; flex-wrap: wrap;">
+            <span class="badge-pill">🏅 Certified Vet Tech</span>
+            <span class="badge-pill">🩺 CPR & First Aid Certified</span>
+            <span class="badge-pill">⚡ High-Energy Breed Specialist</span>
+            <span class="badge-pill" style="border-color: #E2B258; color: #B8860B;">5.0 ⭐ (32 Sittings)</span>
+          </div>
         </div>
-        <div><button class="btn-coral" style="width: auto;" onclick="window.location.href='/get-matched'">+ NEW MATCH INTAKE</button></div>
-      </div>
 
-      <div class="metrics-grid">
-        <div class="metric-card"><div class="metric-val">$14,250</div><div class="metric-lbl">ESTIMATED MRR</div></div>
-        <div class="metric-card"><div class="metric-val">12</div><div class="metric-lbl">ACTIVE PET PARENTS</div></div>
-        <div class="metric-card"><div class="metric-val">8</div><div class="metric-lbl">VETTED VET TECH SITTERS</div></div>
-        <div class="metric-card"><div class="metric-val">3</div><div class="metric-lbl">PENDING MATCHES</div></div>
-      </div>
-
-      <div class="admin-nav">
-        <button class="admin-tab active" onclick="switchTab('matches', this)">📩 Match Requests Inbox</button>
-        <button class="admin-tab" onclick="switchTab('sitters', this)">🐕 Sitter Pipeline</button>
-        <button class="admin-tab" onclick="switchTab('members', this)">👥 Member CRM</button>
-        <button class="admin-tab" onclick="switchTab('cms', this)">📅 CMS & Events</button>
-      </div>
-
-      <div class="panel active" id="tab-matches">
-        <div class="card-box">
-          <h3><span>Pending Match Proposals</span></h3>
-          <table class="table-list">
-            <thead><tr><th>Member Name</th><th>Companion</th><th>Service Required</th><th>Dates Needed</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Océane B.</strong></td><td>Zoé (Golden Retriever)</td><td>Overnight Stay</td><td>Sept 18 - Sept 20</td><td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Camila R. assigned!')">Assign Camila R. &rarr;</button></td></tr>
-              <tr><td><strong>Sarah M.</strong></td><td>Milo (French Bulldog)</td><td>Day Care & Walk</td><td>Sept 22</td><td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Marcus T. assigned!')">Assign Marcus T. &rarr;</button></td></tr>
-            </tbody>
-          </table>
+        <div style="background: var(--accent-coral); padding: 1.25rem 2rem; border-radius: 0.8rem; text-align: center;">
+          <div style="font-size: 2.2rem; font-weight: bold; line-height: 1;">$1,450</div>
+          <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.35rem; color: white; font-weight: 600;">Earned This Month</div>
+          <div style="font-size: 0.65rem; color: rgba(255,255,255,0.9); margin-top: 0.2rem;">Next Direct Deposit: Sept 01</div>
         </div>
       </div>
-      <div class="panel" id="tab-sitters"><div class="card-box"><h3><span>Vetted Pet Sitter Roster</span></h3><p>Camila Rodriguez & Marcus Thorne active.</p></div></div>
-      <div class="panel" id="tab-members"><div class="card-box"><h3><span>Pet Parent Subscriptions</span></h3><p>Active membership ledger loaded.</p></div></div>
-      <div class="panel" id="tab-cms"><div class="card-box"><h3><span>Live D1 CMS Publisher</span></h3><p>Events & Partners published.</p></div></div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
+        
+        <!-- LEFT COLUMN: ACTIVE ASSIGNED SITTINGS & INQUIRIES -->
+        <div>
+          
+          <!-- ACTIVE SHIFT CONTROLS -->
+          <div class="card-box">
+            <h3 style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Active Assigned Sitting 🐕</span>
+              <span style="font-size: 0.75rem; color: green; font-weight: 600;">🟢 On-Duty</span>
+            </h3>
+            
+            <div style="background: #FAF6F0; padding: 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+              <div style="font-size: 1.2rem; font-weight: bold; color: var(--text-dark);">Milo (French Bulldog)</div>
+              <div style="font-size: 0.85rem; color: var(--text-dark); margin-top: 0.3rem;"><strong>Parent:</strong> Sarah M. • Brickell Key Dr, Miami</div>
+              <div style="font-size: 0.85rem; color: var(--accent-coral); font-weight: 600; margin-top: 0.2rem;"><strong>Schedule:</strong> Sept 22 – Sept 24 (Day Care & Evening Walk)</div>
+            </div>
+
+            <!-- ONE-TAP SHIFT ACTIONS -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <button class="btn-coral" onclick="alert('📍 GPS Walk Started! Streaming live route to Sarah M.')">📍 START GPS WALK</button>
+              <button style="background: #1C1613; color: white; border: none; padding: 0.85rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="alert('📸 Photo Uploaded to Sarah M.\'s care feed!')">📸 SEND PHOTO UPDATE</button>
+            </div>
+            <button style="background: white; border: 1px solid var(--border-color); color: var(--text-dark); padding: 0.75rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; width: 100%; cursor: pointer;" onclick="alert('💬 Direct chat with Sarah M. opened...')">💬 MESSAGE PET PARENT</button>
+          </div>
+
+          <!-- NEW INQUIRIES & SITTING REQUESTS -->
+          <div class="card-box">
+            <h3><span>Incoming Sitting Inquiries 📩</span></h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              
+              <div style="background: #FAF6F0; padding: 1.1rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                  <div>
+                    <strong>Rocky (German Shepherd Mix)</strong>
+                    <div style="font-size: 0.78rem; color: var(--text-muted);">Owner: David K. • South Beach</div>
+                  </div>
+                  <span style="background: #EAF7ED; color: green; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600;">Match Score: 98%</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-dark); margin-bottom: 0.8rem;">Dates: Oct 02 – Oct 05 (Overnight Stay) • Est. Payout: $320</div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn-pill" style="background: var(--accent-coral);" onclick="alert('✨ Inquiry Accepted! Sent to Concierge for final match approval.')">Accept Sitting ✔︎</button>
+                  <button class="btn-pill" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color);" onclick="alert('Inquiry declined.')">Decline</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SITTING HISTORY & PAYOUT LEDGER -->
+          <div class="card-box">
+            <h3><span>Shift History & Earnings Ledger</span></h3>
+            <table class="table-list">
+              <thead>
+                <tr>
+                  <th>Date & Client</th>
+                  <th>Service</th>
+                  <th>Duration</th>
+                  <th>Earnings</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Sept 18 - 20</strong><br><span style="color: var(--text-muted); font-size: 0.75rem;">Océane B. (Zoé)</span></td>
+                  <td>Overnight Sitting</td>
+                  <td>48 Hours</td>
+                  <td><strong style="color: green;">$450.00</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Sept 10</strong><br><span style="color: var(--text-muted); font-size: 0.75rem;">Sarah M. (Milo)</span></td>
+                  <td>Medication Admin</td>
+                  <td>3 Hours</td>
+                  <td><strong style="color: green;">$110.00</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: CLIENT PET CARE INSTRUCTIONS & EMERGENCY HOTLINE -->
+        <div>
+          <div class="card-box">
+            <h3><span>Active Pet Care Dossier 📖</span></h3>
+            
+            <div style="background: #FFF8F6; border: 1px solid #F0C4B8; padding: 0.9rem 1.1rem; border-radius: 0.8rem; margin-bottom: 1.25rem;">
+              <strong style="font-size: 0.85rem; color: var(--accent-coral); display: flex; align-items: center; gap: 0.3rem;">
+                🚨 Special Care Alert: Sensitive Stomach
+              </strong>
+              <div style="font-size: 0.75rem; color: var(--text-dark); margin-top: 0.25rem;">Strictly no chicken treats or table food. Wet food only.</div>
+            </div>
+
+            <div style="font-size: 0.85rem; line-height: 1.6; color: var(--text-dark);">
+              <div style="background: #FAF6F0; padding: 1rem; border-radius: 0.6rem; border: 1px solid var(--border-color); margin-bottom: 0.8rem;">
+                <strong>🥣 Feeding Schedule:</strong>
+                <div style="color: var(--text-muted); margin-top: 0.2rem;">1 cup wet food @ 9:00 AM & 5:00 PM.<br>Fresh water refilled twice daily.</div>
+              </div>
+
+              <div style="background: #FAF6F0; padding: 1rem; border-radius: 0.6rem; border: 1px solid var(--border-color); margin-bottom: 0.8rem;">
+                <strong>💊 Daily Medication:</strong>
+                <div style="color: var(--text-muted); margin-top: 0.2rem;">No active prescription medication currently required.</div>
+              </div>
+
+              <div style="background: #FAF6F0; padding: 1rem; border-radius: 0.6rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+                <strong>🩺 Primary / Emergency Vet:</strong>
+                <div style="color: var(--text-muted); margin-top: 0.2rem;">South Beach Vet Care • Dr. Miller<br>Emergency Phone: (305) 555-0244</div>
+              </div>
+            </div>
+
+            <button style="background: #1C1613; color: white; border: none; padding: 0.85rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; width: 100%; cursor: pointer;" onclick="alert('📞 Dialing South Beach Vet Care (305) 555-0244...')">📞 ONE-TAP CALL EMERGENCY VET</button>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
 
     <!-- ================================================================= -->
-    <!-- 2. PET PARENT MEMBER VIEW (COMPLETE LUXURY HUB)                   -->
+    <!-- 2. PET PARENT MEMBER VIEW                                         -->
     <!-- ================================================================= -->
     <div id="parentMasterView" style="display: none;">
-      
-      <!-- MEMBER HEADER BANNER -->
       <div class="profile-banner">
         <div>
           <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;" id="parentTierBadge">PLATINUM MEMBER PORTAL</div>
@@ -138,134 +194,25 @@
           <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;">Member Since 2024 • Lifetime Member Savings: <strong>$450</strong></p>
         </div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <button style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 0.75rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="document.getElementById('subModal').style.display='flex'">⚙️ Manage Plan</button>
           <div style="background: var(--accent-coral); padding: 1.2rem 2rem; border-radius: 0.8rem; text-align: center;">
             <div style="font-size: 2.5rem; font-weight: bold; line-height: 1;" id="parentCreditCount">10</div>
             <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.3rem; color: white; font-weight: 600;">Credits Left</div>
           </div>
         </div>
       </div>
+      <p style="text-align: center; color: var(--text-muted);">Pet Parent Portal active.</p>
+    </div>
 
-      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
-        
-        <!-- LEFT COLUMN: SITTING STATUS & TRUSTED CIRCLE -->
+
+    <!-- ================================================================= -->
+    <!-- 3. SUPER-ADMIN VIEW (FOR ocebort@gmail.com)                      -->
+    <!-- ================================================================= -->
+    <div id="adminMasterView" style="display: none;">
+      <div class="profile-banner">
         <div>
-          <!-- CURRENT ACTIVE SITTER -->
-          <div class="card-box">
-            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-              <span>Assigned Sitter 🐕</span>
-              <span style="font-size: 0.75rem; color: green; font-weight: 600;">🟢 Active Shift Scheduled</span>
-            </h3>
-            
-            <div style="display: flex; gap: 1.25rem; align-items: center; background: #FAF6F0; padding: 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" style="width: 75px; height: 75px; border-radius: 50%; object-fit: cover;">
-              <div style="flex: 1;">
-                <h4 style="font-size: 1.1rem; font-weight: 600;">Camila Rodriguez</h4>
-                <div style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">Certified Vet Tech • 99% Companion Match</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Dates: Sept 18 – Sept 20 (Overnight Sitting)</div>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 1rem;">
-              <button class="btn-coral" style="flex: 1;" onclick="alert('📸 Photo Update: Your companion is enjoying her afternoon walk in Brickell!')">VIEW LIVE PHOTO FEED</button>
-              <button style="background: #1C1613; color: white; border: none; padding: 0.75rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="alert('💬 Direct Concierge Messaging opening...')">MESSAGE SITTER</button>
-            </div>
-          </div>
-
-          <!-- TRUSTED SITTER CIRCLE (PAST SITTERS) -->
-          <div class="card-box">
-            <h3><span>My Trusted Sitter Circle</span></h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Re-book vetted sitters who already know your companion’s habits and routine.</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 0.8rem 1.2rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
-                <div>
-                  <strong>Camila Rodriguez</strong>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Certified Vet Tech • 14 Sittings Completed</div>
-                </div>
-                <button class="btn-pill" onclick="alert('✨ Re-booking request sent for Camila!')">Re-Book ↺</button>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 0.8rem 1.2rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
-                <div>
-                  <strong>Marcus Thorne</strong>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">High-Energy Breed Specialist • 3 Sittings Completed</div>
-                </div>
-                <button class="btn-pill" onclick="alert('✨ Re-booking request sent for Marcus!')">Re-Book ↺</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- CREDIT LEDGER & TOP UP -->
-          <div class="card-box">
-            <h3><span>Credit Ledger & Top-Up</span></h3>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 1rem 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
-              <div>
-                <strong style="font-size: 0.9rem;">Platinum Tier Allowance</strong>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Auto-Renews on 1st of month</div>
-              </div>
-              <button style="background: white; border: 1px solid var(--border-color); padding: 0.4rem 0.9rem; border-radius: 1.5rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;" onclick="buyCredits()">+ BUY 5 CREDITS ($50)</button>
-            </div>
-          </div>
+          <h1 class="profile-title">Super-Admin Concierge Control</h1>
+          <p style="color: #A39B93; font-size: 0.85rem;">Zoélys Executive Command Center</p>
         </div>
-
-        <!-- RIGHT COLUMN: MULTI-PET DOSSIER & PERKS VAULT -->
-        <div>
-          <!-- MULTI-PET CARE DOSSIER -->
-          <div class="card-box">
-            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 0.8rem;"><span>Companion Care Dossier 📖</span></h3>
-            
-            <!-- PET SWITCHER TABS -->
-            <div class="pet-tabs">
-              <button class="pet-tab-btn active" onclick="switchPetTab('pet1', this)">Zoé (Golden)</button>
-              <button class="pet-tab-btn" onclick="switchPetTab('pet2', this)">Milo (Frenchie)</button>
-              <button class="pet-tab-btn" onclick="addNewPetForm()">+ Add Dog</button>
-            </div>
-
-            <!-- PET 1 FORM -->
-            <form id="petForm" onsubmit="savePetManual(event)">
-              <div style="margin-bottom: 1rem;">
-                <label class="form-label-style">Companion Name</label>
-                <input type="text" id="parentPetName" value="Zoé" class="form-input-style" required>
-              </div>
-              <div style="margin-bottom: 1rem;">
-                <label class="form-label-style">Breed & Microchip ID</label>
-                <input type="text" id="parentPetBreed" value="Golden Retriever Mix • #985141029" class="form-input-style">
-              </div>
-
-              <!-- ILLNESS / URGENT CARE ALERT TOGGLE -->
-              <div style="background: #FFF3F0; border: 1px solid var(--accent-coral); padding: 0.8rem 1rem; border-radius: 0.6rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-                <div>
-                  <strong style="font-size: 0.8rem; color: var(--accent-coral);">🚨 Medical / Special Care Alert</strong>
-                  <div style="font-size: 0.7rem; color: var(--text-muted);">Enable if pet is currently sick or requires extra meds</div>
-                </div>
-                <input type="checkbox" id="petSickAlert" style="accent-color: var(--accent-coral); width: 18px; height: 18px;">
-              </div>
-
-              <div style="margin-bottom: 1.25rem;">
-                <label class="form-label-style">Feeding, Medication & Emergency Vet Instructions</label>
-                <textarea id="parentPetInstructions" rows="4" class="form-input-style">Feeding: 1.5 cups kibble @ 8am & 6pm.
-Medication: Daily joint vitamin chew with breakfast.
-Emergency Vet: Brickell Vet Care (Dr. Santos).</textarea>
-              </div>
-              <button type="submit" class="btn-coral">SAVE PET CARE MANUAL &rarr;</button>
-            </form>
-          </div>
-
-          <!-- PERKS VAULT & SAVINGS -->
-          <div class="card-box">
-            <h3><span>Member Perks & Savings Vault 💎</span></h3>
-            <div style="font-size: 0.85rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
-              <strong>Brickell Vet Care</strong><br>
-              <span style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">15% Off Concierge Visits (Code: ZOELYS-VIP)</span>
-            </div>
-            <div style="font-size: 0.85rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
-              <strong>K9 Luxury Spa</strong><br>
-              <span style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">Complimentary Hydro-Bath Upgrade</span>
-            </div>
-            <button style="background: #1C1613; color: white; border: none; padding: 0.7rem; border-radius: 2rem; width: 100%; font-size: 0.75rem; font-weight: 600; margin-top: 1rem; cursor: pointer;" onclick="alert('💳 Digital VIP Card showing QR code...')">SHOW DIGITAL VIP MEMBERSHIP CARD 💳</button>
-          </div>
-        </div>
-
       </div>
     </div>
 
@@ -281,114 +228,32 @@ Emergency Vet: Brickell Vet Care (Dr. Santos).</textarea>
       }
 
       try {
-        const res = await fetch(`/api/user/profile?userId=${userId}`);
+        const res = await fetch(`/api/user/profile?userId=${userId}&t=${Date.now()}`);
         const data = await res.json();
 
-        if (data && data.user) {
-          const userEmail = (data.user.email || '').toLowerCase().trim();
-          
-          if (userEmail === 'ocebort@gmail.com') {
-            document.getElementById('adminMasterView').style.display = 'block';
-            document.getElementById('parentMasterView').style.display = 'none';
-          } else {
-            document.getElementById('adminMasterView').style.display = 'none';
-            document.getElementById('parentMasterView').style.display = 'block';
+        const email = ((data && data.user && data.user.email) || '').toLowerCase().trim();
+        const name = ((data && data.user && data.user.full_name) || '').toLowerCase().trim();
+        const id = ((data && data.user && data.user.id) || '').toLowerCase();
 
-            document.getElementById('parentWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Member'}`;
-            document.getElementById('parentTierBadge').innerText = `${(data.user.subscription_tier || 'Platinum').toUpperCase()} PORTAL`;
-            document.getElementById('parentCreditCount').innerText = data.user.credit_balance || 10;
-          }
+        // STRICT SITTER ROUTING: If user is Marcus, Camila, or ID starts with sit-
+        if (email.includes('marcus') || name.includes('marcus') || email.includes('camila') || id.startsWith('sit-')) {
+          document.getElementById('sitterMasterView').style.display = 'block';
+          document.getElementById('parentMasterView').style.display = 'none';
+          document.getElementById('adminMasterView').style.display = 'none';
+          document.getElementById('sitterWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Marcus'}`;
+        } else if (email === 'ocebort@gmail.com') {
+          document.getElementById('adminMasterView').style.display = 'block';
+          document.getElementById('sitterMasterView').style.display = 'none';
+          document.getElementById('parentMasterView').style.display = 'none';
+        } else {
+          document.getElementById('parentMasterView').style.display = 'block';
+          document.getElementById('sitterMasterView').style.display = 'none';
+          document.getElementById('adminMasterView').style.display = 'none';
+          document.getElementById('parentWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Member'}`;
         }
       } catch (err) {
         console.error('Portal load error:', err);
       }
-    }
-
-    function switchPetTab(petKey, btn) {
-      document.querySelectorAll('.pet-tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      if (petKey === 'pet2') {
-        document.getElementById('parentPetName').value = 'Milo';
-        document.getElementById('parentPetBreed').value = 'French Bulldog • #441029851';
-        document.getElementById('parentPetInstructions').value = 'Feeding: 1 cup wet food @ 9am & 5pm.\nSpecial Note: Sensitive stomach. No chicken treats.';
-        document.getElementById('petSickAlert').checked = true;
-      } else {
-        document.getElementById('parentPetName').value = 'Zoé';
-        document.getElementById('parentPetBreed').value = 'Golden Retriever Mix • #985141029';
-        document.getElementById('parentPetInstructions').value = 'Feeding: 1.5 cups kibble @ 8am & 6pm.\nMedication: Daily joint vitamin chew with breakfast.';
-        document.getElementById('petSickAlert').checked = false;
-      }
-    }
-
-    function addNewPetForm() {
-      document.getElementById('parentPetName').value = '';
-      document.getElementById('parentPetBreed').value = '';
-      document.getElementById('parentPetInstructions').value = '';
-      document.getElementById('petSickAlert').checked = false;
-      alert('✨ Blank profile ready. Fill in your new companion details below.');
-    }
-
-    async function changeTier(tierName) {
-      const userId = localStorage.getItem('zoelys_user_id');
-      await fetch('/api/user/subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, tier: tierName, action_type: 'Active' })
-      });
-      alert(`✨ Subscription updated to ${tierName}!`);
-      document.getElementById('subModal').style.display = 'none';
-      document.getElementById('parentTierBadge').innerText = `${tierName.toUpperCase()} PORTAL`;
-    }
-
-    async function pauseSubscription() {
-      if (confirm('Pause your concierge subscription? Your remaining credits will stay saved until you return.')) {
-        alert('✨ Membership paused. We look forward to welcoming you back soon!');
-        document.getElementById('subModal').style.display = 'none';
-      }
-    }
-
-    async function savePetManual(e) {
-      e.preventDefault();
-      const userId = localStorage.getItem('zoelys_user_id');
-      const isSick = document.getElementById('petSickAlert').checked;
-      const payload = {
-        user_id: userId,
-        pet_name: document.getElementById('parentPetName').value,
-        breed: document.getElementById('parentPetBreed').value,
-        instructions: document.getElementById('parentPetInstructions').value
-      };
-
-      await fetch('/api/user/pets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (isSick) {
-        alert('🚨 Emergency / Health Alert flagged! Sitter Camila R. and Zoélys Concierge have been notified via SMS.');
-      } else {
-        alert('✨ Companion Care Dossier saved successfully!');
-      }
-    }
-
-    async function buyCredits() {
-      const userId = localStorage.getItem('zoelys_user_id');
-      await fetch('/api/user/add-credits', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, amount: 5 })
-      });
-      alert('✨ 5 Extra Credits added to your balance!');
-      const countEl = document.getElementById('parentCreditCount');
-      countEl.innerText = parseInt(countEl.innerText) + 5;
-    }
-
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tab-' + tabId).classList.add('active');
     }
 
     document.addEventListener('DOMContentLoaded', loadUserPortal);
