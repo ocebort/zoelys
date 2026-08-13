@@ -1,0 +1,91 @@
+:root {
+  --bg-cream: #FAF6F0;
+  --card-white: #FFFFFF;
+  --text-dark: #1C1613;
+  --text-muted: #8E8883;
+  --accent-coral: #D97757;
+  --border-color: #EFEAE3;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* MASTER STATIC NAVBAR - IDENTICAL ACROSS ALL PAGES */
+header.master-navbar {
+  width: 100%;
+  height: 80px;
+  background: var(--bg-cream);
+  padding: 0 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand-logo {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+.nav-center {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-center a, .nav-right a {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nav-center a.active-link {
+  color: var(--accent-coral) !important;
+}
+
+.nav-right {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.btn-join-pill {
+  background: var(--accent-coral);
+  color: white !important;
+  padding: 0.65rem 1.4rem;
+  border-radius: 2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 850px) {
+  .nav-center { display: none; }
+  header.master-navbar { padding: 0 1.5rem; }
+}
