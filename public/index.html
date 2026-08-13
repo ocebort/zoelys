@@ -418,3 +418,16 @@
 
 </body>
 </html>
+<script>
+  // Auto-scroll to anchor section if navigated from another page
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash) {
+      setTimeout(() => {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  });
+</script>
