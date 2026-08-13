@@ -3,79 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Member Portal Access</title>
+  <title>Zoélys — Apply for Access</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    main.auth-container { max-width: 460px; width: 90%; margin: 3.5rem auto 6rem auto; }
-    .auth-box { background: var(--card-white); border-radius: 1rem; padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-    .auth-box h1 { font-family: var(--font-serif); font-size: 2.4rem; text-align: center; margin-bottom: 0.3rem; font-weight: 400; }
-    
-    .role-toggle { display: flex; background: #FAF6F0; border-radius: 2rem; padding: 0.35rem; margin: 1.5rem 0 1.5rem 0; border: 1px solid #EFEAE3; }
-    .role-btn { flex: 1; border: none; background: transparent; padding: 0.65rem; font-size: 0.75rem; font-weight: 600; border-radius: 1.5rem; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+    main.container { max-width: 480px; width: 100%; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
+    .auth-card { background: white; border: 1px solid var(--border-color); border-radius: 1.2rem; padding: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+    .auth-title { font-family: var(--font-serif); font-size: 2.4rem; text-align: center; font-weight: 400; margin-bottom: 0.3rem; }
+    .auth-subtitle { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; }
+
+    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #FAF6F0; padding: 0.3rem; border-radius: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+    .role-btn { border: none; background: transparent; padding: 0.7rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: 1.5rem; color: var(--text-muted); transition: all 0.2s ease; }
     .role-btn.active { background: #1C1613; color: white; }
 
     .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-dark); }
-    .form-group input, .form-group select { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: var(--font-sans); outline: none; background: #FAF8F5; font-size: 0.85rem; }
-
-    .btn-submit { background: var(--accent-coral); color: white; border: none; padding: 0.9rem 1.8rem; border-radius: 2rem; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; cursor: pointer; width: 100%; margin-top: 0.5rem; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
+    .form-input { width: 100%; padding: 0.85rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; box-sizing: border-box; }
     
-    .forgot-link { display: block; text-align: right; font-size: 0.7rem; color: var(--text-muted); text-decoration: none; margin-top: -0.5rem; margin-bottom: 1rem; }
-    .toggle-footer { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); }
-    .toggle-footer a { color: var(--accent-coral); font-weight: 600; text-decoration: none; }
+    .btn-coral { background: var(--accent-coral); color: white; border: none; padding: 0.95rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; width: 100%; margin-top: 0.5rem; }
+    .toggle-link { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem; cursor: pointer; }
+    .toggle-link strong { color: var(--accent-coral); }
   </style>
 </head>
 <body>
 
-  <main class="auth-container">
-    <div class="auth-box">
-      <h1 id="pageTitle">Member Portal Access</h1>
-      <p style="color: var(--text-muted); font-size: 0.8rem; text-align: center;" id="pageSubtitle">Sign in or register for your concierge account.</p>
+  <main class="container">
+    <div class="auth-card">
+      <h1 class="auth-title" id="authTitle">Apply for Access</h1>
+      <p class="auth-subtitle" id="authSub">Choose your role & create your concierge account.</p>
 
       <!-- ROLE SELECTOR -->
-      <div class="role-toggle" id="roleBox">
-        <button type="button" class="role-btn active" id="btnRoleOwner" onclick="setRole('owner')">Pet Parent 🐾</button>
-        <button type="button" class="role-btn" id="btnRoleSitter" onclick="setRole('sitter')">Pet Sitter 🐕</button>
+      <div class="role-toggle" id="roleToggleBar">
+        <button type="button" class="role-btn active" onclick="setRole('owner', this)">Pet Parent 🐾</button>
+        <button type="button" class="role-btn" onclick="setRole('sitter', this)">Pet Sitter 🐕</button>
       </div>
 
-      <!-- MAIN AUTH FORM -->
-      <form id="authForm" onsubmit="handleAuth(event)">
-        <div class="form-group" id="nameGroup" style="display: none;">
-          <label>Full Name</label>
-          <input type="text" id="authName" placeholder="e.g. Océane Bort">
+      <form onsubmit="handleAuth(event)">
+        
+        <!-- FULL NAME (HIDDEN ON LOGIN / FORGOT) -->
+        <div class="form-group" id="nameGroup">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input">
         </div>
 
+        <!-- EMAIL -->
         <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" id="authEmail" placeholder="ocebort@gmail.com" required>
+          <label class="form-label">Email Address</label>
+          <input type="email" id="authEmail" placeholder="ocebort@gmail.com" required class="form-input">
         </div>
 
+        <!-- PASSWORD -->
         <div class="form-group" id="passGroup">
-          <label>Password</label>
-          <input type="password" id="authPass" placeholder="••••••••">
+          <label class="form-label">Password</label>
+          <input type="password" id="authPass" placeholder="••••••••" class="form-input">
         </div>
 
-        <a href="#" onclick="showForgotView(event)" class="forgot-link" id="forgotBtn">Forgot password?</a>
-
-        <div class="form-group" id="tierGroup" style="display: none;">
-          <label>Membership Tier</label>
-          <select id="authTier">
-            <option value="Gold ($65/mo)">Gold — $65/mo (5 Monthly Credits)</option>
-            <option value="Platinum ($125/mo)" selected>Platinum — $125/mo (10 Monthly Credits)</option>
-            <option value="Diamond ($180/mo)">Diamond — $180/mo (15 Monthly Credits)</option>
+        <!-- PET PARENT TIER SELECTION -->
+        <div class="form-group" id="tierGroup">
+          <label class="form-label">Select Membership Tier</label>
+          <select id="authTier" class="form-input">
+            <option value="Gold ($65/mo)">Gold Tier ($65/mo • 5 Credits)</option>
+            <option value="Platinum ($125/mo)" selected>Platinum Tier ($125/mo • 10 Credits)</option>
+            <option value="Diamond ($195/mo)">Diamond Tier ($195/mo • 15 Credits)</option>
           </select>
         </div>
 
-        <button type="submit" class="btn-submit" id="authBtn">SIGN IN &rarr;</button>
+        <!-- SITTER SECRET VETTING CODE FIELD -->
+        <div class="form-group" id="vettingGroup" style="display: none;">
+          <label class="form-label" style="color: var(--accent-coral);">🔑 Zoélys Vetting Authorization ID *</label>
+          <input type="text" id="authVettingCode" placeholder="e.g. ZOELYS-VET-2026" class="form-input" style="border: 1.5px solid var(--accent-coral); background: #FFF8F6; font-weight: 600; text-transform: uppercase;">
+          <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.3rem;">
+            Required for Sitters. Provided by Zoélys Concierge after vetting.
+          </span>
+        </div>
+
+        <button type="submit" class="btn-coral" id="submitBtn">REGISTER & CONTINUE &rarr;</button>
       </form>
 
-      <div class="toggle-footer" id="footerToggle">
-        <span id="toggleText">Need a new membership?</span>
-        <a href="#" onclick="toggleAuthMode(event)" id="toggleLink">Register Here</a>
+      <div class="toggle-link" id="switchLink" onclick="toggleAuthMode()">
+        Already have an account? <strong>Sign In Here</strong>
+      </div>
+      
+      <div class="toggle-link" id="forgotLink" style="font-size: 0.75rem; margin-top: 0.8rem;" onclick="forgotPassMode()">
+        Forgot password?
       </div>
     </div>
   </main>
@@ -83,46 +96,73 @@
   <script src="/navbar.js"></script>
   <script>
     let selectedRole = 'owner';
-    let isRegisterMode = false;
+    let isRegisterMode = true;
     let isForgotMode = false;
 
-    function setRole(role) {
+    function setRole(role, btn) {
       selectedRole = role;
-      document.getElementById('btnRoleOwner').classList.toggle('active', role === 'owner');
-      document.getElementById('btnRoleSitter').classList.toggle('active', role === 'sitter');
-      document.getElementById('tierGroup').style.display = (isRegisterMode && role === 'owner') ? 'block' : 'none';
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tierGroup = document.getElementById('tierGroup');
+      const vettingGroup = document.getElementById('vettingGroup');
+
+      if (role === 'sitter') {
+        if (tierGroup) tierGroup.style.display = 'none';
+        if (vettingGroup) vettingGroup.style.display = 'block';
+      } else {
+        if (tierGroup) tierGroup.style.display = 'block';
+        if (vettingGroup) vettingGroup.style.display = 'none';
+      }
     }
 
-    function toggleAuthMode(e) {
-      if (e) e.preventDefault();
-      isForgotMode = false;
+    function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
-      
-      document.getElementById('pageTitle').innerText = isRegisterMode ? 'Apply for Access' : 'Member Portal Access';
-      document.getElementById('pageSubtitle').innerText = isRegisterMode ? 'Choose your role & create your concierge account.' : 'Sign in or register for your concierge account.';
-      document.getElementById('roleBox').style.display = 'flex';
-      document.getElementById('nameGroup').style.display = isRegisterMode ? 'block' : 'none';
-      document.getElementById('passGroup').style.display = 'block';
-      document.getElementById('forgotBtn').style.display = isRegisterMode ? 'none' : 'block';
-      document.getElementById('tierGroup').style.display = (isRegisterMode && selectedRole === 'owner') ? 'block' : 'none';
-      document.getElementById('authBtn').innerText = isRegisterMode ? 'REGISTER & CONTINUE →' : 'SIGN IN →';
-      document.getElementById('toggleText').innerText = isRegisterMode ? 'Already have an account?' : 'Need a new membership?';
-      document.getElementById('toggleLink').innerText = isRegisterMode ? 'Sign In Here' : 'Register Here';
+      isForgotMode = false;
+
+      const title = document.getElementById('authTitle');
+      const sub = document.getElementById('authSub');
+      const nameGrp = document.getElementById('nameGroup');
+      const tierGrp = document.getElementById('tierGroup');
+      const vettingGrp = document.getElementById('vettingGroup');
+      const passGrp = document.getElementById('passGroup');
+      const roleBar = document.getElementById('roleToggleBar');
+      const btn = document.getElementById('submitBtn');
+      const link = document.getElementById('switchLink');
+
+      if (isRegisterMode) {
+        title.innerText = 'Apply for Access';
+        sub.innerText = 'Choose your role & create your concierge account.';
+        nameGrp.style.display = 'block';
+        passGrp.style.display = 'block';
+        roleBar.style.display = 'grid';
+        btn.innerText = 'REGISTER & CONTINUE →';
+        link.innerHTML = 'Already have an account? <strong>Sign In Here</strong>';
+        setRole(selectedRole, document.querySelector('.role-btn.active'));
+      } else {
+        title.innerText = 'Member Access';
+        sub.innerText = 'Sign in to your private concierge portal.';
+        nameGrp.style.display = 'none';
+        tierGrp.style.display = 'none';
+        vettingGrp.style.display = 'none';
+        roleBar.style.display = 'none';
+        passGrp.style.display = 'block';
+        btn.innerText = 'SIGN IN TO PORTAL →';
+        link.innerHTML = 'Need an account? <strong>Register Here</strong>';
+      }
     }
 
-    function showForgotView(e) {
-      e.preventDefault();
+    function forgotPassMode() {
       isForgotMode = true;
-      document.getElementById('pageTitle').innerText = 'Reset Password';
-      document.getElementById('pageSubtitle').innerText = 'Enter your email address to receive password reset instructions.';
-      document.getElementById('roleBox').style.display = 'none';
+      document.getElementById('authTitle').innerText = 'Reset Password';
+      document.getElementById('authSub').innerText = 'Enter your account email to receive reset instructions.';
       document.getElementById('nameGroup').style.display = 'none';
-      document.getElementById('passGroup').style.display = 'none';
       document.getElementById('tierGroup').style.display = 'none';
-      document.getElementById('forgotBtn').style.display = 'none';
-      document.getElementById('authBtn').innerText = 'SEND RESET INSTRUCTIONS →';
-      document.getElementById('toggleText').innerText = 'Remembered your password?';
-      document.getElementById('toggleLink').innerText = 'Return to Sign In';
+      document.getElementById('vettingGroup').style.display = 'none';
+      document.getElementById('roleToggleBar').style.display = 'none';
+      document.getElementById('passGroup').style.display = 'none';
+      document.getElementById('submitBtn').innerText = 'SEND RESET INSTRUCTIONS →';
+      document.getElementById('switchLink').innerHTML = 'Back to <strong>Sign In</strong>';
     }
 
     async function handleAuth(e) {
@@ -130,7 +170,7 @@
       const email = document.getElementById('authEmail').value;
 
       if (isForgotMode) {
-        alert('✨ Reset instructions sent! Please check your email inbox.');
+        alert('✨ Password reset link sent to ' + email);
         toggleAuthMode();
         return;
       }
@@ -138,30 +178,39 @@
       const password = document.getElementById('authPass').value;
 
       if (isRegisterMode) {
+        localStorage.clear();
         const full_name = document.getElementById('authName').value;
         const tier = document.getElementById('authTier').value;
+        const vetting_code = document.getElementById('authVettingCode').value;
 
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
+          body: JSON.stringify({ email, password, full_name, tier, role: selectedRole, vetting_code })
         });
+
         const data = await res.json();
         if (data.success) {
           localStorage.setItem('zoelys_user_id', data.userId);
           window.location.href = '/dashboard';
-        } else { alert(data.error || 'Registration failed'); }
+        } else {
+          alert(data.error || 'Registration failed');
+        }
       } else {
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
+
         const data = await res.json();
         if (data.success) {
+          localStorage.removeItem('zoelys_user_id');
           localStorage.setItem('zoelys_user_id', data.user.id);
           window.location.href = '/dashboard';
-        } else { alert(data.error || 'Invalid credentials'); }
+        } else {
+          alert(data.error || 'Invalid credentials');
+        }
       }
     }
   </script>
