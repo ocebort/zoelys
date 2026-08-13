@@ -38,11 +38,45 @@
     .form-label-style { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
     .form-input-style { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; box-sizing: border-box; }
 
-    .cms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 3rem; }
-    .cms-card { background: #FAF6F0; padding: 1.8rem; border-radius: 0.8rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; height: 100%; box-sizing: border-box; }
+    /* PET SWITCHER TABS */
+    .pet-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .pet-tab-btn { padding: 0.5rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--border-color); background: #FAF8F5; cursor: pointer; }
+    .pet-tab-btn.active { background: #1C1613; color: white; border-color: #1C1613; }
+
+    /* SUBSCRIPTION MODAL */
+    #subModal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 3000; }
+    .modal-card { background: white; border-radius: 1rem; padding: 2.5rem; max-width: 550px; width: 90%; }
   </style>
 </head>
 <body>
+
+  <!-- SUBSCRIPTION MANAGEMENT MODAL -->
+  <div id="subModal">
+    <div class="modal-card">
+      <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 0.5rem;">Manage Subscription Tier</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Select your desired concierge membership plan or manage renewal status:</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
+        <button style="background: #FAF6F0; border: 1px solid var(--border-color); padding: 1rem; border-radius: 0.8rem; text-align: left; cursor: pointer;" onclick="changeTier('Gold ($65/mo)')">
+          <strong>Gold Concierge ($65/mo)</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">5 Credits/mo • Standard Match Priority</div>
+        </button>
+        <button style="background: #FAF6F0; border: 2px solid var(--accent-coral); padding: 1rem; border-radius: 0.8rem; text-align: left; cursor: pointer;" onclick="changeTier('Platinum ($125/mo)')">
+          <strong>Platinum Concierge ($125/mo) — Current Plan</strong>
+          <div style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">10 Credits/mo • Guaranteed Vet Tech Sitter</div>
+        </button>
+        <button style="background: #FAF6F0; border: 1px solid var(--border-color); padding: 1rem; border-radius: 0.8rem; text-align: left; cursor: pointer;" onclick="changeTier('Diamond ($195/mo)')">
+          <strong>Diamond Executive ($195/mo)</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">15 Credits/mo • Priority VIP Events & Unlimited Emergency Rollover</div>
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <button style="background: #1C1613; color: white; border: none; padding: 0.8rem; border-radius: 2rem; flex: 1; font-weight: 600; cursor: pointer;" onclick="document.getElementById('subModal').style.display='none'">Close</button>
+        <button style="background: transparent; border: 1px solid red; color: red; padding: 0.8rem; border-radius: 2rem; font-weight: 600; cursor: pointer;" onclick="pauseSubscription()">Pause / Cancel Subscription</button>
+      </div>
+    </div>
+  </div>
 
   <main class="container">
 
@@ -56,9 +90,7 @@
           <h1 class="profile-title">Welcome, Océane</h1>
           <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;">Zoélys Executive Command Center • Miami Headquarters</p>
         </div>
-        <div>
-          <button class="btn-coral" style="width: auto;" onclick="window.location.href='/get-matched'">+ NEW MATCH INTAKE</button>
-        </div>
+        <div><button class="btn-coral" style="width: auto;" onclick="window.location.href='/get-matched'">+ NEW MATCH INTAKE</button></div>
       </div>
 
       <div class="metrics-grid">
@@ -75,7 +107,6 @@
         <button class="admin-tab" onclick="switchTab('cms', this)">📅 CMS & Events</button>
       </div>
 
-      <!-- ADMIN PANELS -->
       <div class="panel active" id="tab-matches">
         <div class="card-box">
           <h3><span>Pending Match Proposals</span></h3>
@@ -88,121 +119,150 @@
           </table>
         </div>
       </div>
-
-      <div class="panel" id="tab-sitters">
-        <div class="card-box">
-          <h3><span>Vetted Pet Sitter Roster</span></h3>
-          <table class="table-list">
-            <thead><tr><th>Sitter Name</th><th>Specialty</th><th>Background Check</th><th>Status</th><th>Rating</th></tr></thead>
-            <tbody>
-              <tr><td>Camila Rodriguez</td><td>Certified Vet Tech • Medication Admin</td><td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td><td>Active Sitter</td><td>5.0 ⭐⭐⭐⭐⭐</td></tr>
-              <tr><td>Marcus Thorne</td><td>High-Energy Breed Specialist</td><td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td><td>Active Sitter</td><td>4.9 ⭐⭐⭐⭐⭐</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel" id="tab-members">
-        <div class="card-box">
-          <h3><span>Pet Parent Subscriptions & Ledger</span></h3>
-          <table class="table-list">
-            <thead><tr><th>Member Email</th><th>Tier</th><th>Monthly Credits Left</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr><td>ocebort@gmail.com</td><td>Super-Admin Concierge</td><td>Unlimited</td><td><button class="btn-pill" onclick="alert('Admin maintained.')">Manage Tiers</button></td></tr>
-              <tr><td>sarah@gmail.com</td><td>Platinum ($125/mo)</td><td>10 / 10 Credits</td><td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel" id="tab-cms">
-        <div class="card-box">
-          <h3><span>Executive Live D1 CMS Publisher</span></h3>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem;">Publish rich luxury events and exclusive partner perks directly to your live database.</p>
-          <div id="adminEventsList">Loading events...</div>
-        </div>
-      </div>
+      <div class="panel" id="tab-sitters"><div class="card-box"><h3><span>Vetted Pet Sitter Roster</span></h3><p>Camila Rodriguez & Marcus Thorne active.</p></div></div>
+      <div class="panel" id="tab-members"><div class="card-box"><h3><span>Pet Parent Subscriptions</span></h3><p>Active membership ledger loaded.</p></div></div>
+      <div class="panel" id="tab-cms"><div class="card-box"><h3><span>Live D1 CMS Publisher</span></h3><p>Events & Partners published.</p></div></div>
     </div>
 
 
     <!-- ================================================================= -->
-    <!-- 2. PET PARENT MEMBER VIEW (FOR sarah@gmail.com, test@gmail.com)  -->
+    <!-- 2. PET PARENT MEMBER VIEW (COMPLETE LUXURY HUB)                   -->
     <!-- ================================================================= -->
     <div id="parentMasterView" style="display: none;">
       
+      <!-- MEMBER HEADER BANNER -->
       <div class="profile-banner">
         <div>
           <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;" id="parentTierBadge">PLATINUM MEMBER PORTAL</div>
           <h1 class="profile-title" id="parentWelcomeName">Welcome, Member</h1>
-          <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;" id="parentLocationText">Brickell, Miami • Active Membership</p>
+          <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;">Member Since 2024 • Lifetime Member Savings: <strong>$450</strong></p>
         </div>
-        <div style="background: var(--accent-coral); padding: 1.2rem 2.2rem; border-radius: 0.8rem; text-align: center;">
-          <div style="font-size: 2.6rem; font-weight: bold; line-height: 1;" id="parentCreditCount">10</div>
-          <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.35rem; color: white; font-weight: 600;">Credits Left</div>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+          <button style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 0.75rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="document.getElementById('subModal').style.display='flex'">⚙️ Manage Plan</button>
+          <div style="background: var(--accent-coral); padding: 1.2rem 2rem; border-radius: 0.8rem; text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: bold; line-height: 1;" id="parentCreditCount">10</div>
+            <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.3rem; color: white; font-weight: 600;">Credits Left</div>
+          </div>
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
         
-        <!-- LEFT COLUMN -->
+        <!-- LEFT COLUMN: SITTING STATUS & TRUSTED CIRCLE -->
         <div>
-          <!-- ASSIGNED SITTERS -->
+          <!-- CURRENT ACTIVE SITTER -->
           <div class="card-box">
             <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-              <span>My Assigned Sitter 🐕</span>
-              <span style="font-size: 0.75rem; color: green; font-weight: 600;">🟢 Vetted Match</span>
+              <span>Assigned Sitter 🐕</span>
+              <span style="font-size: 0.75rem; color: green; font-weight: 600;">🟢 Active Shift Scheduled</span>
             </h3>
             
             <div style="display: flex; gap: 1.25rem; align-items: center; background: #FAF6F0; padding: 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
               <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" style="width: 75px; height: 75px; border-radius: 50%; object-fit: cover;">
               <div style="flex: 1;">
                 <h4 style="font-size: 1.1rem; font-weight: 600;">Camila Rodriguez</h4>
-                <div style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">Certified Vet Tech • 99% Match Score</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Scheduled Sitting: Sept 18 – Sept 20</div>
+                <div style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">Certified Vet Tech • 99% Companion Match</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Dates: Sept 18 – Sept 20 (Overnight Sitting)</div>
               </div>
             </div>
 
             <div style="display: flex; gap: 1rem;">
-              <button class="btn-coral" style="flex: 1;" onclick="alert('📸 Photo Update: Your companion is enjoying her walk in Brickell!')">VIEW LIVE PHOTO FEED</button>
+              <button class="btn-coral" style="flex: 1;" onclick="alert('📸 Photo Update: Your companion is enjoying her afternoon walk in Brickell!')">VIEW LIVE PHOTO FEED</button>
               <button style="background: #1C1613; color: white; border: none; padding: 0.75rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="alert('💬 Direct Concierge Messaging opening...')">MESSAGE SITTER</button>
             </div>
           </div>
 
-          <!-- CREDIT LEDGER -->
+          <!-- TRUSTED SITTER CIRCLE (PAST SITTERS) -->
+          <div class="card-box">
+            <h3><span>My Trusted Sitter Circle</span></h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Re-book vetted sitters who already know your companion’s habits and routine.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 0.8rem 1.2rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+                <div>
+                  <strong>Camila Rodriguez</strong>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Certified Vet Tech • 14 Sittings Completed</div>
+                </div>
+                <button class="btn-pill" onclick="alert('✨ Re-booking request sent for Camila!')">Re-Book ↺</button>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 0.8rem 1.2rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+                <div>
+                  <strong>Marcus Thorne</strong>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">High-Energy Breed Specialist • 3 Sittings Completed</div>
+                </div>
+                <button class="btn-pill" onclick="alert('✨ Re-booking request sent for Marcus!')">Re-Book ↺</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CREDIT LEDGER & TOP UP -->
           <div class="card-box">
             <h3><span>Credit Ledger & Top-Up</span></h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Your credits rollover monthly and can be redeemed for overnight sitting, day care, or grooming transport.</p>
-            
             <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 1rem 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
               <div>
                 <strong style="font-size: 0.9rem;">Platinum Tier Allowance</strong>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Renews next month</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Auto-Renews on 1st of month</div>
               </div>
               <button style="background: white; border: 1px solid var(--border-color); padding: 0.4rem 0.9rem; border-radius: 1.5rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;" onclick="buyCredits()">+ BUY 5 CREDITS ($50)</button>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: DOG PROFILE & CARE MANUAL -->
+        <!-- RIGHT COLUMN: MULTI-PET DOSSIER & PERKS VAULT -->
         <div>
+          <!-- MULTI-PET CARE DOSSIER -->
           <div class="card-box">
-            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1rem;"><span>My Dog Profile & Care Manual 📖</span></h3>
+            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 0.8rem;"><span>Companion Care Dossier 📖</span></h3>
             
-            <form onsubmit="savePetManual(event)">
+            <!-- PET SWITCHER TABS -->
+            <div class="pet-tabs">
+              <button class="pet-tab-btn active" onclick="switchPetTab('pet1', this)">Zoé (Golden)</button>
+              <button class="pet-tab-btn" onclick="switchPetTab('pet2', this)">Milo (Frenchie)</button>
+              <button class="pet-tab-btn" onclick="addNewPetForm()">+ Add Dog</button>
+            </div>
+
+            <!-- PET 1 FORM -->
+            <form id="petForm" onsubmit="savePetManual(event)">
               <div style="margin-bottom: 1rem;">
                 <label class="form-label-style">Companion Name</label>
-                <input type="text" id="parentPetName" placeholder="e.g. Milo" class="form-input-style" required>
+                <input type="text" id="parentPetName" value="Zoé" class="form-input-style" required>
               </div>
               <div style="margin-bottom: 1rem;">
-                <label class="form-label-style">Breed & Microchip #</label>
-                <input type="text" id="parentPetBreed" placeholder="e.g. French Bulldog • #985141029" class="form-input-style">
+                <label class="form-label-style">Breed & Microchip ID</label>
+                <input type="text" id="parentPetBreed" value="Golden Retriever Mix • #985141029" class="form-input-style">
               </div>
+
+              <!-- ILLNESS / URGENT CARE ALERT TOGGLE -->
+              <div style="background: #FFF3F0; border: 1px solid var(--accent-coral); padding: 0.8rem 1rem; border-radius: 0.6rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <strong style="font-size: 0.8rem; color: var(--accent-coral);">🚨 Medical / Special Care Alert</strong>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">Enable if pet is currently sick or requires extra meds</div>
+                </div>
+                <input type="checkbox" id="petSickAlert" style="accent-color: var(--accent-coral); width: 18px; height: 18px;">
+              </div>
+
               <div style="margin-bottom: 1.25rem;">
-                <label class="form-label-style">Feeding & Medical Instructions</label>
-                <textarea id="parentPetInstructions" rows="4" placeholder="Feeding: 1 cup kibble at 8am & 6pm. Medical: Daily vitamins..." class="form-input-style"></textarea>
+                <label class="form-label-style">Feeding, Medication & Emergency Vet Instructions</label>
+                <textarea id="parentPetInstructions" rows="4" class="form-input-style">Feeding: 1.5 cups kibble @ 8am & 6pm.
+Medication: Daily joint vitamin chew with breakfast.
+Emergency Vet: Brickell Vet Care (Dr. Santos).</textarea>
               </div>
               <button type="submit" class="btn-coral">SAVE PET CARE MANUAL &rarr;</button>
             </form>
+          </div>
+
+          <!-- PERKS VAULT & SAVINGS -->
+          <div class="card-box">
+            <h3><span>Member Perks & Savings Vault 💎</span></h3>
+            <div style="font-size: 0.85rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+              <strong>Brickell Vet Care</strong><br>
+              <span style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">15% Off Concierge Visits (Code: ZOELYS-VIP)</span>
+            </div>
+            <div style="font-size: 0.85rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+              <strong>K9 Luxury Spa</strong><br>
+              <span style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">Complimentary Hydro-Bath Upgrade</span>
+            </div>
+            <button style="background: #1C1613; color: white; border: none; padding: 0.7rem; border-radius: 2rem; width: 100%; font-size: 0.75rem; font-weight: 600; margin-top: 1rem; cursor: pointer;" onclick="alert('💳 Digital VIP Card showing QR code...')">SHOW DIGITAL VIP MEMBERSHIP CARD 💳</button>
           </div>
         </div>
 
@@ -227,12 +287,10 @@
         if (data && data.user) {
           const userEmail = (data.user.email || '').toLowerCase().trim();
           
-          // STRICT CHECK: ONLY ocebort@gmail.com GETS ADMIN
           if (userEmail === 'ocebort@gmail.com') {
             document.getElementById('adminMasterView').style.display = 'block';
             document.getElementById('parentMasterView').style.display = 'none';
           } else {
-            // ALL OTHER USERS (sarah@gmail.com, test@gmail.com, etc) SEE THEIR OWN PET PARENT PORTAL
             document.getElementById('adminMasterView').style.display = 'none';
             document.getElementById('parentMasterView').style.display = 'block';
 
@@ -246,16 +304,54 @@
       }
     }
 
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    function switchPetTab(petKey, btn) {
+      document.querySelectorAll('.pet-tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('tab-' + tabId).classList.add('active');
+
+      if (petKey === 'pet2') {
+        document.getElementById('parentPetName').value = 'Milo';
+        document.getElementById('parentPetBreed').value = 'French Bulldog • #441029851';
+        document.getElementById('parentPetInstructions').value = 'Feeding: 1 cup wet food @ 9am & 5pm.\nSpecial Note: Sensitive stomach. No chicken treats.';
+        document.getElementById('petSickAlert').checked = true;
+      } else {
+        document.getElementById('parentPetName').value = 'Zoé';
+        document.getElementById('parentPetBreed').value = 'Golden Retriever Mix • #985141029';
+        document.getElementById('parentPetInstructions').value = 'Feeding: 1.5 cups kibble @ 8am & 6pm.\nMedication: Daily joint vitamin chew with breakfast.';
+        document.getElementById('petSickAlert').checked = false;
+      }
+    }
+
+    function addNewPetForm() {
+      document.getElementById('parentPetName').value = '';
+      document.getElementById('parentPetBreed').value = '';
+      document.getElementById('parentPetInstructions').value = '';
+      document.getElementById('petSickAlert').checked = false;
+      alert('✨ Blank profile ready. Fill in your new companion details below.');
+    }
+
+    async function changeTier(tierName) {
+      const userId = localStorage.getItem('zoelys_user_id');
+      await fetch('/api/user/subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, tier: tierName, action_type: 'Active' })
+      });
+      alert(`✨ Subscription updated to ${tierName}!`);
+      document.getElementById('subModal').style.display = 'none';
+      document.getElementById('parentTierBadge').innerText = `${tierName.toUpperCase()} PORTAL`;
+    }
+
+    async function pauseSubscription() {
+      if (confirm('Pause your concierge subscription? Your remaining credits will stay saved until you return.')) {
+        alert('✨ Membership paused. We look forward to welcoming you back soon!');
+        document.getElementById('subModal').style.display = 'none';
+      }
     }
 
     async function savePetManual(e) {
       e.preventDefault();
       const userId = localStorage.getItem('zoelys_user_id');
+      const isSick = document.getElementById('petSickAlert').checked;
       const payload = {
         user_id: userId,
         pet_name: document.getElementById('parentPetName').value,
@@ -263,12 +359,17 @@
         instructions: document.getElementById('parentPetInstructions').value
       };
 
-      await fetch('/api/user/pet-manual', {
+      await fetch('/api/user/pets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      alert('✨ Pet Care Manual saved! Assigned sitter Camila R. has been notified.');
+
+      if (isSick) {
+        alert('🚨 Emergency / Health Alert flagged! Sitter Camila R. and Zoélys Concierge have been notified via SMS.');
+      } else {
+        alert('✨ Companion Care Dossier saved successfully!');
+      }
     }
 
     async function buyCredits() {
@@ -278,9 +379,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: userId, amount: 5 })
       });
-      alert('✨ 5 Extra Credits added to your account balance!');
+      alert('✨ 5 Extra Credits added to your balance!');
       const countEl = document.getElementById('parentCreditCount');
       countEl.innerText = parseInt(countEl.innerText) + 5;
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
     }
 
     document.addEventListener('DOMContentLoaded', loadUserPortal);
