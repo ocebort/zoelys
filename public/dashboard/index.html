@@ -28,11 +28,16 @@
     .card-box { background: white; border: 1px solid var(--border-color); border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; }
     .card-box h3 { font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.25rem; }
 
+    .table-list { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .table-list th { text-align: left; padding: 0.8rem; background: #FAF6F0; border-bottom: 1px solid var(--border-color); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .table-list td { padding: 1rem 0.8rem; border-bottom: 1px solid var(--border-color); }
+
+    .btn-pill { background: #1C1613; color: white; border: none; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+    .btn-coral { background: var(--accent-coral); color: white; border: none; padding: 0.75rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; }
+
     .form-label-style { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
     .form-input-style { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; }
-    .btn-coral { background: var(--accent-coral); color: white; border: none; padding: 0.75rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; }
-    
-    /* SOCIAL POST MODAL */
+
     #socialModal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 3000; }
     .modal-card { background: white; border-radius: 1rem; padding: 2.5rem; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; }
   </style>
@@ -43,7 +48,7 @@
   <div id="socialModal">
     <div class="modal-card">
       <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 0.5rem;">✨ Event Published! Social Posts Ready</h2>
-      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem;">Copy & paste these tailored posts directly to Instagram and LinkedIn:</p>
+      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem;">Copy & paste these tailored captions directly to Instagram and LinkedIn:</p>
       
       <div style="margin-bottom: 1.5rem;">
         <label class="form-label-style">📲 Instagram Caption</label>
@@ -83,18 +88,134 @@
 
     <!-- NAVIGATION TABS -->
     <div class="admin-nav">
-      <button class="admin-tab" onclick="switchTab('matches', this)">📩 Match Requests Inbox</button>
+      <button class="admin-tab active" onclick="switchTab('matches', this)">📩 Match Requests Inbox</button>
       <button class="admin-tab" onclick="switchTab('sitters', this)">🐕 Sitter Pipeline</button>
       <button class="admin-tab" onclick="switchTab('members', this)">👥 Member CRM</button>
-      <button class="admin-tab active" onclick="switchTab('cms', this)">📅 CMS & Events</button>
+      <button class="admin-tab" onclick="switchTab('cms', this)">📅 CMS & Events</button>
     </div>
 
-    <!-- PANEL 4: RICH CMS PUBLISHER WITH DATE/TIME PICKERS -->
-    <div class="panel active" id="tab-cms">
+    <!-- PANEL 1: MATCH REQUESTS INBOX -->
+    <div class="panel active" id="tab-matches">
+      <div class="card-box">
+        <h3><span>Pending Match Proposals</span></h3>
+        <table class="table-list">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>Companion</th>
+              <th>Service Required</th>
+              <th>Dates Needed</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Océane B.</strong></td>
+              <td>Zoé (Golden Retriever)</td>
+              <td>Overnight Concierge Stay</td>
+              <td>Sept 18 - Sept 20</td>
+              <td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td>
+              <td><button class="btn-pill" onclick="alert('✨ Camila R. assigned to Zoé!')">Assign Camila R. &rarr;</button></td>
+            </tr>
+            <tr>
+              <td><strong>Julian M.</strong></td>
+              <td>Milo (French Bulldog)</td>
+              <td>Day Care & Walk</td>
+              <td>Sept 22</td>
+              <td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td>
+              <td><button class="btn-pill" onclick="alert('✨ Marcus T. assigned to Milo!')">Assign Marcus T. &rarr;</button></td>
+            </tr>
+            <tr>
+              <td><strong>Elena R.</strong></td>
+              <td>Coco (Poodle Mix)</td>
+              <td>Medication Sitting</td>
+              <td>Oct 01 - Oct 04</td>
+              <td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td>
+              <td><button class="btn-pill" onclick="alert('✨ Camila R. assigned to Coco!')">Assign Camila R. &rarr;</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL 2: SITTER PIPELINE -->
+    <div class="panel" id="tab-sitters">
+      <div class="card-box">
+        <h3><span>Vetted Pet Sitter Roster</span></h3>
+        <table class="table-list">
+          <thead>
+            <tr>
+              <th>Sitter Name</th>
+              <th>Specialty</th>
+              <th>Background Check</th>
+              <th>Status</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Camila Rodriguez</td>
+              <td>Certified Vet Tech • Medication Admin</td>
+              <td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td>
+              <td>Active Sitter</td>
+              <td>5.0 ⭐⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td>Marcus Thorne</td>
+              <td>High-Energy Breed Specialist</td>
+              <td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td>
+              <td>Active Sitter</td>
+              <td>4.9 ⭐⭐⭐⭐⭐</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL 3: MEMBER CRM -->
+    <div class="panel" id="tab-members">
+      <div class="card-box">
+        <h3><span>Pet Parent Subscriptions & Ledger</span></h3>
+        <table class="table-list">
+          <thead>
+            <tr>
+              <th>Member Email</th>
+              <th>Tier</th>
+              <th>Monthly Credits Left</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ocebort@gmail.com</td>
+              <td>Super-Admin Concierge</td>
+              <td>Unlimited</td>
+              <td><button class="btn-pill" onclick="alert('Admin account maintained.')">Manage Tiers</button></td>
+            </tr>
+            <tr>
+              <td>sarah.m@gmail.com</td>
+              <td>Platinum ($125/mo)</td>
+              <td>8 / 10 Credits</td>
+              <td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td>
+            </tr>
+            <tr>
+              <td>julian.m@gmail.com</td>
+              <td>Gold ($65/mo)</td>
+              <td>3 / 5 Credits</td>
+              <td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL 4: RICH CMS PUBLISHER & ACTIVE CONTENT TRACKER -->
+    <div class="panel" id="tab-cms">
       <div class="card-box">
         <h3><span>Executive Live D1 CMS Publisher</span></h3>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
           
           <!-- RICH EVENT PUBLISHER -->
           <div style="background: #FAF6F0; padding: 1.8rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
@@ -120,7 +241,7 @@
                 </div>
               </div>
 
-              <!-- DATES PICKERS (NO TYPING!) -->
+              <!-- DATES PICKERS -->
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <div>
                   <label class="form-label-style">Start Date</label>
@@ -132,7 +253,7 @@
                 </div>
               </div>
 
-              <!-- TIMES PICKERS (NO TYPING!) -->
+              <!-- TIMES PICKERS -->
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <div>
                   <label class="form-label-style">Start Time</label>
@@ -203,6 +324,24 @@
           </div>
 
         </div>
+
+        <!-- LIVE CONTENT TRACKER & DELETE LIST -->
+        <div style="border-top: 1px solid var(--border-color); padding-top: 2rem;">
+          <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.25rem;">Active Content Tracker & Manager</h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div style="background: #FAF6F0; border: 1px solid var(--border-color); border-radius: 0.8rem; padding: 1.5rem;">
+              <h4 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1rem;">Published Events 📅</h4>
+              <div id="adminEventsList" style="font-size: 0.85rem; color: var(--text-muted);">Loading events from D1...</div>
+            </div>
+
+            <div style="background: #FAF6F0; border: 1px solid var(--border-color); border-radius: 0.8rem; padding: 1.5rem;">
+              <h4 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1rem;">Published Partners 💎</h4>
+              <div id="adminPartnersList" style="font-size: 0.85rem; color: var(--text-muted);">Loading partners from D1...</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -214,6 +353,57 @@
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + tabId).classList.add('active');
+      if (tabId === 'cms') loadCmsTracker();
+    }
+
+    async function loadCmsTracker() {
+      try {
+        const resEvt = await fetch('/api/events');
+        const dataEvt = await resEvt.json();
+        const evts = dataEvt.events || dataEvt;
+        const evtContainer = document.getElementById('adminEventsList');
+        if (evtContainer && Array.isArray(evts)) {
+          if (evts.length === 0) evtContainer.innerHTML = 'No active events published yet.';
+          else {
+            evtContainer.innerHTML = evts.map(e => `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                <div>
+                  <strong style="color: var(--text-dark);">${e.title}</strong><br>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">${e.date || e.event_date}</span>
+                </div>
+                <button onclick="deleteContent('events', '${e.id}')" style="background: white; border: 1px solid #EFEAE3; color: #D97757; padding: 0.35rem 0.8rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;">Delete</button>
+              </div>
+            `).join('');
+          }
+        }
+
+        const resPrt = await fetch('/api/partners');
+        const dataPrt = await resPrt.json();
+        const prts = dataPrt.partners || dataPrt;
+        const prtContainer = document.getElementById('adminPartnersList');
+        if (prtContainer && Array.isArray(prts)) {
+          if (prts.length === 0) prtContainer.innerHTML = 'No active partners published yet.';
+          else {
+            prtContainer.innerHTML = prts.map(p => `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                <div>
+                  <strong style="color: var(--text-dark);">${p.name}</strong><br>
+                  <span style="font-size: 0.75rem; color: var(--accent-coral);">${p.perk || p.category}</span>
+                </div>
+                <button onclick="deleteContent('partners', '${p.id}')" style="background: white; border: 1px solid #EFEAE3; color: #D97757; padding: 0.35rem 0.8rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;">Delete</button>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) { console.error('Tracker error:', e); }
+    }
+
+    async function deleteContent(type, id) {
+      if (confirm(`Remove this ${type} from the live site?`)) {
+        await fetch(`/api/${type}/${id}`, { method: 'DELETE' });
+        alert('✨ Removed successfully!');
+        loadCmsTracker();
+      }
     }
 
     async function publishEvent(e) {
@@ -242,7 +432,6 @@
 
       await fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
 
-      // GENERATE INSTAGRAM & LINKEDIN POSTS
       document.getElementById('igPostText').value = 
 `✨ ZOÉLYS EXCLUSIVE — Join us for ${title} in partnership with ${sponsor}!
 
@@ -267,6 +456,7 @@ ${desc}
 Learn more about our membership & partner perks at zoelys.com.`;
 
       document.getElementById('socialModal').style.display = 'flex';
+      loadCmsTracker();
     }
 
     function copyText(id) {
@@ -288,6 +478,12 @@ Learn more about our membership & partner perks at zoelys.com.`;
       };
       await fetch('/api/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       alert('✨ Exclusive Partner Perk Published Live!');
+      loadCmsTracker();
+    }
+
+    const existingUserId = localStorage.getItem('zoelys_user_id');
+    if (!existingUserId) {
+      window.location.href = '/join';
     }
   </script>
 </body>

@@ -3,228 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Our Partner Network</title>
+  <title>Zoélys — Preferred Partners & Perks</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
 
   <style>
-    :root {
-      --bg-cream: #FAF6F0;
-      --card-dark: #201A17;
-      --card-white: #FFFFFF;
-      --text-dark: #1C1613;
-      --text-muted: #8E8883;
-      --accent-coral: #D97757;
-      --border-color: #EFEAE3;
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans: 'Inter', -apple-system, sans-serif;
-    }
+    main.container { max-width: 1100px; width: 100%; margin: 3rem auto 6rem auto; padding: 0 1.5rem; }
+    .hero-sec { text-align: center; margin-bottom: 3rem; }
+    .hero-sec h1 { font-family: var(--font-serif); font-size: 3.2rem; font-weight: 400; margin-bottom: 0.5rem; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    .filter-pills { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+    .filter-pill { background: #FAF8F5; color: #1C1613; border: 1px solid #EFEAE3; padding: 0.6rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .filter-pill.active { background: #1C1613; color: white; border-color: #1C1613; }
 
-    body {
-      background-color: var(--bg-cream);
-      color: var(--text-dark);
-      font-family: var(--font-sans);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header.navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 3rem;
-      background: var(--bg-cream);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .brand-logo {
-      font-family: var(--font-serif);
-      font-size: 1.6rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: var(--text-dark);
-      text-decoration: none;
-    }
-
-    .back-link {
-      color: var(--text-dark);
-      text-decoration: none;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .hero-banner {
-      background-color: #201A17;
-      color: #F7F3EC;
-      text-align: center;
-      padding: 4.5rem 1rem 5.5rem 1rem;
-    }
-
-    .hero-tag {
-      color: var(--accent-coral);
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-title {
-      font-family: var(--font-serif);
-      font-size: 3.2rem;
-      font-weight: 400;
-      letter-spacing: 0.03em;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-subtitle {
-      color: #A39B93;
-      font-size: 0.9rem;
-      font-weight: 300;
-    }
-
-    main.partners-grid {
-      max-width: 1100px;
-      margin: 3rem auto 5rem auto;
-      padding: 0 1.5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2rem;
-      width: 100%;
-    }
-
-    .partner-card {
-      background: var(--card-white);
-      border-radius: 1rem;
-      padding: 2rem;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .badge-approved {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: #1C1613;
-      color: #FAF6F0;
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      padding: 0.3rem 0.6rem;
-      border-radius: 1rem;
-      text-transform: uppercase;
-    }
-
-    .logo-circle {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #1C1613;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .partner-category {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent-coral);
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .partner-name {
-      font-family: var(--font-serif);
-      font-size: 1.7rem;
-      font-weight: 500;
-      margin-bottom: 0.75rem;
-    }
-
-    .partner-desc {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-
-    .partner-link {
-      color: var(--text-dark);
-      text-decoration: none;
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    @media (max-width: 600px) { main.partners-grid { grid-template-columns: 1fr; } }
+    .partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
+    .partner-card { background: white; border: 1px solid #EFEAE3; border-radius: 1rem; overflow: hidden; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
   </style>
 </head>
 <body>
 
-  <header class="navbar">
-    <a href="/" class="brand-logo">ZOÉLYS</a>
-    <a href="/" class="back-link">&larr; BACK TO HOME</a>
-  </header>
+  <main class="container">
+    <div class="hero-sec">
+      <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">VIP BENEFITS</div>
+      <h1>Preferred Partners & Perks</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Exclusive discounts, priority appointments, and complimentary upgrades across Miami.</p>
+    </div>
 
-  <div class="hero-banner">
-    <div class="hero-tag">A CURATED CIRCLE</div>
-    <h1 class="hero-title">Our Partners</h1>
-    <p class="hero-subtitle">Every partner is personally selected by the Zoélys team.</p>
-  </div>
+    <!-- FILTER PILLS -->
+    <div class="filter-pills">
+      <button class="filter-pill active" onclick="filterPartners('All', this)">All Partners</button>
+      <button class="filter-pill" onclick="filterPartners('Veterinary Care', this)">Veterinary Care</button>
+      <button class="filter-pill" onclick="filterPartners('Luxury Grooming', this)">Luxury Grooming</button>
+      <button class="filter-pill" onclick="filterPartners('Boutique Hotels', this)">Boutique Hotels</option>
+      <button class="filter-pill" onclick="filterPartners('Pet Dining & Treats', this)">Dining & Treats</button>
+    </div>
 
-  <main class="partners-grid" id="partnersGrid">
-    <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">Loading partner network from Cloudflare D1...</p>
+    <!-- DYNAMIC PARTNERS GRID -->
+    <div class="partners-grid" id="partnersContainer">
+      <div style="text-align: center; grid-column: 1/-1; padding: 3rem; color: var(--text-muted);">Loading partner perks...</div>
+    </div>
   </main>
 
+  <script src="/navbar.js"></script>
   <script>
+    let allPartners = [];
+
     async function fetchPartners() {
       try {
         const res = await fetch('/api/partners');
-        const partners = await res.json();
-        const grid = document.getElementById('partnersGrid');
-
-        if (partners.length === 0) {
-          grid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem;">
-              <p style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--text-dark); margin-bottom: 0.5rem;">No partner network items listed</p>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Add partners inside your <a href="/admin" style="color: var(--accent-coral);">/admin CMS dashboard</a>!</p>
-            </div>
-          `;
-          return;
-        }
-
-        grid.innerHTML = partners.map(p => `
-          <div class="partner-card">
-            <span class="badge-approved">ZOÉLYS APPROVED</span>
-            <div>
-              <div class="logo-circle">${p.name.charAt(0)}</div>
-              <div class="partner-category">${p.category || 'LUXURY CONCIERGE'}</div>
-              <h2 class="partner-name">${p.name}</h2>
-              <p class="partner-desc">Hand-selected luxury partner offering premier services to Zoélys members in Miami.</p>
-            </div>
-            <div>
-              <a href="${p.website_url || '#'}" target="_blank" class="partner-link">Discover &rarr;</a>
-            </div>
-          </div>
-        `).join('');
-      } catch (err) { console.error(err); }
+        const data = await res.json();
+        allPartners = data.partners || data;
+        renderPartners(allPartners);
+      } catch (e) {
+        document.getElementById('partnersContainer').innerHTML = '<div style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Unable to load partners.</div>';
+      }
     }
-    fetchPartners();
-  </script>
 
-<script src="/navbar.js"></script></body>
+    function renderPartners(list) {
+      const container = document.getElementById('partnersContainer');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<div style="text-align: center; grid-column: 1/-1; padding: 4rem; color: var(--text-muted);">No partners found in this category.</div>';
+        return;
+      }
+
+      container.innerHTML = list.map(p => `
+        <div class="partner-card">
+          <div>
+            ${p.image_url ? `<img src="${p.image_url}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1.25rem;">` : ''}
+            <div style="font-size: 0.7rem; letter-spacing: 0.12em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">${p.category || 'LUXURY CARE'}</div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin: 0.3rem 0;">${p.name}</h3>
+            <div style="font-size: 0.85rem; color: var(--text-dark); font-weight: 600; margin-bottom: 0.8rem;">💎 ${p.perk || 'Exclusive Perk'}</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">${p.description || ''}</p>
+          </div>
+          <a href="${p.website_url || '#'}" target="_blank" style="background: #1C1613; color: white; text-align: center; padding: 0.7rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; display: block;">REDEEM MEMBER PERK &rarr;</a>
+        </div>
+      `).join('');
+    }
+
+    function filterPartners(category, btn) {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (category === 'All') renderPartners(allPartners);
+      else renderPartners(allPartners.filter(p => (p.category || '').toLowerCase() === category.toLowerCase()));
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchPartners);
+  </script>
+</body>
 </html>
