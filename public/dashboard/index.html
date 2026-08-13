@@ -38,7 +38,10 @@
     .table-list td { padding: 1rem 0.8rem; border-bottom: 1px solid var(--border-color); }
 
     .btn-pill { background: #1C1613; color: white; border: none; padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
-    .btn-coral { background: var(--accent-coral); color: white; border: none; padding: 0.7rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; }
+    .btn-coral { background: var(--accent-coral); color: white; border: none; padding: 0.75rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 600; }
+    
+    .form-label-style { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
+    .form-input-style { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -185,27 +188,98 @@
       </div>
     </div>
 
-    <!-- PANEL 4: CMS PUBLISHER -->
+    <!-- PANEL 4: UPGRADED RICH CMS PUBLISHER -->
     <div class="panel" id="tab-cms">
       <div class="card-box">
-        <h3><span>Live D1 CMS Publisher</span></h3>
+        <h3><span>Executive Live D1 CMS Publisher</span></h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem;">Publish rich luxury events and exclusive partner perks directly to your live database.</p>
+        
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-          <div style="background: #FAF6F0; padding: 1.5rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
-            <h4 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 1rem;">Publish Event 📅</h4>
+          
+          <!-- RICH EVENT PUBLISHER -->
+          <div style="background: #FAF6F0; padding: 1.8rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+            <h4 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.25rem; color: var(--text-dark);">Publish Luxury Event 📅</h4>
             <form onsubmit="publishEvent(event)">
-              <div style="margin-bottom: 1rem;"><label style="font-size: 0.75rem; font-weight: 600;">Title</label><input type="text" id="evtTitle" placeholder="Paws & Prosecco Mixer" required style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);"></div>
-              <div style="margin-bottom: 1rem;"><label style="font-size: 0.75rem; font-weight: 600;">Date & Time</label><input type="text" id="evtDate" placeholder="Sun, Oct 12 • 17:00" required style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);"></div>
-              <button type="submit" class="btn-coral" style="width: 100%;">PUBLISH EVENT TO SITE &rarr;</button>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Event Title</label>
+                <input type="text" id="evtTitle" placeholder="Paws & Prosecco Rooftop Social" required class="form-input-style">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label class="form-label-style">Category</label>
+                  <select id="evtCategory" class="form-input-style">
+                    <option value="Social Mixer">Social Mixer</option>
+                    <option value="Wellness & Yoga">Wellness & Yoga</option>
+                    <option value="VIP Dinner">VIP Dinner</option>
+                    <option value="Educational Workshop">Educational Workshop</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label-style">Partner / Sponsor</label>
+                  <input type="text" id="evtSponsor" placeholder="Equinox & Faena" class="form-input-style">
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label class="form-label-style">Date & Time</label>
+                  <input type="text" id="evtDate" placeholder="Sun, Oct 12 • 17:00" required class="form-input-style">
+                </div>
+                <div>
+                  <label class="form-label-style">Venue / Location</label>
+                  <input type="text" id="evtLocation" placeholder="Faena Penthouse, Miami" required class="form-input-style">
+                </div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Cover Photo Image URL</label>
+                <input type="text" id="evtImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
+              </div>
+              <div style="margin-bottom: 1.25rem;">
+                <label class="form-label-style">Event Description & Details</label>
+                <textarea id="evtDesc" rows="3" placeholder="Join fellow members for an exclusive rooftop evening..." class="form-input-style"></textarea>
+              </div>
+              <button type="submit" class="btn-coral" style="width: 100%;">PUBLISH EVENT LIVE &rarr;</button>
             </form>
           </div>
-          <div style="background: #FAF6F0; padding: 1.5rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
-            <h4 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 1rem;">Publish Partner Perk 🤝</h4>
+
+          <!-- RICH PARTNER PUBLISHER -->
+          <div style="background: #FAF6F0; padding: 1.8rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+            <h4 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.25rem; color: var(--text-dark);">Publish Luxury Partner Perk 💎</h4>
             <form onsubmit="publishPartner(event)">
-              <div style="margin-bottom: 1rem;"><label style="font-size: 0.75rem; font-weight: 600;">Partner Name</label><input type="text" id="prtName" placeholder="Brickell Vet Care" required style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);"></div>
-              <div style="margin-bottom: 1rem;"><label style="font-size: 0.75rem; font-weight: 600;">Website URL</label><input type="text" id="prtUrl" placeholder="https://brickellvet.com" required style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);"></div>
-              <button type="submit" class="btn-coral" style="width: 100%;">PUBLISH PARTNER TO SITE &rarr;</button>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Partner Name</label>
+                <input type="text" id="prtName" placeholder="Brickell Vet Care" required class="form-input-style">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label class="form-label-style">Category</label>
+                  <select id="prtCategory" class="form-input-style">
+                    <option value="Veterinary Care">Veterinary Care</option>
+                    <option value="Luxury Grooming">Luxury Grooming</option>
+                    <option value="Boutique Hotels">Boutique Hotels</option>
+                    <option value="Pet Dining & Treats">Pet Dining & Treats</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label-style">Website / Booking Link</label>
+                  <input type="text" id="prtUrl" placeholder="https://brickellvet.com" required class="form-input-style">
+                </div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Exclusive Member Perk Headline</label>
+                <input type="text" id="prtPerk" placeholder="Complimentary Health Exam + 15% Off Visits" required class="form-input-style">
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Logo / Cover Image URL</label>
+                <input type="text" id="prtImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
+              </div>
+              <div style="margin-bottom: 1.25rem;">
+                <label class="form-label-style">Perk Description & Redeem Terms</label>
+                <textarea id="prtDesc" rows="3" placeholder="Show your Zoélys digital membership card at reception..." class="form-input-style"></textarea>
+              </div>
+              <button type="submit" class="btn-coral" style="width: 100%;">PUBLISH PARTNER LIVE &rarr;</button>
             </form>
           </div>
+
         </div>
       </div>
     </div>
@@ -226,19 +300,33 @@
 
     async function publishEvent(e) {
       e.preventDefault();
-      const payload = { title: document.getElementById('evtTitle').value, event_date: document.getElementById('evtDate').value };
+      const payload = { 
+        title: document.getElementById('evtTitle').value, 
+        category: document.getElementById('evtCategory').value,
+        sponsor: document.getElementById('evtSponsor').value,
+        event_date: document.getElementById('evtDate').value,
+        location: document.getElementById('evtLocation').value,
+        image_url: document.getElementById('evtImage').value,
+        description: document.getElementById('evtDesc').value
+      };
       await fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      alert('✨ Event published live to D1 Database!');
+      alert('✨ Rich Luxury Event Published Live to Site!');
     }
 
     async function publishPartner(e) {
       e.preventDefault();
-      const payload = { name: document.getElementById('prtName').value, website_url: document.getElementById('prtUrl').value };
+      const payload = { 
+        name: document.getElementById('prtName').value, 
+        category: document.getElementById('prtCategory').value,
+        website_url: document.getElementById('prtUrl').value,
+        perk: document.getElementById('prtPerk').value,
+        image_url: document.getElementById('prtImage').value,
+        description: document.getElementById('prtDesc').value
+      };
       await fetch('/api/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      alert('✨ Partner published live to D1 Database!');
+      alert('✨ Exclusive Partner Perk Published Live to Site!');
     }
 
-    // Auto-check Admin session
     const existingUserId = localStorage.getItem('zoelys_user_id');
     if (!existingUserId) {
       window.location.href = '/join';
