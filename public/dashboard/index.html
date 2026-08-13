@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Executive Command Center</title>
+  <title>Zoélys — Concierge Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -38,464 +38,252 @@
     .form-label-style { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
     .form-input-style { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; box-sizing: border-box; }
 
-    /* EQUAL HEIGHT CMS CARDS */
     .cms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 3rem; }
     .cms-card { background: #FAF6F0; padding: 1.8rem; border-radius: 0.8rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; height: 100%; box-sizing: border-box; }
-
-    #socialModal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 3000; }
-    .modal-card { background: white; border-radius: 1rem; padding: 2.5rem; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; }
   </style>
 </head>
 <body>
 
-  <!-- SOCIAL POST GENERATOR POPUP MODAL -->
-  <div id="socialModal">
-    <div class="modal-card">
-      <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 0.5rem;">✨ Event Published! Social Posts Ready</h2>
-      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem;">Copy & paste these tailored captions directly to Instagram and LinkedIn:</p>
-      
-      <div style="margin-bottom: 1.5rem;">
-        <label class="form-label-style">📲 Instagram Caption</label>
-        <textarea id="igPostText" rows="6" class="form-input-style" readonly></textarea>
-        <button class="btn-coral" style="margin-top: 0.5rem;" onclick="copyText('igPostText')">📋 Copy Instagram Caption</button>
-      </div>
-
-      <div style="margin-bottom: 1.5rem;">
-        <label class="form-label-style">💼 LinkedIn Post</label>
-        <textarea id="liPostText" rows="6" class="form-input-style" readonly></textarea>
-        <button class="btn-coral" style="margin-top: 0.5rem;" onclick="copyText('liPostText')">📋 Copy LinkedIn Post</button>
-      </div>
-
-      <button style="background: #1C1613; color: white; border: none; padding: 0.8rem; border-radius: 2rem; width: 100%; font-weight: 600; cursor: pointer;" onclick="document.getElementById('socialModal').style.display='none'">DONE & CLOSE</button>
-    </div>
-  </div>
-
   <main class="container">
-    <div class="profile-banner">
-      <div>
-        <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">SUPER-ADMIN CONCIERGE CONTROL</div>
-        <h1 class="profile-title" id="welcomeMsg">Welcome, Océane</h1>
-        <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;">Zoélys Executive Command Center • Miami Headquarters</p>
+
+    <!-- ================================================================= -->
+    <!-- 1. SUPER-ADMIN VIEW (ONLY FOR ocebort@gmail.com)                 -->
+    <!-- ================================================================= -->
+    <div id="adminMasterView" style="display: none;">
+      <div class="profile-banner">
+        <div>
+          <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">SUPER-ADMIN CONCIERGE CONTROL</div>
+          <h1 class="profile-title">Welcome, Océane</h1>
+          <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;">Zoélys Executive Command Center • Miami Headquarters</p>
+        </div>
+        <div>
+          <button class="btn-coral" style="width: auto;" onclick="window.location.href='/get-matched'">+ NEW MATCH INTAKE</button>
+        </div>
       </div>
-      <div>
-        <button class="btn-coral" style="width: auto;" onclick="window.location.href='/get-matched'">+ NEW MATCH INTAKE</button>
+
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-val">$14,250</div><div class="metric-lbl">ESTIMATED MRR</div></div>
+        <div class="metric-card"><div class="metric-val">12</div><div class="metric-lbl">ACTIVE PET PARENTS</div></div>
+        <div class="metric-card"><div class="metric-val">8</div><div class="metric-lbl">VETTED VET TECH SITTERS</div></div>
+        <div class="metric-card"><div class="metric-val">3</div><div class="metric-lbl">PENDING MATCHES</div></div>
       </div>
-    </div>
 
-    <!-- METRICS OVERVIEW BAR -->
-    <div class="metrics-grid">
-      <div class="metric-card"><div class="metric-val">$14,250</div><div class="metric-lbl">ESTIMATED MRR</div></div>
-      <div class="metric-card"><div class="metric-val">12</div><div class="metric-lbl">ACTIVE PET PARENTS</div></div>
-      <div class="metric-card"><div class="metric-val">8</div><div class="metric-lbl">VETTED VET TECH SITTERS</div></div>
-      <div class="metric-card"><div class="metric-val">3</div><div class="metric-lbl">PENDING MATCHES</div></div>
-    </div>
-
-    <!-- NAVIGATION TABS -->
-    <div class="admin-nav">
-      <button class="admin-tab" onclick="switchTab('matches', this)">📩 Match Requests Inbox</button>
-      <button class="admin-tab" onclick="switchTab('sitters', this)">🐕 Sitter Pipeline</button>
-      <button class="admin-tab" onclick="switchTab('members', this)">👥 Member CRM</button>
-      <button class="admin-tab active" onclick="switchTab('cms', this)">📅 CMS & Events</button>
-    </div>
-
-    <!-- PANEL 1: MATCH REQUESTS INBOX -->
-    <div class="panel" id="tab-matches">
-      <div class="card-box">
-        <h3><span>Pending Match Proposals</span></h3>
-        <table class="table-list">
-          <thead>
-            <tr>
-              <th>Member Name</th>
-              <th>Companion</th>
-              <th>Service Required</th>
-              <th>Dates Needed</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Océane B.</strong></td>
-              <td>Zoé (Golden Retriever)</td>
-              <td>Overnight Concierge Stay</td>
-              <td>Sept 18 - Sept 20</td>
-              <td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td>
-              <td><button class="btn-pill" onclick="alert('✨ Camila R. assigned to Zoé!')">Assign Camila R. &rarr;</button></td>
-            </tr>
-            <tr>
-              <td><strong>Julian M.</strong></td>
-              <td>Milo (French Bulldog)</td>
-              <td>Day Care & Walk</td>
-              <td>Sept 22</td>
-              <td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td>
-              <td><button class="btn-pill" onclick="alert('✨ Marcus T. assigned to Milo!')">Assign Marcus T. &rarr;</button></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="admin-nav">
+        <button class="admin-tab active" onclick="switchTab('matches', this)">📩 Match Requests Inbox</button>
+        <button class="admin-tab" onclick="switchTab('sitters', this)">🐕 Sitter Pipeline</button>
+        <button class="admin-tab" onclick="switchTab('members', this)">👥 Member CRM</button>
+        <button class="admin-tab" onclick="switchTab('cms', this)">📅 CMS & Events</button>
       </div>
-    </div>
 
-    <!-- PANEL 2: SITTER PIPELINE -->
-    <div class="panel" id="tab-sitters">
-      <div class="card-box">
-        <h3><span>Vetted Pet Sitter Roster</span></h3>
-        <table class="table-list">
-          <thead>
-            <tr><th>Sitter Name</th><th>Specialty</th><th>Background Check</th><th>Status</th><th>Rating</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Camila Rodriguez</td><td>Certified Vet Tech • Medication Admin</td><td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td><td>Active Sitter</td><td>5.0 ⭐⭐⭐⭐⭐</td></tr>
-            <tr><td>Marcus Thorne</td><td>High-Energy Breed Specialist</td><td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td><td>Active Sitter</td><td>4.9 ⭐⭐⭐⭐⭐</td></tr>
-          </tbody>
-        </table>
+      <!-- ADMIN PANELS -->
+      <div class="panel active" id="tab-matches">
+        <div class="card-box">
+          <h3><span>Pending Match Proposals</span></h3>
+          <table class="table-list">
+            <thead><tr><th>Member Name</th><th>Companion</th><th>Service Required</th><th>Dates Needed</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Océane B.</strong></td><td>Zoé (Golden Retriever)</td><td>Overnight Stay</td><td>Sept 18 - Sept 20</td><td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Camila R. assigned!')">Assign Camila R. &rarr;</button></td></tr>
+              <tr><td><strong>Sarah M.</strong></td><td>Milo (French Bulldog)</td><td>Day Care & Walk</td><td>Sept 22</td><td><span style="color: var(--accent-coral); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Marcus T. assigned!')">Assign Marcus T. &rarr;</button></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <!-- PANEL 3: MEMBER CRM -->
-    <div class="panel" id="tab-members">
-      <div class="card-box">
-        <h3><span>Pet Parent Subscriptions & Ledger</span></h3>
-        <table class="table-list">
-          <thead>
-            <tr><th>Member Email</th><th>Tier</th><th>Monthly Credits Left</th><th>Action</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>ocebort@gmail.com</td><td>Super-Admin Concierge</td><td>Unlimited</td><td><button class="btn-pill" onclick="alert('Admin account maintained.')">Manage Tiers</button></td></tr>
-            <tr><td>sarah.m@gmail.com</td><td>Platinum ($125/mo)</td><td>8 / 10 Credits</td><td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td></tr>
-          </tbody>
-        </table>
+      <div class="panel" id="tab-sitters">
+        <div class="card-box">
+          <h3><span>Vetted Pet Sitter Roster</span></h3>
+          <table class="table-list">
+            <thead><tr><th>Sitter Name</th><th>Specialty</th><th>Background Check</th><th>Status</th><th>Rating</th></tr></thead>
+            <tbody>
+              <tr><td>Camila Rodriguez</td><td>Certified Vet Tech • Medication Admin</td><td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td><td>Active Sitter</td><td>5.0 ⭐⭐⭐⭐⭐</td></tr>
+              <tr><td>Marcus Thorne</td><td>High-Energy Breed Specialist</td><td><span style="color: green; font-weight: 600;">Passed ✔︎</span></td><td>Active Sitter</td><td>4.9 ⭐⭐⭐⭐⭐</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-members">
+        <div class="card-box">
+          <h3><span>Pet Parent Subscriptions & Ledger</span></h3>
+          <table class="table-list">
+            <thead><tr><th>Member Email</th><th>Tier</th><th>Monthly Credits Left</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>ocebort@gmail.com</td><td>Super-Admin Concierge</td><td>Unlimited</td><td><button class="btn-pill" onclick="alert('Admin maintained.')">Manage Tiers</button></td></tr>
+              <tr><td>sarah@gmail.com</td><td>Platinum ($125/mo)</td><td>10 / 10 Credits</td><td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-cms">
+        <div class="card-box">
+          <h3><span>Executive Live D1 CMS Publisher</span></h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem;">Publish rich luxury events and exclusive partner perks directly to your live database.</p>
+          <div id="adminEventsList">Loading events...</div>
+        </div>
       </div>
     </div>
 
-    <!-- PANEL 4: BALANCED CMS PUBLISHER WITH EDIT & UPDATE SUPPORT -->
-    <div class="panel active" id="tab-cms">
-      <div class="card-box">
-        <h3><span>Executive Live D1 CMS Publisher</span></h3>
+
+    <!-- ================================================================= -->
+    <!-- 2. PET PARENT MEMBER VIEW (FOR sarah@gmail.com, test@gmail.com)  -->
+    <!-- ================================================================= -->
+    <div id="parentMasterView" style="display: none;">
+      
+      <div class="profile-banner">
+        <div>
+          <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;" id="parentTierBadge">PLATINUM MEMBER PORTAL</div>
+          <h1 class="profile-title" id="parentWelcomeName">Welcome, Member</h1>
+          <p style="color: #A39B93; font-size: 0.85rem; margin-top: 0.3rem;" id="parentLocationText">Brickell, Miami • Active Membership</p>
+        </div>
+        <div style="background: var(--accent-coral); padding: 1.2rem 2.2rem; border-radius: 0.8rem; text-align: center;">
+          <div style="font-size: 2.6rem; font-weight: bold; line-height: 1;" id="parentCreditCount">10</div>
+          <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.35rem; color: white; font-weight: 600;">Credits Left</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
         
-        <div class="cms-grid">
-          
-          <!-- RICH EVENT PUBLISHER FORM -->
-          <div class="cms-card">
-            <div>
-              <h4 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.25rem;" id="evtFormHeader">Publish Luxury Event 📅</h4>
-              <form id="evtForm" onsubmit="saveEvent(event)">
-                <input type="hidden" id="editEvtId">
-                <div style="margin-bottom: 1rem;">
-                  <label class="form-label-style">Event Title</label>
-                  <input type="text" id="evtTitle" placeholder="Paws & Prosecco Rooftop Social" required class="form-input-style">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                  <div>
-                    <label class="form-label-style">Category</label>
-                    <select id="evtCategory" class="form-input-style">
-                      <option value="Social Mixer">Social Mixer</option>
-                      <option value="Wellness & Yoga">Wellness & Yoga</option>
-                      <option value="VIP Dinner">VIP Dinner</option>
-                      <option value="Educational Workshop">Educational Workshop</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="form-label-style">Partner / Sponsor</label>
-                    <input type="text" id="evtSponsor" placeholder="Equinox & Faena" class="form-input-style">
-                  </div>
-                </div>
+        <!-- LEFT COLUMN -->
+        <div>
+          <!-- ASSIGNED SITTERS -->
+          <div class="card-box">
+            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <span>My Assigned Sitter 🐕</span>
+              <span style="font-size: 0.75rem; color: green; font-weight: 600;">🟢 Vetted Match</span>
+            </h3>
+            
+            <div style="display: flex; gap: 1.25rem; align-items: center; background: #FAF6F0; padding: 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" style="width: 75px; height: 75px; border-radius: 50%; object-fit: cover;">
+              <div style="flex: 1;">
+                <h4 style="font-size: 1.1rem; font-weight: 600;">Camila Rodriguez</h4>
+                <div style="font-size: 0.75rem; color: var(--accent-coral); font-weight: 600;">Certified Vet Tech • 99% Match Score</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Scheduled Sitting: Sept 18 – Sept 20</div>
+              </div>
+            </div>
 
-                <!-- DATES PICKERS -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                  <div>
-                    <label class="form-label-style">Start Date</label>
-                    <input type="date" id="evtStartDate" required class="form-input-style">
-                  </div>
-                  <div>
-                    <label class="form-label-style">End Date (Optional)</label>
-                    <input type="date" id="evtEndDate" class="form-input-style">
-                  </div>
-                </div>
-
-                <!-- TIMES PICKERS -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                  <div>
-                    <label class="form-label-style">Start Time</label>
-                    <input type="time" id="evtStartTime" required class="form-input-style">
-                  </div>
-                  <div>
-                    <label class="form-label-style">End Time</label>
-                    <input type="time" id="evtEndTime" class="form-input-style">
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 1rem;">
-                  <label class="form-label-style">Venue / Location</label>
-                  <input type="text" id="evtLocation" placeholder="Faena Penthouse, Miami" required class="form-input-style">
-                </div>
-
-                <div style="margin-bottom: 1rem;">
-                  <label class="form-label-style">Cover Photo Image URL</label>
-                  <input type="text" id="evtImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
-                </div>
-
-                <div style="margin-bottom: 1.25rem;">
-                  <label class="form-label-style">Event Description & Details</label>
-                  <textarea id="evtDesc" rows="3" placeholder="Join fellow members for an exclusive rooftop evening..." class="form-input-style"></textarea>
-                </div>
-
-                <button type="submit" class="btn-coral" id="evtSubmitBtn">PUBLISH EVENT & GENERATE SOCIAL POSTS &rarr;</button>
-              </form>
+            <div style="display: flex; gap: 1rem;">
+              <button class="btn-coral" style="flex: 1;" onclick="alert('📸 Photo Update: Your companion is enjoying her walk in Brickell!')">VIEW LIVE PHOTO FEED</button>
+              <button style="background: #1C1613; color: white; border: none; padding: 0.75rem 1.2rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="alert('💬 Direct Concierge Messaging opening...')">MESSAGE SITTER</button>
             </div>
           </div>
 
-          <!-- RICH PARTNER PUBLISHER FORM -->
-          <div class="cms-card">
-            <div>
-              <h4 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.25rem;" id="prtFormHeader">Publish Luxury Partner Perk 💎</h4>
-              <form id="prtForm" onsubmit="savePartner(event)">
-                <input type="hidden" id="editPrtId">
-                <div style="margin-bottom: 1rem;">
-                  <label class="form-label-style">Partner Name</label>
-                  <input type="text" id="prtName" placeholder="Brickell Vet Care" required class="form-input-style">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                  <div>
-                    <label class="form-label-style">Category</label>
-                    <select id="prtCategory" class="form-input-style">
-                      <option value="Veterinary Care">Veterinary Care</option>
-                      <option value="Luxury Grooming">Luxury Grooming</option>
-                      <option value="Boutique Hotels">Boutique Hotels</option>
-                      <option value="Pet Dining & Treats">Pet Dining & Treats</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="form-label-style">Website / Booking Link</label>
-                    <input type="text" id="prtUrl" placeholder="https://brickellvet.com" required class="form-input-style">
-                  </div>
-                </div>
-                <div style="margin-bottom: 1rem;">
-                  <label class="form-label-style">Exclusive Member Perk Headline</label>
-                  <input type="text" id="prtPerk" placeholder="Complimentary Health Exam + 15% Off Visits" required class="form-input-style">
-                </div>
-                <div style="margin-bottom: 1rem;">
-                  <label class="form-label-style">Logo / Cover Image URL</label>
-                  <input type="text" id="prtImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
-                </div>
-                <div style="margin-bottom: 1.25rem;">
-                  <label class="form-label-style">Perk Description & Redeem Terms</label>
-                  <textarea id="prtDesc" rows="8" placeholder="Show your Zoélys digital membership card at reception..." class="form-input-style"></textarea>
-                </div>
-
-                <button type="submit" class="btn-coral" id="prtSubmitBtn">PUBLISH PARTNER LIVE &rarr;</button>
-              </form>
+          <!-- CREDIT LEDGER -->
+          <div class="card-box">
+            <h3><span>Credit Ledger & Top-Up</span></h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Your credits rollover monthly and can be redeemed for overnight sitting, day care, or grooming transport.</p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #FAF6F0; padding: 1rem 1.25rem; border-radius: 0.8rem; border: 1px solid var(--border-color);">
+              <div>
+                <strong style="font-size: 0.9rem;">Platinum Tier Allowance</strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Renews next month</div>
+              </div>
+              <button style="background: white; border: 1px solid var(--border-color); padding: 0.4rem 0.9rem; border-radius: 1.5rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;" onclick="buyCredits()">+ BUY 5 CREDITS ($50)</button>
             </div>
           </div>
-
         </div>
 
-        <!-- LIVE CONTENT TRACKER & EDIT/DELETE CONTROL LIST -->
-        <div style="border-top: 1px solid var(--border-color); padding-top: 2rem;">
-          <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.25rem;">Active Content Tracker & Manager</h3>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-            <div style="background: #FAF6F0; border: 1px solid var(--border-color); border-radius: 0.8rem; padding: 1.5rem;">
-              <h4 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1rem;">Published Events 📅</h4>
-              <div id="adminEventsList" style="font-size: 0.85rem; color: var(--text-muted);">Loading events from D1...</div>
-            </div>
-
-            <div style="background: #FAF6F0; border: 1px solid var(--border-color); border-radius: 0.8rem; padding: 1.5rem;">
-              <h4 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1rem;">Published Partners 💎</h4>
-              <div id="adminPartnersList" style="font-size: 0.85rem; color: var(--text-muted);">Loading partners from D1...</div>
-            </div>
+        <!-- RIGHT COLUMN: DOG PROFILE & CARE MANUAL -->
+        <div>
+          <div class="card-box">
+            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1rem;"><span>My Dog Profile & Care Manual 📖</span></h3>
+            
+            <form onsubmit="savePetManual(event)">
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Companion Name</label>
+                <input type="text" id="parentPetName" placeholder="e.g. Milo" class="form-input-style" required>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Breed & Microchip #</label>
+                <input type="text" id="parentPetBreed" placeholder="e.g. French Bulldog • #985141029" class="form-input-style">
+              </div>
+              <div style="margin-bottom: 1.25rem;">
+                <label class="form-label-style">Feeding & Medical Instructions</label>
+                <textarea id="parentPetInstructions" rows="4" placeholder="Feeding: 1 cup kibble at 8am & 6pm. Medical: Daily vitamins..." class="form-input-style"></textarea>
+              </div>
+              <button type="submit" class="btn-coral">SAVE PET CARE MANUAL &rarr;</button>
+            </form>
           </div>
         </div>
 
       </div>
     </div>
+
   </main>
 
   <script src="/navbar.js"></script>
   <script>
-    let rawEvents = [];
-    let rawPartners = [];
+    async function loadUserPortal() {
+      const userId = localStorage.getItem('zoelys_user_id');
+      if (!userId) {
+        window.location.href = '/join';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/user/profile?userId=${userId}`);
+        const data = await res.json();
+
+        if (data && data.user) {
+          const userEmail = (data.user.email || '').toLowerCase().trim();
+          
+          // STRICT CHECK: ONLY ocebort@gmail.com GETS ADMIN
+          if (userEmail === 'ocebort@gmail.com') {
+            document.getElementById('adminMasterView').style.display = 'block';
+            document.getElementById('parentMasterView').style.display = 'none';
+          } else {
+            // ALL OTHER USERS (sarah@gmail.com, test@gmail.com, etc) SEE THEIR OWN PET PARENT PORTAL
+            document.getElementById('adminMasterView').style.display = 'none';
+            document.getElementById('parentMasterView').style.display = 'block';
+
+            document.getElementById('parentWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Member'}`;
+            document.getElementById('parentTierBadge').innerText = `${(data.user.subscription_tier || 'Platinum').toUpperCase()} PORTAL`;
+            document.getElementById('parentCreditCount').innerText = data.user.credit_balance || 10;
+          }
+        }
+      } catch (err) {
+        console.error('Portal load error:', err);
+      }
+    }
 
     function switchTab(tabId, btn) {
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + tabId).classList.add('active');
-      if (tabId === 'cms') loadCmsTracker();
     }
 
-    async function loadCmsTracker() {
-      try {
-        const resEvt = await fetch('/api/events');
-        const dataEvt = await resEvt.json();
-        rawEvents = dataEvt.events || dataEvt;
-        const evtContainer = document.getElementById('adminEventsList');
-        if (evtContainer && Array.isArray(rawEvents)) {
-          if (rawEvents.length === 0) evtContainer.innerHTML = 'No active events published yet.';
-          else {
-            evtContainer.innerHTML = rawEvents.map(e => `
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
-                <div>
-                  <strong style="color: var(--text-dark);">${e.title}</strong><br>
-                  <span style="font-size: 0.75rem; color: var(--text-muted);">${e.date || e.event_date}</span>
-                </div>
-                <div style="display: flex; gap: 0.4rem;">
-                  <button onclick="editEventItem('${e.id}')" style="background: white; border: 1px solid #EFEAE3; color: #1C1613; padding: 0.35rem 0.8rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;">Edit</button>
-                  <button onclick="deleteContent('events', '${e.id}')" style="background: white; border: 1px solid #EFEAE3; color: #D97757; padding: 0.35rem 0.8rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;">Delete</button>
-                </div>
-              </div>
-            `).join('');
-          }
-        }
-
-        const resPrt = await fetch('/api/partners');
-        const dataPrt = await resPrt.json();
-        rawPartners = dataPrt.partners || dataPrt;
-        const prtContainer = document.getElementById('adminPartnersList');
-        if (prtContainer && Array.isArray(rawPartners)) {
-          if (rawPartners.length === 0) prtContainer.innerHTML = 'No active partners published yet.';
-          else {
-            prtContainer.innerHTML = rawPartners.map(p => `
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
-                <div>
-                  <strong style="color: var(--text-dark);">${p.name}</strong><br>
-                  <span style="font-size: 0.75rem; color: var(--accent-coral);">${p.perk || p.category}</span>
-                </div>
-                <div style="display: flex; gap: 0.4rem;">
-                  <button onclick="editPartnerItem('${p.id}')" style="background: white; border: 1px solid #EFEAE3; color: #1C1613; padding: 0.35rem 0.8rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;">Edit</button>
-                  <button onclick="deleteContent('partners', '${p.id}')" style="background: white; border: 1px solid #EFEAE3; color: #D97757; padding: 0.35rem 0.8rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600; cursor: pointer;">Delete</button>
-                </div>
-              </div>
-            `).join('');
-          }
-        }
-      } catch (e) { console.error('Tracker error:', e); }
-    }
-
-    function editEventItem(id) {
-      const item = rawEvents.find(e => e.id === id);
-      if (!item) return;
-      document.getElementById('editEvtId').value = item.id;
-      document.getElementById('evtTitle').value = item.title;
-      document.getElementById('evtCategory').value = item.category || 'Social Mixer';
-      document.getElementById('evtSponsor').value = item.sponsor || '';
-      document.getElementById('evtLocation').value = item.location || '';
-      document.getElementById('evtImage').value = item.image_url || '';
-      document.getElementById('evtDesc').value = item.description || '';
-      
-      document.getElementById('evtFormHeader').innerText = '✏️ Edit Event Details';
-      document.getElementById('evtSubmitBtn').innerText = 'UPDATE EVENT LIVE →';
-      window.scrollTo({ top: 400, behavior: 'smooth' });
-    }
-
-    function editPartnerItem(id) {
-      const item = rawPartners.find(p => p.id === id);
-      if (!item) return;
-      document.getElementById('editPrtId').value = item.id;
-      document.getElementById('prtName').value = item.name;
-      document.getElementById('prtCategory').value = item.category || 'Veterinary Care';
-      document.getElementById('prtUrl').value = item.website_url || '';
-      document.getElementById('prtPerk').value = item.perk || '';
-      document.getElementById('prtImage').value = item.image_url || '';
-      document.getElementById('prtDesc').value = item.description || '';
-      
-      document.getElementById('prtFormHeader').innerText = '✏️ Edit Partner Details';
-      document.getElementById('prtSubmitBtn').innerText = 'UPDATE PARTNER LIVE →';
-      window.scrollTo({ top: 400, behavior: 'smooth' });
-    }
-
-    async function saveEvent(e) {
+    async function savePetManual(e) {
       e.preventDefault();
-      const editId = document.getElementById('editEvtId').value;
-      const title = document.getElementById('evtTitle').value;
-      const category = document.getElementById('evtCategory').value;
-      const sponsor = document.getElementById('evtSponsor').value || 'Zoélys Concierge';
-      const startDate = document.getElementById('evtStartDate').value;
-      const endDate = document.getElementById('evtEndDate').value;
-      const startTime = document.getElementById('evtStartTime').value;
-      const endTime = document.getElementById('evtEndTime').value;
-      const location = document.getElementById('evtLocation').value;
-      const desc = document.getElementById('evtDesc').value;
-
-      const dateStr = endDate && endDate !== startDate ? `${startDate} to ${endDate}` : startDate;
-      const timeStr = endTime ? `${startTime} – ${endTime}` : startTime;
-      const fullDateStr = startDate ? `${dateStr} • ${timeStr}` : 'Scheduled Event';
-
+      const userId = localStorage.getItem('zoelys_user_id');
       const payload = {
-        title, category, sponsor,
-        event_date: fullDateStr,
-        location,
-        image_url: document.getElementById('evtImage').value,
-        description: desc
+        user_id: userId,
+        pet_name: document.getElementById('parentPetName').value,
+        breed: document.getElementById('parentPetBreed').value,
+        instructions: document.getElementById('parentPetInstructions').value
       };
 
-      const url = editId ? `/api/events/${editId}` : '/api/events';
-      const method = editId ? 'PUT' : 'POST';
-
-      await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-
-      if (!editId) {
-        document.getElementById('igPostText').value = `✨ ZOÉLYS EXCLUSIVE — Join us for ${title} in partnership with ${sponsor}!\n\n📅 Date: ${dateStr}\n⏰ Time: ${timeStr}\n📍 Location: ${location}\n\n${desc}\n\nRSVP exclusively through your Zoélys Member Portal.\n🐾 #ZoelysConcierge #MiamiPets #${category.replace(/\s+/g, '')}`;
-        document.getElementById('liPostText').value = `We are thrilled to announce our upcoming Zoélys Concierge gathering: ${title}, co-hosted with ${sponsor}.\n\nElevating luxury pet care and community in Miami.\n📍 Venue: ${location}\n📅 Dates: ${dateStr} (${timeStr})\n\n${desc}\n\nLearn more about our membership & partner perks at zoelys.com.`;
-        document.getElementById('socialModal').style.display = 'flex';
-      } else {
-        alert('✨ Event updated successfully!');
-      }
-
-      // Reset Form Mode
-      document.getElementById('editEvtId').value = '';
-      document.getElementById('evtFormHeader').innerText = 'Publish Luxury Event 📅';
-      document.getElementById('evtSubmitBtn').innerText = 'PUBLISH EVENT & GENERATE SOCIAL POSTS →';
-      document.getElementById('evtForm').reset();
-      loadCmsTracker();
+      await fetch('/api/user/pet-manual', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      alert('✨ Pet Care Manual saved! Assigned sitter Camila R. has been notified.');
     }
 
-    async function savePartner(e) {
-      e.preventDefault();
-      const editId = document.getElementById('editPrtId').value;
-      const payload = { 
-        name: document.getElementById('prtName').value, 
-        category: document.getElementById('prtCategory').value,
-        website_url: document.getElementById('prtUrl').value,
-        perk: document.getElementById('prtPerk').value,
-        image_url: document.getElementById('prtImage').value,
-        description: document.getElementById('prtDesc').value
-      };
-
-      const url = editId ? `/api/partners/${editId}` : '/api/partners';
-      const method = editId ? 'PUT' : 'POST';
-
-      await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      alert(editId ? '✨ Partner updated successfully!' : '✨ Exclusive Partner Perk Published Live!');
-
-      // Reset Form Mode
-      document.getElementById('editPrtId').value = '';
-      document.getElementById('prtFormHeader').innerText = 'Publish Luxury Partner Perk 💎';
-      document.getElementById('prtSubmitBtn').innerText = 'PUBLISH PARTNER LIVE →';
-      document.getElementById('prtForm').reset();
-      loadCmsTracker();
+    async function buyCredits() {
+      const userId = localStorage.getItem('zoelys_user_id');
+      await fetch('/api/user/add-credits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, amount: 5 })
+      });
+      alert('✨ 5 Extra Credits added to your account balance!');
+      const countEl = document.getElementById('parentCreditCount');
+      countEl.innerText = parseInt(countEl.innerText) + 5;
     }
 
-    async function deleteContent(type, id) {
-      if (confirm(`Remove this ${type} from the live site?`)) {
-        await fetch(`/api/${type}/${id}`, { method: 'DELETE' });
-        alert('✨ Removed successfully!');
-        loadCmsTracker();
-      }
-    }
-
-    function copyText(id) {
-      const text = document.getElementById(id);
-      text.select();
-      navigator.clipboard.writeText(text.value);
-      alert('📋 Copied to clipboard!');
-    }
-
-    const existingUserId = localStorage.getItem('zoelys_user_id');
-    if (!existingUserId) {
-      window.location.href = '/join';
-    } else {
-      loadCmsTracker();
-    }
+    document.addEventListener('DOMContentLoaded', loadUserPortal);
   </script>
 </body>
 </html>
