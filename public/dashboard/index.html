@@ -399,6 +399,60 @@
 
           </div>
 
+          <!-- JOURNAL POST PUBLISHER -->
+          <div class="inset-panel" style="margin-bottom: 3rem;">
+            <h4 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 1.25rem;">Publish Journal Post</h4>
+            <form onsubmit="publishPost(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label class="form-label-style">Post Title</label>
+                  <input type="text" id="postTitle" placeholder="How to train your puppy — the first 90 days" required class="form-input-style">
+                </div>
+                <div>
+                  <label class="form-label-style">Category</label>
+                  <input type="text" id="postCategory" list="postCats" placeholder="Training" class="form-input-style">
+                  <datalist id="postCats">
+                    <option value="Training"></option>
+                    <option value="Nutrition"></option>
+                    <option value="Wellness"></option>
+                    <option value="Care"></option>
+                    <option value="Behind Zoélys"></option>
+                  </datalist>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label class="form-label-style">Author</label>
+                  <input type="text" id="postAuthor" placeholder="Océane Bort" class="form-input-style">
+                </div>
+                <div>
+                  <label class="form-label-style">Publish Date</label>
+                  <input type="date" id="postDate" class="form-input-style">
+                </div>
+                <div>
+                  <label class="form-label-style">Read Time</label>
+                  <input type="text" id="postReadTime" placeholder="6 min read" class="form-input-style">
+                </div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Cover Photo Image URL</label>
+                <input type="text" id="postImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label class="form-label-style">Excerpt (shown on the journal cards)</label>
+                <textarea id="postExcerpt" rows="2" placeholder="Three months that shape the next fifteen years..." class="form-input-style"></textarea>
+              </div>
+              <div style="margin-bottom: 1.25rem;">
+                <label class="form-label-style">Article Content</label>
+                <textarea id="postContent" rows="8" placeholder="Separate paragraphs with a blank line. Start a line with '## ' for a subheading, or '> ' for a pull quote." class="form-input-style"></textarea>
+              </div>
+              <label style="display:flex; align-items:center; gap:0.6rem; font-size:0.8rem; color: var(--ink-muted,#6E675F); margin-bottom:1.25rem; cursor:pointer;">
+                <input type="checkbox" id="postFeatured" style="accent-color: var(--accent-coral,#C1623F);"> Feature this post at the top of the journal
+              </label>
+              <button type="submit" class="btn-coral">Publish Journal Post & Generate Social Posts &rarr;</button>
+            </form>
+          </div>
+
           <!-- LIVE CONTENT TRACKER & DELETE LIST -->
           <div style="border-top: 1px solid var(--hairline, #E5DED2); padding-top: 2rem;">
             <h3 style="font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400; margin-bottom: 1.25rem;">Active Content Tracker & Manager</h3>
@@ -413,6 +467,11 @@
                 <h4 style="font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem;">Published Partners</h4>
                 <div id="adminPartnersList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading partners from D1...</div>
               </div>
+            </div>
+
+            <div class="inset-panel" style="margin-top: 2rem;">
+              <h4 style="font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem;">Published Journal Posts</h4>
+              <div id="adminPostsList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading posts from D1...</div>
             </div>
           </div>
         </div>
@@ -524,6 +583,24 @@
                   <span style="font-size: 0.75rem; color: var(--accent-coral, #C1623F);">${p.perk || p.category}</span>
                 </div>
                 <button class="btn-pill" onclick="deleteContent('partners', '${p.id}')" style="background: transparent; border: 1px solid var(--accent-coral, #C1623F); color: var(--accent-coral, #C1623F);">Delete</button>
+              </div>
+            `).join('');
+          }
+        }
+        const resPost = await fetch('/api/posts');
+        const dataPost = await resPost.json();
+        const posts = dataPost.posts || dataPost;
+        const postContainer = document.getElementById('adminPostsList');
+        if (postContainer && Array.isArray(posts)) {
+          if (posts.length === 0) postContainer.innerHTML = 'No journal posts published yet.';
+          else {
+            postContainer.innerHTML = posts.map(pt => `
+              <div class="admin-row">
+                <div>
+                  <strong style="color: var(--ink, #191512);">${pt.title}</strong><br>
+                  <span style="font-size: 0.75rem; color: var(--ink-muted, #6E675F);">${pt.category || 'Journal'} &bull; ${pt.publish_date || ''}</span>
+                </div>
+                <button class="btn-pill" onclick="deleteContent('posts', '${pt.id}')" style="background: transparent; border: 1px solid var(--accent-coral, #C1623F); color: var(--accent-coral, #C1623F);">Delete</button>
               </div>
             `).join('');
           }
@@ -645,6 +722,46 @@ Zoélys members can redeem this perk through the member portal. Thank you to our
       text.select();
       navigator.clipboard.writeText(text.value);
       alert('Copied to clipboard!');
+    }
+
+    async function publishPost(e) {
+      e.preventDefault();
+      const payload = {
+        title: document.getElementById('postTitle').value,
+        category: document.getElementById('postCategory').value,
+        author: document.getElementById('postAuthor').value,
+        publish_date: document.getElementById('postDate').value,
+        read_time: document.getElementById('postReadTime').value,
+        image_url: document.getElementById('postImage').value,
+        excerpt: document.getElementById('postExcerpt').value,
+        content: document.getElementById('postContent').value,
+        featured: document.getElementById('postFeatured').checked ? 1 : 0
+      };
+      const res = await fetch('/api/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) { alert('Error publishing post.'); return; }
+      const data = await res.json();
+
+      const postLink = `/journal/article.html?slug=${data.slug}`;
+      document.getElementById('igPostText').value =
+`NEW ON THE ZOÉLYS JOURNAL — ${payload.title}
+
+${payload.excerpt}
+
+Read the full piece on the journal: ${postLink}
+#ZoelysConcierge #MiamiPets #LuxuryPetCare #${(payload.category || 'Journal').replace(/\s+/g, '')}`;
+
+      document.getElementById('liPostText').value =
+`I just published a new piece on the Zoélys journal: "${payload.title}"
+
+${payload.excerpt}
+
+Read it here: ${postLink}
+#ZoelysConcierge #LuxuryPetCare #Miami`;
+
+      document.getElementById('socialModalTitle').textContent = 'Journal Post Published! Social Posts Ready';
+      document.getElementById('socialModal').style.display = 'flex';
+      loadCmsTracker();
+      e.target.reset();
     }
 
     document.addEventListener('DOMContentLoaded', loadUserPortal);

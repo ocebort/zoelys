@@ -286,59 +286,16 @@
   </div>
 
   <!-- Featured Article -->
-  <div class="featured-container">
-    <a href="/journal/articles/makes-a-great-pet-sitter.html" class="featured-card">
-      <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=1000" class="featured-img" alt="Sitter with Whippet">
-      <div class="featured-content">
-        <div class="eyebrow">— FEATURED &bull; BEHIND ZOÉLYS</div>
-        <h2>What actually makes a great pet sitter</h2>
-        <p>It's rarely the longest résumé. It's the small, quiet attentions — and we know how to spot them.</p>
-        <div class="author-meta">OCÉANE BORT &bull; JUNE 6, 2026 &bull; 6 MIN READ</div>
-        <span class="read-link">READ THE PIECE &nearr;</span>
-      </div>
-    </a>
-  </div>
+  <div class="featured-container" id="featuredContainer"></div>
 
   <!-- Articles Header -->
   <div class="section-header">
     <h3>More from the Journal</h3>
-    <span style="font-size: 0.65rem; letter-spacing: 0.15em; color: #A39D95;">19 PIECES</span>
+    <span style="font-size: 0.65rem; letter-spacing: 0.15em; color: #A39D95;" id="journalCount"></span>
   </div>
 
   <!-- Articles Grid -->
-  <div class="articles-grid">
-    <a href="/journal/articles/puppy-training-first-90-days.html" class="article-card">
-      <img src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?auto=format&fit=crop&q=80&w=800" alt="Puppy with toy">
-      <div class="eyebrow">— TRAINING</div>
-      <h4>How to train your puppy — the first 90 days</h4>
-      <p>Three months that shape the next fifteen years. A gentle, structured guide to those early weeks at home.</p>
-      <div class="author-meta">OCÉANE BORT &bull; 12 MIN READ</div>
-    </a>
-
-    <a href="/journal/articles/choose-right-dog-food.html" class="article-card">
-      <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=800" alt="Dog food bowl">
-      <div class="eyebrow">— NUTRITION</div>
-      <h4>How to choose the right food for your dog</h4>
-      <p>Forget the marketing. Three principles, one label-reading habit, and a vet on speed-dial.</p>
-      <div class="author-meta">OCÉANE BORT &bull; 10 MIN READ</div>
-    </a>
-
-    <a href="/journal/articles/makes-a-great-pet-sitter.html" class="article-card">
-      <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800" alt="Indoor cat">
-      <div class="eyebrow">— WELLNESS</div>
-      <h4>Keeping an indoor cat genuinely happy</h4>
-      <p>A bored cat is a stressed cat. Enrichment isn't a luxury — it's the difference between coexisting and thriving.</p>
-      <div class="author-meta">OCÉANE BORT &bull; 9 MIN READ</div>
-    </a>
-
-    <a href="/journal/articles/makes-a-great-pet-sitter.html" class="article-card">
-      <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=800" alt="Senior dog by sea">
-      <div class="eyebrow">— CARE</div>
-      <h4>Caring for a senior dog with grace</h4>
-      <p>Old age is not an illness. It's a different rhythm — and once you find it, the years that follow can be the sweetest.</p>
-      <div class="author-meta">OCÉANE BORT &bull; 9 MIN READ</div>
-    </a>
-  </div>
+  <div class="articles-grid" id="articlesGrid"></div>
 
   <!-- Footer -->
   <footer class="master-footer">
@@ -380,5 +337,70 @@
     </div>
   </footer>
 
-<script src="/navbar.js"></script></body>
+<script src="/navbar.js"></script>
+<script>
+  function esc(str) {
+    return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function formatDate(d) {
+    if (!d) return '';
+    const dt = new Date(d + 'T12:00:00');
+    if (isNaN(dt)) return esc(d);
+    return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase();
+  }
+
+  function featuredCard(p) {
+    return `
+      <a href="/journal/article.html?slug=${esc(p.slug)}" class="featured-card">
+        <img src="${esc(p.image_url)}" class="featured-img" alt="${esc(p.title)}">
+        <div class="featured-content">
+          <div class="eyebrow">— FEATURED &bull; ${esc((p.category || 'Journal').toUpperCase())}</div>
+          <h2>${esc(p.title)}</h2>
+          <p>${esc(p.excerpt)}</p>
+          <div class="author-meta">${esc(p.author || 'Zoélys Editorial').toUpperCase()} &bull; ${formatDate(p.publish_date)} &bull; ${esc(p.read_time || '5 min read')}</div>
+          <span class="read-link">READ THE PIECE &nearr;</span>
+        </div>
+      </a>`;
+  }
+
+  function articleCard(p) {
+    return `
+      <a href="/journal/article.html?slug=${esc(p.slug)}" class="article-card">
+        <img src="${esc(p.image_url)}" alt="${esc(p.title)}">
+        <div class="eyebrow">— ${esc((p.category || 'Journal').toUpperCase())}</div>
+        <h4>${esc(p.title)}</h4>
+        <p>${esc(p.excerpt)}</p>
+        <div class="author-meta">${esc(p.author || 'Zoélys Editorial').toUpperCase()} &bull; ${esc(p.read_time || '5 min read')}</div>
+      </a>`;
+  }
+
+  async function loadJournal() {
+    const featuredEl = document.getElementById('featuredContainer');
+    const gridEl = document.getElementById('articlesGrid');
+    const countEl = document.getElementById('journalCount');
+    try {
+      const res = await fetch('/api/posts');
+      const data = await res.json();
+      const posts = data.posts || data;
+      if (!posts.length) {
+        featuredEl.innerHTML = '<p style="max-width:1100px;margin:0 auto 4rem;padding:0 2rem;color:#6E675F;font-weight:300;">New journal pieces will appear here soon.</p>';
+        gridEl.innerHTML = '';
+        countEl.textContent = '0 PIECES';
+        return;
+      }
+      const featured = posts.find(p => p.featured) || posts[0];
+      const rest = posts.filter(p => p.slug !== featured.slug).slice(0, 6);
+      featuredEl.innerHTML = featuredCard(featured);
+      gridEl.innerHTML = rest.map(articleCard).join('');
+      countEl.textContent = posts.length + ' PIECE' + (posts.length === 1 ? '' : 'S');
+    } catch (e) {
+      featuredEl.innerHTML = '';
+      gridEl.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#6E675F;font-weight:300;">Unable to load journal pieces.</p>';
+      countEl.textContent = '';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadJournal);
+</script></body>
 </html>
