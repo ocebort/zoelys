@@ -51,6 +51,9 @@
     .admin-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--hairline, #E5DED2); }
     .admin-row:last-child { border-bottom: none; }
     .admin-row .btn-pill { white-space: nowrap; }
+
+    #socialModal { position: fixed; inset: 0; background: rgba(15,12,10,0.8); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 3000; }
+    .modal-card { background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1.1rem; padding: 2.5rem; max-width: 620px; width: 90%; max-height: 85vh; overflow-y: auto; }
   </style>
 </head>
 <body>
@@ -293,15 +296,145 @@
         <div class="card-box">
           <h3><span>Executive Live D1 CMS Publisher</span></h3>
           <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem; margin-bottom: 2rem;">Publish rich luxury events and exclusive partner perks directly to your live database.</p>
-          <h4 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Live Events</h4>
-          <div id="adminEventsList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading events...</div>
-          <h4 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400; margin-top: 2rem; margin-bottom: 0.5rem;">Live Partners</h4>
-          <div id="adminPartnersList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading partners...</div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem;">
+
+            <!-- RICH EVENT PUBLISHER -->
+            <div class="inset-panel">
+              <h4 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 1.25rem;">Publish Luxury Event</h4>
+              <form onsubmit="publishEvent(event)">
+                <div style="margin-bottom: 1rem;">
+                  <label class="form-label-style">Event Title</label>
+                  <input type="text" id="evtTitle" placeholder="Paws & Prosecco Rooftop Social" required class="form-input-style">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                  <div>
+                    <label class="form-label-style">Category</label>
+                    <select id="evtCategory" class="form-input-style">
+                      <option value="Social Mixer">Social Mixer</option>
+                      <option value="Wellness & Yoga">Wellness & Yoga</option>
+                      <option value="VIP Dinner">VIP Dinner</option>
+                      <option value="Educational Workshop">Educational Workshop</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label-style">Partner / Sponsor</label>
+                    <input type="text" id="evtSponsor" placeholder="Equinox & Faena" class="form-input-style">
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                  <div>
+                    <label class="form-label-style">Start Date</label>
+                    <input type="date" id="evtStartDate" required class="form-input-style">
+                  </div>
+                  <div>
+                    <label class="form-label-style">End Date (Optional)</label>
+                    <input type="date" id="evtEndDate" class="form-input-style">
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                  <div>
+                    <label class="form-label-style">Start Time</label>
+                    <input type="time" id="evtStartTime" required class="form-input-style">
+                  </div>
+                  <div>
+                    <label class="form-label-style">End Time</label>
+                    <input type="time" id="evtEndTime" class="form-input-style">
+                  </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                  <label class="form-label-style">Venue / Location</label>
+                  <input type="text" id="evtLocation" placeholder="Faena Penthouse, Miami" required class="form-input-style">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                  <label class="form-label-style">Cover Photo Image URL</label>
+                  <input type="text" id="evtImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                  <label class="form-label-style">Event Description & Details</label>
+                  <textarea id="evtDesc" rows="3" placeholder="Join fellow members for an exclusive rooftop evening..." class="form-input-style"></textarea>
+                </div>
+                <button type="submit" class="btn-coral">Publish Event & Generate Social Posts &rarr;</button>
+              </form>
+            </div>
+
+            <!-- RICH PARTNER PUBLISHER -->
+            <div class="inset-panel">
+              <h4 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 1.25rem;">Publish Luxury Partner Perk</h4>
+              <form onsubmit="publishPartner(event)">
+                <div style="margin-bottom: 1rem;">
+                  <label class="form-label-style">Partner Name</label>
+                  <input type="text" id="prtName" placeholder="Brickell Vet Care" required class="form-input-style">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                  <div>
+                    <label class="form-label-style">Category</label>
+                    <select id="prtCategory" class="form-input-style">
+                      <option value="Veterinary Care">Veterinary Care</option>
+                      <option value="Luxury Grooming">Luxury Grooming</option>
+                      <option value="Boutique Hotels">Boutique Hotels</option>
+                      <option value="Pet Dining & Treats">Pet Dining & Treats</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label-style">Website / Booking Link</label>
+                    <input type="text" id="prtUrl" placeholder="https://brickellvet.com" required class="form-input-style">
+                  </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                  <label class="form-label-style">Exclusive Member Perk Headline</label>
+                  <input type="text" id="prtPerk" placeholder="Complimentary Health Exam + 15% Off Visits" required class="form-input-style">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                  <label class="form-label-style">Logo / Cover Image URL</label>
+                  <input type="text" id="prtImage" placeholder="https://images.unsplash.com/photo-..." class="form-input-style">
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                  <label class="form-label-style">Perk Description & Redeem Terms</label>
+                  <textarea id="prtDesc" rows="3" placeholder="Show your Zoélys digital membership card at reception..." class="form-input-style"></textarea>
+                </div>
+                <button type="submit" class="btn-coral">Publish Partner Live &rarr;</button>
+              </form>
+            </div>
+
+          </div>
+
+          <!-- LIVE CONTENT TRACKER & DELETE LIST -->
+          <div style="border-top: 1px solid var(--hairline, #E5DED2); padding-top: 2rem;">
+            <h3 style="font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400; margin-bottom: 1.25rem;">Active Content Tracker & Manager</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <div class="inset-panel">
+                <h4 style="font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem;">Published Events</h4>
+                <div id="adminEventsList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading events from D1...</div>
+              </div>
+
+              <div class="inset-panel">
+                <h4 style="font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem;">Published Partners</h4>
+                <div id="adminPartnersList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading partners from D1...</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
   </main>
+
+  <!-- SOCIAL POST GENERATOR POPUP MODAL -->
+  <div id="socialModal">
+    <div class="modal-card">
+      <h2 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;">Event Published! Social Posts Ready</h2>
+      <p style="color: var(--ink-muted, #6E675F); font-size: 0.8rem; margin-bottom: 1.5rem;">Copy & paste these tailored captions directly to Instagram:</p>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label class="form-label-style">Instagram Caption</label>
+        <textarea id="igPostText" rows="6" class="form-input-style" readonly></textarea>
+        <button class="btn-coral" style="margin-top: 0.5rem;" onclick="copyText('igPostText')">Copy Instagram Caption</button>
+      </div>
+      <button style="background: var(--ink, #191512); color: white; border: none; padding: 0.85rem; border-radius: 2rem; width: 100%; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; cursor: pointer;" onclick="document.getElementById('socialModal').style.display='none'">Done & Close</button>
+    </div>
+  </div>
 
   <script src="/navbar.js"></script>
   <script>
@@ -397,6 +530,74 @@
         alert('Removed successfully!');
         loadCmsTracker();
       }
+    }
+
+    async function publishEvent(e) {
+      e.preventDefault();
+      const title = document.getElementById('evtTitle').value;
+      const category = document.getElementById('evtCategory').value;
+      const sponsor = document.getElementById('evtSponsor').value || 'Zoélys Concierge';
+      const startDate = document.getElementById('evtStartDate').value;
+      const endDate = document.getElementById('evtEndDate').value;
+      const startTime = document.getElementById('evtStartTime').value;
+      const endTime = document.getElementById('evtEndTime').value;
+      const location = document.getElementById('evtLocation').value;
+      const desc = document.getElementById('evtDesc').value;
+
+      const dateStr = endDate && endDate !== startDate ? `${startDate} to ${endDate}` : startDate;
+      const timeStr = endTime ? `${startTime} – ${endTime}` : startTime;
+      const fullDateStr = `${dateStr} • ${timeStr}`;
+
+      const payload = {
+        title, category, sponsor,
+        event_date: fullDateStr,
+        location,
+        image_url: document.getElementById('evtImage').value,
+        description: desc
+      };
+
+      const res = await fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) { alert('Error publishing event.'); return; }
+
+      document.getElementById('igPostText').value =
+`ZOÉLYS EXCLUSIVE — Join us for ${title} in partnership with ${sponsor}!
+
+Date: ${dateStr}
+Time: ${timeStr}
+Location: ${location}
+
+${desc}
+
+RSVP exclusively through your Zoélys Member Portal. Space is limited.
+#ZoelysConcierge #MiamiPets #LuxuryPetCare #${category.replace(/\s+/g, '')}`;
+
+      document.getElementById('socialModal').style.display = 'flex';
+      loadCmsTracker();
+      e.target.reset();
+    }
+
+    async function publishPartner(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('prtName').value,
+        category: document.getElementById('prtCategory').value,
+        website_url: document.getElementById('prtUrl').value,
+        perk: document.getElementById('prtPerk').value,
+        image_url: document.getElementById('prtImage').value,
+        description: document.getElementById('prtDesc').value
+      };
+      const res = await fetch('/api/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) { alert('Error publishing partner.'); return; }
+      alert('Exclusive Partner Perk Published Live!');
+      loadCmsTracker();
+      e.target.reset();
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id);
+      text.select();
+      navigator.clipboard.writeText(text.value);
+      alert('Copied to clipboard!');
     }
 
     document.addEventListener('DOMContentLoaded', loadUserPortal);
