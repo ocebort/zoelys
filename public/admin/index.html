@@ -4,21 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoélys Concierge — Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #1C1613;
-      --bg-card: #251F1B;
+      --bg-dark: #191512;
+      --bg-card: #221C18;
       --border-color: #38312C;
-      --accent-coral: #D97757;
+      --accent-coral: #C1623F;
       --text-main: #F7F3EC;
       --text-muted: #A39D95;
       --font-serif: 'Cormorant Garamond', Georgia, serif;
       --font-sans: 'Inter', -apple-system, sans-serif;
     }
+
+    /* Dark override for the injected cream master-navbar */
+    body .master-navbar { background: var(--bg-dark); border-bottom: 1px solid var(--border-color); }
+    body .master-navbar .brand-word { color: var(--text-main); }
+    body .master-navbar .brand-logo-img { content: url('/assets/logo-paw-light.png'); }
+    body .master-navbar .nav-center a { color: var(--text-muted); }
+    body .master-navbar .nav-center a:hover { color: var(--text-main); }
+    body .master-navbar .nav-center a.active-link { color: var(--accent-coral); }
+    body .master-navbar .nav-right a { color: var(--text-main); }
+    body .master-navbar .nav-right a.btn-join-pill { background: var(--accent-coral); border: 1px solid var(--accent-coral); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -199,17 +210,10 @@
     </div>
   </div>
 
-  <header>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <span class="logo">ZOÉLYS</span>
-      <span class="badge">Cloudflare D1 Admin</span>
-    </div>
-    <div style="font-size: 0.8rem; color: var(--text-muted);" id="requestCount">Locked</div>
-  </header>
-
   <div class="container">
     <div class="card">
       <h2>Incoming Client Requests</h2>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;" id="requestCount">Locked</p>
       <table>
         <thead>
           <tr>

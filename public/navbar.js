@@ -42,7 +42,8 @@ function initNavigation() {
   const navbarHTML = `
     <header class="master-navbar">
       <a href="/" class="brand-logo">
-        <span class="brand-mark">Z</span>ZOÉLYS
+        <img class="brand-logo-img" src="/assets/logo-paw.png" alt="Zoélys">
+        <span class="brand-word">ZOÉLYS</span>
       </a>
       <ul class="nav-center">${centerLinks}</ul>
       <ul class="nav-right">${rightNavHTML}</ul>

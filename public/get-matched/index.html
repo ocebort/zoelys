@@ -4,51 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoélys — Concierge Sitter Intake</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    main.form-container { max-width: 640px; width: 90%; margin: 2.5rem auto 5rem auto; }
-    .progress-bar-container { margin-bottom: 2rem; }
-    .progress-text { display: flex; justify-content: space-between; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-coral); font-weight: 600; margin-bottom: 0.5rem; }
-    .progress-track { width: 100%; height: 2px; background: #E5DFD5; position: relative; }
-    .progress-fill { height: 100%; background: var(--accent-coral); transition: width 0.3s ease; }
-    .form-card { background: var(--card-white); border-radius: 1rem; padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-    .form-card h2 { font-family: var(--font-serif); font-size: 2.2rem; font-weight: 400; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
+    main.form-container { max-width: 640px; width: 90%; margin: 3.5rem auto 6rem auto; }
+    .progress-bar-container { margin-bottom: 2.25rem; }
+    .progress-text { display: flex; justify-content: space-between; font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.6rem; }
+    .progress-track { width: 100%; height: 2px; background: var(--hairline); position: relative; }
+    .progress-fill { height: 100%; background: var(--ink); transition: width 0.4s var(--ease); }
+    .form-card { background: var(--bg-cream-soft); border-radius: 1.25rem; padding: 3rem; border: 1px solid var(--hairline); box-shadow: 0 28px 52px -30px rgba(25,21,18,0.22); }
+    .form-card h2 { font-family: var(--font-serif); font-size: 2.3rem; font-weight: 400; margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--hairline); letter-spacing: -0.01em; }
     .step-panel { display: none; }
     .step-panel.active { display: block; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-dark); }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: var(--font-sans); outline: none; background: #FAF8F5; font-size: 0.85rem; }
-    .field-hint { font-size: 0.7rem; color: var(--text-muted); font-style: italic; margin-top: 0.3rem; }
-    .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
-    .chip { background: #FAF8F5; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.75rem; cursor: pointer; user-select: none; }
-    .chip.selected { background: #1C1613; color: white; border-color: #1C1613; }
+    .form-group { margin-bottom: 1.35rem; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 0.45rem; color: var(--ink); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.9rem 1rem; border: 1px solid var(--hairline); border-radius: 0.6rem; font-family: var(--font-sans); outline: none; background: var(--bg-card); font-size: 0.87rem; color: var(--ink); transition: border-color 0.3s var(--ease); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .field-hint { font-size: 0.7rem; color: var(--ink-muted); font-style: italic; margin-top: 0.35rem; }
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.45rem; }
+    .chip { background: var(--bg-card); border: 1px solid var(--hairline); padding: 0.55rem 1.1rem; border-radius: 100px; font-size: 0.76rem; cursor: pointer; user-select: none; color: var(--ink); transition: all 0.25s var(--ease); }
+    .chip.selected { background: var(--ink); color: var(--bg-cream); border-color: var(--ink); }
     .grid-2-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
-    .btn-back-text { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; }
-    .btn-continue { background: #1C1613; color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
-    .btn-coral-submit { background: var(--accent-coral); color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+    .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2.25rem; }
+    .btn-back-text { background: none; border: none; color: var(--ink-muted); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+    .btn-back-text:hover { color: var(--ink); }
+    .btn-continue { background: var(--ink); color: var(--bg-cream); border: none; padding: 0.9rem 2rem; border-radius: 100px; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; cursor: pointer; transition: background 0.35s var(--ease), transform 0.35s var(--ease); }
+    .btn-continue:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-coral-submit { background: var(--accent); color: #FFFFFF; border: none; padding: 0.9rem 2rem; border-radius: 100px; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; cursor: pointer; transition: background 0.35s var(--ease), transform 0.35s var(--ease); }
+    .btn-coral-submit:hover { background: var(--accent-deep); transform: translateY(-1px); }
   </style>
 </head>
 <body>
-
-  <!-- MASTER NAVBAR -->
-  <header class="master-navbar">
-    <a href="/" class="brand-logo">ZOÉLYS</a>
-    <ul class="nav-center">
-      <li><a href="/get-matched" class="active-link">FIND A SITTER</a></li>
-      <li><a href="/#how-it-works">HOW IT WORKS</a></li>
-      <li><a href="/#journal">JOURNAL</a></li>
-      <li><a href="/#map">EXPLORE ▾</a></li>
-    </ul>
-    <ul class="nav-right">
-      <li><a href="/dashboard">SIGN IN</a></li>
-      <li><a href="/get-matched" class="btn-join-pill">JOIN ZOÉLYS</a></li>
-    </ul>
-  </header>
 
   <main class="form-container">
     <div class="progress-bar-container">
@@ -185,6 +175,41 @@
     </div>
   </main>
 
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/join">Sign In</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
   <script>
     const stepTitles = ["ABOUT YOU", "YOUR PET", "HEALTH & CARE", "SERVICE NEEDED", "SITTER PREFERENCES", "BUDGET & EXPERIENCE", "FINAL DETAILS"];
     function nextStep(step) {
@@ -199,7 +224,7 @@
     function toggleMultiChip(el) { el.classList.toggle('selected'); }
     async function handleFormSubmit(e) {
       e.preventDefault();
-      alert('✨ Request Sent! Returning to Dashboard...');
+      alert('Request Sent! Returning to Dashboard...');
       window.location.href = '/dashboard';
     }
   </script>

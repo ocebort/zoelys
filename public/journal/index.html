@@ -4,18 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoélys — Journal</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-cream: #FAF7F2;
+      --bg-cream: #F5F1E9;
       --bg-card: #FFFFFF;
-      --hero-dark: #1C1613;
-      --text-dark: #1C1613;
-      --text-muted: #706A63;
-      --accent-coral: #D97757;
+      --hero-dark: #191512;
+      --text-dark: #191512;
+      --text-muted: #6E675F;
+      --accent-coral: #C1623F;
       --font-serif: 'Cormorant Garamond', Georgia, serif;
       --font-sans: 'Inter', -apple-system, sans-serif;
     }
@@ -300,23 +301,6 @@
 </head>
 <body>
 
-  <!-- Navigation with Direct Buttons -->
-  <header>
-    <a href="/" class="logo">ZOÉLYS</a>
-    <nav>
-      <a href="/get-matched">Find a Sitter</a>
-      <a href="/how-it-works">How It Works</a>
-      <a href="/journal" class="active">Journal</a>
-      <a href="/map">Map</a>
-      <a href="/events">Events</a>
-      <a href="/partners">Partners</a>
-    </nav>
-    <div class="nav-actions">
-      <a href="/join" class="btn-sign-in">Sign In</a>
-      <a href="/join" class="btn-join">Join Zoélys</a>
-    </div>
-  </header>
-
   <!-- Page Title Hero -->
   <div class="journal-hero">
     <div class="eyebrow">— THE JOURNAL</div>
@@ -380,15 +364,15 @@
   </div>
 
   <!-- Footer -->
-  <footer>
-    <div class="footer-content">
+  <footer class="master-footer">
+    <div class="footer-inner">
       <div class="footer-brand">
-        <span class="logo">ZOÉLYS</span>
-        <p>&ldquo;Pets aren't a side note — they're family. We treat them that way.&rdquo;</p>
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
       </div>
 
-      <div class="footer-column">
-        <h5>EXPLORE</h5>
+      <div>
+        <h5>Explore</h5>
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/map">The Map</a></li>
@@ -398,8 +382,8 @@
         </ul>
       </div>
 
-      <div class="footer-column">
-        <h5>ZOÉLYS</h5>
+      <div>
+        <h5>Zoélys</h5>
         <ul>
           <li><a href="/how-it-works">How It Works</a></li>
           <li><a href="/join">Join</a></li>
@@ -407,14 +391,15 @@
         </ul>
       </div>
 
-      <div class="footer-column">
-        <h5>STAY CLOSE</h5>
-        <p style="color: #8C857B; font-size: 0.8rem; margin-bottom: 0.75rem;">Quiet letters, real care. No spam, ever.</p>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
       </div>
     </div>
 
     <div class="footer-bottom">
       <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
     </div>
   </footer>
 

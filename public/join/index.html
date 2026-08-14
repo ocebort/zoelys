@@ -4,28 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoélys — Apply for Access</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    main.container { max-width: 480px; width: 100%; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
-    .auth-card { background: white; border: 1px solid var(--border-color); border-radius: 1.2rem; padding: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
-    .auth-title { font-family: var(--font-serif); font-size: 2.4rem; text-align: center; font-weight: 400; margin-bottom: 0.3rem; }
-    .auth-subtitle { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; }
+    main.container { max-width: 480px; width: 100%; margin: 4rem auto 6rem auto; padding: 0 1.5rem; }
+    .auth-card { background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 1.25rem; padding: 3rem 2.75rem; box-shadow: 0 24px 48px -28px rgba(25,21,18,0.18); }
+    .auth-title { font-family: var(--font-serif); font-size: 2.6rem; text-align: center; font-weight: 400; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+    .auth-subtitle { text-align: center; color: var(--ink-muted); font-size: 0.85rem; font-weight: 300; margin-bottom: 2.25rem; }
 
-    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #FAF6F0; padding: 0.3rem; border-radius: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
-    .role-btn { border: none; background: transparent; padding: 0.7rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: 1.5rem; color: var(--text-muted); transition: all 0.2s ease; }
-    .role-btn.active { background: #1C1613; color: white; }
+    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #F0EAE0; padding: 0.3rem; border-radius: 2rem; margin-bottom: 1.75rem; border: 1px solid var(--hairline); }
+    .role-btn { border: none; background: transparent; padding: 0.75rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; border-radius: 1.5rem; color: var(--ink-muted); transition: all 0.3s var(--ease); }
+    .role-btn.active { background: var(--ink); color: var(--bg-cream); }
 
-    .form-group { margin-bottom: 1.25rem; }
-    .form-label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-dark); }
-    .form-input { width: 100%; padding: 0.85rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-family: var(--font-sans); background: #FAF8F5; font-size: 0.85rem; box-sizing: border-box; }
-    
-    .btn-coral { background: var(--accent-coral); color: white; border: none; padding: 0.95rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; width: 100%; margin-top: 0.5rem; }
-    .toggle-link { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem; cursor: pointer; }
-    .toggle-link strong { color: var(--accent-coral); }
+    .form-group { margin-bottom: 1.35rem; }
+    .form-label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 0.45rem; color: var(--ink); }
+    .form-input { width: 100%; padding: 0.9rem 1rem; border-radius: 0.6rem; border: 1px solid var(--hairline); font-family: var(--font-sans); background: var(--bg-card); font-size: 0.87rem; box-sizing: border-box; color: var(--ink); outline: none; transition: border-color 0.3s var(--ease); }
+    .form-input:focus { border-color: var(--accent); }
+
+    .btn-coral { background: var(--ink); color: var(--bg-cream); border: none; padding: 1rem; border-radius: 100px; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; width: 100%; margin-top: 0.75rem; transition: background 0.35s var(--ease), transform 0.35s var(--ease); }
+    .btn-coral:hover { background: var(--accent); transform: translateY(-1px); }
+    .toggle-link { text-align: center; font-size: 0.8rem; color: var(--ink-muted); margin-top: 1.75rem; cursor: pointer; }
+    .toggle-link strong { color: var(--accent); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -37,8 +40,8 @@
 
       <!-- ROLE SELECTOR -->
       <div class="role-toggle" id="roleToggleBar">
-        <button type="button" class="role-btn active" onclick="setRole('owner', this)">Pet Parent 🐾</button>
-        <button type="button" class="role-btn" onclick="setRole('sitter', this)">Pet Sitter 🐕</button>
+        <button type="button" class="role-btn active" onclick="setRole('owner', this)">Pet Parent</button>
+        <button type="button" class="role-btn" onclick="setRole('sitter', this)">Pet Sitter</button>
       </div>
 
       <form onsubmit="handleAuth(event)">
@@ -73,7 +76,7 @@
 
         <!-- SITTER SECRET VETTING CODE FIELD -->
         <div class="form-group" id="vettingGroup" style="display: none;">
-          <label class="form-label" style="color: var(--accent-coral);">🔑 Zoélys Vetting Authorization ID *</label>
+          <label class="form-label" style="color: var(--accent);">Zoélys Vetting Authorization ID *</label>
           <input type="text" id="authVettingCode" placeholder="e.g. ZOELYS-VET-2026" class="form-input" style="border: 1.5px solid var(--accent-coral); background: #FFF8F6; font-weight: 600; text-transform: uppercase;">
           <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.3rem;">
             Required for Sitters. Provided by Zoélys Concierge after vetting.
@@ -92,6 +95,41 @@
       </div>
     </div>
   </main>
+
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/join">Sign In</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
 
   <script src="/navbar.js"></script>
   <script>
@@ -170,7 +208,7 @@
       const email = document.getElementById('authEmail').value;
 
       if (isForgotMode) {
-        alert('✨ Password reset link sent to ' + email);
+        alert('Password reset link sent to ' + email);
         toggleAuthMode();
         return;
       }

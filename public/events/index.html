@@ -4,33 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoélys — Member Events & Gatherings</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    main.container { max-width: 1100px; width: 100%; margin: 3rem auto 6rem auto; padding: 0 1.5rem; }
-    .hero-sec { text-align: center; margin-bottom: 3rem; }
-    .hero-sec h1 { font-family: var(--font-serif); font-size: 3.2rem; font-weight: 400; margin-bottom: 0.5rem; }
-    
-    .filter-pills { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
-    .filter-pill { background: #FAF8F5; color: #1C1613; border: 1px solid #EFEAE3; padding: 0.6rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .filter-pill.active { background: #1C1613; color: white; border-color: #1C1613; }
+    main.container { max-width: 1100px; width: 100%; margin: 4rem auto 7rem auto; padding: 0 1.5rem; }
+    .hero-sec { text-align: center; margin-bottom: 3.5rem; }
+    .hero-sec .eyebrow { margin-bottom: 1.4rem; }
+    .hero-sec h1 { font-family: var(--font-serif); font-size: clamp(2.6rem, 4.5vw, 3.6rem); font-weight: 400; letter-spacing: -0.015em; margin-bottom: 1rem; }
+    .hero-sec p { color: var(--ink-muted); font-size: 0.92rem; font-weight: 300; }
+
+    .filter-pills { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; }
+    .filter-pill { background: var(--bg-cream-soft); color: var(--ink); border: 1px solid var(--hairline); padding: 0.65rem 1.5rem; border-radius: 100px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s var(--ease); }
+    .filter-pill:hover { border-color: var(--ink); }
+    .filter-pill.active { background: var(--ink); color: var(--bg-cream); border-color: var(--ink); }
 
     .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
-    .event-card { background: white; border: 1px solid #EFEAE3; border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+    .event-card { background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 1.1rem; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+    .event-card:hover { transform: translateY(-5px); box-shadow: 0 26px 48px -28px rgba(25,21,18,0.2); }
     .event-card img { width: 100%; height: 220px; object-fit: cover; }
-    .event-body { padding: 1.8rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .event-body { padding: 1.9rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .event-tag { font-size: 0.66rem; letter-spacing: 0.2em; color: var(--accent); font-weight: 600; text-transform: uppercase; }
+    .event-title { font-family: var(--font-serif); font-size: 1.9rem; font-weight: 400; margin: 0.5rem 0 0.9rem; line-height: 1.2; }
+    .event-meta { font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 0.5rem; }
+    .event-desc { font-size: 0.84rem; color: var(--ink-muted); line-height: 1.7; margin-bottom: 1.6rem; }
+    .btn-rsvp { background: var(--ink); color: var(--bg-cream); border: none; padding: 0.85rem 1.5rem; border-radius: 100px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; width: 100%; transition: background 0.35s var(--ease); }
+    .btn-rsvp:hover { background: var(--accent); }
+    .empty-state { text-align: center; grid-column: 1/-1; padding: 4rem; color: var(--ink-muted); font-weight: 300; }
   </style>
 </head>
 <body>
 
   <main class="container">
     <div class="hero-sec">
-      <div style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">MEMBER COMMUNITY</div>
+      <div class="eyebrow">Member Community</div>
       <h1>Exclusive Gatherings & Events</h1>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Private rooftop socials, canine wellness workshops, and VIP dining in Miami.</p>
+      <p>Private rooftop socials, canine wellness workshops, and VIP dining experiences.</p>
     </div>
 
     <!-- FILTER PILLS -->
@@ -44,9 +56,44 @@
 
     <!-- DYNAMIC EVENTS GRID -->
     <div class="events-grid" id="eventsContainer">
-      <div style="text-align: center; grid-column: 1/-1; padding: 3rem; color: var(--text-muted);">Loading member events...</div>
+      <div class="empty-state">Loading member events...</div>
     </div>
   </main>
+
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/join">Sign In</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
 
   <script src="/navbar.js"></script>
   <script>
@@ -59,29 +106,29 @@
         allEvents = data.events || data;
         renderEvents(allEvents);
       } catch (e) {
-        document.getElementById('eventsContainer').innerHTML = '<div style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Unable to load events.</div>';
+        document.getElementById('eventsContainer').innerHTML = '<div class="empty-state">Unable to load events.</div>';
       }
     }
 
     function renderEvents(list) {
       const container = document.getElementById('eventsContainer');
       if (!list || list.length === 0) {
-        container.innerHTML = '<div style="text-align: center; grid-column: 1/-1; padding: 4rem; color: var(--text-muted);">No upcoming events found in this category.</div>';
+        container.innerHTML = '<div class="empty-state">No upcoming events found in this category.</div>';
         return;
       }
 
       container.innerHTML = list.map(evt => `
         <div class="event-card">
-          ${evt.image_url ? `<img src="${evt.image_url}" alt="${evt.title}">` : '<div style="height: 180px; background: #FAF6F0; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🐾</div>'}
+          ${evt.image_url ? `<img src="${evt.image_url}" alt="${evt.title}">` : '<div style="height: 180px; background: var(--accent-tint); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 2rem; color: var(--accent);">Zoélys</div>'}
           <div class="event-body">
             <div>
-              <div style="font-size: 0.7rem; letter-spacing: 0.12em; color: var(--accent-coral); font-weight: 600; text-transform: uppercase;">${evt.category || 'SOCIAL MIXER'} • ${evt.sponsor || 'ZOÉLYS'}</div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin: 0.4rem 0;">${evt.title}</h3>
-              <div style="font-size: 0.8rem; color: var(--text-dark); font-weight: 600; margin-bottom: 0.8rem;">📅 ${evt.date || evt.event_date}</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">📍 ${evt.location}</div>
-              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">${evt.description || ''}</p>
+              <div class="event-tag">${evt.category || 'Social Mixer'} &bull; ${evt.sponsor || 'Zoélys'}</div>
+              <h3 class="event-title">${evt.title}</h3>
+              <div class="event-meta"><strong>${evt.date || evt.event_date}</strong></div>
+              <div class="event-meta">${evt.location}</div>
+              <p class="event-desc">${evt.description || ''}</p>
             </div>
-            <button style="background: var(--accent-coral); color: white; border: none; padding: 0.7rem 1.4rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; width: 100%;" onclick="window.location.href='/join'">RSVP VIA PORTAL &rarr;</button>
+            <button class="btn-rsvp" onclick="window.location.href='/join'">RSVP via portal <span class="arrow">&rarr;</span></button>
           </div>
         </div>
       `).join('');

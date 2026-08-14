@@ -2,29 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to choose the right food for your dog — Zoélys</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>How to choose the right food for your dog — Zoélys Journal</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { background: #FAF7F2; color: #1C1613; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.7; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: #FAF7F2; border-bottom: 1px solid rgba(0,0,0,0.03); }
-    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 0.25em; text-transform: uppercase; color: #1C1613; text-decoration: none; }
-    .article-container { max-width: 720px; margin: 4rem auto 6rem; padding: 0 2rem; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 3rem; margin-bottom: 1rem; font-weight: 400; }
-    .hero-img { width: 100%; height: 380px; object-fit: cover; border-radius: 1.25rem; margin: 2rem 0; }
+    :root { --bg-cream: #F5F1E9; --text-dark: #191512; --text-muted: #6E675F; --accent-coral: #C1623F; --hairline: #E5DED2; --font-serif: 'Cormorant Garamond', Georgia, serif; --font-sans: 'Inter', -apple-system, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-cream); color: var(--text-dark); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    .article-container { max-width: 720px; margin: 5rem auto 7rem; padding: 0 2rem; }
+    .eyebrow { font-size: 0.66rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent-coral); margin-bottom: 1.1rem; font-weight: 600; }
+    h1 { font-family: var(--font-serif); font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 400; line-height: 1.12; margin-bottom: 1.2rem; letter-spacing: -0.015em; }
+    .meta-bar { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 2.5rem; border-bottom: 1px solid var(--hairline); padding-bottom: 1.1rem; }
+    .hero-img { width: 100%; height: 400px; object-fit: cover; border-radius: 1.1rem; margin-bottom: 3rem; }
+    .article-body p { margin-bottom: 1.75rem; font-size: 0.98rem; color: #3A3530; font-weight: 300; line-height: 1.85; }
+    .back-link { display: inline-block; margin-bottom: 2.25rem; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dark); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--text-dark); padding-bottom: 3px; transition: color 0.3s, border-color 0.3s; }
+    .back-link:hover { color: var(--accent-coral); border-color: var(--accent-coral); }
   </style>
 </head>
 <body>
-  <header>
-    <a href="/" class="logo">ZOÉLYS</a>
-    <a href="/journal" style="text-decoration:none; font-size:0.7rem; letter-spacing:0.15em; color:#1C1613; text-transform:uppercase;">&larr; Journal</a>
-  </header>
-  <div class="article-container">
-    <p style="color:#D97757; font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase;">— NUTRITION</p>
+
+  <article class="article-container">
+    <a href="/journal" class="back-link">&larr; Back to Journal</a>
+    <div class="eyebrow">Nutrition</div>
     <h1>How to choose the right food for your dog</h1>
-    <p style="font-size:0.75rem; color:#706A63;">BY OCÉANE BORT &bull; 10 MIN READ</p>
+    <div class="meta-bar">By Océane Bort &bull; 10 min read</div>
     <img class="hero-img" src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=1200" alt="Dog food">
-    <p>Pet food marketing is flooded with buzzwords like 'holistic', 'ancestral', and 'human-grade'. To navigate the aisles effectively, learn to inspect the guaranteed analysis panel and ingredient sourcing rather than front-of-bag claims.</p>
-    <p>Every dog has unique metabolic requirements based on age, coat condition, energy levels, and digestive sensitivities.</p>
-  </div>
+    <div class="article-body">
+      <p>Pet food marketing is flooded with buzzwords like 'holistic', 'ancestral', and 'human-grade'. To navigate the aisles effectively, learn to inspect the guaranteed analysis panel and ingredient sourcing rather than front-of-bag claims.</p>
+      <p>Every dog has unique metabolic requirements based on age, coat condition, energy levels, and digestive sensitivities.</p>
+    </div>
+  </article>
+
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/join">Sign In</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
+  <script src="/navbar.js"></script>
 </body>
 </html>

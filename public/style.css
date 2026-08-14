@@ -14,6 +14,16 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --nav-h: 92px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Backward-compatible aliases for pages still referencing legacy tokens */
+  --accent-coral: #C1623F;
+  --accent-coral-hover: #A94E2F;
+  --card-white: #FFFFFF;
+  --border-color: #E5DED2;
+  --text-dark: #191512;
+  --text-muted: #6E675F;
+  --hero-dark: #191512;
+  --line-color: #E5DED2;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,6 +70,13 @@ header.master-navbar {
   color: var(--ink);
   text-decoration: none;
   line-height: 1;
+}
+
+.brand-logo-img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-mark {
@@ -211,6 +228,7 @@ footer.master-footer {
 
 .master-footer .brand-logo { color: #ECE6DC; }
 .master-footer .brand-logo .brand-mark { border-color: rgba(255, 255, 255, 0.4); }
+.master-footer .brand-logo-img { opacity: 0.95; }
 
 .master-footer .footer-tag {
   color: #A79E95;

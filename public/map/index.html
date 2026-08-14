@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoélys — The Map</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { background: #FAF7F2; color: #1C1613; font-family: 'Inter', sans-serif; margin: 0; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: #FAF7F2; border-bottom: 1px solid rgba(0,0,0,0.03); }
-    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 0.25em; text-transform: uppercase; color: #1C1613; text-decoration: none; }
-    .container { max-width: 800px; margin: 6rem auto; text-align: center; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 400; }
+    body { background: var(--bg-cream, #F5F1E9); color: var(--ink, #191512); font-family: var(--font-sans, 'Inter', sans-serif); margin: 0; }
+    .container { max-width: 800px; margin: 9rem auto 11rem; padding: 0 1.5rem; text-align: center; }
+    .eyebrow { font-size: 0.66rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent, #C1623F); font-weight: 600; margin-bottom: 1.4rem; }
+    h1 { font-family: var(--font-serif, 'Cormorant Garamond', serif); font-size: clamp(3rem, 6vw, 4.2rem); font-weight: 400; letter-spacing: -0.015em; margin-bottom: 1.2rem; }
+    .container p:not(.eyebrow) { color: var(--ink-muted, #6E675F); font-size: 0.95rem; font-weight: 300; max-width: 520px; margin: 0 auto; line-height: 1.7; }
+    .soon-note { margin-top: 2.2rem; font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-muted, #6E675F); border-top: 1px solid var(--hairline, #E5DED2); display: inline-block; padding-top: 1rem; }
   </style>
 </head>
 <body>
-  <header>
-    <a href="/" class="logo">ZOÉLYS</a>
-    <a href="/journal" style="text-decoration:none; font-size:0.7rem; letter-spacing:0.15em; color:#1C1613; text-transform:uppercase;">&larr; Back</a>
-  </header>
   <div class="container">
-    <p style="color: #D97757; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;">EXPLORE</p>
+    <div class="eyebrow">Explore</div>
     <h1>The Map</h1>
-    <p style="color: #706A63;">Curated, vetted pet spots near you — parks, pet-friendly cafés, and emergency services.</p>
+    <p>Curated, vetted pet spots near you — parks, pet-friendly cafés, and emergency services.</p>
+    <div class="soon-note">Interactive map arriving with member launch</div>
   </div>
 <script src="/navbar.js"></script></body>
 </html>

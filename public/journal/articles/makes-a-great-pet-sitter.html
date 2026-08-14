@@ -3,45 +3,33 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>What actually makes a great pet sitter — Zoélys Journal</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root { --bg-cream: #FAF7F2; --hero-dark: #1C1613; --text-dark: #1C1613; --text-muted: #706A63; --accent-coral: #D97757; --font-serif: 'Cormorant Garamond', Georgia, serif; --font-sans: 'Inter', -apple-system, sans-serif; }
+    :root { --bg-cream: #F5F1E9; --hero-dark: #191512; --text-dark: #191512; --text-muted: #6E675F; --accent-coral: #C1623F; --font-serif: 'Cormorant Garamond', Georgia, serif; --font-sans: 'Inter', -apple-system, sans-serif; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg-cream); color: var(--text-dark); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: var(--bg-cream); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.03); }
-    .logo { font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 500; color: var(--text-dark); text-decoration: none; }
-    nav a { text-decoration: none; color: var(--text-dark); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; margin-left: 2rem; }
-    nav a.active { color: var(--accent-coral); }
-    .article-container { max-width: 720px; margin: 4rem auto 6rem; padding: 0 2rem; }
-    .eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent-coral); margin-bottom: 1rem; font-weight: 500; }
-    h1 { font-family: var(--font-serif); font-size: 3.25rem; font-weight: 400; line-height: 1.15; margin-bottom: 1.5rem; }
-    .meta-bar { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2.5rem; border-bottom: 1px solid #EAE4D9; padding-bottom: 1rem; }
-    .hero-image { width: 100%; height: 420px; object-fit: cover; border-radius: 1.25rem; margin-bottom: 3rem; }
-    .article-body p { margin-bottom: 1.75rem; font-size: 0.95rem; color: #3A3530; font-weight: 300; }
-    .article-body h2 { font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin: 2.5rem 0 1rem; }
-    blockquote { font-family: var(--font-serif); font-style: italic; font-size: 1.5rem; border-left: 2px solid var(--accent-coral); padding-left: 1.5rem; margin: 2.5rem 0; color: var(--text-dark); }
-    .back-link { display: inline-block; margin-bottom: 2rem; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dark); text-decoration: none; font-weight: 500; }
-    footer { background-color: var(--hero-dark); color: #FFFFFF; padding: 4rem 4rem 2rem; text-align: center; font-size: 0.75rem; color: #8C857B; }
+    .article-container { max-width: 720px; margin: 5rem auto 7rem; padding: 0 2rem; }
+    .eyebrow { font-size: 0.66rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent-coral); margin-bottom: 1.1rem; font-weight: 600; }
+    h1 { font-family: var(--font-serif); font-size: clamp(2.6rem, 5vw, 3.6rem); font-weight: 400; line-height: 1.12; margin-bottom: 1.5rem; letter-spacing: -0.015em; }
+    .meta-bar { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 2.75rem; border-bottom: 1px solid var(--hairline, #E5DED2); padding-bottom: 1.1rem; }
+    .hero-image { width: 100%; height: 420px; object-fit: cover; border-radius: 1.1rem; margin-bottom: 3rem; }
+    .article-body p { margin-bottom: 1.75rem; font-size: 0.98rem; color: #3A3530; font-weight: 300; line-height: 1.85; }
+    .article-body h2 { font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin: 2.75rem 0 1.1rem; }
+    blockquote { font-family: var(--font-serif); font-style: italic; font-size: 1.55rem; border-left: 2px solid var(--accent-coral); padding-left: 1.5rem; margin: 2.75rem 0; color: var(--text-dark); line-height: 1.5; }
+    .back-link { display: inline-block; margin-bottom: 2.25rem; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dark); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--text-dark); padding-bottom: 3px; transition: color 0.3s, border-color 0.3s; }
+    .back-link:hover { color: var(--accent-coral); border-color: var(--accent-coral); }
   </style>
 </head>
 <body>
-  <header>
-    <a href="/" class="logo">ZOÉLYS</a>
-    <nav>
-      <a href="/get-matched">Find a Sitter</a>
-      <a href="/how-it-works">How It Works</a>
-      <a href="/journal" class="active">Journal</a>
-      <a href="/partners">Explore ▾</a>
-    </nav>
-  </header>
 
   <article class="article-container">
     <a href="/journal" class="back-link">&larr; Back to Journal</a>
-    <div class="eyebrow">— FEATURED &bull; BEHIND ZOÉLYS</div>
+    <div class="eyebrow">Featured &bull; Behind Zoélys</div>
     <h1>What actually makes a great pet sitter</h1>
-    <div class="meta-bar">BY OCÉANE BORT &bull; JUNE 6, 2026 &bull; 6 MIN READ</div>
+    <div class="meta-bar">By Océane Bort &bull; June 6, 2026 &bull; 6 min read</div>
     
     <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=1200" class="hero-image" alt="Sitter with dog">
 
@@ -62,8 +50,41 @@
     </div>
   </article>
 
-  <footer>
-    &copy; 2026 Zoélys. Crafted with care in Miami.
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/join">Sign In</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
   </footer>
+
+  <script src="/navbar.js"></script>
 </body>
 </html>
