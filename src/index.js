@@ -12,6 +12,11 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
+    // HEALTH CHECK
+    if (request.method === 'GET' && url.pathname === '/api/health') {
+      return new Response(JSON.stringify({ ok: true, service: 'zoelys', time: new Date().toISOString() }), { headers: corsHeaders });
+    }
+
     // REGISTER
     if (request.method === 'POST' && url.pathname === '/api/auth/register') {
       try {
