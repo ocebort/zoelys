@@ -41,6 +41,16 @@
 
     .inset-panel { background: rgba(255,255,255,0.5); border: 1px solid var(--hairline, #E5DED2); border-radius: 0.8rem; padding: 1.2rem; margin-bottom: 1.2rem; }
     .care-alert { background: #FFF8F6; border: 1px solid #F0C4B8; padding: 0.9rem 1.1rem; border-radius: 0.8rem; margin-bottom: 1.25rem; }
+
+    .admin-nav { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--hairline, #E5DED2); margin-bottom: 2rem; flex-wrap: wrap; }
+    .admin-tab { padding: 0.85rem 1.5rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--ink-muted, #6E675F); border-bottom: 2px solid transparent; transition: color 0.3s, border-color 0.3s; }
+    .admin-tab:hover { color: var(--ink, #191512); }
+    .admin-tab.active { color: var(--ink, #191512); border-bottom-color: var(--accent); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .admin-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--hairline, #E5DED2); }
+    .admin-row:last-child { border-bottom: none; }
+    .admin-row .btn-pill { white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -216,8 +226,77 @@
     <div id="adminMasterView" style="display: none;">
       <div class="profile-banner">
         <div>
-          <h1 class="profile-title">Super-Admin Concierge Control</h1>
-          <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem;">Zoélys Executive Command Center</p>
+          <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: var(--accent-coral, #C1623F); font-weight: 600; text-transform: uppercase;">Super-Admin Concierge Control</div>
+          <h1 class="profile-title">Welcome, Océane</h1>
+          <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem; margin-top: 0.3rem;">Zoélys Executive Command Center &bull; Miami Headquarters</p>
+        </div>
+        <div>
+          <button class="btn-coral" style="width: auto; padding: 0.85rem 1.6rem;" onclick="window.location.href='/get-matched'">+ New Match Intake</button>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-val">$14,250</div><div class="metric-lbl">Estimated MRR</div></div>
+        <div class="metric-card"><div class="metric-val">12</div><div class="metric-lbl">Active Pet Parents</div></div>
+        <div class="metric-card"><div class="metric-val">8</div><div class="metric-lbl">Vetted Vet Tech Sitters</div></div>
+        <div class="metric-card"><div class="metric-val">3</div><div class="metric-lbl">Pending Matches</div></div>
+      </div>
+
+      <div class="admin-nav">
+        <button class="admin-tab active" onclick="switchTab('matches', this)">Match Requests Inbox</button>
+        <button class="admin-tab" onclick="switchTab('sitters', this)">Sitter Pipeline</button>
+        <button class="admin-tab" onclick="switchTab('members', this)">Member CRM</button>
+        <button class="admin-tab" onclick="switchTab('cms', this)">CMS & Events</button>
+      </div>
+
+      <!-- ADMIN PANELS -->
+      <div class="panel active" id="tab-matches">
+        <div class="card-box">
+          <h3><span>Pending Match Proposals</span></h3>
+          <table class="table-list">
+            <thead><tr><th>Member Name</th><th>Companion</th><th>Service Required</th><th>Dates Needed</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Océane B.</strong></td><td>Zoé (Golden Retriever)</td><td>Overnight Stay</td><td>Sept 18 - Sept 20</td><td><span style="color: var(--accent-coral, #C1623F); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Camila R. assigned!')">Assign Camila R. &rarr;</button></td></tr>
+              <tr><td><strong>Sarah M.</strong></td><td>Milo (French Bulldog)</td><td>Day Care & Walk</td><td>Sept 22</td><td><span style="color: var(--accent-coral, #C1623F); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Marcus T. assigned!')">Assign Marcus T. &rarr;</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-sitters">
+        <div class="card-box">
+          <h3><span>Vetted Pet Sitter Roster</span></h3>
+          <table class="table-list">
+            <thead><tr><th>Sitter Name</th><th>Specialty</th><th>Background Check</th><th>Status</th><th>Rating</th></tr></thead>
+            <tbody>
+              <tr><td>Camila Rodriguez</td><td>Certified Vet Tech &bull; Medication Admin</td><td><span style="color: #2E7D4F; font-weight: 600;">Passed</span></td><td>Active Sitter</td><td>5.0 &bull; 32 sittings</td></tr>
+              <tr><td>Marcus Thorne</td><td>High-Energy Breed Specialist</td><td><span style="color: #2E7D4F; font-weight: 600;">Passed</span></td><td>Active Sitter</td><td>4.9 &bull; 18 sittings</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-members">
+        <div class="card-box">
+          <h3><span>Pet Parent Subscriptions & Ledger</span></h3>
+          <table class="table-list">
+            <thead><tr><th>Member Email</th><th>Tier</th><th>Monthly Credits Left</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>ocebort@gmail.com</td><td>Super-Admin Concierge</td><td>Unlimited</td><td><button class="btn-pill" onclick="alert('Admin maintained.')">Manage Tiers</button></td></tr>
+              <tr><td>sarah@gmail.com</td><td>Platinum ($125/mo)</td><td>10 / 10 Credits</td><td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-cms">
+        <div class="card-box">
+          <h3><span>Executive Live D1 CMS Publisher</span></h3>
+          <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem; margin-bottom: 2rem;">Publish rich luxury events and exclusive partner perks directly to your live database.</p>
+          <h4 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem;">Live Events</h4>
+          <div id="adminEventsList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading events...</div>
+          <h4 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400; margin-top: 2rem; margin-bottom: 0.5rem;">Live Partners</h4>
+          <div id="adminPartnersList" style="font-size: 0.85rem; color: var(--ink-muted, #6E675F);">Loading partners...</div>
         </div>
       </div>
     </div>
@@ -259,6 +338,64 @@
         }
       } catch (err) {
         console.error('Portal load error:', err);
+      }
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+      if (tabId === 'cms') loadCmsTracker();
+    }
+
+    async function loadCmsTracker() {
+      try {
+        const resEvt = await fetch('/api/events');
+        const dataEvt = await resEvt.json();
+        const evts = dataEvt.events || dataEvt;
+        const evtContainer = document.getElementById('adminEventsList');
+        if (evtContainer && Array.isArray(evts)) {
+          if (evts.length === 0) evtContainer.innerHTML = 'No active events published yet.';
+          else {
+            evtContainer.innerHTML = evts.map(e => `
+              <div class="admin-row">
+                <div>
+                  <strong style="color: var(--ink, #191512);">${e.title}</strong><br>
+                  <span style="font-size: 0.75rem; color: var(--ink-muted, #6E675F);">${e.date || e.event_date}</span>
+                </div>
+                <button class="btn-pill" onclick="deleteContent('events', '${e.id}')" style="background: transparent; border: 1px solid var(--accent-coral, #C1623F); color: var(--accent-coral, #C1623F);">Delete</button>
+              </div>
+            `).join('');
+          }
+        }
+
+        const resPrt = await fetch('/api/partners');
+        const dataPrt = await resPrt.json();
+        const prts = dataPrt.partners || dataPrt;
+        const prtContainer = document.getElementById('adminPartnersList');
+        if (prtContainer && Array.isArray(prts)) {
+          if (prts.length === 0) prtContainer.innerHTML = 'No active partners published yet.';
+          else {
+            prtContainer.innerHTML = prts.map(p => `
+              <div class="admin-row">
+                <div>
+                  <strong style="color: var(--ink, #191512);">${p.name}</strong><br>
+                  <span style="font-size: 0.75rem; color: var(--accent-coral, #C1623F);">${p.perk || p.category}</span>
+                </div>
+                <button class="btn-pill" onclick="deleteContent('partners', '${p.id}')" style="background: transparent; border: 1px solid var(--accent-coral, #C1623F); color: var(--accent-coral, #C1623F);">Delete</button>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) { console.error('Tracker error:', e); }
+    }
+
+    async function deleteContent(type, id) {
+      if (confirm(`Remove this ${type} from the live site?`)) {
+        await fetch(`/api/${type}/${id}`, { method: 'DELETE' });
+        alert('Removed successfully!');
+        loadCmsTracker();
       }
     }
 
