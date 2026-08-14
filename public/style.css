@@ -143,7 +143,7 @@ header.master-navbar {
 .nav-logout { color: var(--ink-muted) !important; font-weight: 500 !important; }
 .nav-logout:hover { color: var(--accent) !important; }
 
-.btn-join-pill {
+.nav-right .btn-join-pill {
   background: var(--ink);
   color: var(--bg-cream) !important;
   padding: 0.85rem 1.8rem;
@@ -153,7 +153,7 @@ header.master-navbar {
   transition: background 0.35s var(--ease), transform 0.35s var(--ease);
 }
 
-.btn-join-pill:hover { background: var(--accent); transform: translateY(-1px); }
+.nav-right .btn-join-pill:hover { background: var(--accent); transform: translateY(-1px); }
 
 /* ============ SHARED UI PRIMITIVES ============ */
 .eyebrow {
