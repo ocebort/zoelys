@@ -9,16 +9,368 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body { background: var(--bg-cream, #F5F1E9); color: var(--ink, #191512); font-family: var(--font-sans, 'Inter', sans-serif); margin: 0; }
-    .page-head { padding-bottom: 6rem; }
-    .soon-note { margin-top: 2.2rem; font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-muted, #6E675F); border-top: 1px solid var(--hairline, #E5DED2); display: inline-block; padding-top: 1rem; }
+    .page-head { padding-bottom: 2rem; }
+
+    .map-wrap {
+      max-width: 1280px;
+      margin: 2rem auto 6rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .map-sidebar {
+      background: var(--bg-cream-soft, #FBF9F4);
+      border: 1px solid var(--hairline, #E5DED2);
+      border-radius: 1.1rem;
+      padding: 1.5rem;
+      position: sticky;
+      top: calc(var(--nav-h, 92px) + 1.5rem);
+    }
+
+    .map-sidebar h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 1.25rem;
+    }
+
+    .filter-group { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.5rem; }
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline, #E5DED2);
+      color: var(--ink, #191512);
+      padding: 0.7rem 1rem;
+      border-radius: 100px;
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.3s var(--ease, ease);
+      text-align: left;
+    }
+    .filter-chip .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .filter-chip:hover { border-color: var(--ink, #191512); }
+    .filter-chip.active { background: var(--ink, #191512); color: var(--bg-cream, #F5F1E9); border-color: var(--ink, #191512); }
+    .filter-chip.active .dot { outline: 1px solid rgba(255,255,255,0.5); }
+
+    #mapStatus {
+      font-size: 0.72rem;
+      color: var(--ink-muted, #6E675F);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6rem 0 0.9rem;
+      border-top: 1px solid var(--hairline, #E5DED2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #mapStatus .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent, #C1623F); animation: blink 1.2s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+    #mapStatus.done .pulse { animation: none; background: #7A9B6E; }
+
+    #placesList { max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.65rem; }
+    #placesList .map-note { font-size: 0.82rem; color: var(--ink-muted, #6E675F); font-weight: 300; line-height: 1.6; padding: 0.5rem 0; }
+    .place-item {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline, #E5DED2);
+      border-radius: 0.8rem;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.25s var(--ease, ease), transform 0.25s var(--ease, ease);
+    }
+    .place-item:hover { border-color: var(--accent, #C1623F); transform: translateX(3px); }
+    .place-item .place-name { font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between; gap: 0.5rem; }
+    .place-item .place-rating { color: #9A7B2F; font-size: 0.75rem; white-space: nowrap; }
+    .place-item .place-addr { font-size: 0.74rem; color: var(--ink-muted, #6E675F); margin-top: 0.25rem; line-height: 1.5; }
+
+    .map-canvas {
+      height: 640px;
+      border-radius: 1.1rem;
+      border: 1px solid var(--hairline, #E5DED2);
+      overflow: hidden;
+      box-shadow: 0 28px 52px -30px rgba(25,21,18,0.22);
+      background: #E8E2D6;
+    }
+
+    .map-canvas.loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-muted, #6E675F);
+      font-size: 0.85rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+    }
+
+    .gm-style .gm-style-iw-c { border-radius: 12px; font-family: var(--font-sans, 'Inter', sans-serif); }
+    .gm-style .gm-style-iw-t::after { border-top-color: #FBF9F4; }
+    .place-iw-name { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 500; color: var(--ink, #191512); margin-bottom: 0.35rem; }
+    .place-iw-meta { font-size: 0.78rem; color: var(--ink-muted, #6E675F); line-height: 1.55; }
+    .place-iw-meta strong { color: #9A7B2F; }
+
+    @media (max-width: 900px) {
+      .map-wrap { grid-template-columns: 1fr; }
+      .map-sidebar { position: static; }
+      .map-canvas { height: 480px; }
+      #placesList { max-height: 300px; }
+    }
   </style>
 </head>
 <body>
+
   <div class="page-head">
     <div class="eyebrow">Explore</div>
     <h1>The Map</h1>
-    <p>Curated, vetted pet spots near you — parks, pet-friendly cafés, and emergency services.</p>
-    <div class="soon-note">Interactive map arriving with member launch</div>
+    <p>Pet-friendly spots near you — parks, cafés, groomers, and emergency care. Curated by Zoélys.</p>
   </div>
-<script src="/navbar.js"></script></body>
+
+  <section class="map-wrap">
+    <aside class="map-sidebar">
+      <h3>Nearby Pet Spots</h3>
+      <div class="filter-group" id="filterGroup">
+        <button class="filter-chip active" data-cat="parks"><span>Parks & Dog Runs</span><span class="dot" style="background:#7A9B6E;"></span></button>
+        <button class="filter-chip" data-cat="cafes"><span>Pet-Friendly Cafés</span><span class="dot" style="background:#C1623F;"></span></button>
+        <button class="filter-chip" data-cat="restaurants"><span>Pet-Friendly Restaurants</span><span class="dot" style="background:#C1623F;"></span></button>
+        <button class="filter-chip" data-cat="groomers"><span>Groomers</span><span class="dot" style="background:#A98A5E;"></span></button>
+        <button class="filter-chip" data-cat="pet-stores"><span>Pet Stores</span><span class="dot" style="background:#6E675F;"></span></button>
+        <button class="filter-chip" data-cat="vets"><span>Veterinarians</span><span class="dot" style="background:#8C5B4F;"></span></button>
+        <button class="filter-chip" data-cat="daycare"><span>Daycare & Boarding</span><span class="dot" style="background:#4F6D8C;"></span></button>
+      </div>
+      <div id="mapStatus"><span class="pulse"></span><span id="mapStatusText">Locating you…</span></div>
+      <div id="placesList"><p class="map-note">Searching nearby spots…</p></div>
+    </aside>
+
+    <div class="map-canvas loading" id="map">Loading map…</div>
+  </section>
+
+<script src="/navbar.js"></script>
+<script>
+  const GOOGLE_MAPS_KEY = 'AIzaSyBmvJph4LmrbtW7skeczzpBIyb9WWzFKo4';
+  const MIAMI = { lat: 25.7617, lng: -80.1918 };
+
+  const CATEGORIES = {
+    parks:       { label: 'Parks & Dog Runs',   type: 'park',             keyword: 'dog park',      color: '#7A9B6E' },
+    cafes:       { label: 'Pet-Friendly Cafés',  type: 'cafe',             keyword: 'pet friendly',  color: '#C1623F' },
+    restaurants: { label: 'Pet-Friendly Restaurants', type: 'restaurant',  keyword: 'dog friendly',  color: '#C1623F' },
+    groomers:    { label: 'Groomers',            type: 'pet_store',        keyword: 'dog grooming',  color: '#A98A5E' },
+    'pet-stores':{ label: 'Pet Stores',          type: 'pet_store',        keyword: null,            color: '#6E675F' },
+    vets:        { label: 'Veterinarians',       type: 'veterinary_care',  keyword: '24 hour',       color: '#8C5B4F' },
+    daycare:     { label: 'Daycare & Boarding',  type: 'pet_store',        keyword: 'dog daycare',   color: '#4F6D8C' }
+  };
+
+  let map, service, infoWindow;
+  let markers = [];
+  let places = [];
+  let center = MIAMI;
+  let activeCat = 'parks';
+
+  function pinIcon(color) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"><path d="M18 2C10.27 2 4 8.27 4 16c0 9.5 14 18 14 18s14-8.5 14-18C32 8.27 25.73 2 18 2z" fill="${color}"/><path d="M18 9c-3.87 0-7 3.13-7 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7z" fill="#FBF9F4"/><g fill="${color}"><circle cx="12.6" cy="15.4" r="1.4"/><circle cx="23.4" cy="15.4" r="1.4"/><circle cx="15.2" cy="10.8" r="1.4"/><circle cx="20.8" cy="10.8" r="1.4"/></g></svg>`;
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+      scaledSize: new google.maps.Size(36, 36),
+      anchor: new google.maps.Point(18, 34)
+    };
+  }
+
+  function loadGoogleMaps() {
+    return new Promise((resolve, reject) => {
+      if (window.google && window.google.maps && window.google.maps.places) return resolve();
+      window.__mapReady = () => {
+        delete window.__mapReady;
+        resolve();
+      };
+      const s = document.createElement('script');
+      s.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places&callback=__mapReady`;
+      s.async = true;
+      s.onerror = () => reject(new Error('Failed to load Google Maps'));
+      document.head.appendChild(s);
+    });
+  }
+
+  function getLocation() {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) return resolve(MIAMI);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => resolve(MIAMI),
+        { timeout: 8000, maximumAge: 300000 }
+      );
+    });
+  }
+
+  function setStatus(text, done) {
+    const el = document.getElementById('mapStatus');
+    el.classList.toggle('done', !!done);
+    document.getElementById('mapStatusText').textContent = text;
+  }
+
+  function clearMarkers() {
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+    places = [];
+    if (infoWindow) infoWindow.close();
+  }
+
+  function renderResults(results) {
+    const list = document.getElementById('placesList');
+    if (!results.length) {
+      list.innerHTML = '<p class="map-note">No spots found nearby for this category. Try another filter or move the map to a new area.</p>';
+      return;
+    }
+    list.innerHTML = '';
+    results.forEach((place, i) => {
+      const item = document.createElement('div');
+      item.className = 'place-item';
+      const rating = place.rating ? `<span class="place-rating">★ ${place.rating.toFixed(1)}</span>` : '';
+      item.innerHTML = `
+        <div class="place-name"><span>${place.name}</span>${rating}</div>
+        <div class="place-addr">${place.vicinity || ''}</div>`;
+      item.addEventListener('click', () => focusPlace(i));
+      list.appendChild(item);
+    });
+  }
+
+  function focusPlace(i) {
+    const place = places[i];
+    map.panTo(place.marker.getPosition());
+    map.setZoom(16);
+    infoWindow.setContent(infoContent(place));
+    infoWindow.open(map, place.marker);
+  }
+
+  function infoContent(p) {
+    const rating = p.rating ? `<strong>★ ${p.rating.toFixed(1)}</strong>${p.user_ratings_total ? ' (' + p.user_ratings_total + ' reviews)' : ''}<br>` : '';
+    const photo = p.photos && p.photos[0]
+      ? `<img src="${p.photos[0].getUrl({ maxWidth: 240, maxHeight: 140 })}" alt="${p.name}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:0.6rem;">`
+      : '';
+    const openNow = p.opening_hours ? (p.opening_hours.isOpen() ? '<span style="color:#2E7D4F;">Open now</span>' : '<span style="color:#8C5B4F;">Closed now</span>') : '';
+    return `
+      <div style="max-width:260px;">
+        ${photo}
+        <div class="place-iw-name">${p.name}</div>
+        <div class="place-iw-meta">${rating}${openNow ? openNow + '<br>' : ''}${p.vicinity || ''}</div>
+      </div>`;
+  }
+
+  function runSearch(cat, retry) {
+    clearMarkers();
+    setStatus(`Showing ${cat.label.toLowerCase()} nearby…`);
+    document.getElementById('placesList').innerHTML = '<p class="map-note">Searching nearby spots…</p>';
+
+    const req = { location: center, radius: 5000 };
+    if (cat.keyword) req.keyword = cat.keyword;
+    if (cat.type) req.type = cat.type;
+
+    service.nearbySearch(req, (results, status) => {
+      if (status === 'OK' && results && results.length) {
+        results.forEach(p => {
+          const marker = new google.maps.Marker({
+            position: p.geometry.location,
+            map,
+            icon: pinIcon(cat.color),
+            title: p.name
+          });
+          const place = Object.assign({}, p, { marker });
+          marker.addListener('click', () => {
+            map.panTo(marker.getPosition());
+            map.setZoom(16);
+            infoWindow.setContent(infoContent(place));
+            infoWindow.open(map, marker);
+          });
+          places.push(place);
+        });
+        renderResults(places);
+        setStatus(`${places.length} ${cat.label.toLowerCase()} near you`, true);
+      } else if (retry && cat.keyword) {
+        runSearch(Object.assign({}, cat, { keyword: null }), false);
+      } else {
+        setStatus(`No ${cat.label.toLowerCase()} found`, true);
+        document.getElementById('placesList').innerHTML = '<p class="map-note">No spots found nearby for this category. Try another filter or move the map to a new area.</p>';
+      }
+    });
+  }
+
+  async function initZoelysMap() {
+    try {
+      await loadGoogleMaps();
+    } catch (e) {
+      setStatus('Map unavailable', true);
+      document.getElementById('map').innerHTML = '<p style="padding:2rem;text-align:center;">The map could not be loaded right now. Please try again later.</p>';
+      return;
+    }
+
+    center = await getLocation();
+    const isFallback = center.lat === MIAMI.lat && center.lng === MIAMI.lng;
+
+    const mapEl = document.getElementById('map');
+    mapEl.classList.remove('loading');
+
+    map = new google.maps.Map(mapEl, {
+      center,
+      zoom: 13,
+      disableDefaultUI: false,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: true,
+      styles: [
+        { elementType: 'geometry', stylers: [{ color: '#EFE9DD' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#6E675F' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#EFE9DD' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#D8E2E6' }] },
+        { featureType: 'park', elementType: 'geometry', stylers: [{ color: '#DCE5D3' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#FBF9F4' }] },
+        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#E5DED2' }] },
+        { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#EDE4D5' }] },
+        { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#F0E6DA' }] },
+        { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#E5DED2' }] }
+      ]
+    });
+
+    service = new google.maps.places.PlacesService(map);
+    infoWindow = new google.maps.InfoWindow();
+
+    new google.maps.Marker({
+      position: center,
+      map,
+      icon: {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><circle cx="13" cy="13" r="11" fill="#191512" stroke="#FBF9F4" stroke-width="3"/></svg>'),
+        scaledSize: new google.maps.Size(26, 26),
+        anchor: new google.maps.Point(13, 13)
+      },
+      title: 'You are here'
+    });
+
+    map.addListener('idle', () => {
+      const c = map.getCenter();
+      if (Math.abs(c.lat() - center.lat) > 0.02 || Math.abs(c.lng() - center.lng) > 0.02) {
+        center = { lat: c.lat(), lng: c.lng() };
+        runSearch(CATEGORIES[activeCat], true);
+      }
+    });
+
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeCat = chip.dataset.cat;
+        runSearch(CATEGORIES[activeCat], true);
+      });
+    });
+
+    setStatus(isFallback ? 'Showing results around Miami — allow location for your area' : 'Showing spots near you', true);
+    runSearch(CATEGORIES[activeCat], true);
+  }
+
+  initZoelysMap();
+</script></body>
 </html>
