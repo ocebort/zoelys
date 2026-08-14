@@ -12,7 +12,7 @@
 
   <style>
     main.container { max-width: 1200px; width: 100%; margin: 5rem auto 6rem auto; padding: 0 1.5rem; }
-    .profile-banner { background: var(--ink, #191512); color: white; border-radius: 1.1rem; padding: 2.75rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .profile-banner { background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1.1rem; padding: 2.75rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; box-shadow: 0 24px 48px -30px rgba(25,21,18,0.18); }
     .profile-title { font-family: var(--font-serif); font-size: 2.6rem; font-weight: 400; letter-spacing: -0.01em; }
     
     .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
@@ -36,8 +36,8 @@
     .form-input-style { width: 100%; padding: 0.75rem; border-radius: 0.6rem; border: 1px solid var(--hairline, #E5DED2); font-family: var(--font-sans); background: var(--bg-card, #FFFFFF); font-size: 0.85rem; box-sizing: border-box; outline: none; }
     .form-input-style:focus { border-color: var(--accent); }
 
-    .badge-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); padding: 0.4rem 0.85rem; border-radius: 1.5rem; font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.92); display: inline-flex; align-items: center; gap: 0.3rem; }
-    .badge-pill.gold { border-color: #C9A45C; color: #E6C788; }
+    .badge-pill { background: var(--bg-card, #FFFFFF); border: 1px solid var(--hairline, #E5DED2); padding: 0.4rem 0.85rem; border-radius: 1.5rem; font-size: 0.72rem; font-weight: 600; color: var(--ink, #191512); display: inline-flex; align-items: center; gap: 0.3rem; }
+    .badge-pill.gold { border-color: #C9A45C; color: #9A7B2F; }
 
     .inset-panel { background: rgba(255,255,255,0.5); border: 1px solid var(--hairline, #E5DED2); border-radius: 0.8rem; padding: 1.2rem; margin-bottom: 1.2rem; }
     .care-alert { background: #FFF8F6; border: 1px solid #F0C4B8; padding: 0.9rem 1.1rem; border-radius: 0.8rem; margin-bottom: 1.25rem; }
@@ -197,7 +197,7 @@
         <div>
           <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: var(--accent-coral, #C1623F); font-weight: 600; text-transform: uppercase;" id="parentTierBadge">Platinum Member Portal</div>
           <h1 class="profile-title" id="parentWelcomeName">Welcome, Member</h1>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem;">Member Since 2024 &bull; Lifetime Member Savings: <strong style="color: rgba(255,255,255,0.92);">$450</strong></p>
+          <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem; margin-top: 0.3rem;">Member Since 2024 &bull; Lifetime Member Savings: <strong style="color: var(--ink, #191512);">$450</strong></p>
         </div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
           <div style="background: var(--accent-coral, #C1623F); padding: 1.2rem 2rem; border-radius: 0.9rem; text-align: center;">
@@ -217,7 +217,7 @@
       <div class="profile-banner">
         <div>
           <h1 class="profile-title">Super-Admin Concierge Control</h1>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Zoélys Executive Command Center</p>
+          <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem;">Zoélys Executive Command Center</p>
         </div>
       </div>
     </div>

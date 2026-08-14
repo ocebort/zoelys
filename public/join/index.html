@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    main.container { max-width: 480px; width: 100%; margin: 4rem auto 6rem auto; padding: 0 1.5rem; }
+    main.container { max-width: 480px; width: 100%; margin: 0 auto 6rem auto; padding: 0 1.5rem; }
     .auth-card { background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 1.25rem; padding: 3rem 2.75rem; box-shadow: 0 24px 48px -28px rgba(25,21,18,0.18); }
     .auth-title { font-family: var(--font-serif); font-size: 2.6rem; text-align: center; font-weight: 400; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
     .auth-subtitle { text-align: center; color: var(--ink-muted); font-size: 0.85rem; font-weight: 300; margin-bottom: 2.25rem; }
@@ -33,11 +33,14 @@
 </head>
 <body>
 
+  <div class="page-head">
+    <div class="eyebrow">Membership</div>
+    <h1 id="authTitle">Apply for Access</h1>
+    <p id="authSub">Choose your role & create your concierge account.</p>
+  </div>
+
   <main class="container">
     <div class="auth-card">
-      <h1 class="auth-title" id="authTitle">Apply for Access</h1>
-      <p class="auth-subtitle" id="authSub">Choose your role & create your concierge account.</p>
-
       <!-- ROLE SELECTOR -->
       <div class="role-toggle" id="roleToggleBar">
         <button type="button" class="role-btn active" onclick="setRole('owner', this)">Pet Parent</button>
