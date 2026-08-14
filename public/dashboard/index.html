@@ -424,14 +424,21 @@
   <!-- SOCIAL POST GENERATOR POPUP MODAL -->
   <div id="socialModal">
     <div class="modal-card">
-      <h2 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;">Event Published! Social Posts Ready</h2>
-      <p style="color: var(--ink-muted, #6E675F); font-size: 0.8rem; margin-bottom: 1.5rem;">Copy & paste these tailored captions directly to Instagram:</p>
+      <h2 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;"><span id="socialModalTitle">Published! Social Posts Ready</span></h2>
+      <p style="color: var(--ink-muted, #6E675F); font-size: 0.8rem; margin-bottom: 1.5rem;">Copy & paste these tailored captions directly to Instagram or LinkedIn:</p>
 
       <div style="margin-bottom: 1.5rem;">
         <label class="form-label-style">Instagram Caption</label>
         <textarea id="igPostText" rows="6" class="form-input-style" readonly></textarea>
         <button class="btn-coral" style="margin-top: 0.5rem;" onclick="copyText('igPostText')">Copy Instagram Caption</button>
       </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label class="form-label-style">LinkedIn Post</label>
+        <textarea id="liPostText" rows="6" class="form-input-style" readonly></textarea>
+        <button class="btn-coral" style="margin-top: 0.5rem;" onclick="copyText('liPostText')">Copy LinkedIn Post</button>
+      </div>
+
       <button style="background: var(--ink, #191512); color: white; border: none; padding: 0.85rem; border-radius: 2rem; width: 100%; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; cursor: pointer;" onclick="document.getElementById('socialModal').style.display='none'">Done & Close</button>
     </div>
   </div>
@@ -571,6 +578,20 @@ ${desc}
 RSVP exclusively through your Zoélys Member Portal. Space is limited.
 #ZoelysConcierge #MiamiPets #LuxuryPetCare #${category.replace(/\s+/g, '')}`;
 
+      document.getElementById('liPostText').value =
+`Zoélys is proud to host "${title}" in partnership with ${sponsor}.
+
+Details:
+- When: ${dateStr}, ${timeStr}
+- Where: ${location}
+
+${desc}
+
+This event is exclusive to Zoélys members and space is limited. Members can RSVP through the member portal. We can't wait to welcome you and your companions.
+
+#ZoelysConcierge #LuxuryPetCare #MiamiEvents #${category.replace(/\s+/g, '')}`;
+
+      document.getElementById('socialModalTitle').textContent = 'Event Published! Social Posts Ready';
       document.getElementById('socialModal').style.display = 'flex';
       loadCmsTracker();
       e.target.reset();
@@ -578,17 +599,43 @@ RSVP exclusively through your Zoélys Member Portal. Space is limited.
 
     async function publishPartner(e) {
       e.preventDefault();
+      const name = document.getElementById('prtName').value;
+      const category = document.getElementById('prtCategory').value;
+      const perk = document.getElementById('prtPerk').value;
+      const desc = document.getElementById('prtDesc').value;
       const payload = {
-        name: document.getElementById('prtName').value,
-        category: document.getElementById('prtCategory').value,
+        name, category,
         website_url: document.getElementById('prtUrl').value,
-        perk: document.getElementById('prtPerk').value,
+        perk,
         image_url: document.getElementById('prtImage').value,
-        description: document.getElementById('prtDesc').value
+        description: desc
       };
       const res = await fetch('/api/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) { alert('Error publishing partner.'); return; }
-      alert('Exclusive Partner Perk Published Live!');
+
+      document.getElementById('igPostText').value =
+`NEW MEMBER PERK — ${name} x Zoélys!
+
+${perk}
+
+${desc}
+
+Redeem exclusively through your Zoélys Member Portal.
+#ZoelysConcierge #MiamiPets #LuxuryPetCare #${category.replace(/\s+/g, '')}`;
+
+      document.getElementById('liPostText').value =
+`Excited to welcome ${name} as an official Zoélys member-exclusive partner.
+
+The perk: ${perk}
+
+${desc}
+
+Zoélys members can redeem this perk through the member portal. Thank you to our partners for helping us elevate pet care in Miami.
+
+#ZoelysConcierge #LuxuryPetCare #Miami #${category.replace(/\s+/g, '')}`;
+
+      document.getElementById('socialModalTitle').textContent = 'Partner Perk Published! Social Posts Ready';
+      document.getElementById('socialModal').style.display = 'flex';
       loadCmsTracker();
       e.target.reset();
     }
