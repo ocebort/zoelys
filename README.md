@@ -31,6 +31,7 @@
 22. [Future Work](#22-future-work)
 23. [Appendix A — Full Commit Log](#appendix-a--full-commit-log)
 24. [Appendix B — API Endpoint Reference](#appendix-b--api-endpoint-reference)
+25. [Thesis Research Plan — Field Lab Workproject](#thesis-research-plan--field-lab-workproject)
 
 ---
 
@@ -561,6 +562,131 @@ Client personal data (name, address, phone, pet health) triggers privacy obligat
 - [ ] **Email notifications** for new requests / publishes (Cloudflare Email Workers or Resend)
 - [ ] **Member payments** (Stripe) for credit top-ups
 - [ ] **Production legal pack** per §19 (contracts, waivers, privacy policy)
+
+---
+
+## Thesis Research Plan — Field Lab Workproject
+
+**Course:** Startup Entrepreneurial Project — Field Lab (Pre-Experience Masters, Fall/Spring)
+**Advisors:** Prof. João Castro & Carla Portela — Haddad Center for Entrepreneurship, Nova SBE
+**Student:** Océane Bort · Master in Business Analytics
+**Deliverable:** Team thesis document (common sections + individual sub-topics), ~20–25 pages, 4 months.
+**Venture under study:** Zoélys (this platform) — live product used as a research instrument.
+
+### T1. Research framework
+
+**Overarching research question**
+> What drives the emergence of a premium segment in a fragmented service market — and how can a digital platform support it?
+
+**Research logic — the causal chain.** The chapters are not independent studies; each answers a question the next depends on:
+
+| Ch. | Question | Type |
+|---|---|---|
+| C1 | Why hasn't a premium market formed yet? | Market failure diagnosis (binding constraint) |
+| C2 | What would "premium" actually mean in this market? | Construct definition & measurement |
+| C3 | What makes affluent consumers trust a premium provider? | Trust architecture (signals that bridge the gap) |
+| C4 | Can a digital platform credibly deliver premium? | Platform design & perceived exclusivity at scale |
+
+**Theoretical anchors:** Akerlof (1970) *Market for Lemons*; Klepper (1997) industry life cycles; Vigneron & Johnson (2004) Brand Luxury Index; Zeithaml (1988) means-end model; McKnight et al. (2002) e-commerce trust typology; Spence (1973) signaling; Petty & Cacioppo (1986) ELM; Kapferer & Bastien (2012) *The Luxury Strategy*; Lynn (1991) scarcity effects.
+
+**Methodological stance:** sequential mixed methods + evidence-based experimentation with a running **hypothesis log** (hypothesis → test → metric → result → decision). Technology/Innovation Readiness Level assessment applied to Zoélys. Every chapter ends with an explicit "so what for Zoélys" sentence.
+
+### T2. Thesis table of contents with step-by-step workplans
+
+**§1 Introduction — 1.5 pp — *(team)***
+- [ ] Context: pet humanization trend, affluent Miami demand, fragmented trust-poor supply.
+- [ ] Zoélys one-paragraph pitch (reuse §1 of this README).
+- [ ] State overarching RQ + how individual chapters nest.
+- [ ] Document roadmap paragraph.
+
+**§2 Literature Review — 3 pp — *(team)***
+- [ ] Stream A: market failure & information asymmetry (Akerlof; Spence signaling).
+- [ ] Stream B: premium/luxury perception (Vigneron & Johnson; Zeithaml; Kapferer).
+- [ ] Stream C: platform trust (McKnight; ELM).
+- [ ] Close with the gap statement + C1→C4 causal chain diagram.
+
+**§3 Methodology — 2 pp — *(team)***
+- [ ] Justify frameworks academically: TRL/IRL, evidence-based experimentation, hypothesis log.
+- [ ] One summary table of ALL data sources with justification:
+
+| Data source | Type | Tool | Output |
+|---|---|---|---|
+| Provider scrape (Miami) | Secondary | Python/BeautifulSoup on Rover, Yelp, Google Maps | Supply-side dataset: pricing dispersion, review variance |
+| Laddering interviews (n=12–15, HHI>$150k) | Primary | Semi-structured guide, thematic coding | Candidate premium dimensions |
+| Van Westendorp PSM (n≥150) | Primary | Survey | WTP thresholds per service type |
+| Conjoint experiment (n≈200) | Primary | Conjoint.ly / Sawtooth | Part-worth utilities per trust attribute |
+| Live A/B tests on Zoélys | Primary | Landing variants on production stack | Causal design effects on exclusivity/intent |
+
+- [ ] Preview limitations honestly.
+
+**§4 Case Description: Zoélys — 1.5 pp — *(team)***
+- [ ] Business model canvas; credit tiers (Gold 5 / Platinum 10 / Diamond 15).
+- [ ] Five-stage vetting pipeline summary (link to §19.1.1 and `/trust` charter).
+- [ ] What is built (condense §3–15 of this README into one page).
+- [ ] Current TRL/IRL rating with justification.
+
+**§5 The Premium Void — 2 pp — *(individual, C1 compressed)***
+- [ ] Scrape ≥300 Miami providers (pricing, reviews, certifications, response rates). Miami only — no cross-city replication.
+- [ ] Compute pricing dispersion, review variance, premium supply density.
+- [ ] Frame via Akerlof; identify binding constraint (expected: trust deficit).
+- [ ] Max two figures. *So-what:* quantifies the whitespace Zoélys occupies.
+
+**§6 Defining Premium — 2 pp — *(individual, C2 compressed)***
+- [ ] Recruit 12–15 high-income Miami owners; run laddering interviews; code themes.
+- [ ] Output: candidate premium dimensions (NOT a validated scale — EFA/CFA cut for scope).
+- [ ] Run Van Westendorp survey; map acceptable/expensive/prohibitive price points per service.
+- [ ] *So-what:* defines which premium attributes Zoélys must signal, and price corridors for tiers.
+
+**§7 Trust Architecture — 3.5 pp — *(individual, C3 — EMPIRICAL CENTERPIECE)***
+- [ ] Design conjoint: attributes = review score, review volume, insurance type, certification level (CPPS etc.), vetting depth, concierge access.
+- [ ] Field n≈200 affluent owners; estimate part-worth utilities; test income/pet-humanization moderation.
+- [ ] Optional supporting analysis: LDA topic modeling on scraped reviews ("trust vocabulary").
+- [ ] Expected headline: institutional signals (certification, insurance verification) outperform algorithmic reputation for the affluent segment.
+- [ ] *So-what:* directly validates/reweights the `/trust` charter elements shown in marketing.
+
+**§8 Platform Design & Exclusivity — 2.5 pp — *(individual, C4)***
+- [ ] Build 4 landing variants on the live Zoélys stack: access model (open vs. gated) × friction (high vs. low), between-subjects.
+- [ ] Measure perceived exclusivity (Vigneron & Johnson items), brand prestige, sign-up intent/WTP proxies post-exposure.
+- [ ] ANOVA + moderation; report effect sizes.
+- [ ] *So-what:* decides Zoélys' actual access model — research output becomes product decision.
+
+**§9 Business Plan & Roadmap — 2.5 pp — *(team)***
+- [ ] Unit economics: CAC/LTV, tier margins, take-rate assumptions.
+- [ ] 12-month development roadmap where §7/§8 findings set priorities explicitly.
+- [ ] Financing path: bootstrap → pre-seed; ecosystem actors (accelerators, Miami VC, Nova network).
+- [ ] Legal/compliance summary condensed from §19 (two-layer insurance, IC classification/ABC test).
+
+**§10 Conclusion & Limitations — 2 pp**
+- [ ] Answer overarching RQ + each sub-RQ explicitly.
+- [ ] State novel insights in plain declarative sentences.
+- [ ] Limitations: single city, sample sizes, self-report bias, seasonality.
+
+**References + Appendices** *(uncounted)* — interview guide; survey/conjoint instruments; dataset codebook; full hypothesis log; legal/compliance annex (from §19).
+
+### T3. Four-month execution calendar
+
+| Month | Milestones | Advisor touchpoint |
+|---|---|---|
+| M1 | RQs locked; literature drafted; scrape completed; conjoint designed; interview recruitment started | Kick-off meeting |
+| M2 | Run conjoint + launch C4 experiments; draft §5–§6 | — |
+| M3 | Analyze results; write §7–§8; merge teammates' sections | Mid-point recommendations |
+| M4 | Synthesis (§9–§10); revisions; formatting | Final recommendations meeting |
+
+### T4. Scope decisions (documented trims)
+
+| Original ambition | Trimmed to | Rationale |
+|---|---|---|
+| 4-market scrape replication (NYC/LA/Chicago) | Miami only | Page/time budget; depth over breadth |
+| Full scale development (EFA+CFA, n≥200) | Candidate dimensions from interviews + PSM | Scale validation is a journal-scale task |
+| Hand-rolled hierarchical Bayes conjoint estimation | Standard tool (Conjoint.ly/Sawtooth) | Reliability + time |
+| Separate prototype build for C4 | Experiments on live production site | Zero marginal infra cost; unique methodological advantage |
+
+### T5. Open questions to resolve at kick-off
+
+1. Confirm page budget: total for team vs. per student; appendices counted?
+2. Grading emphasis: breadth (all chapters attempted) vs. depth (one executed rigorously)?
+3. Team composition confirmation (pre-formed team required; every member needs own CV + motivation letter).
+4. Topic validation email to advisors BEFORE platform application (required for proposers).
 
 ---
 
