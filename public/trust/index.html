@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys — Trust &amp; Safety</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    main.container { max-width: 880px; width: 100%; margin: 0 auto 6rem auto; padding: 0 1.5rem; }
+
+    .charter-intro { font-size: 1.05rem; font-weight: 300; color: var(--ink); line-height: 1.8; max-width: 640px; margin: 0 auto 4.5rem auto; text-align: center; }
+    .charter-intro em { font-family: var(--font-serif); font-style: italic; font-size: 1.2em; }
+
+    .section-label { text-align: center; margin-bottom: 3rem; }
+    .section-label .eyebrow { margin-bottom: 0.75rem; display: block; }
+    .section-label h2 { font-family: var(--font-serif); font-size: 2.4rem; font-weight: 400; letter-spacing: -0.01em; }
+
+    /* PIPELINE TIMELINE */
+    .pipeline { position: relative; max-width: 720px; margin: 0 auto; padding-left: 1rem; }
+    .pipeline::before { content: ''; position: absolute; left: calc(2.35rem + 1px); top: 1rem; bottom: 1rem; width: 1px; background: var(--hairline); }
+    .step { position: relative; display: flex; gap: 1.75rem; padding-bottom: 2.75rem; }
+    .step:last-child { padding-bottom: 0; }
+    .step-num { flex-shrink: 0; width: 4.7rem; height: 4.7rem; border-radius: 50%; background: var(--bg-cream-soft, #FDFBF7); border: 1px solid var(--hairline); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 1.5rem; color: var(--ink); z-index: 1; }
+    .step-final .step-num { background: var(--ink); color: var(--bg-cream); border-color: var(--ink); }
+    .step-body { padding-top: 0.55rem; }
+    .step-body h3 { font-family: var(--font-serif); font-size: 1.45rem; font-weight: 500; margin-bottom: 0.45rem; letter-spacing: -0.01em; }
+    .step-body p { font-size: 0.88rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; max-width: 480px; }
+    .step-badge { display: inline-block; margin-top: 0.65rem; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-coral, #C96F5A); border: 1px solid currentColor; border-radius: 100px; padding: 0.32rem 0.85rem; }
+
+    /* PROTECTION LAYERS */
+    .layers { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 5rem; }
+    @media (max-width: 700px) { .layers { grid-template-columns: 1fr; } }
+    .layer-card { background: var(--bg-card, #fff); border: 1px solid var(--hairline); border-radius: 1.25rem; padding: 2.25rem 2rem; box-shadow: 0 18px 40px -30px rgba(25,21,18,0.15); }
+    .layer-tag { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 1rem; display: block; }
+    .layer-card h3 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 500; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+    .layer-card p { font-size: 0.86rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; }
+    .layer-card strong { color: var(--ink); font-weight: 600; }
+
+    /* BOOKING PROTECTION BAND */
+    .protection-band { background: var(--bg-cream-soft, #FDFBF7); border: 1px solid var(--hairline); border-radius: 1.5rem; padding: 3rem 2.75rem; text-align: center; margin-bottom: 5rem; }
+    .protection-band h3 { font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.9rem; }
+    .protection-band p { font-size: 0.88rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; max-width: 520px; margin: 0 auto 1.9rem auto; }
+
+    /* CTA */
+    .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 6rem; }
+  </style>
+</head>
+<body>
+
+  <div class="page-head">
+    <div class="eyebrow">Trust &amp; Safety</div>
+    <h1>The Zoélys Standard</h1>
+    <p>Trust is not claimed here. It is engineered — credential by credential, layer by layer.</p>
+  </div>
+
+  <main class="container">
+    <p class="charter-intro">Every caregiver on the Zoélys roster has passed a five-stage authorization pipeline before ever meeting an animal. We verify professional certifications, observe real handling, confirm active liability coverage — and only then grant the status that matters: <em>Zoélys Authorized Caregiver</em>.</p>
+
+    <!-- AUTHORIZATION PIPELINE -->
+    <div class="section-label">
+      <span class="eyebrow">The Pipeline</span>
+      <h2>From application to authorized caregiver</h2>
+    </div>
+
+    <div class="pipeline" style="margin-bottom: 5.5rem;">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Application &amp; Screening</h3>
+          <p>Every candidacy begins with a written application and a one-on-one interview. We review experience, neighbourhood, species comfort, and special-care capabilities — then run identity and background screening before anything else moves forward.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Certification Review</h3>
+          <p>Recognized credentials are verified at the source — CPPS (Certified Professional Pet Sitter), pet first aid &amp; CPR, veterinary technician licensure. A certification earns respect, never automatic entry: it must survive the stages that follow.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Practical Assessment</h3>
+          <p>Hands-on evaluation with real animals. We assess what résumés cannot: calm presence under pressure, reading an anxious animal's signals, medication handling, and the quiet attentions that define our philosophy of care.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h3>Insurance Verification</h3>
+          <p>Before approval, every sitter must show proof of active professional pet-sitting liability insurance. Policies are checked for validity and currency — and re-verified periodically throughout their time on the roster.</p>
+        </div>
+      </div>
+      <div class="step step-final">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h3>Zoélys Authorized Caregiver</h3>
+          <p>The final status. Authorized caregivers receive the Zoélys badge, appear on the private roster and map, and remain under ongoing oversight — with periodic re-verification of credentials, coverage, and care quality.</p>
+          <span class="step-badge">Authorized Status</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWO LAYERS OF PROTECTION -->
+    <div class="section-label">
+      <span class="eyebrow">Coverage</span>
+      <h2>Two layers of protection</h2>
+    </div>
+
+    <div class="layers">
+      <div class="layer-card">
+        <span class="layer-tag">Layer One — The Caregiver</span>
+        <h3>Sitter's own policy</h3>
+        <p>Each authorized caregiver carries <strong>their own professional pet-sitting liability insurance</strong> — protecting their business if a pet, owner, or property is harmed while in their care. It is a condition of entry, not an option.</p>
+      </div>
+      <div class="layer-card">
+        <span class="layer-tag">Layer Two — The Platform</span>
+        <h3>Zoélys' own coverage</h3>
+        <p>Zoélys maintains <strong>its own commercial liability coverage</strong> as the platform. We never hide behind "the sitter is responsible" — accountability travels with the brand that made the match.</p>
+      </div>
+    </div>
+
+    <!-- OPTIONAL BOOKING PROTECTION -->
+    <div class="protection-band">
+      <span class="layer-tag">For Members — Coming Soon</span>
+      <h3>Booking protection &amp; pet insurance</h3>
+      <p>In partnership with licensed insurance providers, members will be able to add optional booking protection or full pet insurance at checkout — extending the same standard of care to life's unplanned moments.</p>
+      <a class="btn btn-ink" href="/join">Join the Waitlist <span class="arrow">&rarr;</span></a>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn btn-ink" href="/apply">Apply as a Caregiver <span class="arrow">&rarr;</span></a>
+      <a class="link-underline" href="/get-matched">Or find your sitter</a>
+    </div>
+  </main>
+
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/map">The Map</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/journal">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/apply">Become a Sitter</a></li>
+          <li><a href="/join">Member Portal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
+  <script src="/navbar.js"></script>
+</body>
+</html>

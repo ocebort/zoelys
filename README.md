@@ -470,6 +470,16 @@ Two exposure layers exist: the **platform** and each **sitter**.
 
 Recommended launch posture: platform corporate GL + require every sitter to carry **$1M GL + CCC** before approval, with proof of coverage captured in onboarding.
 
+### 19.1.1 Trust & Safety framework (public charter at `/trust`)
+The compliance posture above is productized as a visible five-stage authorization pipeline:
+1. **Application & screening** — written application, interview, identity + background check.
+2. **Certification review** — recognized credentials verified at the source (CPPS — Certified Professional Pet Sitter, pet first aid/CPR, vet tech licensure). Respected, never sufficient alone.
+3. **Practical assessment** — hands-on handling evaluation (calm presence, anxious-animal signals, medication handling).
+4. **Insurance verification** — proof of active professional pet-sitting liability insurance required *before* approval; re-verified periodically.
+5. **"Zoélys Authorized Caregiver" status** — badge issued; ongoing oversight and periodic re-verification.
+
+Two-layer coverage model: every sitter carries their own professional policy (protecting their business), and Zoélys carries its own platform-level commercial liability — responsibility is never displaced onto the sitter ("the sitter is responsible" is not a defense). Future revenue stream: partner with a licensed insurer to offer optional **pet insurance / booking protection** at checkout as a premium add-on and referral stream.
+
 ### 19.2 Entity & licensing
 - Form a **Florida LLC** to separate personal and business liability.
 - **EIN** from the IRS (payments to sitters, income reporting).
