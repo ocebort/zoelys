@@ -240,13 +240,14 @@
     function chipsVal(groupId) { const g = document.getElementById(groupId); return g ? [...g.querySelectorAll('.chip.selected')].map(c => c.textContent).join(', ') : ''; }
     async function handleFormSubmit(e) {
       e.preventDefault();
+      const memberId = localStorage.getItem('zoelys_user_id');
+      if (!memberId) { window.location.href = '/join?reason=intake'; return; }
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.innerText = 'FINDING YOUR MATCH...';
 
       const payload = {
         full_name: fieldVal('fullName'),
-        email: fieldVal('email'),
         neighbourhood: fieldVal('neighbourhood'),
         pet_type: fieldVal('animalType'),
         pet_name: fieldVal('petName'),
@@ -262,7 +263,7 @@
       };
 
       try {
-        const res = await fetch('/api/requests', {
+        const res = await fetch('/api/requests?userId=' + encodeURIComponent(memberId), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -281,6 +282,23 @@
         alert('Could not reach the concierge. Please try again.');
       }
     }
+    async function prefillMember() {
+      const memberId = localStorage.getItem('zoelys_user_id');
+      if (!memberId) {
+        window.location.href = '/join?reason=intake';
+        return;
+      }
+      const el = document.getElementById('email');
+      if (el) el.readOnly = true;
+      try {
+        const res = await fetch('/api/user/profile?userId=' + encodeURIComponent(memberId));
+        const data = await res.json();
+        const user = data.user || {};
+        if (user.full_name) document.getElementById('fullName').value = user.full_name;
+        if (user.email) { const emailEl = document.getElementById('email'); if (emailEl) emailEl.value = user.email; }
+      } catch (err) { /* keep manual entry */ }
+    }
+    prefillMember();
   </script>
 <script src="/navbar.js"></script></body>
 </html>

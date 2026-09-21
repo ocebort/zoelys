@@ -99,8 +99,18 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const sitterId = params.get('id');
+    const memberId = localStorage.getItem('zoelys_user_id');
+
+    function requireMember() {
+      if (!memberId) {
+        window.location.href = '/join?reason=roster';
+        return false;
+      }
+      return true;
+    }
 
     async function load() {
+      if (!requireMember()) return;
       if (sitterId) { renderProfile(sitterId); return; }
       renderRoster();
     }
@@ -108,7 +118,8 @@
     async function renderRoster() {
       const area = document.getElementById('contentArea');
       try {
-        const res = await fetch('/api/sitters');
+        const res = await fetch('/api/sitters?userId=' + encodeURIComponent(memberId));
+        if (res.status === 401) { window.location.href = '/join?reason=roster'; return; }
         const data = await res.json();
         const sitters = data.sitters || [];
         if (!sitters.length) {
@@ -116,7 +127,7 @@
           return;
         }
         area.innerHTML = `
-          <p class="rookie-note">This is the whole roster — deliberately small, deliberately exceptional. Each caregiver is matched to your pet&rsquo;s specific needs through your intake journey.</p>
+          <p class="rookie-note">Member-exclusive list — this is the whole roster, deliberately small, deliberately exceptional. Each caregiver is matched to your pet&rsquo;s specific needs through your intake journey.</p>
           <div class="roster-grid">
             ${sitters.map(s => `
               <div class="roster-card" onclick="window.location.href='/sitters?id=${s.id}'">
@@ -143,7 +154,8 @@
       document.getElementById('headTitle').textContent = 'The Roster';
       const area = document.getElementById('contentArea');
       try {
-        const res = await fetch('/api/sitters/' + encodeURIComponent(id));
+        const res = await fetch('/api/sitters/' + encodeURIComponent(id) + '?userId=' + encodeURIComponent(memberId));
+        if (res.status === 401) { window.location.href = '/join?reason=roster'; return; }
         const data = await res.json();
         const s = data.sitter;
         if (!s) { area.innerHTML = '<div class="empty"><h3>Not found</h3></div>'; return; }

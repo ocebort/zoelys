@@ -13,13 +13,15 @@ function initNavigation() {
   const currentPath = window.location.pathname.replace(/\/$/, '');
   const userId = localStorage.getItem('zoelys_user_id');
 
-  const links = [
+  const linkList = [
     ['/get-matched', 'get-matched', 'Find a Sitter'],
-    ['/sitters', 'sitters', 'The Roster'],
     ['/how-it-works', 'how-it-works', 'How It Works'],
     ['/trust', 'trust', 'Trust & Safety'],
     ['/journal', 'journal', 'Journal']
   ];
+  if (userId) linkList.push(['/sitters', 'sitters', 'The Roster']);
+
+  const links = linkList;
 
   const centerLinks = links
     .map(

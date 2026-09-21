@@ -104,11 +104,15 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const requestId = params.get('requestId');
+    const memberId = localStorage.getItem('zoelys_user_id');
 
     async function loadMatches() {
+      if (!memberId) { window.location.href = '/join?reason=matches'; return; }
       if (!requestId) { renderEmpty('No request found. Start with your intake.'); return; }
       try {
-        const res = await fetch('/api/match?requestId=' + encodeURIComponent(requestId));
+        const res = await fetch('/api/match?requestId=' + encodeURIComponent(requestId) + '&userId=' + encodeURIComponent(memberId));
+        if (res.status === 401) { window.location.href = '/join?reason=matches'; return; }
+        if (res.status === 403) { renderEmpty('This matching journey belongs to another member.'); return; }
         const data = await res.json();
         if (!data.matches || data.matches.length === 0) {
           renderEmpty('No active caregivers can meet these needs yet. Our concierge will design a custom solution.');
@@ -151,7 +155,7 @@
       const btn = event.target;
       btn.disabled = true;
       btn.textContent = 'ASKING CONCIERGE...';
-      const res = await fetch('/api/matches', {
+      const res = await fetch('/api/matches?userId=' + encodeURIComponent(memberId), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ request_id: requestId, sitter_id: sitterId })

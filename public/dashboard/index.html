@@ -86,6 +86,11 @@
         </div>
       </div>
 
+      <div id="sitterProfileCard" style="display: none; background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1.1rem; padding: 1.5rem 1.8rem; margin-bottom: 2rem;">
+        <h3 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-weight: 500; margin-bottom: 0.9rem;">Your caregiver profile</h3>
+        <div id="sitterProfileBody" style="color: var(--ink-muted, #6E675F); font-size: 0.85rem;">Loading...</div>
+      </div>
+
       <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
         
         <!-- LEFT COLUMN: ACTIVE ASSIGNED SITTINGS & INQUIRIES -->
@@ -530,6 +535,7 @@
           document.getElementById('parentMasterView').style.display = 'none';
           document.getElementById('adminMasterView').style.display = 'none';
           document.getElementById('sitterWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Marcus'}`;
+          loadSitterProfile(data.user.full_name, id);
         } else if (email === 'ocebort@gmail.com') {
           document.getElementById('adminMasterView').style.display = 'block';
           document.getElementById('sitterMasterView').style.display = 'none';
@@ -548,15 +554,16 @@
 
     async function loadParentHistory(email) {
       const box = document.getElementById('parentHistory');
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
       try {
-        const reqs = await (await fetch(`/api/requests?email=${encodeURIComponent(email)}`)).json();
+        const reqs = await (await fetch(`/api/requests?email=${encodeURIComponent(email)}&userId=${encodeURIComponent(memberId)}`)).json();
         const requests = reqs.requests || [];
         if (!requests.length) {
           box.innerHTML = `You haven't started a matching journey yet. <a href="/get-matched" style="color: var(--accent-coral, #C1623F); font-weight: 600;">Begin one now &rarr;</a>`;
           return;
         }
         const ids = requests.map(r => r.id).join(',');
-        const matches = ids ? await (await fetch(`/api/matches?requestIds=${encodeURIComponent(ids)}`)).json() : {};
+        const matches = ids ? await (await fetch(`/api/matches?requestIds=${encodeURIComponent(ids)}&userId=${encodeURIComponent(memberId)}`)).json() : {};
         const sel = {};
         (matches.matches || []).forEach(m => { (sel[m.request_id] = sel[m.request_id] || []).push(m); });
         const rows = requests.slice().reverse().map(r => `
@@ -577,6 +584,26 @@
       } catch (err) {
         box.innerHTML = 'Could not load your journey.';
       }
+    }
+
+    async function loadSitterProfile(sitterName, memberId) {
+      const card = document.getElementById('sitterProfileCard');
+      const body = document.getElementById('sitterProfileBody');
+      try {
+        const data = await (await fetch(`/api/sitters?userId=${encodeURIComponent(memberId)}`)).json();
+        const roster = data.sitters || [];
+        const s = roster.find(x => (x.full_name || '').toLowerCase() === String(sitterName || '').toLowerCase()) || roster.find(x => (x.full_name || '').toLowerCase().includes(String(sitterName || '').toLowerCase())) || roster[0];
+        if (!s) return;
+        card.style.display = 'block';
+        body.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
+            <div>
+              <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; color: var(--ink, #191512);">${s.full_name}</div>
+              <div style="font-size: 0.8rem; margin-top: 0.25rem;">${s.neighbourhood} &middot; ${s.experience_years}+ years &middot; $${Number(s.nightly_rate_usd).toFixed(0)}/night ${s.vet_tech_background ? '&middot; Vet tech' : ''}</div>
+            </div>
+            <a href="/sitters?id=${s.id}" style="background: var(--ink, #191512); color: white; text-decoration: none; padding: 0.7rem 1.3rem; border-radius: 2rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">View profile &rarr;</a>
+          </div>`;
+      } catch (err) { /* profile card hidden on failure */ }
     }
 
     function switchTab(tabId, btn) {

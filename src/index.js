@@ -1,6 +1,16 @@
 let postsBootstrapped = false;
 let matchmakingBootstrapped = false;
 
+async function memberFromRequest(env, url) {
+  const key = (url.searchParams.get('userId') || '').trim();
+  if (!key) return null;
+  const user = await env.zoelys_db.prepare(`SELECT id, email, full_name, subscription_tier, credit_balance FROM users WHERE id = ?`).bind(key).first();
+  if (!user) return null;
+  const role = String(user.id).startsWith('sit-') || user.subscription_tier === 'Vetted Sitter' ? 'sitter' : 'owner';
+  const is_admin = user.email && user.email.toLowerCase() === 'ocebort@gmail.com' ? 1 : 0;
+  return { ...user, role, is_admin };
+}
+
 async function ensureMatchmaking(env) {
   if (matchmakingBootstrapped) return;
   await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS client_requests (
@@ -277,6 +287,8 @@ export default {
     if (request.method === 'POST' && url.pathname === '/api/requests') {
       try {
         await ensureMatchmaking(env);
+        const member = await memberFromRequest(env, url);
+        if (!member) return new Response(JSON.stringify({ error: 'Members only — sign in to begin' }), { status: 401, headers: corsHeaders });
         const body = await request.json();
         const id = 'req-' + crypto.randomUUID().slice(0, 8);
         await env.zoelys_db.prepare(`
@@ -284,7 +296,7 @@ export default {
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           id,
-          body.full_name, body.email, body.neighbourhood,
+          body.full_name, member.email, body.neighbourhood,
           body.pet_type, body.pet_name, body.breed,
           body.behavioral_traits, body.medical_conditions, body.exercise_needs,
           body.service_type, body.start_date, body.end_date,
@@ -297,7 +309,11 @@ export default {
     }
     if (request.method === 'GET' && url.pathname === '/api/requests') {
       await ensureMatchmaking(env);
-      const email = (url.searchParams.get('email') || '').trim().toLowerCase();
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const email = member.is_admin
+        ? (url.searchParams.get('email') || '').trim().toLowerCase()
+        : member.email.toLowerCase();
       const { results } = email
         ? await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE LOWER(TRIM(email)) = ? ORDER BY created_at DESC`).bind(email).all()
         : await env.zoelys_db.prepare(`SELECT * FROM client_requests ORDER BY created_at DESC`).all();
@@ -331,11 +347,15 @@ export default {
     }
     if (request.method === 'GET' && url.pathname === '/api/sitters') {
       await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
       const { results } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1 ORDER BY full_name ASC`).all();
       return new Response(JSON.stringify({ sitters: results || [] }), { headers: corsHeaders });
     }
     if (request.method === 'GET' && url.pathname.startsWith('/api/sitters/')) {
       await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
       const id = url.pathname.split('/')[3];
       const sitter = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE id = ? AND is_active = 1`).bind(id).first();
       return new Response(JSON.stringify({ sitter: sitter || null }), { headers: corsHeaders });
@@ -344,9 +364,14 @@ export default {
     // MATCH ENGINE + RECORDED MATCHES
     if (request.method === 'GET' && url.pathname === '/api/match') {
       await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
       const requestId = url.searchParams.get('requestId');
       const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(requestId).first();
       if (!req) return new Response(JSON.stringify({ error: 'Request not found' }), { status: 404, headers: corsHeaders });
+      if (!member.is_admin && req.email.toLowerCase() !== member.email.toLowerCase()) {
+        return new Response(JSON.stringify({ error: 'This request belongs to another member' }), { status: 403, headers: corsHeaders });
+      }
 
       const { results: sitters } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1`).all();
       const needs = {
@@ -386,14 +411,28 @@ export default {
     }
     if (request.method === 'POST' && url.pathname === '/api/matches') {
       await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
       const body = await request.json();
+      const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(body.request_id).first();
+      if (!req) return new Response(JSON.stringify({ error: 'Request not found' }), { status: 404, headers: corsHeaders });
+      if (!member.is_admin && req.email.toLowerCase() !== member.email.toLowerCase()) {
+        return new Response(JSON.stringify({ error: 'This request belongs to another member' }), { status: 403, headers: corsHeaders });
+      }
       const id = 'mch-' + crypto.randomUUID().slice(0, 6);
       await env.zoelys_db.prepare(`INSERT INTO matches (id, request_id, sitter_id) VALUES (?, ?, ?)`).bind(id, body.request_id, body.sitter_id).run().catch(() => {});
       return new Response(JSON.stringify({ success: true, matchId: id }), { headers: corsHeaders });
     }
     if (request.method === 'GET' && url.pathname === '/api/matches') {
       await ensureMatchmaking(env);
-      const requestIds = (url.searchParams.get('requestIds') || '').split(',').filter(Boolean);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      let requestIds = (url.searchParams.get('requestIds') || '').split(',').filter(Boolean);
+      if (!member.is_admin && requestIds.length) {
+        const { results: own = [] } = await env.zoelys_db.prepare(`SELECT id FROM client_requests WHERE LOWER(TRIM(email)) = ?`).bind(member.email.toLowerCase()).all();
+        const ownSet = new Set(own.map(r => r.id));
+        requestIds = requestIds.filter(id => ownSet.has(id));
+      }
       if (!requestIds.length) return new Response(JSON.stringify({ matches: [] }), { headers: corsHeaders });
       const clause = requestIds.map(() => '?').join(',');
       const { results } = await env.zoelys_db.prepare(`SELECT m.id, m.request_id, m.sitter_id, s.full_name AS sitter_name, s.neighbourhood, s.nightly_rate_usd, s.vet_tech_background, r.full_name AS owner_name FROM matches m JOIN sitters s ON s.id = m.sitter_id JOIN client_requests r ON r.id = m.request_id WHERE m.request_id IN (${clause}) ORDER BY m.created_at DESC`).bind(...requestIds).all();

@@ -241,10 +241,19 @@
 
   <script>
     const CONCIERGE_PIN = '2026';
+    const memberId = localStorage.getItem('zoelys_user_id') || '';
+
+    function requireMemberSession() {
+      if (!memberId) {
+        window.location.href = '/join?reason=admin';
+        return false;
+      }
+      return true;
+    }
 
     function unlockAdmin() {
       const enteredPin = document.getElementById('pinInput').value;
-      if (enteredPin === CONCIERGE_PIN) {
+      if (enteredPin === CONCIERGE_PIN && requireMemberSession()) {
         document.getElementById('authOverlay').style.display = 'none';
         sessionStorage.setItem('zoelys_admin_auth', 'true');
         loadRequests();
@@ -257,14 +266,15 @@
       if (e.key === 'Enter') unlockAdmin();
     });
 
-    if (sessionStorage.getItem('zoelys_admin_auth') === 'true') {
+    if (sessionStorage.getItem('zoelys_admin_auth') === 'true' && requireMemberSession()) {
       document.getElementById('authOverlay').style.display = 'none';
       loadRequests();
     }
 
     async function loadRequests() {
+      if (!requireMemberSession()) return;
       try {
-        const res = await fetch('/api/requests');
+        const res = await fetch('/api/requests?userId=' + encodeURIComponent(memberId));
         const requests = await res.json();
 
         document.getElementById('requestCount').innerText = `${requests.length} Total Requests in Cloudflare D1`;
@@ -309,7 +319,7 @@
       matchesContainer.innerHTML = '';
 
       try {
-        const res = await fetch(`/api/match?requestId=${requestId}`);
+        const res = await fetch(`/api/match?requestId=${requestId}&userId=${encodeURIComponent(memberId)}`);
         const matches = await res.json();
 
         document.getElementById('matchmakerNotice').innerHTML = `Top Sitter Matches for <strong>${clientName}</strong>:`;
