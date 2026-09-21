@@ -12,9 +12,9 @@
 
   <style>
     .section-container {
-      max-width: 760px;
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 8rem 2rem;
+      padding: 6rem 2rem;
       text-align: center;
     }
 
@@ -26,60 +26,35 @@
       letter-spacing: -0.01em;
     }
 
-    .timeline { position: relative; max-width: 560px; margin: 0 auto; text-align: left; }
+    .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; text-align: left; }
+    @media (max-width: 860px) { .tracks { grid-template-columns: 1fr; } }
 
-    .timeline::before {
-      content: '';
-      position: absolute;
-      top: 18px;
-      bottom: 25px;
-      left: 15px;
-      width: 1px;
-      background-color: var(--accent);
-      opacity: 0.35;
-      z-index: 1;
+    .track {
+      background: var(--bg-cream-soft, #FBF9F4);
+      border: 1px solid var(--hairline, #E5DED2);
+      border-radius: 1.5rem;
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 24px 52px -38px rgba(25,21,18,0.28);
     }
 
-    .timeline-item {
-      position: relative;
-      display: flex;
-      gap: 2rem;
-      margin-bottom: 3.5rem;
-      z-index: 2;
-    }
+    .track-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--hairline, #E5DED2); gap: 1rem; }
+    .track-title { font-family: var(--font-serif); font-size: 1.85rem; font-weight: 500; }
+    .track-kicker { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600; white-space: nowrap; }
 
-    .timeline-item:last-child { margin-bottom: 0; }
-
+    .tl-item { display: flex; gap: 1.35rem; margin-bottom: 1.9rem; }
+    .tl-item:last-child { margin-bottom: 0; }
     .step-number {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: var(--ink);
-      color: #FFFFFF;
-      border: 1px solid var(--ink);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-serif);
-      font-size: 0.95rem;
-      font-weight: 500;
-      flex-shrink: 0;
+      width: 32px; height: 32px; border-radius: 50%; background: var(--ink, #191512); color: #FFF;
+      border: 1px solid var(--ink, #191512); display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif); font-size: 0.95rem; font-weight: 500; flex-shrink: 0;
     }
+    .step-number.accent { background: var(--accent, #C1623F); border-color: var(--accent, #C1623F); }
+    .step-content h3 { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 500; margin-bottom: 0.35rem; color: var(--ink, #191512); }
+    .step-content p { color: var(--ink-muted, #6E675F); font-size: 0.84rem; line-height: 1.7; max-width: 44ch; }
 
-    .step-content h3 {
-      font-family: var(--font-serif);
-      font-size: 1.6rem;
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-      color: var(--ink);
-    }
-
-    .step-content p {
-      color: var(--ink-muted);
-      font-size: 0.87rem;
-      line-height: 1.75;
-      max-width: 46ch;
-    }
+    .track-cta { margin-top: 2.1rem; }
+    .btn-sm-ghost { display: inline-flex; border: 1px solid var(--ink, #191512); color: var(--ink, #191512); padding: 0.85rem 1.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: all 0.35s var(--ease); }
+    .btn-sm-ghost:hover { background: var(--ink, #191512); color: var(--bg-cream, #FBF9F4); }
 
     .cta-wrap { margin-top: 4.5rem; }
 
@@ -96,54 +71,99 @@
   </div>
 
   <section class="section-container">
-    <div class="eyebrow reveal">The Vetting Process</div>
-    <h2 class="section-title reveal" style="--d:.08s">Five stages. One badge.</h2>
+    <p class="eyebrow reveal">One platform, two journeys</p>
+    <h2 class="section-title reveal" style="--d:.08s">Cared for on both sides.</h2>
 
-    <div class="timeline">
-      <div class="timeline-item reveal" style="--d:.02s">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h3>Application</h3>
-          <p>Detailed profile, experience, references and a complete home setup review.</p>
+    <div class="tracks">
+      <!-- OWNER TRACK -->
+      <div class="track reveal" style="--d:.05s">
+        <div class="track-head">
+          <div class="track-title">For pet owners</div>
+          <div class="track-kicker">Zero-scroll journey</div>
+        </div>
+        <div class="tl-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Tell us about your pet</h3>
+            <p>A guided intake — temperament, medications, habits, dates — takes about two minutes.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Receive your ranked proposal</h3>
+            <p>One scored shortlist, matched to your pet&rsquo;s needs out of 100, with the reasons written down.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Meet &amp; confirm</h3>
+            <p>Review the profile, request the sitter, and confirm — your concierge coordinates the rest.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="step-number accent">4</div>
+          <div class="step-content">
+            <h3>Tracked in your portal</h3>
+            <p>Status, timeline and sitter details live in your portal until the care is complete.</p>
+          </div>
+        </div>
+        <div class="track-cta">
+          <a href="/get-matched" class="btn-sm-ghost">Start the journey &rarr;</a>
         </div>
       </div>
 
-      <div class="timeline-item reveal" style="--d:.08s">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h3>Background check</h3>
-          <p>Full identity verification and criminal record check — no exceptions.</p>
+      <!-- SITTER TRACK -->
+      <div class="track reveal" style="--d:.15s">
+        <div class="track-head">
+          <div class="track-title">For caregivers</div>
+          <div class="track-kicker">Five-stage vetting</div>
         </div>
-      </div>
-
-      <div class="timeline-item reveal" style="--d:.14s">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h3>Zoélys interview</h3>
-          <p>A personal video interview assessing values, empathy and fit with our standards.</p>
+        <div class="tl-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Application</h3>
+            <p>Detailed profile, verifiable experience, references and a home-setup review.</p>
+          </div>
         </div>
-      </div>
-
-      <div class="timeline-item reveal" style="--d:.2s">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h3>Trial period</h3>
-          <p>Monitored first sittings with continuous ratings review.</p>
+        <div class="tl-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Background check</h3>
+            <p>Full identity verification and criminal record check — no exceptions.</p>
+          </div>
         </div>
-      </div>
-
-      <div class="timeline-item reveal" style="--d:.26s">
-        <div class="step-number">5</div>
-        <div class="step-content">
-          <h3>Certified badge awarded</h3>
-          <p>Only those who pass every stage earn the Zoélys Certified badge.</p>
+        <div class="tl-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Zoélys interview</h3>
+            <p>A personal video interview assessing values, empathy and fit with our standards.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Trial period</h3>
+            <p>Monitored first sittings with continuous rating review.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="step-number accent">5</div>
+          <div class="step-content">
+            <h3>Certified badge</h3>
+            <p>Only those who pass every stage earn the Zoélys Authorized Caregiver badge &amp; appear on the roster.</p>
+          </div>
+        </div>
+        <div class="track-cta">
+          <a href="/apply" class="btn-sm-ghost">Apply to the roster &rarr;</a>
         </div>
       </div>
     </div>
 
-    <p style="text-align:center; font-size:0.82rem; color:var(--text-muted); margin-top:-2.5rem; margin-bottom:3rem;">
+    <p style="text-align:center; font-size:0.82rem; color:var(--ink-muted, #6E675F); margin-top:2.75rem;">
       Read the full charter — certifications, insurance verification &amp; coverage layers at
-      <a href="/trust" style="color:var(--accent-coral); text-decoration:none; border-bottom:1px solid currentColor;">Trust &amp; Safety</a>.
+      <a href="/trust" style="color:var(--accent-coral, #C1623F); text-decoration:none; border-bottom:1px solid currentColor;">Trust &amp; Safety</a>.
     </p>
 
     <div class="cta-wrap reveal">
@@ -162,7 +182,6 @@
         <h5>Explore</h5>
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
-          <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/sitters">The Roster</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
           <li><a href="/journal">Journal</a></li>
@@ -173,8 +192,7 @@
         <h5>Zoélys</h5>
         <ul>
           <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/join">Join</a></li>
-          <li><a href="/join">Sign In</a></li>
+          <li><a href="/join">Member Portal</a></li>
         </ul>
       </div>
 

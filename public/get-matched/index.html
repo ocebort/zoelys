@@ -180,8 +180,9 @@
           <div class="form-group"><label>Anything else you'd like to share</label><textarea id="finalNotes" rows="3"></textarea></div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(6)">&larr; Back</button>
-            <button type="submit" class="btn-coral-submit">SEND MY REQUEST &rarr;</button>
+            <button type="submit" id="submitBtn" class="btn-coral-submit">SEND MY REQUEST &rarr;</button>
           </div>
+          <p class="field-hint signin-hint" id="signinHint" style="text-align:center; display:none;">Sign in to send your request — it lets you track your match in the portal.</p>
         </div>
 
       </form>
@@ -198,7 +199,6 @@
         <h5>Explore</h5>
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
-          <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/sitters">The Roster</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
           <li><a href="/journal">Journal</a></li>
@@ -208,8 +208,7 @@
         <h5>Zoélys</h5>
         <ul>
           <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/join">Join</a></li>
-          <li><a href="/join">Sign In</a></li>
+          <li><a href="/join">Member Portal</a></li>
         </ul>
       </div>
       <div>
@@ -285,7 +284,10 @@
     async function prefillMember() {
       const memberId = localStorage.getItem('zoelys_user_id');
       if (!memberId) {
-        window.location.href = '/join?reason=intake';
+        const hint = document.getElementById('signinHint');
+        if (hint) hint.style.display = 'block';
+        const emailEl = document.getElementById('email');
+        if (emailEl) emailEl.readOnly = false;
         return;
       }
       const el = document.getElementById('email');

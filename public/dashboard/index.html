@@ -48,6 +48,38 @@
     .admin-tab.active { color: var(--ink, #191512); border-bottom-color: var(--accent); }
     .panel { display: none; }
     .panel.active { display: block; }
+
+    /* ---- Owner journey tracker ---- */
+    .jcard { background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1.3rem; padding: 2rem 2.1rem; margin-bottom: 1.5rem; box-shadow: 0 22px 46px -34px rgba(25,21,18,0.22); }
+    .jcard-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .jcard-pet { font-family: var(--font-serif); font-size: 1.9rem; }
+    .jcard-meta { font-size: 0.78rem; color: var(--ink-muted, #6E675F); letter-spacing: 0.04em; }
+    .status-pill { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.4rem 0.85rem; border-radius: 100px; border: 1px solid var(--hairline, #E5DED2); background: var(--bg-card, #fff); color: var(--ink, #191512); white-space: nowrap; }
+    .status-matching    { border-color: #C9A45C; color: #9A7B2F; }
+    .status-proposed    { border-color: #B08A5E; color: #7C5A36; }
+    .status-confirmed   { border-color: #4E7A54; color: #2E5A34; }
+    .status-in_care     { border-color: #4E7A54; color: #2E5A34; background: #EDF5EE; }
+    .status-completed   { background: var(--bg-card, #fff); color: var(--ink-muted, #6E675F); }
+    .status-declined    { border-color: #C96F5A; color: #9A4B38; }
+
+    .jtimeline { display: flex; align-items: center; margin: 1.6rem 0 1.5rem; }
+    .jt-node { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 0 0 auto; }
+    .jt-dot { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--hairline, #E5DED2); background: var(--bg-card, #fff); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--ink-muted, #6E675F); }
+    .jt-dot.done { background: var(--ink, #191512); border-color: var(--ink, #191512); color: var(--bg-cream, #FBF9F4); }
+    .jt-dot.now { background: var(--accent, #C1623F); border-color: var(--accent, #C1623F); color: #fff; }
+    .jt-lbl { font-size: 0.56rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600; white-space: nowrap; }
+    .jt-lbl.now { color: var(--accent, #C1623F); }
+    .jt-rail { flex: 1; height: 1px; background: var(--hairline, #E5DED2); margin: 0 0.4rem; margin-bottom: 1.15rem; }
+    .jt-rail.filled { background: var(--ink, #191512); }
+
+    .j-step-note { font-size: 0.84rem; color: var(--ink-muted, #6E675F); line-height: 1.65; margin-bottom: 1.4rem; }
+    .j-step-note strong { color: var(--ink, #191512); font-weight: 600; }
+    .j-match { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; background: rgba(255,255,255,0.5); border: 1px solid var(--hairline, #E5DED2); border-radius: 0.9rem; padding: 1.1rem 1.3rem; margin-bottom: 1rem; }
+    .j-match-name { font-family: var(--font-serif); font-size: 1.35rem; }
+    .j-match-meta { font-size: 0.76rem; color: var(--ink-muted, #6E675F); margin-top: 0.15rem; }
+    .j-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+    .panel:not(.active) { display: none; }
     .admin-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--hairline, #E5DED2); }
     .admin-row:last-child { border-bottom: none; }
     .admin-row .btn-pill { white-space: nowrap; }
@@ -552,37 +584,108 @@
       }
     }
 
+    const JSTEPS = ['matching', 'proposed', 'confirmed', 'in_care', 'completed'];
+    const JLABEL = { matching: 'Intake', proposed: 'Proposal', confirmed: 'Confirmed', in_care: 'In care', completed: 'Complete' };
+
+    function journeyCard(r) {
+      const st = (r.status || 'matching').toLowerCase();
+      const idx = JSTEPS.indexOf(st);
+      const active = idx === -1 ? 0 : idx;
+      const best = (r.matches && r.matches[0]) || null;
+      const dates = [r.start_date, r.end_date].filter(Boolean).join(' to ');
+      const timeline = JSTEPS.map((s, i) => {
+        const cls = i < active ? 'done' : i === active ? 'now' : '';
+        const sym = i < active ? '&#10003;' : i === active ? '&#9679;' : String(i + 1);
+        return `<div class="jt-node"><div class="jt-dot ${cls}">${sym}</div><div class="jt-lbl ${cls === 'now' ? 'now' : ''}">${JLABEL[s]}</div></div>${i < JSTEPS.length - 1 ? `<div class="jt-rail ${i < active ? 'filled' : ''}"></div>` : ''}`;
+      }).join('');
+
+      let note = '', actions = '';
+      if (st === 'matching') {
+        note = `<div class="j-step-note"><strong>Your concierge is preparing your proposal.</strong> Our team studies your pet&rsquo;s profile and handpicks the carers who truly fit - typically within 24 hours.</div>`;
+      }
+      if (st === 'proposed') {
+        note = `<div class="j-step-note">Proposal ready - review your primary match and confirm to lock in the care.</div>`;
+        if (best) {
+          note += `<div class="j-match">
+            <div>
+              <div class="j-match-name">${best.full_name}</div>
+              <div class="j-match-meta">${best.neighbourhood} &middot; $${Number(best.nightly_rate_usd).toFixed(0)}/night ${best.vet_tech_background ? '&middot; Vet tech' : ''} &middot; ${best.experience_years}+ years</div>
+            </div>
+            <a href="/sitters?id=${best.sitter_id}" style="color:var(--accent-coral,#C1623F); font-weight:600; font-size:0.78rem; letter-spacing:.1em; text-transform:uppercase;">View profile</a>
+          </div>`;
+        }
+        actions = `<div class="j-actions">
+          <button class="btn-pill" onclick="setJourneyStatus('${r.id}','confirmed')">Confirm this sitter</button>
+          <button class="btn-pill" style="background:transparent; border:1px solid var(--hairline,#E5DED2); color:var(--ink,#191512);" onclick="setJourneyStatus('${r.id}','declined')">Decline &amp; rethink</button>
+        </div>`;
+      }
+      if (st === 'confirmed') {
+        note = `<div class="j-step-note">Care <strong>confirmed</strong>${best ? ' with <strong>' + best.full_name + '</strong>' : ''}.${dates ? ' Scheduled: <strong>' + dates + '</strong>.' : ''} Your concierge is in contact.</div>`;
+        actions = `<div class="j-actions"><button class="btn-pill" onclick="setJourneyStatus('${r.id}','in_care')">Mark care as started</button></div>`;
+      }
+      if (st === 'in_care') {
+        note = `<div class="j-step-note">Your pet is <strong>in care</strong>${best ? ' with ' + best.full_name : ''}${dates ? ' through ' + dates : ''}. Everything is on track.</div>`;
+        actions = `<div class="j-actions"><button class="btn-pill" onclick="setJourneyStatus('${r.id}','completed')">Mark complete</button></div>`;
+      }
+      if (st === 'completed') {
+        note = `<div class="j-step-note">Care complete. Thank you for trusting Zoélys${best ? ' with ' + best.full_name : ''}.</div>`;
+        actions = `<div class="j-actions"><a class="btn-pill" style="text-decoration:none;text-align:center;" href="/get-matched">Book again &rarr;</a></div>`;
+      }
+      if (st === 'declined') {
+        note = `<div class="j-step-note">Proposal declined. Would you like the concierge to prepare a fresh one?</div>`;
+        actions = `<div class="j-actions"><a class="btn-pill" style="text-decoration:none;text-align:center;" href="/get-matched">Start a new journey</a></div>`;
+      }
+
+      return `<div class="jcard">
+        <div class="jcard-head">
+          <div>
+            <div class="jcard-pet">${r.pet_name || 'Your pet'}${r.breed ? ' <span style="font-size:1rem; color:var(--ink-muted,#6E675F); font-family:var(--font-sans); font-weight:300;">(' + r.breed + ')</span>' : ''}</div>
+            <div class="jcard-meta">${r.service_type || ''}${r.neighbourhood ? ' &middot; ' + r.neighbourhood : ''}${dates ? ' &middot; ' + dates : ''}</div>
+          </div>
+          <span class="status-pill status-${st}">${(JLABEL[st] || st).toUpperCase()}</span>
+        </div>
+        <div class="jtimeline">${timeline}</div>
+        ${note}${actions}
+        <div style="margin-top:0.9rem;"><a href="/matches?requestId=${r.id}" style="color:var(--ink,#191512); font-weight:600; font-size:0.72rem; letter-spacing:.1em; text-transform:uppercase;">Reopen match results &rarr;</a></div>
+      </div>`;
+    }
+
+    async function setJourneyStatus(requestId, status) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch(`/api/journey/status?userId=${encodeURIComponent(memberId)}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: requestId, status })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const email = await memberEmail();
+        loadParentHistory(email);
+      } else {
+        alert(data.error || 'Could not update status.');
+      }
+    }
+
+    async function memberEmail() {
+      try {
+        const uid = localStorage.getItem('zoelys_user_id');
+        const d = await (await fetch(`/api/user/profile?userId=${encodeURIComponent(uid)}`)).json();
+        return (d.user && d.user.email) || '';
+      } catch (e) { return ''; }
+    }
+
     async function loadParentHistory(email) {
       const box = document.getElementById('parentHistory');
       const memberId = localStorage.getItem('zoelys_user_id') || '';
       try {
-        const reqs = await (await fetch(`/api/requests?email=${encodeURIComponent(email)}&userId=${encodeURIComponent(memberId)}`)).json();
-        const requests = reqs.requests || [];
+        const data = await (await fetch(`/api/journey?userId=${encodeURIComponent(memberId)}`)).json();
+        const requests = data.requests || [];
         if (!requests.length) {
           box.innerHTML = `You haven't started a matching journey yet. <a href="/get-matched" style="color: var(--accent-coral, #C1623F); font-weight: 600;">Begin one now &rarr;</a>`;
           return;
         }
-        const ids = requests.map(r => r.id).join(',');
-        const matches = ids ? await (await fetch(`/api/matches?requestIds=${encodeURIComponent(ids)}&userId=${encodeURIComponent(memberId)}`)).json() : {};
-        const sel = {};
-        (matches.matches || []).forEach(m => { (sel[m.request_id] = sel[m.request_id] || []).push(m); });
-        const rows = requests.slice().reverse().map(r => `
-          <div style="background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1rem; padding: 1.4rem 1.6rem; margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
-              <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.35rem;">${r.pet_name || 'Your pet'}</div>
-              <div style="font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted, #6E675F);">${r.service_type || ''} &middot; ${r.neighbourhood || ''}</div>
-            </div>
-            <div style="font-size: 0.82rem; color: var(--ink-muted, #6E675F); margin-top: 0.35rem;">${r.breed || ''}${r.start_date ? ' &middot; ' + r.start_date + ' to ' + r.end_date : ''}</div>
-            ${(sel[r.id] || []).map(m => `
-              <div style="font-size: 0.85rem; margin-top: 0.8rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-                <span>Matched with <strong style="color: var(--ink, #191512);">${m.sitter_name}</strong> &middot; ${m.neighbourhood} &middot; $${Number(m.nightly_rate_usd).toFixed(0)}/night</span>
-                <a href="/sitters?id=${m.sitter_id}" style="color: var(--accent-coral, #C1623F); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;">View profile &rarr;</a>
-              </div>`).join('') || `<div style="font-size: 0.82rem; color: var(--ink-muted, #6E675F); margin-top: 0.8rem;">Awaiting concierge coordination.</div>`}
-            <div style="margin-top: 1rem;"><a href="/matches?requestId=${r.id}" style="color: var(--ink, #191512); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;">Reopen match results &rarr;</a></div>
-          </div>`).join('');
-        box.innerHTML = rows;
+        box.innerHTML = requests.map(journeyCard).join('');
       } catch (err) {
-        box.innerHTML = 'Could not load your journey.';
+        box.innerHTML = `Could not load your journey. <a style="color:var(--accent-coral,#C1623F);" href="/get-matched">Begin one now</a>.`;
       }
     }
 
@@ -590,19 +693,44 @@
       const card = document.getElementById('sitterProfileCard');
       const body = document.getElementById('sitterProfileBody');
       try {
-        const data = await (await fetch(`/api/sitters?userId=${encodeURIComponent(memberId)}`)).json();
-        const roster = data.sitters || [];
-        const s = roster.find(x => (x.full_name || '').toLowerCase() === String(sitterName || '').toLowerCase()) || roster.find(x => (x.full_name || '').toLowerCase().includes(String(sitterName || '').toLowerCase())) || roster[0];
-        if (!s) return;
-        card.style.display = 'block';
+        const data = await (await fetch(`/api/sitter/pipeline?userId=${encodeURIComponent(memberId)}`)).json();
+        const s = data.profile;
+        const incoming = data.incoming || [];
+        if (!s) {
+          body.innerHTML = `<div style="font-size:0.84rem; line-height:1.6;">No roster profile linked to this account yet. <a href="/apply" style="color: var(--accent-coral, #C1623F); font-weight: 600;">Complete your application &rarr;</a></div>`;
+          card.style.display = 'block';
+          return;
+        }
+        const appTxt = s.application_status === 'active' ? 'Live on the roster' : 'Under review';
+        const appColor = s.application_status === 'active' ? '#2E5A34' : '#9A7B2F';
         body.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
             <div>
-              <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; color: var(--ink, #191512);">${s.full_name}</div>
-              <div style="font-size: 0.8rem; margin-top: 0.25rem;">${s.neighbourhood} &middot; ${s.experience_years}+ years &middot; $${Number(s.nightly_rate_usd).toFixed(0)}/night ${s.vet_tech_background ? '&middot; Vet tech' : ''}</div>
+              <div style="display:flex; align-items:center; gap:0.9rem; flex-wrap:wrap;">
+                <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; color: var(--ink, #191512);">${s.full_name}</div>
+                <span style="font-size:0.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--hairline,#E5DED2); padding:.3rem .7rem; border-radius:100px; color:${appColor};">${appTxt}</span>
+              </div>
+              <div style="font-size: 0.8rem; margin-top: 0.3rem;">${s.neighbourhood} &middot; ${s.experience_years}+ years &middot; $${Number(s.nightly_rate_usd).toFixed(0)}/night ${s.vet_tech_background ? '&middot; Vet tech' : ''}</div>
             </div>
             <a href="/sitters?id=${s.id}" style="background: var(--ink, #191512); color: white; text-decoration: none; padding: 0.7rem 1.3rem; border-radius: 2rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">View profile &rarr;</a>
+          </div>
+          <div style="margin-top:1.3rem; border-top:1px solid var(--hairline,#E5DED2); padding-top:1.1rem;">
+            <div style="font-size:0.64rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-muted,#6E675F); font-weight:600; margin-bottom:.7rem;">Incoming sitting requests</div>
+            ${incoming.length === 0
+              ? '<div style="font-size:0.8rem; color:var(--ink-muted,#6E675F);">No incoming requests yet. Owners find you through matching.</div>'
+              : incoming.map(m => {
+                  const req = m;
+                  const dates = [req.start_date, req.end_date].filter(Boolean).join(' to ');
+                  return `<div style="display:flex; justify-content:space-between; align-items:center; gap:.8rem; flex-wrap:wrap; background:rgba(255,255,255,.5); border:1px solid var(--hairline,#E5DED2); border-radius:.8rem; padding:.9rem 1.1rem; margin-bottom:.6rem;">
+                    <div>
+                      <div style="font-size:.92rem; color:var(--ink,#191512); font-weight:500;">${req.pet_name || 'A pet'} <span style="color:var(--ink-muted,#6E675F); font-weight:300;">(${req.pet_type || 'Pet'}${req.breed ? ', ' + req.breed : ''})</span></div>
+                      <div style="font-size:.72rem; color:var(--ink-muted,#6E675F); margin-top:.15rem;">${req.full_name || req.owner_name} &middot; ${req.neighbourhood || ''}${dates ? ' &middot; ' + dates : ''}</div>
+                    </div>
+                    <span style="font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:${(m.match_status || 'proposed') === 'confirmed' ? '#2E5A34' : '#7C5A36'};">${(m.match_status || 'proposed').replace(/_/g, ' &middot; ')}</span>
+                  </div>`;
+                }).join('')}
           </div>`;
+        card.style.display = 'block';
       } catch (err) { /* profile card hidden on failure */ }
     }
 
