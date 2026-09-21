@@ -11,6 +11,41 @@ async function memberFromRequest(env, url) {
   return { ...user, role, is_admin };
 }
 
+async function computeMatches(env, req) {
+  const { results: sitters } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1`).all();
+  const needs = {
+    species: (req.pet_type || '').toLowerCase(),
+    meds: /yes/i.test(req.medical_conditions || ''),
+    anxiety: /anxiety/i.test(req.behavioral_traits || ''),
+    outdoor: /yes/i.test(req.outdoor_space || ''),
+    neighbourhood: (req.neighbourhood || '').trim().toLowerCase()
+  };
+  return (sitters || []).map(s => {
+    const reasons = [];
+    let score = 0;
+
+    const accepted = (s.accepted_pet_types || '').split(',').map(t => t.trim().toLowerCase());
+    if (needs.species && !accepted.includes(needs.species)) return null;
+
+    score += 25; reasons.push('Perfect species match');
+    if (needs.neighbourhood && s.neighbourhood.trim().toLowerCase() === needs.neighbourhood) {
+      score += 20; reasons.push('In your neighbourhood');
+    } else {
+      score += 10; reasons.push('Nearby in Miami');
+    }
+    if (needs.meds && s.can_handle_medication) { score += 15; reasons.push('Confident with medications'); }
+    if (needs.anxiety && s.can_handle_anxiety) { score += 10; reasons.push('Calms separation anxiety'); }
+    if (needs.outdoor && s.has_outdoor_space) { score += 15; reasons.push('Fenced outdoor space'); }
+    else if (!needs.outdoor) { score += 10; reasons.push('Outdoor ready'); }
+    if (s.vet_tech_background) { score += 15; reasons.push('Certified vet tech'); }
+    else if (s.experience_years >= 5) { score += 12; reasons.push(5 + '+ years experience'); }
+    else { score += 8; reasons.push('Experienced caregiver'); }
+
+    score = Math.min(score, 100);
+    return { ...s, match_score: score, match_reasons: reasons };
+  }).filter(Boolean).sort((a, b) => b.match_score - a.match_score);
+}
+
 async function ensureMatchmaking(env) {
   if (matchmakingBootstrapped) return;
   await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS client_requests (
@@ -50,11 +85,15 @@ async function ensureMatchmaking(env) {
     request_id TEXT NOT NULL,
     sitter_id TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status TEXT DEFAULT 'proposed'
+    status TEXT DEFAULT 'proposed',
+    match_score INTEGER DEFAULT 0,
+    match_reasons TEXT DEFAULT '[]'
   )`).run();
 
   await env.zoelys_db.prepare(`ALTER TABLE client_requests ADD COLUMN status TEXT DEFAULT 'matching'`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN status TEXT DEFAULT 'proposed'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN match_score INTEGER DEFAULT 0`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN match_reasons TEXT DEFAULT '[]'`).run().catch(() => {});
 
   const row = await env.zoelys_db.prepare(`SELECT COUNT(*) AS c FROM sitters`).first();
   if (row && row.c === 0) {
@@ -297,17 +336,18 @@ export default {
         const body = await request.json();
         const id = 'req-' + crypto.randomUUID().slice(0, 8);
         await env.zoelys_db.prepare(`
-          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level, status)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           id,
           body.full_name, member.email, body.neighbourhood,
           body.pet_type, body.pet_name, body.breed,
           body.behavioral_traits, body.medical_conditions, body.exercise_needs,
           body.service_type, body.start_date, body.end_date,
-          body.outdoor_space, body.experience_level
+          body.outdoor_space, body.experience_level,
+          'pending'
         ).run();
-        return new Response(JSON.stringify({ success: true, requestId: id }), { headers: corsHeaders });
+        return new Response(JSON.stringify({ success: true, requestId: id, status: 'pending' }), { headers: corsHeaders });
       } catch (e) {
         return new Response(JSON.stringify({ error: 'Request could not be saved' }), { status: 400, headers: corsHeaders });
       }
@@ -323,6 +363,35 @@ export default {
         ? await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE LOWER(TRIM(email)) = ? ORDER BY created_at DESC`).bind(email).all()
         : await env.zoelys_db.prepare(`SELECT * FROM client_requests ORDER BY created_at DESC`).all();
       return new Response(JSON.stringify({ requests: results || [] }), { headers: corsHeaders });
+    }
+
+    // ADMIN: accept a client request — compute, record and reveal her handpicked matches
+    if (request.method === 'POST' && url.pathname.startsWith('/api/requests/') && url.pathname.endsWith('/approve')) {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member || !member.is_admin) return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
+      const id = url.pathname.split('/')[3];
+      const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(id).first();
+      if (!req) return new Response(JSON.stringify({ error: 'Request not found' }), { status: 404, headers: corsHeaders });
+      if (['confirmed', 'in_care', 'completed'].includes(req.status)) {
+        return new Response(JSON.stringify({ error: 'This request has already moved past proposal' }), { status: 400, headers: corsHeaders });
+      }
+      const scored = await computeMatches(env, req);
+      for (const m of scored) {
+        await env.zoelys_db.prepare(`INSERT INTO matches (id, request_id, sitter_id, status, match_score, match_reasons) VALUES (?, ?, ?, ?, ?, ?)`).bind('mch-' + crypto.randomUUID().slice(0, 6), id, m.id, 'proposed', m.match_score, JSON.stringify(m.match_reasons)).run().catch(() => {});
+      }
+      await env.zoelys_db.prepare(`UPDATE client_requests SET status = 'proposed' WHERE id = ?`).bind(id).run();
+      return new Response(JSON.stringify({ success: true, requestId: id, matched: scored.map(m => m.id), matches: scored }), { headers: corsHeaders });
+    }
+
+    // ADMIN: decline a client request (e.g. no fit available yet)
+    if (request.method === 'POST' && url.pathname.startsWith('/api/requests/') && url.pathname.endsWith('/decline')) {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member || !member.is_admin) return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
+      const id = url.pathname.split('/')[3];
+      await env.zoelys_db.prepare(`UPDATE client_requests SET status = 'not_accepted' WHERE id = ?`).bind(id).run();
+      return new Response(JSON.stringify({ success: true, requestId: id, status: 'not_accepted' }), { headers: corsHeaders });
     }
 
     // SITTERS ROSTER API
@@ -372,6 +441,7 @@ export default {
       await ensureMatchmaking(env);
       const member = await memberFromRequest(env, url);
       if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      if (!member.is_admin) return new Response(JSON.stringify({ error: 'Concierge preview only' }), { status: 403, headers: corsHeaders });
       const requestId = url.searchParams.get('requestId');
       const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(requestId).first();
       if (!req) return new Response(JSON.stringify({ error: 'Request not found' }), { status: 404, headers: corsHeaders });
@@ -379,40 +449,7 @@ export default {
         return new Response(JSON.stringify({ error: 'This request belongs to another member' }), { status: 403, headers: corsHeaders });
       }
 
-      const { results: sitters } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1`).all();
-      const needs = {
-        species: (req.pet_type || '').toLowerCase(),
-        meds: /yes/i.test(req.medical_conditions || ''),
-        anxiety: /anxiety/i.test(req.behavioral_traits || ''),
-        outdoor: /yes/i.test(req.outdoor_space || ''),
-        neighbourhood: (req.neighbourhood || '').trim().toLowerCase()
-      };
-
-      const matches = (sitters || []).map(s => {
-        const reasons = [];
-        let score = 0;
-
-        const accepted = (s.accepted_pet_types || '').split(',').map(t => t.trim().toLowerCase());
-        if (needs.species && !accepted.includes(needs.species)) return null;
-
-        score += 25; reasons.push('Perfect species match');
-        if (needs.neighbourhood && s.neighbourhood.trim().toLowerCase() === needs.neighbourhood) {
-          score += 20; reasons.push('In your neighbourhood');
-        } else {
-          score += 10; reasons.push('Nearby in Miami');
-        }
-        if (needs.meds && s.can_handle_medication) { score += 15; reasons.push('Confident with medications'); }
-        if (needs.anxiety && s.can_handle_anxiety) { score += 10; reasons.push('Calms separation anxiety'); }
-        if (needs.outdoor && s.has_outdoor_space) { score += 15; reasons.push('Fenced outdoor space'); }
-        else if (!needs.outdoor) { score += 10; reasons.push('Outdoor ready'); }
-        if (s.vet_tech_background) { score += 15; reasons.push('Certified vet tech'); }
-        else if (s.experience_years >= 5) { score += 12; reasons.push(5 + '+ years experience'); }
-        else { score += 8; reasons.push('Experienced caregiver'); }
-
-        score = Math.min(score, 100);
-        return { ...s, match_score: score, match_reasons: reasons };
-      }).filter(Boolean).sort((a, b) => b.match_score - a.match_score);
-
+      const matches = await computeMatches(env, req);
       return new Response(JSON.stringify({ matches, request: req }), { headers: corsHeaders });
     }
     if (request.method === 'POST' && url.pathname === '/api/matches') {
@@ -454,8 +491,8 @@ export default {
       const { results: requests = [] } = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE LOWER(TRIM(email)) = ? ORDER BY created_at DESC`).bind(member.email.toLowerCase()).all();
       const tracked = [];
       for (const r of requests) {
-        const { results: mch = [] } = await env.zoelys_db.prepare(`SELECT m.id, m.sitter_id, m.status, m.created_at, s.full_name, s.neighbourhood, s.nightly_rate_usd, s.vet_tech_background, s.experience_years FROM matches m JOIN sitters s ON s.id = m.sitter_id WHERE m.request_id = ? ORDER BY m.created_at DESC`).bind(r.id).all();
-        tracked.push({ ...r, status: r.status || 'matching', matches: mch });
+        const { results: mch = [] } = await env.zoelys_db.prepare(`SELECT m.id, m.sitter_id, m.status, m.match_score, m.match_reasons, m.created_at, s.full_name, s.neighbourhood, s.nightly_rate_usd, s.vet_tech_background, s.experience_years FROM matches m JOIN sitters s ON s.id = m.sitter_id WHERE m.request_id = ? ORDER BY m.created_at DESC`).bind(r.id).all();
+        tracked.push({ ...r, status: r.status || 'pending', matches: mch });
       }
       return new Response(JSON.stringify({ requests: tracked }), { headers: corsHeaders });
     }

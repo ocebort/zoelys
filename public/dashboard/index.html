@@ -61,6 +61,7 @@
     .status-in_care     { border-color: #4E7A54; color: #2E5A34; background: #EDF5EE; }
     .status-completed   { background: var(--bg-card, #fff); color: var(--ink-muted, #6E675F); }
     .status-declined    { border-color: #C96F5A; color: #9A4B38; }
+    .status-not_accepted { border-color: #C9A45C; color: #9A7B2F; }
 
     .jtimeline { display: flex; align-items: center; margin: 1.6rem 0 1.5rem; }
     .jt-node { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 0 0 auto; }
@@ -259,7 +260,10 @@
       <p style="text-align: center; color: var(--ink-muted, #6E675F);">Pet Parent Portal active.</p>
 
       <div style="margin-top: 2.5rem;">
-        <h2 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-weight: 500; margin-bottom: 1.25rem;">Your requests &amp; matches</h2>
+        <div id="sentNotice" style="display:none; background: #F2F8F3; border: 1px solid #9FCFA6; color: #2E5A34; border-radius: 0.9rem; padding: 1rem 1.3rem; margin-bottom: 1.75rem; font-size: 0.85rem; line-height: 1.6;">
+          <strong>Your request is with your concierge.</strong> We&rsquo;re reviewing your pet&rsquo;s dossier now. Your handpicked caregivers will appear on this page once approved.
+        </div>
+        <h2 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-weight: 500; margin-bottom: 1.25rem;">Your matching journey</h2>
         <div id="parentHistory" style="color: var(--ink-muted, #6E675F); font-size: 0.85rem;">Loading your journey...</div>
       </div>
     </div>
@@ -553,6 +557,11 @@
         return;
       }
 
+      const sentNotice = document.getElementById('sentNotice');
+      if (sentNotice && new URLSearchParams(window.location.search).get('sent') === '1') {
+        sentNotice.style.display = 'block';
+      }
+
       try {
         const res = await fetch(`/api/user/profile?userId=${userId}&t=${Date.now()}`);
         const data = await res.json();
@@ -584,14 +593,16 @@
       }
     }
 
-    const JSTEPS = ['matching', 'proposed', 'confirmed', 'in_care', 'completed'];
-    const JLABEL = { matching: 'Intake', proposed: 'Proposal', confirmed: 'Confirmed', in_care: 'In care', completed: 'Complete' };
+    const JSTEPS = ['pending', 'proposed', 'confirmed', 'in_care', 'completed'];
+    const JLABEL = { pending: 'Intake', matching: 'Intake', not_accepted: 'Under review', proposed: 'Proposal', confirmed: 'Confirmed', in_care: 'In care', completed: 'Complete' };
 
     function journeyCard(r) {
-      const st = (r.status || 'matching').toLowerCase();
+      const raw = (r.status || 'pending').toLowerCase();
+      const st = raw === 'declined' ? 'declined' : raw === 'not_accepted' ? 'not_accepted' : (raw === 'matching' ? 'pending' : raw);
+      const pendingLike = st === 'pending' || st === 'not_accepted';
       const idx = JSTEPS.indexOf(st);
       const active = idx === -1 ? 0 : idx;
-      const best = (r.matches && r.matches[0]) || null;
+      const best = (r.matches && r.matches.length ? r.matches[0] : null) || null;
       const dates = [r.start_date, r.end_date].filter(Boolean).join(' to ');
       const timeline = JSTEPS.map((s, i) => {
         const cls = i < active ? 'done' : i === active ? 'now' : '';
@@ -600,16 +611,21 @@
       }).join('');
 
       let note = '', actions = '';
-      if (st === 'matching') {
-        note = `<div class="j-step-note"><strong>Your concierge is preparing your proposal.</strong> Our team studies your pet&rsquo;s profile and handpicks the carers who truly fit - typically within 24 hours.</div>`;
+      if (st === 'pending') {
+        note = `<div class="j-step-note"><strong>Your request is with your concierge.</strong> We study your pet&rsquo;s dossier, then handpick the caregivers who genuinely fit. Sitters are revealed here only after approval &mdash; never a scrolling search.</div>`;
+      }
+      if (st === 'not_accepted') {
+        note = `<div class="j-step-note">We haven&rsquo;t found a fitting caregiver for these needs yet. Your concierge is designing a custom solution for <strong>${r.pet_name || 'your pet'}</strong>.</div>`;
       }
       if (st === 'proposed') {
-        note = `<div class="j-step-note">Proposal ready - review your primary match and confirm to lock in the care.</div>`;
+        note = `<div class="j-step-note">Proposal ready - your concierge handpicked these caregivers for <strong>${r.pet_name || 'your pet'}</strong>. Review and confirm to lock in the care.</div>`;
         if (best) {
+          const reasons = Array.isArray(best.match_reasons) ? best.match_reasons : (() => { try { return JSON.parse(best.match_reasons || '[]'); } catch (e) { return []; } })();
           note += `<div class="j-match">
             <div>
               <div class="j-match-name">${best.full_name}</div>
-              <div class="j-match-meta">${best.neighbourhood} &middot; $${Number(best.nightly_rate_usd).toFixed(0)}/night ${best.vet_tech_background ? '&middot; Vet tech' : ''} &middot; ${best.experience_years}+ years</div>
+              <div class="j-match-meta">${best.neighbourhood} &middot; $${Number(best.nightly_rate_usd).toFixed(0)}/night ${best.vet_tech_background ? '&middot; Vet tech' : ''} &middot; ${best.experience_years}+ years &middot; <strong style="color:var(--accent-coral,#C1623F);">${best.match_score || 0}% fit</strong></div>
+              <div class="reason-tags" style="margin-top:0.5rem;">${reasons.slice(0, 3).map(x => `<span class="reason-tag" style="font-size:0.6rem;">${x}</span>`).join('')}</div>
             </div>
             <a href="/sitters?id=${best.sitter_id}" style="color:var(--accent-coral,#C1623F); font-weight:600; font-size:0.78rem; letter-spacing:.1em; text-transform:uppercase;">View profile</a>
           </div>`;
@@ -642,11 +658,11 @@
             <div class="jcard-pet">${r.pet_name || 'Your pet'}${r.breed ? ' <span style="font-size:1rem; color:var(--ink-muted,#6E675F); font-family:var(--font-sans); font-weight:300;">(' + r.breed + ')</span>' : ''}</div>
             <div class="jcard-meta">${r.service_type || ''}${r.neighbourhood ? ' &middot; ' + r.neighbourhood : ''}${dates ? ' &middot; ' + dates : ''}</div>
           </div>
-          <span class="status-pill status-${st}">${(JLABEL[st] || st).toUpperCase()}</span>
+          <span class="status-pill status-${st}">${(JLABEL[st] || st.replace(/_/g, ' ')).toUpperCase()}</span>
         </div>
         <div class="jtimeline">${timeline}</div>
         ${note}${actions}
-        <div style="margin-top:0.9rem;"><a href="/matches?requestId=${r.id}" style="color:var(--ink,#191512); font-weight:600; font-size:0.72rem; letter-spacing:.1em; text-transform:uppercase;">Reopen match results &rarr;</a></div>
+        ${st === 'pending' || st === 'not_accepted' ? '' : `<div style="margin-top:0.9rem;"><a href="/matches?requestId=${r.id}" style="color:var(--ink,#191512); font-weight:600; font-size:0.72rem; letter-spacing:.1em; text-transform:uppercase;">Reopen match results &rarr;</a></div>`}
       </div>`;
     }
 

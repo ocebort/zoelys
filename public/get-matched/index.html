@@ -78,7 +78,7 @@
         <!-- STEP 2 -->
         <div class="step-panel" id="step2">
           <h2>Step 2. Your Pet</h2>
-          <div class="form-group"><label>Animal type</label><select id="animalType"><option value="">Select..</option><option value="Dog">Dog</option><option value="Cat">Cat</option></select></div>
+          <div class="form-group"><label>Animal type</label><select id="animalType"><option value="">Select...</option><option value="Dog">Dog</option><option value="Cat">Cat</option><option value="Bird">Bird</option><option value="Rabbit">Rabbit</option><option value="Fish">Fish</option><option value="Reptile">Reptile</option><option value="Other">Other</option></select></div>
           <div class="grid-2-fields">
             <div class="form-group"><label>Breed</label><input type="text" id="breed"></div>
             <div class="form-group"><label>Pet name</label><input type="text" id="petName"></div>
@@ -91,7 +91,7 @@
             <label>Sex</label>
             <div class="chip-group"><span class="chip" onclick="selectChip(this)">Male</span><span class="chip" onclick="selectChip(this)">Female</span></div>
           </div>
-          <div class="form-group"><label>Temperament</label><select id="temperament"><option value="">Select...</option><option value="Calm">Calm</option><option value="Energetic">Energetic</option></select></div>
+          <div class="form-group"><label>Temperament</label><select id="temperament"><option value="">Select...</option><option value="Calm">Calm</option><option value="Energetic">Energetic</option><option value="Playful">Playful</option><option value="Anxious">Anxious</option><option value="Shy">Shy</option><option value="Guarded">Guarded</option><option value="Independent">Independent</option></select></div>
           <div class="form-group">
             <label>House-trained</label>
             <div class="chip-group"><span class="chip" onclick="selectChip(this)">Yes</span><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">In progress</span></div>
@@ -117,8 +117,8 @@
             <label>Medical conditions</label>
             <div class="chip-group" id="medicalGroup"><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">Yes</span></div>
           </div>
-          <div class="form-group"><label>Vaccination status</label><select id="vaccination"><option value="">Select...</option><option value="Up to date">Up to date</option></select></div>
-          <div class="form-group"><label>Diet type</label><select id="diet"><option value="">Select...</option><option value="Kibble">Kibble</option><option value="Raw">Raw</option></select></div>
+          <div class="form-group"><label>Vaccination status</label><select id="vaccination"><option value="">Select...</option><option value="Up to date">Up to date</option><option value="In progress">In progress</option><option value="Not yet">Not yet</option><option value="Not applicable">Not applicable</option></select></div>
+          <div class="form-group"><label>Diet type</label><select id="diet"><option value="">Select...</option><option value="Kibble">Kibble</option><option value="Wet food">Wet food</option><option value="Raw">Raw</option><option value="Home-cooked">Home-cooked</option><option value="Mixed / other">Mixed / other</option></select></div>
           <div class="form-group">
             <label>Is there a private outdoor space available at your home?</label>
             <div class="chip-group" id="outdoorGroup">
@@ -137,7 +137,7 @@
           <h2>Step 4. Service Needed</h2>
           <div class="form-group">
             <label>Service type</label>
-            <div class="chip-group" id="serviceGroup"><span class="chip" onclick="selectChip(this)">Home visit</span><span class="chip" onclick="selectChip(this)">Overnight stay</span><span class="chip" onclick="selectChip(this)">Dog walking</span></div>
+            <div class="chip-group" id="serviceGroup"><span class="chip" onclick="selectChip(this)">Home visit</span><span class="chip" onclick="selectChip(this)">Overnight stay</span><span class="chip" onclick="selectChip(this)">Dog walking</span><span class="chip" onclick="selectChip(this)">Live-in care</span><span class="chip" onclick="selectChip(this)">Boarding at sitter&rsquo;s home</span><span class="chip" onclick="selectChip(this)">Cat sitting</span><span class="chip" onclick="selectChip(this)">Airport pickup</span><span class="chip" onclick="selectChip(this)">Other</span></div>
           </div>
           <div class="grid-2-fields">
             <div class="form-group"><label>Start date</label><input type="date" id="startDate"></div>
@@ -152,7 +152,7 @@
         <!-- STEP 5 -->
         <div class="step-panel" id="step5">
           <h2>Step 5. Sitter Preferences</h2>
-          <div class="form-group"><label>Experience level</label><select id="expLevel"><option value="">Select..</option><option value="Vet Tech">Vet Tech</option><option value="Professional">Professional</option></select></div>
+          <div class="form-group"><label>Experience level preferred</label><select id="expLevel"><option value="">Select...</option><option value="Vet Tech">Vet tech / medical</option><option value="Professional">Professional 5+ years</option><option value="Professional">Professional caregiver</option></select></div>
           <div class="form-group"><label>Special notes</label><textarea id="otherQualities" rows="3"></textarea></div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(4)">&larr; Back</button>
@@ -176,13 +176,14 @@
         <!-- STEP 7 -->
         <div class="step-panel" id="step7">
           <h2>Step 7. Final Details</h2>
-          <div class="form-group"><label>How did you hear about Zoélys?</label><select id="hearAbout"><option value="">Select...</option><option value="Instagram">Instagram</option><option value="Friend">Friend Referral</option></select></div>
+          <div class="form-group"><label>How did you hear about Zoélys?</label><select id="hearAbout"><option value="">Select...</option><option value="Instagram">Instagram</option><option value="Friends & family">Friends &amp; family</option><option value="Google">Google</option><option value="Journal">Journal / Blog</option><option value="Event">Event</option><option value="Other">Other</option></select></div>
           <div class="form-group"><label>Anything else you'd like to share</label><textarea id="finalNotes" rows="3"></textarea></div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(6)">&larr; Back</button>
             <button type="submit" id="submitBtn" class="btn-coral-submit">SEND MY REQUEST &rarr;</button>
           </div>
           <p class="field-hint signin-hint" id="signinHint" style="text-align:center; display:none;">Sign in to send your request — it lets you track your match in the portal.</p>
+          <p class="field-hint" style="text-align:center;">Your request goes straight to your concierge for review. Once approved, your handpicked caregivers appear in your portal — never before.</p>
         </div>
 
       </form>
@@ -199,7 +200,6 @@
         <h5>Explore</h5>
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
-          <li><a href="/sitters">The Roster</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
           <li><a href="/journal">Journal</a></li>
         </ul>
@@ -243,7 +243,7 @@
       if (!memberId) { window.location.href = '/join?reason=intake'; return; }
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
-      btn.innerText = 'FINDING YOUR MATCH...';
+      btn.innerText = 'SENDING TO YOUR CONCIERGE...';
 
       const payload = {
         full_name: fieldVal('fullName'),
@@ -269,7 +269,7 @@
         });
         const data = await res.json();
         if (data.success && data.requestId) {
-          window.location.href = '/matches?requestId=' + data.requestId;
+          window.location.href = '/dashboard?sent=1';
         } else {
           btn.disabled = false;
           btn.innerText = 'SEND MY REQUEST →';

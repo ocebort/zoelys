@@ -19,7 +19,6 @@ function initNavigation() {
     ['/trust', 'trust', 'Trust & Safety'],
     ['/journal', 'journal', 'Journal']
   ];
-  if (userId) linkList.push(['/sitters', 'sitters', 'The Roster']);
 
   const links = linkList;
 
