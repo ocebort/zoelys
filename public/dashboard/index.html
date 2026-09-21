@@ -220,6 +220,11 @@
         </div>
       </div>
       <p style="text-align: center; color: var(--ink-muted, #6E675F);">Pet Parent Portal active.</p>
+
+      <div style="margin-top: 2.5rem;">
+        <h2 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-weight: 500; margin-bottom: 1.25rem;">Your requests &amp; matches</h2>
+        <div id="parentHistory" style="color: var(--ink-muted, #6E675F); font-size: 0.85rem;">Loading your journey...</div>
+      </div>
     </div>
 
 
@@ -534,9 +539,43 @@
           document.getElementById('sitterMasterView').style.display = 'none';
           document.getElementById('adminMasterView').style.display = 'none';
           document.getElementById('parentWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Member'}`;
+          loadParentHistory(email);
         }
       } catch (err) {
         console.error('Portal load error:', err);
+      }
+    }
+
+    async function loadParentHistory(email) {
+      const box = document.getElementById('parentHistory');
+      try {
+        const reqs = await (await fetch(`/api/requests?email=${encodeURIComponent(email)}`)).json();
+        const requests = reqs.requests || [];
+        if (!requests.length) {
+          box.innerHTML = `You haven't started a matching journey yet. <a href="/get-matched" style="color: var(--accent-coral, #C1623F); font-weight: 600;">Begin one now &rarr;</a>`;
+          return;
+        }
+        const ids = requests.map(r => r.id).join(',');
+        const matches = ids ? await (await fetch(`/api/matches?requestIds=${encodeURIComponent(ids)}`)).json() : {};
+        const sel = {};
+        (matches.matches || []).forEach(m => { (sel[m.request_id] = sel[m.request_id] || []).push(m); });
+        const rows = requests.slice().reverse().map(r => `
+          <div style="background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1rem; padding: 1.4rem 1.6rem; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+              <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.35rem;">${r.pet_name || 'Your pet'}</div>
+              <div style="font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted, #6E675F);">${r.service_type || ''} &middot; ${r.neighbourhood || ''}</div>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--ink-muted, #6E675F); margin-top: 0.35rem;">${r.breed || ''}${r.start_date ? ' &middot; ' + r.start_date + ' to ' + r.end_date : ''}</div>
+            ${(sel[r.id] || []).map(m => `
+              <div style="font-size: 0.85rem; margin-top: 0.8rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                <span>Matched with <strong style="color: var(--ink, #191512);">${m.sitter_name}</strong> &middot; ${m.neighbourhood} &middot; $${Number(m.nightly_rate_usd).toFixed(0)}/night</span>
+                <a href="/sitters?id=${m.sitter_id}" style="color: var(--accent-coral, #C1623F); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;">View profile &rarr;</a>
+              </div>`).join('') || `<div style="font-size: 0.82rem; color: var(--ink-muted, #6E675F); margin-top: 0.8rem;">Awaiting concierge coordination.</div>`}
+            <div style="margin-top: 1rem;"><a href="/matches?requestId=${r.id}" style="color: var(--ink, #191512); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;">Reopen match results &rarr;</a></div>
+          </div>`).join('');
+        box.innerHTML = rows;
+      } catch (err) {
+        box.innerHTML = 'Could not load your journey.';
       }
     }
 

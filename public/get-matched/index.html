@@ -98,7 +98,7 @@
           </div>
           <div class="form-group">
             <label>Behavioural traits</label>
-            <div class="chip-group">
+            <div class="chip-group" id="behaviouralGroup">
               <span class="chip" onclick="toggleMultiChip(this)">Pulls on lead</span>
               <span class="chip" onclick="toggleMultiChip(this)">Separation anxiety</span>
               <span class="chip" onclick="toggleMultiChip(this)">Good with kids</span>
@@ -115,10 +115,17 @@
           <h2>Step 3. Health & Care</h2>
           <div class="form-group">
             <label>Medical conditions</label>
-            <div class="chip-group"><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">Yes</span></div>
+            <div class="chip-group" id="medicalGroup"><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">Yes</span></div>
           </div>
           <div class="form-group"><label>Vaccination status</label><select id="vaccination"><option value="">Select...</option><option value="Up to date">Up to date</option></select></div>
           <div class="form-group"><label>Diet type</label><select id="diet"><option value="">Select...</option><option value="Kibble">Kibble</option><option value="Raw">Raw</option></select></div>
+          <div class="form-group">
+            <label>Is there a private outdoor space available at your home?</label>
+            <div class="chip-group" id="outdoorGroup">
+              <span class="chip" onclick="selectChip(this)">No</span>
+              <span class="chip" onclick="selectChip(this)">Yes</span>
+            </div>
+          </div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(2)">&larr; Back</button>
             <button type="button" class="btn-continue" onclick="nextStep(4)">CONTINUE &rarr;</button>
@@ -130,7 +137,7 @@
           <h2>Step 4. Service Needed</h2>
           <div class="form-group">
             <label>Service type</label>
-            <div class="chip-group"><span class="chip" onclick="selectChip(this)">Home visit</span><span class="chip" onclick="selectChip(this)">Overnight stay</span><span class="chip" onclick="selectChip(this)">Dog walking</span></div>
+            <div class="chip-group" id="serviceGroup"><span class="chip" onclick="selectChip(this)">Home visit</span><span class="chip" onclick="selectChip(this)">Overnight stay</span><span class="chip" onclick="selectChip(this)">Dog walking</span></div>
           </div>
           <div class="grid-2-fields">
             <div class="form-group"><label>Start date</label><input type="date" id="startDate"></div>
@@ -191,9 +198,9 @@
         <h5>Explore</h5>
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
-          <li><a href="/map">The Map</a></li>
-          <li><a href="/events">Events</a></li>
-          <li><a href="/partners">Partners</a></li>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/sitters">The Roster</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
           <li><a href="/journal">Journal</a></li>
         </ul>
       </div>
@@ -228,10 +235,51 @@
     }
     function selectChip(el) { el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); }
     function toggleMultiChip(el) { el.classList.toggle('selected'); }
+    function fieldVal(id) { return (document.getElementById(id).value || '').trim(); }
+    function chipVal(groupId) { const g = document.getElementById(groupId); const sel = g && g.querySelector('.chip.selected'); return sel ? sel.textContent : ''; }
+    function chipsVal(groupId) { const g = document.getElementById(groupId); return g ? [...g.querySelectorAll('.chip.selected')].map(c => c.textContent).join(', ') : ''; }
     async function handleFormSubmit(e) {
       e.preventDefault();
-      alert('Request Sent! Returning to Dashboard...');
-      window.location.href = '/dashboard';
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerText = 'FINDING YOUR MATCH...';
+
+      const payload = {
+        full_name: fieldVal('fullName'),
+        email: fieldVal('email'),
+        neighbourhood: fieldVal('neighbourhood'),
+        pet_type: fieldVal('animalType'),
+        pet_name: fieldVal('petName'),
+        breed: fieldVal('breed'),
+        behavioral_traits: chipsVal('behaviouralGroup'),
+        medical_conditions: chipVal('medicalGroup'),
+        exercise_needs: fieldVal('temperament') === 'Energetic' ? 'High' : (fieldVal('temperament') === 'Calm' ? 'Low' : ''),
+        outdoor_space: chipVal('outdoorGroup'),
+        service_type: chipVal('serviceGroup'),
+        start_date: fieldVal('startDate'),
+        end_date: fieldVal('endDate'),
+        experience_level: fieldVal('expLevel')
+      };
+
+      try {
+        const res = await fetch('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success && data.requestId) {
+          window.location.href = '/matches?requestId=' + data.requestId;
+        } else {
+          btn.disabled = false;
+          btn.innerText = 'SEND MY REQUEST →';
+          alert(data.error || 'Something went wrong. Please try again.');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerText = 'SEND MY REQUEST →';
+        alert('Could not reach the concierge. Please try again.');
+      }
     }
   </script>
 <script src="/navbar.js"></script></body>

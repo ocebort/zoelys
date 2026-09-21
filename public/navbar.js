@@ -15,11 +15,10 @@ function initNavigation() {
 
   const links = [
     ['/get-matched', 'get-matched', 'Find a Sitter'],
+    ['/sitters', 'sitters', 'The Roster'],
     ['/how-it-works', 'how-it-works', 'How It Works'],
-    ['/journal', 'journal', 'Journal'],
-    ['/map', 'map', 'Map'],
-    ['/events', 'events', 'Events'],
-    ['/partners', 'partners', 'Partners']
+    ['/trust', 'trust', 'Trust & Safety'],
+    ['/journal', 'journal', 'Journal']
   ];
 
   const centerLinks = links
