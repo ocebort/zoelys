@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Portal Dashboard</title>
+  <title>Zoélys Portal Dashboard</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -129,16 +129,30 @@
           </div>
         </div>
 
-        <div style="background: var(--accent-coral, #C1623F); padding: 1.25rem 2rem; border-radius: 0.9rem; text-align: center; min-width: 190px;">
-          <div style="font-size: 2.2rem; font-weight: bold; line-height: 1;">$1,450</div>
-          <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.35rem; color: white; font-weight: 600;">Earned This Month</div>
-          <div style="font-size: 0.65rem; color: rgba(255,255,255,0.9); margin-top: 0.2rem;">Next Direct Deposit: Sept 01</div>
+        <div style="background: var(--accent-coral, #C1623F); padding: 1.25rem 2rem; border-radius: 0.9rem; text-align: center; min-width: 220px;">
+          <div style="font-size: 2.2rem; font-weight: bold; line-height: 1;" id="sitterWalletStat">$0</div>
+          <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.35rem; color: white; font-weight: 600;">In your wallet</div>
+          <div style="font-size: 0.65rem; color: rgba(255,255,255,0.95); margin-top: 0.2rem; cursor: pointer; text-decoration: underline;" onclick="openWallet()">Withdraw anytime</div>
         </div>
       </div>
 
       <div id="sitterProfileCard" style="display: none; background: var(--bg-cream-soft, #FBF9F4); border: 1px solid var(--hairline, #E5DED2); border-radius: 1.1rem; padding: 1.5rem 1.8rem; margin-bottom: 2rem;">
-        <h3 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-weight: 500; margin-bottom: 0.9rem;">Your caregiver profile</h3>
-        <div id="sitterProfileBody" style="color: var(--ink-muted, #6E675F); font-size: 0.85rem;">Loading...</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.6rem;">
+          <h3 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-weight: 500; margin-bottom: 0;">Your caregiver profile</h3>
+          <button class="btn-pill" onclick="toggleProfileEditor()">Edit profile &amp; photos</button>
+        </div>
+        <div id="sitterProfileBody" style="color: var(--ink-muted, #6E675F); font-size: 0.85rem; margin-top: 0.9rem;">Loading...</div>
+        <div id="sitterProfileEditor" style="display:none; margin-top:1.2rem; border-top:1px solid var(--hairline,#E5DED2); padding-top:1.1rem;">
+          <div style="font-size:0.9rem; font-weight:600; margin-bottom:0.2rem;">Tell owners who you are</div>
+          <div style="font-size:0.75rem; color:var(--ink-muted,#6E675F); margin-bottom:0.9rem;">Add up to a few photo links (one per line), a short tagline, and a warm bio.</div>
+          <label class="form-label-style">Tagline</label>
+          <input class="form-input-style" id="sitTagline" placeholder="e.g. Calm, steady morning light">
+          <label class="form-label-style" style="margin-top:0.8rem;">Bio</label>
+          <textarea class="form-input-style" id="sitBio" rows="4" placeholder="What do owners notice first about the way you care?"></textarea>
+          <label class="form-label-style" style="margin-top:0.8rem;">Photo links</label>
+          <textarea class="form-input-style" id="sitGallery" rows="3" placeholder="https://... one per line"></textarea>
+          <button class="btn-coral" style="margin-top:0.9rem; width:auto; padding:0.8rem 1.5rem;" onclick="saveProfileEditor()">Save profile</button>
+        </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
@@ -146,25 +160,18 @@
         <!-- LEFT COLUMN: ACTIVE ASSIGNED SITTINGS & INQUIRIES -->
         <div>
           
-          <!-- ACTIVE SHIFT CONTROLS -->
+          <!-- SITTING ORDER, ACCEPTANCE + CARE TRACKING -->
           <div class="card-box">
-            <h3 style="display: flex; justify-content: space-between; align-items: center;">
-              <span>Active Assigned Sitting</span>
-              <span style="font-size: 0.72rem; color: #3A7D44; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">On Duty</span>
-            </h3>
-            
-            <div class="inset-panel">
-              <div style="font-size: 1.2rem; font-weight: bold; color: var(--ink, #191512);">Milo (French Bulldog)</div>
-              <div style="font-size: 0.85rem; color: var(--ink, #191512); margin-top: 0.3rem;"><strong>Parent:</strong> Sarah M. &bull; Brickell Key Dr, Miami</div>
-              <div style="font-size: 0.85rem; color: var(--accent-coral, #C1623F); font-weight: 600; margin-top: 0.2rem;"><strong>Schedule:</strong> Sept 22 – Sept 24 (Day Care & Evening Walk)</div>
+            <h3><span>Sitting order &amp; care</span></h3>
+            <div style="display:flex; gap:.45rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; font-size:0.68rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-muted,#6E675F);">
+              <span class="order-chip">1. Concierge matches</span><span>&rarr;</span>
+              <span class="order-chip">2. Owner confirms</span><span>&rarr;</span>
+              <span class="order-chip">3. You accept</span><span>&rarr;</span>
+              <span class="order-chip">4. In care</span><span>&rarr;</span>
+              <span class="order-chip">5. Payout in your wallet</span>
             </div>
-
-            <!-- ONE-TAP SHIFT ACTIONS -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-              <button class="btn-coral" onclick="alert('GPS walk started! Streaming live route to Sarah M.')">Start GPS Walk</button>
-              <button style="background: var(--ink, #191512); color: white; border: none; padding: 0.85rem; border-radius: 2rem; font-size: 0.72rem; font-weight: 600; cursor: pointer;" onclick="alert('Photo uploaded to Sarah M.&rsquo;s care feed!')">Send Photo Update</button>
-            </div>
-            <button style="background: transparent; border: 1px solid var(--hairline, #E5DED2); color: var(--ink, #191512); padding: 0.8rem; border-radius: 2rem; font-size: 0.72rem; font-weight: 600; width: 100%; cursor: pointer;" onclick="alert('Direct chat with Sarah M. opened...')">Message Pet Parent</button>
+            <div id="sitterCareBody" style="color:var(--ink-muted,#6E675F); font-size:0.85rem;">Loading your sittings...</div>
+            <div id="sitterCarePane"></div>
           </div>
 
           <!-- NEW INQUIRIES & SITTING REQUESTS -->
@@ -180,7 +187,7 @@
                   </div>
                   <span style="background: #EAF7ED; color: #2E7D4F; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600;">Match Score: 98%</span>
                 </div>
-                <div style="font-size: 0.8rem; color: var(--ink, #191512); margin-bottom: 0.8rem;">Dates: Oct 02 – Oct 05 (Overnight Stay) &bull; Est. Payout: $320</div>
+                <div style="font-size: 0.8rem; color: var(--ink, #191512); margin-bottom: 0.8rem;">Dates: Oct 02 to Oct 05 (Overnight Stay) &bull; Est. Payout: $320</div>
                 <div style="display: flex; gap: 0.5rem;">
                   <button class="btn-pill" style="background: var(--accent-coral, #C1623F);" onclick="alert('Inquiry accepted! Sent to concierge for final match approval.')">Accept Sitting</button>
                   <button class="btn-pill" style="background: transparent; color: var(--ink-muted, #6E675F); border: 1px solid var(--hairline, #E5DED2);" onclick="alert('Inquiry declined.')">Decline</button>
@@ -270,7 +277,8 @@
         <div style="display: flex; gap: 1.5rem; align-items: center;">
           <div style="background: var(--accent-coral, #C1623F); padding: 1.2rem 2rem; border-radius: 0.9rem; text-align: center;">
             <div style="font-size: 2.5rem; font-weight: bold; line-height: 1;" id="parentCreditCount">10</div>
-            <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.3rem; color: white; font-weight: 600;">Credits Left</div>
+            <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.3rem; color: white; font-weight: 600;">Strategic Credits</div>
+            <div style="font-size: 0.62rem; color: rgba(255,255,255,0.9); margin-top: 0.25rem;">Your concierge tops you up anytime</div>
           </div>
         </div>
       </div>
@@ -305,7 +313,7 @@
         <div class="metric-card"><div class="metric-val">$14,250</div><div class="metric-lbl">Estimated MRR</div></div>
         <div class="metric-card"><div class="metric-val">12</div><div class="metric-lbl">Active Pet Parents</div></div>
         <div class="metric-card"><div class="metric-val">8</div><div class="metric-lbl">Vetted Vet Tech Sitters</div></div>
-        <div class="metric-card"><div class="metric-val" id="adminPendingCount">—</div><div class="metric-lbl">Pending Concierge Review</div></div>
+        <div class="metric-card"><div class="metric-val" id="adminPendingCount">0</div><div class="metric-lbl">Pending Concierge Review</div></div>
       </div>
 
       <div class="admin-nav">
@@ -325,9 +333,9 @@
           </div>
           <p class="desk-sub" style="margin-top:.25rem;">Every intake is reviewed here before anything is revealed to the owner. Approve only what you would send with your own name.</p>
           <table class="table-list">
-            <thead><tr><th>Member</th><th>Pet Dossier</th><th>Neighbourhood</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <thead><tr><th>Member</th><th>Pet Dossier</th><th>Neighbourhood</th><th>Budget</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
             <tbody id="adminRequestsBody">
-              <tr><td colspan="6" style="color: var(--ink-muted, #6E675F); text-align:center;">Loading the inbox...</td></tr>
+              <tr><td colspan="7" style="color: var(--ink-muted, #6E675F); text-align:center;">Loading the inbox...</td></tr>
             </tbody>
           </table>
           <div id="comparePane"></div>
@@ -352,12 +360,30 @@
 
       <div class="panel" id="tab-members">
         <div class="card-box">
-          <h3><span>Pet Parent Subscriptions & Ledger</span></h3>
+          <h3><span>Credit Bank &amp; Member Ledger</span></h3>
+          <p style="color: var(--ink-muted, #6E675F); font-size: 0.85rem; margin-bottom: 1.4rem;">Owners pay for sits with Strategic Credits. This is the live bank: balances, top-ups, and every credit transaction.</p>
+          <div style="display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 1.6rem;">
+            <div class="inset-panel" style="flex: 1; min-width: 180px;">
+              <div style="font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600;">Total credits in circulation</div>
+              <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2.4rem; margin-top: 0.2rem;" id="credBankTotal">0</div>
+            </div>
+            <div class="inset-panel" style="flex: 1; min-width: 180px;">
+              <div style="font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600;">Fully vetted caregivers</div>
+              <div style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2.4rem;" id="adminCredCaregivers">0</div>
+            </div>
+            <div class="inset-panel" style="flex: 1; min-width: 220px;">
+              <div style="font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600;">Top up any member</div>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem; flex-wrap: wrap;">
+                <input id="credTopUpMember" placeholder="Member email" style="flex:1; min-width:150px; padding:0.7rem 0.9rem; border:1px solid var(--hairline,#E5DED2); border-radius:0.6rem; font-size:0.85rem; background:#fff;">
+                <input id="credTopUpAmt" type="number" min="1" value="5" style="width:80px; padding:0.7rem 0.9rem; border:1px solid var(--hairline,#E5DED2); border-radius:0.6rem; font-size:0.85rem;">
+                <button class="btn-pill" onclick="adminTopUp()">Add credits</button>
+              </div>
+            </div>
+          </div>
           <table class="table-list">
-            <thead><tr><th>Member Email</th><th>Tier</th><th>Monthly Credits Left</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr><td>ocebort@gmail.com</td><td>Super-Admin Concierge</td><td>Unlimited</td><td><button class="btn-pill" onclick="alert('Admin maintained.')">Manage Tiers</button></td></tr>
-              <tr><td>sarah@gmail.com</td><td>Platinum ($125/mo)</td><td>10 / 10 Credits</td><td><button class="btn-pill" onclick="alert('1 Bonus Credit Added!')">+ Add Credit</button></td></tr>
+            <thead><tr><th>Member</th><th>Balance</th><th>Sittings started</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="adminMembersList">
+              <tr><td colspan="5" style="color: var(--ink-muted, #6E675F);">Loading the credit bank...</td></tr>
             </tbody>
           </table>
         </div>
@@ -477,7 +503,7 @@
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <div>
                   <label class="form-label-style">Post Title</label>
-                  <input type="text" id="postTitle" placeholder="How to train your puppy — the first 90 days" required class="form-input-style">
+                  <input type="text" id="postTitle" placeholder="How to train your puppy, the first 90 days" required class="form-input-style">
                 </div>
                 <div>
                   <label class="form-label-style">Category</label>
@@ -573,6 +599,27 @@
     </div>
   </div>
 
+  <!-- WALLET MODAL (Vinted-style: money is yours, take it out anytime) -->
+  <div id="walletModal" style="position: fixed; inset: 0; background: rgba(15,12,10,0.8); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 3001;">
+    <div class="modal-card">
+      <h2 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;">Your payout wallet</h2>
+      <p style="color: var(--ink-muted, #6E675F); font-size: 0.8rem; margin-bottom: 1.4rem;">Every accepted sitting puts money straight into your wallet. It's yours whenever you want it.</p>
+      <div style="background: var(--ink, #191512); color: white; border-radius: 0.9rem; padding: 1.2rem 1.5rem; margin-bottom: 1.4rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
+        <div>
+          <div style="font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75;">Available now</div>
+          <div style="font-family: var(--font-serif, 'Cormorant Garamond'); font-size: 2.2rem;" id="walletAvailable">$0</div>
+        </div>
+        <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+          <input id="walletAmount" type="number" step="0.01" min="1" placeholder="Amount" style="padding:0.8rem 1rem; border-radius:0.6rem; border:none; font-size:0.9rem; width:130px;">
+          <button class="btn-coral" style="width:auto; padding:0.85rem 1.4rem;" onclick="withdrawWallet()">Withdraw</button>
+        </div>
+      </div>
+      <div style="font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600; margin-bottom: 0.6rem;">Recent movement</div>
+      <div id="walletTxnList" style="font-size: 0.82rem; color: var(--ink-muted, #6E675F);">Loading...</div>
+      <button style="background: var(--ink, #191512); color: white; border: none; padding: 0.85rem; border-radius: 2rem; width: 100%; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; cursor: pointer; margin-top: 1.4rem;" onclick="document.getElementById('walletModal').style.display='none'">Done</button>
+    </div>
+  </div>
+
   <script src="/navbar.js"></script>
   <script>
     async function loadUserPortal() {
@@ -602,17 +649,22 @@
           document.getElementById('adminMasterView').style.display = 'none';
           document.getElementById('sitterWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Marcus'}`;
           loadSitterProfile(data.user.full_name, id);
+          loadSitterCare(id);
+          loadWallet(id);
         } else if (email === 'ocebort@gmail.com') {
           document.getElementById('adminMasterView').style.display = 'block';
           document.getElementById('sitterMasterView').style.display = 'none';
           document.getElementById('parentMasterView').style.display = 'none';
           loadAdminDesk();
           loadAdminSitters();
+          loadAdminMembers();
         } else {
           document.getElementById('parentMasterView').style.display = 'block';
           document.getElementById('sitterMasterView').style.display = 'none';
           document.getElementById('adminMasterView').style.display = 'none';
           document.getElementById('parentWelcomeName').innerText = `Welcome, ${data.user.full_name || 'Member'}`;
+          if (document.getElementById('parentCreditCount')) document.getElementById('parentCreditCount').innerText = (typeof data.user.credit_balance === 'number' ? data.user.credit_balance : '0');
+          if (document.getElementById('parentTierBadge')) document.getElementById('parentTierBadge').innerText = (data.user.subscription_tier || 'Member').replace('Platinum', 'Platinum');
           loadParentHistory(email);
         }
       } catch (err) {
@@ -620,8 +672,8 @@
       }
     }
 
-    const JSTEPS = ['pending', 'proposed', 'confirmed', 'in_care', 'completed'];
-    const JLABEL = { pending: 'Intake', matching: 'Intake', not_accepted: 'Under review', proposed: 'Proposal', confirmed: 'Confirmed', in_care: 'In care', completed: 'Complete' };
+    const JSTEPS = ['pending', 'proposed', 'confirmed', 'accepted', 'in_care', 'completed'];
+    const JLABEL = { pending: 'Intake', matching: 'Intake', not_accepted: 'Under review', proposed: 'Proposal', confirmed: 'Confirmed', accepted: 'Accepted', in_care: 'In care', completed: 'Complete' };
 
     function journeyCard(r) {
       const raw = (r.status || 'pending').toLowerCase();
@@ -639,7 +691,7 @@
 
       let note = '', actions = '';
       if (st === 'pending') {
-        note = `<div class="j-step-note"><strong>Your request is with your concierge.</strong> We study your pet&rsquo;s dossier, then handpick the caregivers who genuinely fit. Sitters are revealed here only after approval &mdash; never a scrolling search.</div>`;
+        note = `<div class="j-step-note"><strong>Your request is with your concierge.</strong> We study your pet&rsquo;s dossier, then handpick the caregivers who genuinely fit. Sitters are revealed here only after approval; there is never a scrolling search.</div>`;
       }
       if (st === 'not_accepted') {
         note = `<div class="j-step-note">We haven&rsquo;t found a fitting caregiver for these needs yet. Your concierge is designing a custom solution for <strong>${r.pet_name || 'your pet'}</strong>.</div>`;
@@ -663,7 +715,11 @@
         </div>`;
       }
       if (st === 'confirmed') {
-        note = `<div class="j-step-note">Care <strong>confirmed</strong>${best ? ' with <strong>' + best.full_name + '</strong>' : ''}.${dates ? ' Scheduled: <strong>' + dates + '</strong>.' : ''} Your concierge is in contact.</div>`;
+        note = `<div class="j-step-note">Care <strong>confirmed</strong>${best ? ' with <strong>' + best.full_name + '</strong>' : ''}.${dates ? ' Scheduled: <strong>' + dates + '</strong>.' : ''} We're waiting for the caregiver to accept. The moment they do, the sitting is locked and their payout is set aside.</div>`;
+        actions = `<div class="j-actions" style="justify-content:flex-start;"><span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">Awaiting the sitter's acceptance...</span></div>`;
+      }
+      if (st === 'accepted') {
+        note = `<div class="j-step-note">Your sitter <strong>accepted</strong> the sitting${best ? ' with ' + best.full_name : ''}. All three of you are aligned.${dates ? ' Care runs <strong>' + dates + '</strong>.' : ''}</div>`;
         actions = `<div class="j-actions"><button class="btn-pill" onclick="setJourneyStatus('${r.id}','in_care')">Mark care as started</button></div>`;
       }
       if (st === 'in_care') {
@@ -744,6 +800,8 @@
           card.style.display = 'block';
           return;
         }
+        window._sitId = s.id;
+        fillSitterEditor(s);
         const appTxt = s.application_status === 'active' ? 'Live on the roster' : 'Under review';
         const appColor = s.application_status === 'active' ? '#2E5A34' : '#9A7B2F';
         body.innerHTML = `
@@ -777,6 +835,233 @@
       } catch (err) { /* profile card hidden on failure */ }
     }
 
+    // ---- Sitter hub: acceptance order, wallet, care dashboard, profile editor ----
+    function refreshSitterHub() { window.location.reload(); }
+
+    function fillSitterEditor(s) {
+      const tag = document.getElementById('sitTagline');
+      if (tag) tag.value = s.tagline || '';
+      const bio = document.getElementById('sitBio');
+      if (bio) bio.value = s.bio || '';
+      const gal = document.getElementById('sitGallery');
+      if (gal) {
+        let g = s.gallery || '[]';
+        if (typeof g !== 'string') g = JSON.stringify(g);
+        try { gal.value = JSON.parse(g).join('\n'); } catch (e) { gal.value = ''; }
+      }
+    }
+
+    function toggleProfileEditor() {
+      const ed = document.getElementById('sitterProfileEditor');
+      ed.style.display = (ed.style.display === 'none') ? 'block' : 'none';
+    }
+
+    async function saveProfileEditor() {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      if (!window._sitId) return;
+      const gallery = document.getElementById('sitGallery').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const res = await fetch('/api/sitters/' + window._sitId + '/update?userId=' + encodeURIComponent(memberId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tagline: document.getElementById('sitTagline').value.trim(),
+          bio: document.getElementById('sitBio').value.trim(),
+          gallery
+        })
+      });
+      const data = await res.json();
+      deskToast(data.success ? 'Profile updated.' : (data.error || 'Could not save.'));
+      if (data.success) window.location.reload();
+    }
+
+    async function loadSitterCare(memberId) {
+      const bodyEl = document.getElementById('sitterCareBody');
+      try {
+        const data = await (await fetch(`/api/sitter/pipeline?userId=${encodeURIComponent(memberId)}`)).json();
+        const acts = (data.incoming || []).filter(m => ['confirmed', 'accepted', 'in_care', 'completed'].includes(m.match_status || m.status));
+        if (!acts.length) { bodyEl.innerHTML = '<div style="font-size:0.8rem; color:var(--ink-muted,#6E675F);">No active sittings yet. Yours will appear here in order, from the owner&rsquo;s confirmation to your payout.</div>'; return; }
+        bodyEl.innerHTML = acts.map(m => {
+          const dates = [m.start_date, m.end_date].filter(Boolean).join(' to ');
+          const status = m.match_status || m.status;
+          const mid = m.match_id || m.id;
+          const btns = status === 'confirmed'
+            ? `<span style="font-size:0.7rem; color:#8A6A3F; align-self:center;">Waiting for your yes.</span>
+               <button class="btn-pill" onclick="sitterAccept('${mid}')">Accept sitting</button>
+               <button class="btn-pill" style="background:transparent; border:1px solid var(--hairline,#E5DED2); color:#9A4B38;" onclick="sitterDecline('${mid}')">Decline</button>`
+            : `<button class="btn-pill" onclick="openCare('${mid}')">Track care</button>`;
+          return `<div style="display:flex; justify-content:space-between; align-items:center; gap:.8rem; flex-wrap:wrap; background:rgba(255,255,255,.5); border:1px solid var(--hairline,#E5DED2); border-radius:.8rem; padding:.9rem 1.1rem; margin-bottom:.6rem;">
+            <div>
+              <div style="font-size:.95rem; color:var(--ink,#191512); font-weight:500;">${m.pet_name || 'A pet'} <span style="color:var(--ink-muted,#6E675F); font-weight:300;">(${m.pet_type || 'Pet'}${m.breed ? ', ' + m.breed : ''})</span></div>
+              <div style="font-size:.72rem; color:var(--ink-muted,#6E675F); margin-top:.15rem;">${m.full_name || m.owner_name || ''} &middot; ${m.neighbourhood || ''}${dates ? ' &middot; ' + dates : ''} &middot; <span style="text-transform:capitalize;">${status.replace(/_/g, ' ')}</span></div>
+            </div>
+            <div style="display:flex; gap:.5rem; flex-wrap:wrap; align-items:center;">${btns}</div>
+          </div>`;
+        }).join('');
+      } catch (e) { bodyEl.innerHTML = '<div style="font-size:0.8rem;">Could not load sittings.</div>'; }
+    }
+
+    async function sitterAccept(matchId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/matches/' + matchId + '/accept?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      deskToast(data.success ? 'Sitting accepted. The payout is now in your wallet.' : (data.error || 'Could not accept.'));
+      if (data.success) refreshSitterHub();
+    }
+
+    async function sitterDecline(matchId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/matches/' + matchId + '/sitter-decline?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      deskToast(data.success ? 'Sitting declined. The owner can choose another caregiver.' : (data.error || 'Could not decline.'));
+      if (data.success) refreshSitterHub();
+    }
+
+    function careField(k, v) {
+      return `<div><div style="font-size:.6rem; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-muted,#6E675F); font-weight:600; margin-bottom:.2rem;">${k}</div><div style="font-size:.85rem; color:var(--ink,#191512);">${v || 'not recorded'}</div></div>`;
+    }
+
+    async function openCare(matchId) {
+      const pane = document.getElementById('sitterCarePane');
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      pane.innerHTML = '<div style="padding:1rem 0; color:var(--ink-muted,#6E675F);">Loading care plan...</div>';
+      try {
+        const data = await (await fetch(`/api/care?matchId=${encodeURIComponent(matchId)}&userId=${encodeURIComponent(memberId)}`)).json();
+        if (data && data.care_profile === undefined) { pane.innerHTML = '<div style="padding:1rem 0; color:#9A4B38;">' + (data.error || 'Could not load care.') + '</div>'; return; }
+        const c = data.care_profile || {};
+        const match = data.match || {};
+        const dates = [match.start_date, match.end_date].filter(Boolean).join(' to ');
+        const logsHtml = (data.logs || []).map(l =>
+          `<div style="background:rgba(255,255,255,.5); border:1px solid var(--hairline,#E5DED2); border-radius:.7rem; padding:.8rem 1rem; margin-bottom:.5rem;">
+            <div style="font-size:.72rem; color:var(--ink-muted,#6E675F);">${l.log_date || 'Today'}</div>
+            <div style="font-size:.85rem; margin-top:.2rem;">${[l.meals && ('Meals: ' + l.meals), l.walks && ('Walks: ' + l.walks), l.meds_given && ('Meds: ' + l.meds_given), l.notes].filter(Boolean).join(' &middot; ') || 'Notes only'}</div>
+          </div>`).join('') || '<div style="font-size:0.8rem; color:var(--ink-muted,#6E675F); margin-bottom:.5rem;">No daily logs yet.</div>';
+        pane.innerHTML = `
+          <div style="margin-top:1rem; border-top:1px solid var(--hairline,#E5DED2); padding-top:1.2rem;">
+            <h4 style="font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.4rem; font-weight:500; margin-bottom:.3rem;">Care plan for ${match.pet_name || 'this pet'}</h4>
+            <div style="font-size:0.8rem; color:var(--ink-muted,#6E675F); margin-bottom:1rem;">${match.owner_name || match.full_name || ''} &middot; ${match.service_type || ''}${dates ? ' &middot; ' + dates : ''}</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem; margin-bottom:1.2rem;">
+              ${careField('Feeding schedule', c.feed_schedule)}
+              ${careField('Diet', c.diet)}
+              ${careField('Medications', c.meds)}
+              ${careField('Vet', (c.vet_name || '') + (c.vet_phone ? ' &middot; ' + c.vet_phone : ''))}
+              ${careField('Quirks & habits', c.quirks)}
+              ${careField('House rules', c.house_rules)}
+              ${careField('Emergency contact', c.emergency_phone)}
+              ${careField('Care stage', (match.status || '').replace(/_/g, ' '))}
+            </div>
+            <details style="margin-bottom:1.4rem;">
+              <summary style="cursor:pointer; font-size:0.72rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; color:var(--accent-coral,#C1623F);;">Edit care plan</summary>
+              <div style="margin-top:0.9rem; background:rgba(255,255,255,.5); border:1px solid var(--hairline,#E5DED2); border-radius:.8rem; padding:1rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem 1.5rem;">
+                  ${careInput('sitFeed', 'Feeding schedule', c.feed_schedule)}
+                  ${careInput('sitDiet', 'Diet', c.diet)}
+                  ${careInput('sitMeds', 'Medications', c.meds)}
+                  ${careInput('sitVet', 'Vet name', c.vet_name)}
+                  ${careInput('sitVetPhone', 'Vet phone', c.vet_phone)}
+                  ${careInput('sitQuirks', 'Quirks & habits', c.quirks)}
+                  ${careInput('sitHouse', 'House rules', c.house_rules)}
+                  ${careInput('sitEmergency', 'Emergency contact', c.emergency_phone)}
+                </div>
+                <button class="btn-pill" style="margin-top:1rem;" onclick="saveCare('${matchId}')">Save care plan</button>
+              </div>
+            </details>
+            <div style="font-size:0.72rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; color:var(--ink-muted,#6E675F); margin-bottom:.6rem;">Daily care log</div>
+            ${logsHtml}
+            <details style="margin-top:.9rem;">
+              <summary style="cursor:pointer; font-size:0.72rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; color:var(--accent-coral,#C1623F);;">Add today's log</summary>
+              <div style="margin-top:0.9rem; background:rgba(255,255,255,.5); border:1px solid var(--hairline,#E5DED2); border-radius:.8rem; padding:1rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem 1.5rem;">
+                  ${careInput('logDate', 'Date', new Date().toISOString().slice(0, 10))}
+                  ${careInput('logMeals', 'Meals', '')}
+                  ${careInput('logWalks', 'Walks', '')}
+                  ${careInput('logMeds', 'Medication given', '')}
+                </div>
+                <label class="form-label-style" style="margin-top:.8rem;">Notes</label>
+                <textarea class="form-input-style" id="logNotes" rows="2" placeholder="How was today?"></textarea>
+                <button class="btn-pill" style="margin-top:.9rem;" onclick="addCareLog('${matchId}')">Add log</button>
+              </div>
+            </details>
+          </div>`;
+        pane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) { pane.innerHTML = '<div style="padding:1rem 0; color:#9A4B38;">Could not reach the care plan.</div>'; }
+    }
+
+    function careInput(id, label, value) {
+      return `<div><label style="font-size:.68rem; font-weight:600; letter-spacing:.04em; margin-bottom:.25rem; display:block;">${label}</label><input id="${id}" value="${(value || '').replace(/"/g, '&quot;')}" style="width:100%; padding:.7rem .9rem; border:1px solid var(--hairline,#E5DED2); border-radius:.6rem; font-size:.85rem; background:var(--bg-card,#FFF);"></div>`;
+    }
+
+    async function saveCare(matchId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const val = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
+      const res = await fetch('/api/care?userId=' + encodeURIComponent(memberId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          match_id: matchId, feed_schedule: val('sitFeed'), diet: val('sitDiet'), meds: val('sitMeds'),
+          vet_name: val('sitVet'), vet_phone: val('sitVetPhone'), quirks: val('sitQuirks'),
+          house_rules: val('sitHouse'), emergency_phone: val('sitEmergency')
+        })
+      });
+      const data = await res.json();
+      deskToast(data.success ? 'Care plan saved.' : (data.error || 'Could not save.'));
+      if (data.success) openCare(matchId);
+    }
+
+    async function addCareLog(matchId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const val = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
+      const res = await fetch('/api/care/log?userId=' + encodeURIComponent(memberId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ match_id: matchId, log_date: val('logDate'), meals: val('logMeals'), walks: val('logWalks'), meds_given: val('logMeds'), notes: val('logNotes') })
+      });
+      const data = await res.json();
+      deskToast(data.success ? 'Care log added.' : (data.error || 'Could not add.'));
+      if (data.success) openCare(matchId);
+    }
+
+    async function loadWallet(memberId) {
+      try {
+        const data = await (await fetch(`/api/wallet?userId=${encodeURIComponent(memberId)}`)).json();
+        const stat = document.getElementById('sitterWalletStat');
+        if (stat) stat.innerText = '$' + (data.wallet ? Number(data.wallet.available).toFixed(0) : '0');
+      } catch (e) { /* banner keeps fallback */ }
+    }
+
+    async function openWallet() {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      document.getElementById('walletModal').style.display = 'flex';
+      document.getElementById('walletAvailable').innerText = '...';
+      document.getElementById('walletTxnList').innerText = 'Loading...';
+      try {
+        const data = await (await fetch(`/api/wallet?userId=${encodeURIComponent(memberId)}`)).json();
+        if (data.error) { document.getElementById('walletTxnList').innerText = data.error; return; }
+        document.getElementById('walletAvailable').innerText = '$' + Number(data.wallet.available).toFixed(2);
+        const txns = data.txns || [];
+        document.getElementById('walletTxnList').innerHTML = txns.length
+          ? txns.map(t => `<div style="display:flex; justify-content:space-between; padding:.55rem 0; border-bottom:1px solid var(--hairline,#E5DED2);">
+              <div>${t.kind === 'earning' ? 'Sitting payout' : 'Withdrawal to you'} <span style="color:var(--ink-muted,#6E675F); font-size:0.72rem;">${t.note || ''}</span></div>
+              <div style="font-weight:600; ${t.kind === 'earning' ? 'color:#2E5A34;' : 'color:#9A4B38;'}">${t.kind === 'earning' ? '+' : '&minus;'}$${Number(t.amount).toFixed(2)}</div>
+            </div>`).join('')
+          : '<div>Nothing yet. Your first accepted sitting puts money here.</div>';
+      } catch (e) { document.getElementById('walletTxnList').innerText = 'Could not load your wallet.'; }
+    }
+
+    async function withdrawWallet() {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const amount = document.getElementById('walletAmount').value;
+      if (!(Number(amount) > 0)) { alert('Enter a valid amount.'); return; }
+      const res = await fetch('/api/wallet/withdraw?userId=' + encodeURIComponent(memberId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Number(amount) })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Withdrawal on its way. Your money leaves whenever you choose.');
+        document.getElementById('walletAmount').value = '';
+        openWallet();
+      } else {
+        alert(data.error || 'Could not withdraw.');
+      }
+    }
+
     function deskToast(msg) {
       const t = document.getElementById('deskToast');
       t.style.display = 'block';
@@ -796,17 +1081,18 @@
         document.getElementById('adminPendingCount').textContent = pending.length;
         count.textContent = pending.length + ' awaiting review · ' + requests.length + ' total';
         const tbody = document.getElementById('adminRequestsBody');
-        if (!requests.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--ink-muted,#6E675F);">No requests yet — new intakes appear here.</td></tr>'; return; }
+        if (!requests.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--ink-muted,#6E675F);">No requests yet. New intakes appear here.</td></tr>'; return; }
         tbody.innerHTML = requests.map(req => {
           const st = req.status || 'pending';
           const dateStr = req.created_at ? new Date((req.created_at.includes('Z') ? req.created_at : req.created_at.replace(' ', 'T') + 'Z')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
           const action = (st === 'pending' || st === 'matching')
             ? `<button class="btn-pill" onclick="reviewAdminRequest('${req.id}')">Review &amp; approve</button>`
-            : `<span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${st === 'proposed' ? 'Awaiting owner' : '&mdash;'}</span>`;
+            : `<span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${st === 'proposed' ? 'Awaiting owner' : ''}</span>`;
           return `<tr>
-            <td><strong>${req.full_name || '&mdash;'}</strong><br><span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${req.email || ''}</span></td>
+            <td><strong>${req.full_name || ''}</strong><br><span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${req.email || ''}</span></td>
             <td>${req.pet_name || 'Pet'} (${req.pet_type || ''})<br><span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${req.breed ? req.breed + ' · ' : ''}${req.service_type || ''}${req.start_date ? ' · ' + req.start_date + ' &rarr; ' + (req.end_date || 'open') : ''}</span></td>
-            <td>${req.neighbourhood || '&mdash;'}</td>
+            <td>${req.neighbourhood || ''}</td>
+            <td style="font-size:0.75rem;">${req.budget_range || ''}<br><span style="font-size:0.68rem; color:var(--ink-muted,#6E675F);">${(Number(req.total_cost) || 0) > 0 ? '$' + Number(req.total_cost).toFixed(0) + ' est.' : ''}</span></td>
             <td style="font-size:0.75rem; color:var(--ink-muted,#6E675F);">${dateStr}</td>
             <td><span style="font-size:0.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.25rem .6rem; border-radius:100px; border:1px solid var(--hairline,#E5DED2); color:${st === 'proposed' ? '#8A6A3F' : (st === 'confirmed' || st === 'in_care' || st === 'completed') ? '#2E5A34' : '#9A7B2F'};">${st.replace(/_/g, ' ')}</span></td>
             <td>${action}</td>
@@ -826,16 +1112,18 @@
         const req = data.request || {};
         const matches = data.matches || [];
         const dossier = [
-          ['Pet', (req.pet_name || '&mdash;') + (req.breed ? ' &middot; ' + req.breed : '')],
-          ['Species', req.pet_type || '&mdash;'],
-          ['Neighbourhood', req.neighbourhood || '&mdash;'],
-          ['Service', req.service_type || '&mdash;'],
-          ['Dates', [req.start_date, req.end_date].filter(Boolean).join(' &rarr; ') || '&mdash;'],
-          ['Medical conditions', req.medical_conditions || '&mdash;'],
-          ['Behaviour', req.behavioral_traits || '&mdash;'],
-          ['Exercise needs', req.exercise_needs || '&mdash;'],
-          ['Outdoor space', req.outdoor_space || '&mdash;'],
-          ['Experience pref.', req.experience_level || '&mdash;'],
+          ['Pet', (req.pet_name || '') + (req.breed ? ' &middot; ' + req.breed : '')],
+          ['Species', req.pet_type || ''],
+          ['Neighbourhood', req.neighbourhood || ''],
+          ['Service', req.service_type || ''],
+          ['Dates', [req.start_date, req.end_date].filter(Boolean).join(' &rarr; ') || ''],
+          ['Budget', req.budget_range || ''],
+          ['Est. cost', (Number(req.total_cost) || 0) > 0 ? '$' + Number(req.total_cost).toFixed(0) : ''],
+          ['Medical conditions', req.medical_conditions || ''],
+          ['Behaviour', req.behavioral_traits || ''],
+          ['Exercise needs', req.exercise_needs || ''],
+          ['Outdoor space', req.outdoor_space || ''],
+          ['Experience pref.', req.experience_level || ''],
           ['Owner', req.full_name + (req.email ? ' &middot; ' + req.email : '')]
         ];
         const dossierHtml = dossier.map(([k, v]) => `<div class="${k === 'Owner' ? 'cmp-full' : ''}"><span>${k}</span><b>${v}</b></div>`).join('');
@@ -848,16 +1136,16 @@
               </div>
               <div class="sugg-score">${m.match_score}</div>
             </div>`).join('')
-          : '<div style="color:var(--ink-muted,#6E675F); font-size:0.82rem;">No caregiver can meet these needs yet &mdash; the concierge must design a custom solution.</div>';
+          : '<div style="color:var(--ink-muted,#6E675F); font-size:0.82rem;">No caregiver can meet these needs yet, so the concierge must design a custom solution.</div>';
         pane.innerHTML = `
           <div style="margin:2rem 0 0; border-top:1px solid var(--hairline,#E5DED2);">
-            <h3 style="font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.5rem; font-weight:500; margin:1.5rem 0 1rem;">Compare &amp; decide &mdash; ${req.pet_name || 'this request'}</h3>
+            <h3 style="font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.5rem; font-weight:500; margin:1.5rem 0 1rem;">Compare &amp; decide for ${req.pet_name || 'this request'}</h3>
             <div class="compare-pane">
               <div class="cmp-col"><h4>Owner &amp; pet dossier</h4><div class="cmp-grid">${dossierHtml}</div></div>
               <div class="cmp-col"><h4>Algorithm proposal</h4><div>${suggHtml}</div></div>
             </div>
             <div style="display:flex; gap:.9rem; flex-wrap:wrap; margin-top:.5rem;">
-              <button class="btn-pill" onclick="approveAdminRequest('${requestId}')">Approve &mdash; reveal ${matches.length} match(es) to owner</button>
+              <button class="btn-pill" onclick="approveAdminRequest('${requestId}')">Approve and reveal ${matches.length} match(es) to the owner</button>
               <button class="btn-pill" style="background:transparent; border:1px solid var(--hairline,#E5DED2); color:var(--ink,#191512);" onclick="declineAdminRequest('${requestId}')">Decline request</button>
             </div>
           </div>`;
@@ -869,7 +1157,7 @@
       const memberId = localStorage.getItem('zoelys_user_id') || '';
       const res = await fetch('/api/requests/' + requestId + '/approve?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
       const data = await res.json();
-      deskToast('Approved &mdash; ' + (data.matched || []).length + ' match(es) now visible in the owner\'s portal.');
+      deskToast('Approved: ' + (data.matched || []).length + ' match(es) now visible in the owner\'s portal.');
       document.getElementById('comparePane').innerHTML = '';
       loadAdminDesk();
     }
@@ -878,7 +1166,7 @@
       const memberId = localStorage.getItem('zoelys_user_id') || '';
       const res = await fetch('/api/requests/' + requestId + '/decline?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
       const data = await res.json();
-      if (data.success) { deskToast('Request declined &mdash; the owner will see it is under review.'); } else { deskToast('Could not decline.'); }
+      if (data.success) { deskToast('Request declined. The owner will see it is under review.'); } else { deskToast('Could not decline.'); }
       document.getElementById('comparePane').innerHTML = '';
       loadAdminDesk();
     }
@@ -915,7 +1203,7 @@
       const memberId = localStorage.getItem('zoelys_user_id') || '';
       const res = await fetch('/api/sitters/' + id + '/approve?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
       const data = await res.json();
-      deskToast(data.success ? 'Caregiver approved &mdash; now visible to the match engine.' : 'Could not approve.');
+      deskToast(data.success ? 'Caregiver approved. Now visible to the match engine.' : 'Could not approve.');
       loadAdminSitters();
     }
 
@@ -934,7 +1222,66 @@
       btn.classList.add('active');
       document.getElementById('tab-' + tabId).classList.add('active');
       if (tabId === 'sitters') loadAdminSitters();
+      if (tabId === 'members') loadAdminMembers();
       if (tabId === 'cms') loadCmsTracker();
+    }
+
+    async function loadAdminMembers() {
+      const tbody = document.getElementById('adminMembersList');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="5" style="color: var(--ink-muted, #6E675F);">Loading the credit bank...</td></tr>';
+      try {
+        const memberId = localStorage.getItem('zoelys_user_id') || '';
+        const data = await (await fetch('/api/credits?userId=' + encodeURIComponent(memberId))).json();
+        if (data.error) { tbody.innerHTML = `<tr><td colspan="5" style="color:#9A4B38;">${data.error}</td></tr>`; return; }
+        const members = data.accounts || data.members || [];
+        const bankTotal = document.getElementById('credBankTotal');
+        if (bankTotal) bankTotal.innerText = String(members.reduce((t, m) => t + (Number(m.credit_balance) || 0), 0));
+        const caregivers = document.getElementById('adminCredCaregivers');
+        const sitterData = await (await fetch('/api/sitters?userId=' + encodeURIComponent(memberId))).json();
+        if (caregivers) caregivers.innerText = String((sitterData.sitters || []).length);
+        if (!members.length) { tbody.innerHTML = '<tr><td colspan="5" style="color: var(--ink-muted, #6E675F);">No members yet.</td></tr>'; return; }
+        tbody.innerHTML = members.map(m => {
+          const bal = Number(m.credit_balance) || 0;
+          const label = m.full_name ? `${m.full_name} <span style="color:var(--ink-muted,#6E675F);">&middot;</span> ${m.email}` : m.email;
+          return `<tr>
+            <td>${label}</td>
+            <td style="font-family: var(--font-serif,'Cormorant Garamond'), serif; font-size: 1.15rem;">${bal} <span style="font-size:0.7rem; color:var(--ink-muted,#6E675F); font-family: inherit;">credits</span></td>
+            <td>${Number(m.requests_count) || 0}</td>
+            <td><span style="font-size:0.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.25rem .6rem; border-radius:100px; border:1px solid var(--hairline,#E5DED2); color:#2E5A34;">member</span></td>
+            <td><button class="btn-pill" onclick="adminAddCredit(${m.id}, ${bal})">+ Add credit</button></td>
+          </tr>`;
+        }).join('');
+      } catch (e) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink-muted,#6E675F);">Could not load the credit bank.</td></tr>'; }
+    }
+
+    async function adminAddCredit(userId, bal) {
+      const add = prompt('Add credits to this member (currently ' + bal + '):', '5');
+      if (add === null) return;
+      const amount = Number(add);
+      if (!(amount > 0)) { alert('Enter a valid amount.'); return; }
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/credits/top-up?userId=' + encodeURIComponent(memberId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: String(userId), amount })
+      });
+      const data = await res.json();
+      deskToast(data.success ? (amount + ' credit(s) added.') : (data.error || 'Could not top up.'));
+      loadAdminMembers();
+    }
+
+    async function adminTopUp() {
+      const emailInput = document.getElementById('credTopUpMember');
+      const amtInput = document.getElementById('credTopUpAmt');
+      if (!emailInput.value.trim()) { alert('Enter a member email.'); return; }
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/credits/top-up?userId=' + encodeURIComponent(memberId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput.value.trim(), amount: Number(amtInput.value || 5) })
+      });
+      const data = await res.json();
+      deskToast(data.success ? 'Credits added.' : (data.error || 'Could not top up.'));
+      emailInput.value = '';
     }
 
     async function loadCmsTracker() {
@@ -1018,7 +1365,7 @@
       const desc = document.getElementById('evtDesc').value;
 
       const dateStr = endDate && endDate !== startDate ? `${startDate} to ${endDate}` : startDate;
-      const timeStr = endTime ? `${startTime} – ${endTime}` : startTime;
+      const timeStr = endTime ? `${startTime} to ${endTime}` : startTime;
       const fullDateStr = `${dateStr} • ${timeStr}`;
 
       const payload = {
@@ -1033,7 +1380,7 @@
       if (!res.ok) { alert('Error publishing event.'); return; }
 
       document.getElementById('igPostText').value =
-`ZOÉLYS EXCLUSIVE — Join us for ${title} in partnership with ${sponsor}!
+`ZOÉLYS EXCLUSIVE: Join us for ${title} in partnership with ${sponsor}!
 
 Date: ${dateStr}
 Time: ${timeStr}
@@ -1080,7 +1427,7 @@ This event is exclusive to Zoélys members and space is limited. Members can RSV
       if (!res.ok) { alert('Error publishing partner.'); return; }
 
       document.getElementById('igPostText').value =
-`NEW MEMBER PERK — ${name} x Zoélys!
+`NEW MEMBER PERK: ${name} x Zoélys!
 
 ${perk}
 
@@ -1132,7 +1479,7 @@ Zoélys members can redeem this perk through the member portal. Thank you to our
 
       const postLink = `/journal/article.html?slug=${data.slug}`;
       document.getElementById('igPostText').value =
-`NEW ON THE ZOÉLYS JOURNAL — ${payload.title}
+`NEW ON THE ZOÉLYS JOURNAL: ${payload.title}
 
 ${payload.excerpt}
 

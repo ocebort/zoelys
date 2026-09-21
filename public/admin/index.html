@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys Concierge — Admin Dashboard</title>
+  <title>Zoélys Concierge: Admin Dashboard</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -368,7 +368,7 @@
           if (btn) { btn.disabled = false; btn.textContent = 'Approved'; }
           return;
         }
-        showToast('Request approved — ' + data.matched.length + ' match(es) now visible in the owner\'s portal.');
+        showToast('Request approved, ' + data.matched.length + ' match(es) now visible in the owner\'s portal.');
         renderMatches(data.matches, 'Handpicked matches for this request');
         loadRequests();
       } catch (err) {
@@ -407,7 +407,7 @@
       if (title) document.getElementById('matchmakerNotice').innerHTML = title + ':';
       const matchesContainer = document.getElementById('matchesContainer');
       if (matches.length === 0) {
-        matchesContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem;">No caregivers fit this request yet — a custom solution will be designed.</div>';
+        matchesContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem;">No caregivers fit this request yet; a custom solution will be designed.</div>';
         return;
       }
       matchesContainer.innerHTML = matches.map(m => `

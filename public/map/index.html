@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — The Map</title>
+  <title>Zoélys: The Map</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,7 +128,7 @@
   <div class="page-head">
     <div class="eyebrow">Explore</div>
     <h1>The Map</h1>
-    <p>Pet-friendly spots near you — parks, cafés, groomers, and emergency care. Curated by Zoélys.</p>
+    <p>Pet-friendly spots near you: parks, cafés, groomers, and emergency care. Curated by Zoélys.</p>
   </div>
 
   <section class="map-wrap">
@@ -143,11 +143,11 @@
         <button class="filter-chip" data-cat="vets"><span>Veterinarians</span><span class="dot" style="background:#8C5B4F;"></span></button>
         <button class="filter-chip" data-cat="daycare"><span>Daycare & Boarding</span><span class="dot" style="background:#4F6D8C;"></span></button>
       </div>
-      <div id="mapStatus"><span class="pulse"></span><span id="mapStatusText">Locating you…</span></div>
-      <div id="placesList"><p class="map-note">Searching nearby spots…</p></div>
+      <div id="mapStatus"><span class="pulse"></span><span id="mapStatusText">Locating you...</span></div>
+      <div id="placesList"><p class="map-note">Searching nearby spots...</p></div>
     </aside>
 
-    <div class="map-canvas loading" id="map">Loading map…</div>
+    <div class="map-canvas loading" id="map">Loading map...</div>
   </section>
 
 <script src="/navbar.js"></script>
@@ -262,8 +262,8 @@
 
   function runSearch(cat, retry) {
     clearMarkers();
-    setStatus(`Showing ${cat.label.toLowerCase()} nearby…`);
-    document.getElementById('placesList').innerHTML = '<p class="map-note">Searching nearby spots…</p>';
+    setStatus(`Showing ${cat.label.toLowerCase()} nearby...`);
+    document.getElementById('placesList').innerHTML = '<p class="map-note">Searching nearby spots...</p>';
 
     const req = { location: center, radius: 5000 };
     if (cat.keyword) req.keyword = cat.keyword;
@@ -367,7 +367,7 @@
       });
     });
 
-    setStatus(isFallback ? 'Showing results around Miami — allow location for your area' : 'Showing spots near you', true);
+    setStatus(isFallback ? 'Showing results around Miami; allow location for your area' : 'Showing spots near you', true);
     runSearch(CATEGORIES[activeCat], true);
   }
 

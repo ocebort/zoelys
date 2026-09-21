@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Your Matches</title>
+  <title>Zoélys: Your Matches</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,11 +49,11 @@
   <div class="page-head">
     <div class="eyebrow">Concierge Matching</div>
     <h1>Your matches</h1>
-    <p>Hand-picked for your pet — no scrolling, no guessing.</p>
+    <p>Hand-picked for your pet, no scrolling, no guessing.</p>
   </div>
 
   <main class="container">
-    <p class="intro-line" id="introLine">Your concierge studied <strong id="petNameSlot">your pet</strong>&rsquo;s dossier and handpicked the caregivers below — each with the reasons written down.</p>
+    <p class="intro-line" id="introLine">Your concierge studied <strong id="petNameSlot">your pet</strong>&rsquo;s dossier and handpicked the caregivers below, each with the reasons written down.</p>
 
     <div id="contentArea">
       <div class="loading">
@@ -64,14 +64,14 @@
 
     <div class="selected-hint" id="selectedHint" style="display:none;"></div>
 
-    <p class="concierge-note">Every caregiver is a Zoélys Authorized Caregiver — certified, insured, and vetted through our five-stage protocol. Nothing is ever shown before your concierge personally approves it.</p>
+    <p class="concierge-note">Every caregiver is a Zoélys Authorized Caregiver, certified, insured, and vetted through our five-stage protocol. Nothing is ever shown before your concierge personally approves it.</p>
   </main>
 
   <footer class="master-footer">
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
-        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note, they&rsquo;re family. We treat them that way.&rdquo;</p>
       </div>
       <div>
         <h5>Explore</h5>
@@ -119,7 +119,7 @@
         }
         const st = (request.status || 'pending').toLowerCase();
         if (['pending', 'matching', 'not_accepted'].includes(st)) {
-          renderEmpty('Your request is with your concierge. Handpicked caregivers appear here only once your concierge approves — usually within 24 hours.', 'With the concierge');
+          renderEmpty('Your request is with your concierge. Handpicked caregivers appear here only once your concierge approves, usually within 24 hours.', 'With the concierge');
           return;
         }
         if (!request.matches || request.matches.length === 0) {

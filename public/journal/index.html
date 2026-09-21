@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Journal</title>
+  <title>Zoélys: Journal</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -282,7 +282,7 @@
   <div class="page-head">
     <div class="eyebrow">The Journal</div>
     <h1>Quiet reading. Considered care.</h1>
-    <p>Notes from our team and our partner vets — on the rituals, decisions, and small attentions that keep pets well.</p>
+    <p>Notes from our team and our partner vets on the rituals, decisions, and small attentions that keep pets well.</p>
   </div>
 
   <!-- Featured Article -->
@@ -302,7 +302,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
-        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note, they&rsquo;re family. We treat them that way.&rdquo;</p>
       </div>
 
       <div>
@@ -352,7 +352,7 @@
       <a href="/journal/article.html?slug=${esc(p.slug)}" class="featured-card">
         <img src="${esc(p.image_url)}" class="featured-img" alt="${esc(p.title)}">
         <div class="featured-content">
-          <div class="eyebrow">— FEATURED &bull; ${esc((p.category || 'Journal').toUpperCase())}</div>
+          <div class="eyebrow">FEATURED &bull; ${esc((p.category || 'Journal').toUpperCase())}</div>
           <h2>${esc(p.title)}</h2>
           <p>${esc(p.excerpt)}</p>
           <div class="author-meta">${esc(p.author || 'Zoélys Editorial').toUpperCase()} &bull; ${formatDate(p.publish_date)} &bull; ${esc(p.read_time || '5 min read')}</div>
@@ -365,7 +365,7 @@
     return `
       <a href="/journal/article.html?slug=${esc(p.slug)}" class="article-card">
         <img src="${esc(p.image_url)}" alt="${esc(p.title)}">
-        <div class="eyebrow">— ${esc((p.category || 'Journal').toUpperCase())}</div>
+        <div class="eyebrow">${esc((p.category || 'Journal').toUpperCase())}</div>
         <h4>${esc(p.title)}</h4>
         <p>${esc(p.excerpt)}</p>
         <div class="author-meta">${esc(p.author || 'Zoélys Editorial').toUpperCase()} &bull; ${esc(p.read_time || '5 min read')}</div>

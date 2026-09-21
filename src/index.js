@@ -20,6 +20,7 @@ async function computeMatches(env, req) {
     outdoor: /yes/i.test(req.outdoor_space || ''),
     neighbourhood: (req.neighbourhood || '').trim().toLowerCase()
   };
+  const budgetMax = parseBudget(req.budget_range);
   return (sitters || []).map(s => {
     const reasons = [];
     let score = 0;
@@ -41,9 +42,63 @@ async function computeMatches(env, req) {
     else if (s.experience_years >= 5) { score += 12; reasons.push(5 + '+ years experience'); }
     else { score += 8; reasons.push('Experienced caregiver'); }
 
-    score = Math.min(score, 100);
+    if (budgetMax != null) {
+      if (Number(s.nightly_rate_usd) <= budgetMax) {
+        score += 10; reasons.push('Within your budget');
+      } else {
+        score -= 8; reasons.push('Above your budget range');
+      }
+    }
+
+    score = Math.max(0, Math.min(score, 100));
     return { ...s, match_score: score, match_reasons: reasons };
   }).filter(Boolean).sort((a, b) => b.match_score - a.match_score);
+}
+
+function parseBudget(range) {
+  const r = (range || '').toLowerCase();
+  if (/under\s*\$?50/.test(r)) return 50;
+  if (/\$50/.test(r) && /\$99/.test(r)) return 99;
+  if (/\$100/.test(r) && /\$149/.test(r)) return 149;
+  return null;
+}
+
+function creditCostForBudget(range) {
+  const r = (range || '').toLowerCase();
+  if (/under\s*\$?50/.test(r)) return 1;
+  if (/\$150\s*\+|over\s*\$?150/.test(r)) return 3;
+  return 2;
+}
+
+function nightsFor(start, end) {
+  if (!start) return 1;
+  const d1 = new Date(start + 'T12:00:00Z');
+  const d2 = end ? new Date(end + 'T12:00:00Z') : new Date(d1.getTime() + 86400000);
+  const days = Math.round((d2 - d1) / 86400000);
+  return Math.max(1, days + 1);
+}
+
+async function creditWallet(env, matchId) {
+  const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(matchId).first();
+  if (!match || Number(match.earnings || 0) > 0) return;
+  const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(match.request_id).first();
+  const sitter = await env.zoelys_db.prepare(`SELECT nightly_rate_usd FROM sitters WHERE id = ?`).bind(match.sitter_id).first();
+  if (!req || !sitter) return;
+  const earnings = Number(sitter.nightly_rate_usd || 0) * nightsFor(req.start_date, req.end_date);
+  await env.zoelys_db.prepare(`UPDATE matches SET earnings = ? WHERE id = ?`).bind(earnings, matchId).run().catch(() => {});
+  await env.zoelys_db.prepare(`INSERT INTO sitter_wallets (id, sitter_id, available, withdrawn) VALUES (?, ?, 0, 0) ON CONFLICT (sitter_id) DO NOTHING`).bind('wl-' + crypto.randomUUID().slice(0, 6), match.sitter_id).run().catch(() => {});
+  await env.zoelys_db.prepare(`UPDATE sitter_wallets SET available = available + ? WHERE sitter_id = ?`).bind(earnings, match.sitter_id).run().catch(() => {});
+  await env.zoelys_db.prepare(`INSERT INTO wallet_txns (id, sitter_id, match_id, kind, amount, note) VALUES (?, ?, ?, 'earning', ?, ?)`).bind('txn-' + crypto.randomUUID().slice(0, 6), match.sitter_id, matchId, earnings, `Sitting payout: ${req.pet_name || 'pet care'}`).run().catch(() => {});
+}
+
+function matchParticipant(env, member, match) {
+  return env.zoelys_db.prepare(`SELECT full_name FROM sitters WHERE id = ?`).bind(match.sitter_id).first().then(s => {
+    const isSitter = s && String(member.full_name || '').toLowerCase() === String(s.full_name || '').toLowerCase();
+    if (member.is_admin || isSitter) return true;
+    return env.zoelys_db.prepare(`SELECT email FROM client_requests WHERE id = ?`).bind(match.request_id).first().then(req =>
+      !!req && String(req.email || '').toLowerCase() === String(member.email || '').toLowerCase()
+    );
+  });
 }
 
 async function ensureMatchmaking(env) {
@@ -94,6 +149,50 @@ async function ensureMatchmaking(env) {
   await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN status TEXT DEFAULT 'proposed'`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN match_score INTEGER DEFAULT 0`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN match_reasons TEXT DEFAULT '[]'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE client_requests ADD COLUMN budget_range TEXT DEFAULT ''`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE matches ADD COLUMN earnings REAL DEFAULT 0`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN tagline TEXT DEFAULT ''`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN bio TEXT DEFAULT ''`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN gallery TEXT DEFAULT '[]'`).run().catch(() => {});
+
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS sitter_wallets (
+    id TEXT PRIMARY KEY,
+    sitter_id TEXT NOT NULL UNIQUE,
+    available REAL DEFAULT 0,
+    withdrawn REAL DEFAULT 0
+  )`).run();
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS wallet_txns (
+    id TEXT PRIMARY KEY,
+    sitter_id TEXT NOT NULL,
+    match_id TEXT,
+    kind TEXT NOT NULL,
+    amount REAL NOT NULL,
+    note TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`).run();
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS care_profiles (
+    id TEXT PRIMARY KEY,
+    match_id TEXT NOT NULL UNIQUE,
+    feed_schedule TEXT DEFAULT '',
+    diet TEXT DEFAULT '',
+    meds TEXT DEFAULT '',
+    vet_name TEXT DEFAULT '',
+    vet_phone TEXT DEFAULT '',
+    quirks TEXT DEFAULT '',
+    house_rules TEXT DEFAULT '',
+    emergency_phone TEXT DEFAULT '',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`).run();
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS care_logs (
+    id TEXT PRIMARY KEY,
+    match_id TEXT NOT NULL,
+    log_date TEXT DEFAULT '',
+    meals TEXT DEFAULT '',
+    walks TEXT DEFAULT '',
+    meds_given TEXT DEFAULT '',
+    notes TEXT DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`).run();
 
   const row = await env.zoelys_db.prepare(`SELECT COUNT(*) AS c FROM sitters`).first();
   if (row && row.c === 0) {
@@ -334,10 +433,15 @@ export default {
         const member = await memberFromRequest(env, url);
         if (!member) return new Response(JSON.stringify({ error: 'Members only — sign in to begin' }), { status: 401, headers: corsHeaders });
         const body = await request.json();
+        const cost = creditCostForBudget(body.budget_range);
+        const balance = Number(member.credit_balance || 0);
+        if (balance < cost) {
+          return new Response(JSON.stringify({ error: 'Not enough credits for this request', required: cost, balance }), { status: 402, headers: corsHeaders });
+        }
         const id = 'req-' + crypto.randomUUID().slice(0, 8);
         await env.zoelys_db.prepare(`
-          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level, status)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level, status, budget_range)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           id,
           body.full_name, member.email, body.neighbourhood,
@@ -345,9 +449,12 @@ export default {
           body.behavioral_traits, body.medical_conditions, body.exercise_needs,
           body.service_type, body.start_date, body.end_date,
           body.outdoor_space, body.experience_level,
-          'pending'
+          'pending',
+          body.budget_range || ''
         ).run();
-        return new Response(JSON.stringify({ success: true, requestId: id, status: 'pending' }), { headers: corsHeaders });
+        const newBalance = balance - cost;
+        await env.zoelys_db.prepare(`UPDATE users SET credit_balance = ? WHERE id = ?`).bind(newBalance, member.id).run();
+        return new Response(JSON.stringify({ success: true, requestId: id, status: 'pending', credits_charged: cost, balance: newBalance }), { headers: corsHeaders });
       } catch (e) {
         return new Response(JSON.stringify({ error: 'Request could not be saved' }), { status: 400, headers: corsHeaders });
       }
@@ -508,7 +615,7 @@ export default {
       const member = await memberFromRequest(env, url);
       if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
       const body = await request.json();
-      const allowed = ['proposed', 'confirmed', 'in_care', 'completed', 'declined'];
+      const allowed = ['proposed', 'confirmed', 'accepted', 'in_care', 'completed', 'declined'];
       const status = String(body.status || '').toLowerCase();
       if (!allowed.includes(status)) return new Response(JSON.stringify({ error: 'Unknown status' }), { status: 400, headers: corsHeaders });
       const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(body.request_id).first();
@@ -517,8 +624,200 @@ export default {
         return new Response(JSON.stringify({ error: 'Not your request' }), { status: 403, headers: corsHeaders });
       }
       await env.zoelys_db.prepare(`UPDATE client_requests SET status = ? WHERE id = ?`).bind(status, body.request_id).run();
-      await env.zoelys_db.prepare(`UPDATE matches SET status = ? WHERE request_id = ? AND status IN ('proposed', 'confirmed', 'in_care')`).bind(status, body.request_id).run().catch(() => {});
+      const matchesToUpdate = status === 'declined'
+        ? ['proposed', 'confirmed', 'accepted']
+        : ['proposed', 'confirmed', 'accepted'];
+      await env.zoelys_db.prepare(`UPDATE matches SET status = ? WHERE request_id = ? AND status IN ('proposed', 'confirmed', 'accepted')`).bind(status, body.request_id).run().catch(() => {});
+      if (['accepted', 'in_care', 'completed'].includes(status)) {
+        const { results: all = [] } = await env.zoelys_db.prepare(`SELECT id FROM matches WHERE request_id = ?`).bind(body.request_id).all();
+        for (const m of all) await creditWallet(env, m.id);
+      }
       return new Response(JSON.stringify({ success: true, status }), { headers: corsHeaders });
+    }
+
+    // SITTER ACCEPTS OR DECLINES A SITTING (third gate in the chain)
+    if (request.method === 'POST' && url.pathname.startsWith('/api/matches/')) {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const parts = url.pathname.split('/');
+      const matchId = parts[3];
+      const action = parts[4];
+      if (!['accept', 'sitter-decline'].includes(action)) {
+        return new Response(JSON.stringify({ error: 'Unknown action' }), { status: 400, headers: corsHeaders });
+      }
+      const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(matchId).first();
+      if (!match) return new Response(JSON.stringify({ error: 'Match not found' }), { status: 404, headers: corsHeaders });
+      if (!(await matchParticipant(env, member, match))) {
+        return new Response(JSON.stringify({ error: 'Not your sitting' }), { status: 403, headers: corsHeaders });
+      }
+      if (action === 'accept') {
+        if (match.status !== 'confirmed') {
+          return new Response(JSON.stringify({ error: `This sitting is currently ${match.status}; it can only be accepted after the owner confirms.` }), { status: 400, headers: corsHeaders });
+        }
+        const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(match.request_id).first();
+        await env.zoelys_db.prepare(`UPDATE matches SET status = 'accepted' WHERE id = ?`).bind(matchId).run();
+        if (req && req.status === 'confirmed') {
+          await env.zoelys_db.prepare(`UPDATE client_requests SET status = 'accepted' WHERE id = ?`).bind(match.request_id).run();
+        }
+        await creditWallet(env, matchId);
+        const earnings = (await env.zoelys_db.prepare(`SELECT earnings FROM matches WHERE id = ?`).bind(matchId).first()) || {};
+        return new Response(JSON.stringify({ success: true, status: 'accepted', earnings: Number(earnings.earnings || 0) }), { headers: corsHeaders });
+      }
+      await env.zoelys_db.prepare(`UPDATE matches SET status = 'sitter_declined' WHERE id = ?`).bind(matchId).run();
+      const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(match.request_id).first();
+      if (req && req.status === 'accepted') {
+        await env.zoelys_db.prepare(`UPDATE client_requests SET status = 'confirmed' WHERE id = ?`).bind(match.request_id).run();
+      }
+      return new Response(JSON.stringify({ success: true, status: 'sitter_declined' }), { headers: corsHeaders });
+    }
+
+    // SITTER WALLET (Vinted-style: money lands on accept, withdraw anytime)
+    if (request.method === 'GET' && url.pathname === '/api/wallet') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const { results: sitters = [] } = await env.zoelys_db.prepare(`SELECT * FROM sitters`).all();
+      const profile = sitters.find(s => (s.full_name || '').toLowerCase() === (member.full_name || '').toLowerCase());
+      if (member.is_admin) {
+        const { results: wallets = [] } = await env.zoelys_db.prepare(`SELECT w.*, s.full_name FROM sitter_wallets w LEFT JOIN sitters s ON s.id = w.sitter_id ORDER BY w.available DESC`).all();
+        return new Response(JSON.stringify({ wallets: wallets || [] }), { headers: corsHeaders });
+      }
+      if (!profile) return new Response(JSON.stringify({ error: 'Only caregivers have a wallet' }), { status: 403, headers: corsHeaders });
+      const wallet = await env.zoelys_db.prepare(`SELECT * FROM sitter_wallets WHERE sitter_id = ?`).bind(profile.id).first();
+      const { results: txns = [] } = await env.zoelys_db.prepare(`SELECT * FROM wallet_txns WHERE sitter_id = ? ORDER BY created_at DESC`).bind(profile.id).all();
+      const { results: acts = [] } = await env.zoelys_db.prepare(`SELECT m.id AS match_id, m.status, m.earnings, r.pet_name, r.start_date, r.end_date, s.nightly_rate_usd FROM matches m JOIN client_requests r ON r.id = m.request_id JOIN sitters s ON s.id = m.sitter_id WHERE m.sitter_id = ? AND m.status IN ('accepted','in_care','completed') ORDER BY m.created_at DESC`).bind(profile.id).all();
+      return new Response(JSON.stringify({
+        wallet: { sitter_id: profile.id, available: Number(wallet ? wallet.available : 0), withdrawn: Number(wallet ? wallet.withdrawn : 0) },
+        txns: txns || [],
+        active_sits: acts || []
+      }), { headers: corsHeaders });
+    }
+    if (request.method === 'POST' && url.pathname === '/api/wallet/withdraw') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      if (member.is_admin) return new Response(JSON.stringify({ error: 'Admins cannot withdraw' }), { status: 403, headers: corsHeaders });
+      const { results: sitters = [] } = await env.zoelys_db.prepare(`SELECT * FROM sitters`).all();
+      const profile = sitters.find(s => (s.full_name || '').toLowerCase() === (member.full_name || '').toLowerCase());
+      if (!profile) return new Response(JSON.stringify({ error: 'Only caregivers have a wallet' }), { status: 403, headers: corsHeaders });
+      const body = await request.json();
+      const amount = Number(body.amount || 0);
+      if (!(amount > 0)) return new Response(JSON.stringify({ error: 'Enter a valid amount' }), { status: 400, headers: corsHeaders });
+      const wallet = await env.zoelys_db.prepare(`SELECT * FROM sitter_wallets WHERE sitter_id = ?`).bind(profile.id).first();
+      const available = Number(wallet ? wallet.available : 0);
+      if (amount > available) return new Response(JSON.stringify({ error: 'Not enough available balance', available }), { status: 400, headers: corsHeaders });
+      if (!wallet) {
+        await env.zoelys_db.prepare(`INSERT INTO sitter_wallets (id, sitter_id, available, withdrawn) VALUES (?, ?, 0, 0)`).bind('wl-' + crypto.randomUUID().slice(0, 6), profile.id).run().catch(() => {});
+      }
+      await env.zoelys_db.prepare(`UPDATE sitter_wallets SET available = available - ?, withdrawn = withdrawn + ? WHERE sitter_id = ?`).bind(amount, amount, profile.id).run();
+      await env.zoelys_db.prepare(`INSERT INTO wallet_txns (id, sitter_id, kind, amount, note) VALUES (?, ?, 'withdrawal', ?, 'Withdrawal requested')`).bind('txn-' + crypto.randomUUID().slice(0, 6), profile.id, amount).run();
+      return new Response(JSON.stringify({ success: true, withdrawn: amount, balance: available - amount }), { headers: corsHeaders });
+    }
+
+    // CREDITS (owner balance + admin credit bank)
+    if (request.method === 'GET' && url.pathname === '/api/credits') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      if (member.is_admin) {
+        const { results = [] } = await env.zoelys_db.prepare(`SELECT u.id, u.email, u.full_name, u.subscription_tier, u.credit_balance, (SELECT COUNT(*) FROM client_requests r WHERE LOWER(TRIM(r.email)) = LOWER(TRIM(u.email))) AS requests_count FROM users u ORDER BY u.credit_balance DESC`).all();
+        return new Response(JSON.stringify({ accounts: results || [] }), { headers: corsHeaders });
+      }
+      const row = await env.zoelys_db.prepare(`SELECT credit_balance, subscription_tier FROM users WHERE id = ?`).bind(member.id).first();
+      return new Response(JSON.stringify({ credits: row || { credit_balance: 0, subscription_tier: '' } }), { headers: corsHeaders });
+    }
+    if (request.method === 'POST' && url.pathname === '/api/credits/top-up') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member || !member.is_admin) return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
+      const body = await request.json();
+      const amount = Number(body.amount);
+      if (!(amount > 0)) return new Response(JSON.stringify({ error: 'Enter a valid amount' }), { status: 400, headers: corsHeaders });
+      let targetId = body.user_id;
+      if (!targetId && body.email) {
+        const byEmail = await env.zoelys_db.prepare(`SELECT id FROM users WHERE LOWER(TRIM(email)) = ?`).bind(String(body.email || '').toLowerCase()).first();
+        if (!byEmail) return new Response(JSON.stringify({ error: 'No member with that email' }), { status: 404, headers: corsHeaders });
+        targetId = byEmail.id;
+      }
+      if (!targetId) return new Response(JSON.stringify({ error: 'Provide a member id or email' }), { status: 400, headers: corsHeaders });
+      await env.zoelys_db.prepare(`UPDATE users SET credit_balance = credit_balance + ? WHERE id = ?`).bind(amount, targetId).run();
+      const updated = await env.zoelys_db.prepare(`SELECT credit_balance FROM users WHERE id = ?`).bind(targetId).first();
+      return new Response(JSON.stringify({ success: true, balance: updated ? updated.credit_balance : null }), { headers: corsHeaders });
+    }
+
+    // CARE PROFILE + DAILY LOGS (sitter dashboards)
+    if (request.method === 'GET' && url.pathname === '/api/care') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const matchId = url.searchParams.get('matchId');
+      const match = await env.zoelys_db.prepare(`SELECT m.*, s.full_name AS sitter_name, r.pet_name, r.pet_type, r.breed, r.full_name AS owner_name, r.start_date, r.end_date, r.medical_conditions, r.behavioral_traits, r.service_type FROM matches m JOIN sitters s ON s.id = m.sitter_id JOIN client_requests r ON r.id = m.request_id WHERE m.id = ?`).bind(matchId).first();
+      if (!match) return new Response(JSON.stringify({ error: 'Sitting not found' }), { status: 404, headers: corsHeaders });
+      if (!(await matchParticipant(env, member, { request_id: match.request_id, sitter_id: match.sitter_id }))) {
+        return new Response(JSON.stringify({ error: 'Not your sitting' }), { status: 403, headers: corsHeaders });
+      }
+      const care = await env.zoelys_db.prepare(`SELECT * FROM care_profiles WHERE match_id = ?`).bind(matchId).first();
+      const { results: logs = [] } = await env.zoelys_db.prepare(`SELECT * FROM care_logs WHERE match_id = ? ORDER BY created_at DESC`).bind(matchId).all();
+      return new Response(JSON.stringify({ match, care_profile: care || null, logs: logs || [] }), { headers: corsHeaders });
+    }
+    if (request.method === 'POST' && url.pathname === '/api/care') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const body = await request.json();
+      const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(body.match_id).first();
+      if (!match) return new Response(JSON.stringify({ error: 'Sitting not found' }), { status: 404, headers: corsHeaders });
+      if (!(await matchParticipant(env, member, match))) {
+        return new Response(JSON.stringify({ error: 'Not your sitting' }), { status: 403, headers: corsHeaders });
+      }
+      if (member.role !== 'sitter' && !member.is_admin) {
+        return new Response(JSON.stringify({ error: 'Only the caregiver keeps the care profile' }), { status: 403, headers: corsHeaders });
+      }
+      const fields = ['feed_schedule', 'diet', 'meds', 'vet_name', 'vet_phone', 'quirks', 'house_rules', 'emergency_phone'];
+      const existing = await env.zoelys_db.prepare(`SELECT id FROM care_profiles WHERE match_id = ?`).bind(body.match_id).first();
+      if (existing) {
+        await env.zoelys_db.prepare(`UPDATE care_profiles SET feed_schedule = ?, diet = ?, meds = ?, vet_name = ?, vet_phone = ?, quirks = ?, house_rules = ?, emergency_phone = ?, updated_at = CURRENT_TIMESTAMP WHERE match_id = ?`)
+          .bind(body.feed_schedule || '', body.diet || '', body.meds || '', body.vet_name || '', body.vet_phone || '', body.quirks || '', body.house_rules || '', body.emergency_phone || '', body.match_id).run();
+      } else {
+        await env.zoelys_db.prepare(`INSERT INTO care_profiles (id, match_id, feed_schedule, diet, meds, vet_name, vet_phone, quirks, house_rules, emergency_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+          .bind('care-' + crypto.randomUUID().slice(0, 6), body.match_id, body.feed_schedule || '', body.diet || '', body.meds || '', body.vet_name || '', body.vet_phone || '', body.quirks || '', body.house_rules || '', body.emergency_phone || '').run();
+      }
+      return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+    if (request.method === 'POST' && url.pathname === '/api/care/log') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const body = await request.json();
+      const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(body.match_id).first();
+      if (!match) return new Response(JSON.stringify({ error: 'Sitting not found' }), { status: 404, headers: corsHeaders });
+      if (!(await matchParticipant(env, member, match))) {
+        return new Response(JSON.stringify({ error: 'Not your sitting' }), { status: 403, headers: corsHeaders });
+      }
+      if (member.role !== 'sitter' && !member.is_admin) {
+        return new Response(JSON.stringify({ error: 'Only the caregiver logs daily care' }), { status: 403, headers: corsHeaders });
+      }
+      await env.zoelys_db.prepare(`INSERT INTO care_logs (id, match_id, log_date, meals, walks, meds_given, notes) VALUES (?, ?, ?, ?, ?, ?, ?)`)
+        .bind('cl-' + crypto.randomUUID().slice(0, 6), body.match_id, body.log_date || '', body.meals || '', body.walks || '', body.meds_given || '', body.notes || '').run();
+      return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+
+    // SITTER PROFILE UPDATE (bio, tagline, photo gallery) — own profile only, or admin
+    if (request.method === 'POST' && url.pathname.startsWith('/api/sitters/') && url.pathname.endsWith('/update')) {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const id = url.pathname.split('/')[3];
+      const sitter = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE id = ?`).bind(id).first();
+      if (!sitter) return new Response(JSON.stringify({ error: 'Sitter not found' }), { status: 404, headers: corsHeaders });
+      const isSelf = (sitter.full_name || '').toLowerCase() === (member.full_name || '').toLowerCase();
+      if (!member.is_admin && !isSelf) return new Response(JSON.stringify({ error: 'You can only edit your own profile' }), { status: 403, headers: corsHeaders });
+      const body = await request.json();
+      const gallery = Array.isArray(body.gallery) ? JSON.stringify(body.gallery.filter(Boolean)) : (body.gallery || '[]');
+      await env.zoelys_db.prepare(`UPDATE sitters SET tagline = ?, bio = ?, gallery = ? WHERE id = ?`)
+        .bind(body.tagline || '', body.bio || '', gallery, id).run();
+      return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
 
     // SITTER PIPELINE (their roster profile, application status + incoming requests)

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journal — Zoélys</title>
+  <title>Journal: Zoélys</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
-        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note — they&rsquo;re family. We treat them that way.&rdquo;</p>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note, they&rsquo;re family. We treat them that way.&rdquo;</p>
       </div>
       <div>
         <h5>Explore</h5>
@@ -110,7 +110,7 @@
       const post = data.post;
       if (!post) { container.style.display = 'none'; empty.style.display = 'block'; return; }
 
-      document.title = post.title + ' — Zoélys Journal';
+      document.title = post.title + ': Zoélys Journal';
       document.getElementById('postCategory').textContent = (post.category || 'Journal').toUpperCase();
       document.getElementById('postTitle').textContent = post.title;
       document.getElementById('postMeta').textContent =
