@@ -1,249 +1,191 @@
-# The Emergence of a Premium Segment in a Fragmented Service Market
-### Evidence from the Miami Pet-Care Market — and a Live Platform Designed for It
+# Evaluating and Designing a High-Trust Managed Platform for Premium Pet Care
 
 **Océane Bort · Master in Business Analytics · Nova School of Business and Economics · 2026**
 
-*Draft v0.1 — working document. Empirical sections contain placeholders to be completed from primary data collection.*
+*Working draft v0.2 — empirical placeholders [DATA] to be completed from collected data (review mining, N=43 survey, interviews).*
 
 ---
 
-## 1. Topic
+## Chapter 1 — Introduction & Practical Motivation
 
-This thesis investigates a deceptively simple question: **what drives the emergence of a premium segment in a fragmented service market — and how can a digital platform support it?**
+### 1.1 Background & macro context
 
-The empirical setting is pet care in Miami. Pet ownership has been rising for two decades, and a growing share of owners treat companion animals as family members rather than property — a demographic shift often called "pet humanization" (Blouin, 2013). In affluent cities, this has produced a visible premiumization of animal-related consumption: designer veterinary medicine, pet hotels, nutritional therapy, and specialist grooming. Yet the *core* service — the person who cares for the pet when the owner is away — remains stubbornly low-trust and commodity-like. Supply is fragmented across individual sitters, gig-marketplace listings, and small boarding facilities, with opaque quality, unverifiable credentials, and pricing that fails to reflect demonstrated quality.
+The U.S. pet industry has grown into an annual expenditure above USD 150 billion, with services representing the fastest-growing category. Expenditure on boarding, sitting, grooming, and specialized care has outpaced food and supplies for several consecutive years (American Pet Products Association, 2024). Driving this growth is a structural shift in ownership — the "pet humanization" trend. Surveys consistently report that the large majority of owners (97% in recent industry studies) regard their pets as family members rather than property. Companion animals now receive birthdays, dietary plans, and medical regimes once reserved for children.
 
-The thesis argues that this asymmetry — **high willingness to pay coexisting with an absent credible premium offer** — is a market failure in the Akerlof (1970) sense, and that a carefully designed platform can resolve it. To test this claim empirically, the research is developed across three subtopics: (A) a *market failure diagnosis*, quantifying the premium void in the Miami supply structure; (B) an *empirical definition of premium and trust*, establishing what affluent owners actually value and which trust signals increase their willingness to pay; and (C) an *experiment in platform design*, testing whether digital design choices can credibly deliver perceived exclusivity at scale.
+This shift has two economic consequences relevant to this thesis. First, it elevates the *stakes* of pet care: an owner delegating the care of a family member is delegating emotional, medical, and legal responsibility, not just a chore. Second, it raises *willingness to pay*: consumers who treat pets as family are willing to spend substantially more on quality care — but only if they can believe the quality claim.
 
-A distinctive feature of the thesis is that the platform under study is not hypothetical: **Zoélys**, a membership-based pet-care concierge, has been designed, built, and deployed as a live web platform during this research. The thesis therefore combines academic analysis with a working technological artefact that embodies and tests the findings.
+### 1.2 The problem statement
 
----
+Digital pet care has, to date, failed to capture this willingness to pay. The legacy model — open gig platforms such as Rover and Wag — operates as an unvetted, open directory: any individual can list a profile, set a price, and accumulate reviews. The academic literature (Chapters 2 and 3) predicts and the empirical data confirms that this model produces, simultaneously:
 
-## 2. Pertinence
+- **Severe safety and reliability risk.** Without meaningful verification, quality claims are unverifiable and the downside is borne by the owner and the pet.
+- **Information asymmetry.** Buyers cannot observe sitter quality before purchase; sellers cannot credibly prove it.
+- **"Scroll fatigue" and choice overload.** A high-income owner seeking one trusted caregiver is instead presented with hundreds of undifferentiated profiles and asked to self-filter — a task that transfers the platform's curation burden to the consumer.
 
-**Why should the jury spend time on this?** The question matters on four levels: market level, industry level, academic level, and societal level.
+The practical symptom is paradoxical: demand for high-touch, personalized service (private house-sitting, overnight boarding, specialized drop-in care) is surging, yet no credible premium tier has formed.
 
-**Market level.** The US pet industry has grown into an annual expenditure in excess of USD 150 billion, with services representing the fastest-growing category, outpacing food and supplies (American Pet Products Association, 2024). Within this, in-home pet care and sitting is occupied overwhelmingly by gig platforms such as Rover and Wag, whose model is volume and commission rather than curation. The result is a market with enormous aggregate spending but no credible premium tier: high-income owners are simultaneously over-served with low-price options and under-served with verified, high-quality ones. Understanding whether and how a premium segment can form is therefore not an academic curiosity — it is a live commercial question with billions of dollars at stake.
+### 1.3 Research void & main research question
 
-**Industry level.** The market failure this thesis diagnoses — deep information asymmetry between buyer and seller in a "credence service" — is not unique to pet care. It is structurally identical to the problems that online platforms have solved (or failed to solve) in childcare, eldercare, home services, and tutoring. The findings on trust signals and platform design therefore transfer directly to any high-trust service marketplace currently trying to escape the race-to-the-bottom dynamic of algorithmic reputation systems.
+**Main research question:** How can a managed digital platform govern service quality and mitigate information asymmetry to capture and sustain the premium pet care segment better than open gig marketplaces?
 
-**Academic level.** The literature confronts a genuine void (Section 4): premiumization has been studied extensively in *physical goods* (Vigneron & Johnson, 2004) and *hospitality* (Kapferer & Bastien, 2012), and trust in *peer-to-peer platforms* has been studied extensively at mass-market price points (McKnight et al., 2002; Sundararajan, 2016). What has not been established is whether a premium — rather than merely expensive — segment can form in a *fragmented local service* where the product is inseparable from a human being's care, and where demand is highly affluent. This thesis is, to our knowledge, among the first to combine a supply-side market-failure diagnosis, a demand-side willingness-to-pay analysis, and a live platform experiment on the same question.
+**Sub-research questions**
 
-**Societal level.** Two of every three US households now include a pet. The care that a family delegates when traveling is not a luxury accessory: it is a core trust interaction, involving access to the family home, the health of a companion animal, and — in Florida specifically — legal exposure under strict dog-bite liability (Fla. Stat. § 767.04). A functioning premium tier in this market is not merely a business opportunity; it is a mechanism for making high-stakes local trust work better for everyone.
+| Sub-RQ | Focus |
+|---|---|
+| SRQ1 | Which trust signals and vetting mechanisms most credibly communicate quality, and how much are they worth? |
+| SRQ2 | What pricing model (tiered subscription, credit-based) captures willingness to pay for guaranteed peace of mind? |
+| SRQ3 | What governance and retention mechanisms prevent quality decay and platform leakage at scale? |
 
-**Personal pertinence.** As the founder of Zoélys, I have had a front-row seat to the problem this thesis formalizes. The platform exists because the market failure described here is felt daily by owners and sitters. This research is not detached observation: the theories, measurements, and experiments in this thesis are the ones informing live product decisions — which makes the research instrument itself part of the contribution.
+### 1.4 Practical motivation: Zoélys as an applied case study
 
----
+The thesis is not a purely observational study. **Zoélys**, a managed concierge for premium pet care in Miami, was designed, built, and deployed during this research as the applied embodiment of the theoretical argument. Zoélys operationalizes a lean, managed "zero-scroll" concierge model that replaces open peer-to-peer browsing with:
 
-## 3. Literature Review
+- a **granular behavioral intake profiling** journey (separation anxiety, leash reactivity, health routines, service needs);
+- a **rigorous five-stage vetting protocol** (Chapter 4.2) governing who enters the roster;
+- **institutional retention safeguards** (living pet dossiers, emergency backup protocol, zero-deductible liability insurance, 24/7 tele-vet) designed to mitigate moral hazard and make off-platform leakage financially irrational (Chapter 4.3).
 
-The review is organized into three streams corresponding to the three subtopics: (i) how markets form and fail under information asymmetry; (ii) what "premium" means and how consumers form willingness-to-pay; (iii) how digital platforms build trust. Each stream closes with what the existing literature firmly establishes, before Section 4 identifies what it leaves open.
-
-### 3.1 Market failure, information asymmetry, and the emergence of markets
-
-Akerlof's (1970) "market for lemons" established the foundational result: when quality is asymmetric between buyer and seller and cannot be verified at purchase, the price collapses toward the level of the worst-quality offer, and high-quality supply *exits* the market. The mechanism is not limited to used cars. Darby and Karni (1973) formalized the category of "credence goods," where quality cannot be evaluated even *after* purchase, and argued that such markets invite systematic fraud and require institutional remedies. Nelson (1970) distinguished "search" from "experience" goods; pet sitting, whose quality is only revealed in the owner's absence, is arguably worse than an experience good — closer to a credence good in the Darby-Karni sense.
-
-Information economics is thus clear on *why* high-quality local services struggle: quality is unobservable (experience), possibly unverifiable even ex post (credence), and cheap to misrepresent. It is also clear on the generic remedy — **signaling** (Spence, 1973): if high-quality providers can purchase a costly, observable signal that low-quality providers cannot plausibly imitate, the two separate and the market can support quality tiers. Certifications, licenses, insurance, and third-party vetting are textbook Spence signals.
-
-Klepper's (1997) work on industry life cycles adds the *emergence* dimension: industries do not simply "appear" at their eventual structure. They move from a fragmented, experimental state dominated by many small entrants toward shakeout and concentration — and the timing of that transition is governed by the dominant design and the efficiency frontier of production. Extending this logic, a "premium segment" is not necessarily a new product; it may be a *re-segmentation* of a mature fragmented industry along a quality dimension that was previously unpriceable. The interesting industrial question is therefore *when* a fragmented industry acquires the institutional infrastructure — standards, certification, insurance, credible intermediaries — needed to support a quality tier.
-
-**What the stream establishes:** asymmetric information can suppress quality in local service markets; credible, costly-to-imitate signals are the mechanism that permits quality tiers; and fragmented industries can re-segment once institutional infrastructure emerges.
-
-### 3.2 What "premium" means: luxury perception and willingness to pay
-
-If a premium segment is to form, "premium" must be more than a synonym for "expensive." Vigneron and Johnson (2004) synthesized the psychological literature into the Brand Luxury Index, decomposing luxury perception into five dimensions: perceived conspicuousness, uniqueness, quality, hedonic value, and extended self. Their central insight — which this thesis adopts — is that **luxury is a consumer-perceived construct, not an objective property of a good**. Premium is in the eye of the beholder, and it is multi-dimensional: a product perceived as merely *expensive* without perceived uniqueness or quality outperforms in neither revenue nor loyalty.
-
-Zeithaml (1988) supplies the value side of the price equation. Her means-end model decomposes perceived value into the trade-off between "what is received" (quality signals, benefits) and "what is given" (price, time, effort). Her review, still authoritative, shows that price operates as *both* a sacrifice and a signal: higher price raises perceived quality when quality is otherwise hard to judge — which is precisely the condition of a credence service. This dual role of price is central to the present thesis because it predicts that, in pet care, *price itself* may be doing signaling work that reviews cannot.
-
-Lynn (1991) provides the mechanism connecting scarcity to value through commodity theory: when an item is scarce, inaccessible, or exclusively available, its perceived value rises, because the item is seen as limited in supply. This is the theoretical anchor for the prediction that **distributional scarcity — gated access, limited roster, invitation-only membership** — can itself be a premium cue in a digital service, independent of the underlying quality.
-
-Kapferer and Bastien (2012), in *The Luxury Strategy*, formalize the apparent paradox at the heart of Subtopic C: luxury brands prosper by rejecting the classical marketing playbook of reach, ubiquity, and delighting the masses. Their "anti-laws of marketing" include: do not be easily accessible (*difficulté d'accès*); do not price to demand; do not grow by adding average customers. The critical question they raise — and the one a digital platform must answer — is whether these principles survive **scale**. A luxury brand can limit production; a platform's entire economics are built on network growth. Whether the scarcity cues of luxury can coexist with the scale economics of a platform is the tension Subtopic C tests empirically.
-
-**What the stream establishes:** premium is a multi-dimensional perception (uniqueness, quality, hedonic value, extended self), price is a dual signal (sacrifice and quality cue), scarcity raises perceived value, and luxury positioning traditionally trades growth against exclusivity — a tension that platforms have not resolved.
-
-### 3.3 Trust in digital and peer-to-peer markets
-
-If signaling is the generic remedy to information asymmetry, the platform-specific question is *which signals work in a digital marketplace*. McKnight, Choudhury, and Kacmar (2002) developed the foundational typology of e-commerce trust, decomposing initial trust into trusting beliefs — benevolence, competence, integrity — and showing that web-based trust-building mechanisms (seals, privacy policies, third-party assurances) increase willingness to engage. Their integrative typology remains the standard lens for categorizing platform trust signals.
-
-Petty and Cacioppo's (1986) elaboration likelihood model (ELM) provides the processing mechanism: when consumers are uncertain and involved, they engage the *central route* (careful scrutiny of arguments and evidence); when they are unmotivated or unable to evaluate, they fall back on the *peripheral route* (heuristic cues such as certifications, endorsements, and aesthetics). This is the theoretical bridge of the thesis: **an affluent owner deciding on a person to enter their home is maximally involved, hence maximally central-route, hence maximally sensitive to evidence-strong signals (verifiable credentials, insurance, vetting) rather than peripheral volume cues (number of reviews)** — even though platforms overwhelmingly privilege the latter.
-
-This stream must confront a tension in the literature. The dominant academic position privileges **algorithmic reputation** — the volume and valence of user reviews — as the scalable trust mechanism of two-sided markets (Tadelis, 2016; Sundararajan, 2016). Yet a parallel and growing body of evidence documents its limits: review herding and strategic manipulation (Luca & Zervas, 2016), the wallet-participation problem where low base rates of feedback make volume a poor signal, and the finding that extreme ratings are more informative than average scores. Institutional signals — certification, insurance, background checks, human vetting — have been comparatively under-studied as platform trust mechanisms, precisely because they are expensive and therefore scale poorly. This thesis treats that expense not as a limitation but as an independent variable: it is the cost that makes the signal credible in the Spence sense.
-
-**What the stream establishes:** trust decomposes into competence, benevolence, and integrity beliefs; highly-involved consumers process trust evidence centrally; algorithmic reputation is the dominant but arguably fragile platform mechanism; certification-based institutional signals are theoretically superior for high-involvement, high-stakes purchases but empirically under-tested — particularly at premium price points.
-
-### 3.4 Synthesis
-
-The three streams lock together into a single argument. Information economics (3.1) explains why no premium pet-care segment exists: it is a credence market suffering the lemon problem, needing credible signals. Perception theory (3.2) explains what a premium offer must feel like — unique, scarcity-consistent, quality-signaling — and why price itself will be doing double duty. Trust research (3.3) explains the mechanism by which an owner decides to trust a stranger with home and pet, and raises the untested empirical proposition at the heart of this thesis: that for affluent, high-involvement buyers, *institutional signals outperform algorithmic ones*, and that platform design can encode scarcity credibly. Section 4 formalizes the void this synthesis exposes.
+The platform thereby functions as a *research instrument*: every design decision in Chapter 4 corresponds to a theoretical mechanism in Chapter 2, allowing the thesis to move from abstraction to a working artifact.
 
 ---
 
-## 4. The Void
+## Chapter 2 — Literature Review & Theoretical Framework
 
-The literature as surveyed leaves three specific questions open, each mapping to a subtopic:
+The theoretical framework is built from four pillars, each supplying a mechanism that the empirical chapters and the applied model draw upon.
 
-**Void A (Subtopic A):** *The existence of the premium void itself is asserted, not measured.* Akerlofian lemon logic predicts that high-quality supply struggles in fragmented markets, but no published work, to our knowledge, quantifies the phenomenon in a specific local service market using real provider data. We do not have a measure of how *without-premium* a market such as Miami pet care actually is — how pricing disperses, how thin the certified/insured supply layer is, how compressed quality signals are. Subtopic A fills this by building and analyzing a provider-level dataset.
+### 2.1 Information asymmetry & adverse selection (Akerlof, 1970)
 
-**Void B (Subtopic B):** *The premium construct has never been operationalized for a human-delivered local service, and institutional trust signals have never been valued for owners willing to pay.* Luxury scales exist for goods; trust typologies exist for general e-commerce. What is missing is a measurement of (i) what affluent families mean when they call a caregiver "premium" and (ii) how much a verifiable credential (insurance, certification, vetting depth) is actually worth to them relative to a high review score. Subtopic B fills this with laddering interviews and a conjoint valuation.
+Akerlof's "market for lemons" is the foundational model for this thesis. When buyers cannot observe the true quality of a good prior to purchase — here, the quality of a caregiver — the market price collapses toward the average quality level. High-quality sellers, unable to recoup the cost of being good, exit; only low-quality providers ("lemons") remain. Applied to digital pet care, the model predicts exactly the pathology observed: unobservable sitter quality drives top-tier professionals out of the open gig networks, and the surviving market is characterized by commoditized pricing and latent quality risk.
 
-**Void C (Subtopic C):** *The luxury-versus-scale tension is asserted but untested experimentally.* Kapferer and Bastien's anti-laws predict that scarcity cues should raise perceived exclusivity, but the claim has not been tested on an actual platform with real design variations — and never with a product that combines the scarcity of a gated concierge with the economics of a two-sided marketplace. Subtopic C fills this with a controlled experiment on the live Zoélys stack.
+### 2.2 Signaling theory (Spence, 1973)
 
-The overarching research question this thesis answers is therefore: **What drives the emergence of a premium segment in a fragmented service market, and can a digital platform credibly support it?** — with the null hypothesis implied by the market failure literature (A), the construct hypotheses from perception theory (B), and the design hypotheses from luxury strategy (C) each tested in turn.
+Spence resolves the lemons dilemma: in asymmetric markets, informed agents (sellers) can transmit costly signals that credibly separate them from low-quality actors. The signal is only effective if it is expensive or impossible for a low-quality actor to imitate. This thesis operationalizes Spence through mandatory certifications, background audits, and practical assessments — costly-to-fake credentials that allow elite caregivers to credibly differentiate. The empirical prediction (SRQ1) is that these institutional signals carry measurable willingness-to-pay, a prediction tested in Chapter 3.4.
+
+### 2.3 Agency theory & moral hazard (Arrow, 1963; Eisenhardt, 1989)
+
+In-home pet care is a textbook principal–agent problem. The principal (the owner) delegates care to an agent (the sitter) whose actions cannot be perfectly monitored, creating moral hazard: the agent may shirk or cut corners when oversight is absent. The platform's governance structure is, in agency terms, a monitoring and incentive-alignment device. Eisenhardt's integration of agency theory shows that outcome-based contracts and monitoring both mitigate moral hazard but have costs; the managed platform's design (Chapter 4.3) chooses monitoring-intensive mechanisms — dossiers, backups, institutional insurance — precisely because the service is a credence good where ex-post verification is weak.
+
+### 2.4 Platform economics & disintermediation (Hagiu & Wright, 2015; Zervas et al., 2021)
+
+Two related findings frame the platform-economics argument. First, **rating inflation**: empirical work on peer-to-peer marketplaces documents systematic inflation, where reviews cluster near the ceiling and cease to discriminate quality — the informational substrate of open directories decays over time. Second, the **two-sided platform governance** literature (Hagiu & Wright, 2015) establishes that platforms capture value only to the extent they can prevent *disintermediation*: users discovering one another and moving transactions off-platform to avoid fees. A platform that offers only matching invites leakage; a platform whose value bundle (matching *plus* institutional safety, insurance, dossiers, backups) exceeds the fee is leak-resistant. This is the theoretical basis for the "leakage prevention" design in Chapter 4.3.
+
+**Synthesis of the framework:** adverse selection (2.1) explains *why* the market fails; signaling (2.2) explains *how quality can separate*; agency theory (2.3) explains *what governance must monitor*; platform economics (2.4) explains *why the platform must deliver more than matching to survive*. The four mechanisms jointly yield the managed-platform hypothesis tested across Chapters 3–4.
 
 ---
 
-## 5. Methodology
+## Chapter 3 — Empirical Market Diagnostics & Mixed-Methods Analysis
 
-### 5.1 Research design
+### 3.1 Methodology overview
 
-The thesis adopts a **sequential mixed-methods design** with a causal core. It proceeds in the order A→B→C, mirroring the logic of the causal chain: diagnose the supply-side void, establish the demand-side construct, then test whether a digital design can bridge the two. The design is grounded in the evidence-based-experimentation tradition advocated for entrepreneurial research: hypotheses are registered in a running **hypothesis log** (hypothesis → test → metric → result → decision), and the platform under study is scored on Technology Readiness Level (TRL) and Innovation Readiness Level (IRL) to make explicit what is proven versus assumed at each stage.
+The empirical design is mixed-methods in three complementary layers:
 
-The research sets out from four registered hypotheses:
-
-| # | Hypothesis | Source | Test |
+| Layer | Level | Method | Sample |
 |---|---|---|---|
-| H1 | Premium supply density in Miami pet care is structurally thin; high-quality tier is absent | Akerlof 1970; Klepper 1997 | Subtopic A (scrape analysis) |
-| H2 | Affluent owners hold a coherent, multi-dimensional "premium" construct, distinct from mere price | Vigneron & Johnson 2004 | Subtopic B (interviews + PSM) |
-| H3 | Institutional signals (insurance, certification, vetting) dominate algorithmic signals (reviews) in driving WTP among affluent owners | Spence 1973; McKnight et al. 2002; ELM | Subtopic B (conjoint) |
-| H4 | Gated-access / higher-friction platform design raises perceived exclusivity and intent without harming usability | Kapferer & Bastien 2012; Lynn 1991 | Subtopic C (A/B experiment) |
+| Macro | Computational review mining | Scraping of competitor platform reviews | [DATA n] reviews |
+| Micro | Primary consumer survey | Structured online questionnaire | N = 43 |
+| Deep | Qualitative interviews | Semi-structured owner/industry interviews | [DATA n] |
 
-### 5.2 Data sources
+Layering allows triangulation: the macro layer establishes aggregate market behavior (rating inflation, complaint themes), the micro layer establishes individual preferences and willingness to pay, and the deep layer explains *why* behind both.
 
-**Secondary data (Subtopic A).** A provider-level dataset is constructed by systematically scraping public listings on the dominant gig platform (Rover) and review platforms (Yelp, Google Maps) across the Miami-Dade metropolitan area. [METHOD DETAIL: include scope criteria, sample size, fields collected — pricing, review counts/scores, certification mentions, response indicators, neighbourhood.]
+### 3.2 Computational review mining — macro diagnostics
 
-**Primary data (Subtopics B and C).** Three instruments:
+**[METHOD.]** Reviews were collected from [competitor platforms — DATA]. Following pre-processing (deduplication, language filtering), the corpus was analyzed for (i) rating distribution and (ii) recurring complaint themes via [keyword/thematic coding approach].
 
-1. **Laddering interviews** (n = 12–15) with affluent Miami pet owners (household income > $150k), recruited via pet-community channels. Semi-structured interview guide elicits attribute → consequence → value chains; transcribed and thematically coded. *Ethics (Section 5.4).*
-2. **Survey battery** (n ≥ 150) combining the Van Westendorp Price Sensitivity Meter — to map acceptable/expensive/prohibitive price thresholds per service type — with pet-humanization and sociodemographic items (Blouin's pet humanization orientation; Vigneron-Johnson luxury perception items adapted to services).
-3. **Discrete-choice conjoint experiment** (n ≈ 200): respondents choose between caregiver profiles varying on review score, review volume, insurance type, certification level, vetting depth, and concierge access; part-worth utilities estimated via standard hierarchical Bayes software. Income and pet-humanization are tested as moderators.
+**Rating inflation [DATA].** The distribution of ratings clusters at 4.5–5.0 stars [figure], consistent with Zervas et al.'s documented inflation dynamic and the theoretical prediction in 2.4. The near-ceiling distribution implies that *star ratings barely discriminate quality*, which is precisely the informational decay a managed platform must bypass.
 
-**Artifact (Subtopic C).** The platform under study, Zoélys, is a deployed production system (Cloudflare Workers + D1, custom design system). Four landing-page variants operationalizing access model (open vs. gated) × friction (high vs. low) are built as experimental conditions on this stack and shown between-subjects, with perceived-exclusivity (Vigneron-Johnson items), brand-prestige, and sign-up-intent/WTP-proxy measures collected post-exposure. ANOVA with post-hoc tests and moderation analysis estimate the design effects.
+**Recurring complaints [DATA].** Thematic analysis surfaces recurring reliability and safety themes: cancellations at short notice, sitter no-shows, inconsistent care quality, and communication failures. [List top themes with representative example counts.] These themes reveal that the *residual risk* not captured by the rating system is exactly the category of risk a managed model with backups and monitoring (4.3) is designed to absorb.
 
-### 5.3 Justification
+### 3.3 Survey & interview insights — micro-level consumer demands
 
-The *reasoning* for the mixed-methods sequence is theoretical (Sections 3–4), but three *methodological* justifications should be explicit. First, each subsequent stage depends on the previous one, so the sequence is not merely additive — it is a designed causal chain, and the hypothesis log ensures the dependency is documented rather than implicit. Second, the use of stated-preference methods (conjoint, PSM) compensates for the fact that *revealed* transactions in a premium tier do not yet exist — the market is too young for observational data, and demanding it would be to demand the phenomenon under study. Third, the live-platform experiment provides a degree of behavioral grounding (actual exposure to a working system) absent from purely survey-based platform research.
+**[INSTRUMENT + RECRUITMENT.]** A structured survey (N = 43) and [n] interviews targeted premium pet owners in the Miami metro [sampling approach, screening criteria].
 
-### 5.4 Interview ethics
+**What the premium owner wants [DATA].** Respondents prioritize *verified safety* over price and breadth of choice, and consistently report fatigue with open-list browsing. [Quote representative survey items and interview selections.]
 
-In line with the program's instructions: every interviewee is asked in advance for (i) permission to be named, (ii) permission to mention their company or affiliation where relevant, and (iii) permission to record and transcribe the interview. Interviews are conducted in English; transcription uses automated software, with typographical imperfections accepted as inherent to verbatim transcription. No interview proceeds without explicit recorded consent, and consent is documented in the Appendix (eConsent form). All data is stored pseudonymized by default, with named attribution only where expressly granted.
+**Pain points [DATA].** The dominant reported pain points: (i) distrust of unverifiable credentials; (ii) time cost of evaluating profiles; (iii) fear of last-minute breakdowns. [Results table.]
 
-### 5.5 Methodological limitations (preview)
+### 3.4 Willingness-to-pay & pricing analysis
 
-The design's chief limitations are (i) the single-city scope, which confines external validity to markets with similar affluence and fragmented supply; (ii) the reliance on stated rather than revealed preferences for the premium tier, which cannot yet exist observationally; (iii) the modest interview sample and the self-selection of volunteer interviewees; and (iv) the controlled-laboratory nature of the platform experiment, traded against the practical impossibility of randomizing real customers between product configurations. Section 10 elaborates these and their mitigations.
+**[METHOD: Van Westendorp / stated preference design — DATA.]**
 
----
+**Premium fee tolerance [DATA].** Consumers' acceptable-, expensive-, and prohibitive-price thresholds by service type (house-sitting, overnight boarding, drop-in care) are reported in [table]. [Key takeaway.]
 
-## 6. Subtopic A — The Premium Void
+**Credit-based subscription acceptance [DATA].** Willingness-to-pay for a membership + credit structure (vs. per-transaction fees) is evaluated; results suggest [finding] — supporting the subscription economics of 4.1.
 
-*Structural diagnosis of the supply side.*
-
-### 6.1 Research question
-**RQA:** Is the Miami pet-care market structurally without a premium tier, and what is the binding constraint on its emergence?
-
-### 6.2 Approach
-Scraped provider dataset → descriptive market structure (pricing distribution, review variance, certification/insurance penetration, neighbourhood density) → interpretation against the Akerlof/Klepper framework. The "premium supply density" metric quantifies the share of providers exhibiting credible-credential and price-signaling characteristics consistent with a premium tier.
-
-### 6.3 Hypotheses tested
-H1 (thin premium supply density). Expected: low density of credentialed, high-price, low-review-volume providers; wide price dispersion at the low end; compression at the top.
-
-### 6.4 Results
-[TO BE COMPLETED — tables/figures from scrape analysis. Intended figures: (1) price distribution by service type; (2) scatter of review volume vs. price with credential markers; (3) neighbourhood density map.]
-
-### 6.5 Findings and so-what for Zoélys
-[TO BE COMPLETED — confirms/corrects the market-failure diagnosis; identifies whether the void is a *supply* gap (no one attempts premium), a *signal* gap (attempts exist but are unverifiable), or both.]
+**Guaranteed peace of mind [DATA].** The price premium respondents assign to explicitly insured, backed-up, monitored care is [amount/finding] — the empirical anchor for the "institutional insurance + tele-vet" bundle in 4.3.
 
 ---
 
-## 7. Subtopic B — Defining Premium and Valuing Trust
+## Chapter 4 — The Zoélys Managed Platform Model (Applied Solution)
 
-*Demand-side construct and signal valuation.*
+The platform operationalizes the theoretical framework. Each subsection ties a mechanism from Chapter 2 to a concrete product decision.
 
-### 7.1 Research questions
-**RQB1:** What attributes constitute "premium" in pet care for affluent Miami owners?
-**RQB2:** Which trust signals — institutional or algorithmic — most strongly drive willingness to pay, and is the effect moderated by income and pet humanization?
+### 4.1 The zero-scroll concierge workflow
 
-### 7.2 Approach
-Laddering interviews → thematic coding → candidate premium dimensions (Table [X]). Van Westendorp PSM → price corridors per service type. Conjoint → part-worth utilities per trust attribute, with moderation analysis.
+**The journey (replaces browsing with intake).** Instead of a search-and-filter directory, the owner completes a **granular behavioral and medical intake** covering separation anxiety, leash reactivity, medical routines, diet, service type, dates, and budget expectations. The intake produces a structured *client request*.
 
-### 7.3 Hypotheses tested
-H2 (coherent multi-dimensional premium construct: uniqueness, quality, hedonic value, extended self — not price alone).
-H3 (institutional signals dominate algorithmic signals for affluent owners; a ceiling on reviews' marginal value).
+**The match (replaces search with curation).** A transparent, rule-based compatibility engine scores every active sitter against the request on species fit, neighbourhood proximity, medical & anxiety capability, outdoor accommodation, and qualifications, returning a short list of hand-picked matches **[LINK: /api/match]** — each with an explicit, legible explanation of *why this sitter fits*. Matches are delivered [within 24h], completing the "zero-scroll" promise: the owner receives curation instead of a catalogue.
 
-### 7.4 Results
-[TO BE COMPLETED. Intended: (1) interview theme table with representative quotes; (2) Van Westendorp "acceptable-priced" range per service; (3) conjoint importance scores + part-worth charts; (4) moderation plots.]
+**The technology.** The platform is built on a lightweight serverless stack (Cloudflare Workers + D1), illustrating 5.1's argument that a managed model does not require heavyweight infrastructure.
 
-### 7.5 Findings and so-what for Zoélys
-[TO BE COMPLETED — maps directly onto Zoélys' tier structure and Trust & Safety charter: which charter elements to lead with, which to de-emphasize.]
+### 4.2 The five-stage vetting protocol
 
----
+The protocol is the operational translation of Spence's signaling theory (2.2):
 
-## 8. Subtopic C — Can a Digital Platform Deliver Premium?
+1. **Identity & credential auditing** — verified identity, background screening, credential validation.
+2. **Certification requirement** — mandatory industry certification (PSI's **CPPS** — Certified Professional Pet Sitter) aligned with NAPPS member standards, ensuring a standardized national baseline.
+3. **Live structured behavioral video interview** — the "calm-presence" assessment; evaluates temperament, communication, and values fit.
+4. **Practical scenario assessments** — specialized care tested concretely (medication administration, anxiety handling, emergency response).
+5. **Supervised trial introductory meeting** — a mandatory first meet-and-greet under structured supervision before any solo booking.
 
-*Design experiment for perceived exclusivity.*
+Costly, observable, and hard to fake, this protocol separates elite caregivers from the open-market population — the mechanism by which adverse selection (2.1) is reversed.
 
-### 8.1 Research question
-**RQC:** To what extent do digital design choices — access model and friction — moderate perceived exclusivity and intent among affluent consumers?
+### 4.3 Retention mechanics, backups & leakage prevention
 
-### 8.2 Approach
-Four live-platform landing variants (open/low-friction; open/high-friction; gated/low-friction; gated/high-friction) in a between-subjects design with quantitative post-exposure measures; ANOVA + post-hoc tests; moderation by income and pet-humanization.
+If 4.2 governs *who enters*, 4.3 governs *why they stay and why nobody leaves*. Three mechanisms:
 
-### 8.3 Hypotheses tested
-H4 (gated access and higher friction raise perceived exclusivity without destroying intent).
+- **Living pet dossiers.** After every booking, a structured dossier accumulates medical notes, routines, behavioural observations, and preferences. This institutional memory makes the *platform* the keeper of the most valuable asset — the pet's history — creating switching costs that anchor both the owner and the sitter to the platform.
+- **Emergency Backup Sitter Protocol.** Every booking carries a standing, vetted backup; if a sitter cancels, a pre-qualified backup is re-assigned automatically. This directly absorbs the dominant complaint theme found in 3.2 (last-minute cancellations).
+- **Institutional insurance + 24/7 tele-vet support.** Comprehensive, zero-deductible liability coverage accompanies every booking, plus round-the-clock veterinary tele-support. This bundle is designed to make *taking transactions off-platform financially irrational* — the disintermediation remedy called for by 2.4 — by making the platform's protection strictly better than a private arrangement.
 
-### 8.4 Results
-[TO BE COMPLETED. Intended: (1) means table per condition; (2) ANOVA results with effect sizes; (3) moderation figures.]
-
-### 8.5 Findings and so-what for Zoélys
-[TO BE COMPLETED — the answer to whether Zoélys should operate open or gated is a product decision, and the thesis supplies the evidence for it.]
+The three mechanisms jointly target the moral hazard identified in 2.3: monitoring (dossiers), redundancy (backups), and aligned incentives (insurance that rewards staying in the system).
 
 ---
 
-## 9. Conclusion
+## Chapter 5 — Strategic Implications, Limitations, and Conclusion
 
-[TO BE COMPLETED. Should restate the overarching RQ, summarize the finding of each subtopic, and state the novel insights in plain sentences — e.g. whether and how a premium segment can emerge, which signals carry it, and whether a platform can encode it. Ends by answering the thesis title's question directly.]
+### 5.1 Feasibility & scalability
 
----
+The managed model's viability turns on unit economics and operational cost. Because the stack is serverless and lean (Cloudflare Workers, D1, no physical footprint), the marginal cost of *managing* (vs. merely listing) is primarily human: vetting throughput, concierge response, backup logistics. The thesis assesses whether intake-to-match automation can compress that cost to a level compatible with premium margins — and whether city-by-city expansion is feasible under a concierge-to-owner ratio constraint. [Feasibility model — DATA/assumptions.]
 
-## 10. Limitations
+### 5.2 Managerial & academic contributions
 
-Full list in development. Core limitations to be elaborated: single-city scope and external validity; stated vs. revealed preference; interview self-selection and small n; contrived-experiment costs of the platform test; scrape coverage caveats (platform policies, updates, sample coverage of informal/unlisted providers); seasonality of demand (holiday peaks); and the author's dual role as researcher and platform founder, with the mitigations for each.
+- **Academic:** the thesis extends platform economics into high-touch service markets, providing evidence that managed curation can reverse the adverse-selection dynamic open directories exhibit.
+- **Managerial:** a transferable playbook for founder-managers: how to price institutional trust (3.4), how to verify rather than aggregate reputation (4.2), and how to engineer retention through value-stack rather than lock-in (4.3).
 
----
+### 5.3 Limitations & future research
 
-## 11. Future Work
-
-Directions to be itemized: replication across markets (NYC, LA, London); revealed-preference follow-up once the premium tier realises real transactions; longitudinal trust research; development roadmap derived from findings — including mapping each Subtopic C result to an actual Zoélys product decision; and extension of the trust-signal valuation to other high-involvement local services (childcare, eldercare).
-
----
-
-## 12. Appendix (unlimited)
-
-- Hypothesis log (full register, maintained from draft date 0)
-- Interview guide (laddering protocol, English)
-- eConsent form
-- Survey instrument (PSM + pet humanization + demographics)
-- Conjoint design and stimuli
-- Experiment conditions (four landing variants) and measurement instrument
-- Dataset codebook (Miami provider scrape)
-- Full legal & compliance annex (drawn from repo §19: two-layer insurance, contractor classification/ABC test, Florida animal liability, contracts & waivers)
+- **Sample constraints** — N = 43 survey, single-city scope; external validity bounded to markets with similar affluence. [Others: scrape coverage, stated vs. revealed preference for premiums.]
+- **Future research** — longitudinal tracking of dossier value and leakage behavior; replication across cities; revealed-preference follow-up as the premium tier generates real transactions; application of the managed-model architecture to adjacent high-trust services (childcare, eldercare).
 
 ---
 
 ## References
 
-*(Working list — full bibliographic details to be completed and formatted per school style.)*
+*(Working list — full bibliographic details to be completed.)*
 
 - Akerlof, G. A. (1970). The market for "lemons": Quality uncertainty and the market mechanism. *Quarterly Journal of Economics*, 84(3), 488–500.
-- Blouin, D. D. (2013). Are dogs children, companions, or just animals? Understanding variations in people's orientations toward animals. *Anthrozoös*, 26(2), 279–294.
-- Darby, M. R., & Karni, E. (1973). Free competition and the optimal amount of fraud. *Journal of Law and Economics*, 16(1), 67–88.
-- Kapferer, J.-N., & Bastien, V. (2012). *The Luxury Strategy: Break the Rules of Marketing to Build Luxury Brands* (2nd ed.). Kogan Page.
-- Klepper, S. (1997). Industry life cycles. *Industrial and Corporate Change*, 6(1), 145–182.
-- Luca, M., & Zervas, G. (2016). Fake it till you make it: Reputation, competition, and Yelp review fraud. *Management Science*, 62(12), 3412–3427.
-- Lynn, M. (1991). Scarcity effects on value: A quantitative review of the commodity theory literature. *Psychology & Marketing*, 8(1), 43–57.
-- McKnight, D. H., Choudhury, V., & Kacmar, C. (2002). Developing and validating trust measures for e-commerce. *Information Systems Research*, 13(3), 334–359.
-- Nelson, P. (1970). Information and consumer behavior. *Journal of Political Economy*, 78(2), 311–329.
-- Petty, R. E., & Cacioppo, J. T. (1986). *Communication and Persuasion: Central and Peripheral Routes to Attitude Change*. Springer-Verlag.
+- Arrow, K. J. (1963). Uncertainty and the welfare economics of medical care. *American Economic Review*, 53(5), 941–973.
+- Eisenhardt, K. M. (1989). Agency theory: An assessment and review. *Academy of Management Review*, 14(1), 57–74.
+- Hagiu, A., & Wright, J. (2015). Multi-sided platforms. *International Journal of Industrial Organization*, 43, 162–174.
 - Spence, M. (1973). Job market signaling. *Quarterly Journal of Economics*, 87(3), 355–374.
-- Sundararajan, A. (2016). *The Sharing Economy: The End of Employment and the Rise of Crowd-Based Capitalism*. MIT Press.
-- Tadelis, S. (2016). Reputation and feedback systems in online platform markets. *Annual Review of Economics*, 8, 321–340.
-- Vigneron, F., & Johnson, L. W. (2004). Measuring perceptions of brand luxury. *Journal of Brand Management*, 11(6), 484–506.
-- Zeithaml, V. A. (1988). Consumer perceptions of price, quality, and value. *Journal of Marketing*, 52(3), 2–22.
+- Zervas, G., Proserpio, D., & Byers, J. W. (2021). A first look at online reputation on Airbnb, where every stay is above average. *Journal of Marketing Research*, 58(2), 247–264.
+- American Pet Products Association (2024). *National Pet Owners Survey* (industry report).
+- Kapferer, J.-N., & Bastien, V. (2012). *The Luxury Strategy* (2nd ed.). Kogan Page. *(supplementary — premium perception)*
+- Vigneron, F., & Johnson, L. W. (2004). Measuring perceptions of brand luxury. *Journal of Brand Management*, 11(6), 484–506. *(supplementary)*
+
+## Appendix (unlimited)
+
+- Interview guide (semi-structured owner/interview protocol) + eConsent form
+- Survey instrument (N = 43) with response distributions
+- Review-mining corpus details: sources, cleaning, codebook
+- Willingness-to-pay instrument and thresholds (full tables)
+- Platform appendix: matchmaking engine scoring rules, vetting protocol documentation, five-stage charter (linked to `/trust`), hypothesis log

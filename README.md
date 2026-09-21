@@ -575,50 +575,28 @@ Client personal data (name, address, phone, pet health) triggers privacy obligat
 
 ### T1. Research framework
 
-**Overarching research question**
-> What drives the emergence of a premium segment in a fragmented service market — and how can a digital platform support it?
+**Thesis title:** *Evaluating and Designing a High-Trust Managed Platform for Premium Pet Care*
 
-**Research logic — the causal chain.** The chapters are not independent studies; each answers a question the next depends on:
+**Main research question**
+> How can a managed digital platform govern service quality and mitigate information asymmetry to capture and sustain the premium pet care segment better than open gig marketplaces?
 
-| Ch. | Question | Type |
-|---|---|---|
-| C1 | Why hasn't a premium market formed yet? | Market failure diagnosis (binding constraint) |
-| C2 | What would "premium" actually mean in this market? | Construct definition & measurement |
-| C3 | What makes affluent consumers trust a premium provider? | Trust architecture (signals that bridge the gap) |
-| C4 | Can a digital platform credibly deliver premium? | Platform design & perceived exclusivity at scale |
+**Sub-questions:** SRQ1 trust signals & vetting (what they cost/worth); SRQ2 willingness-to-pay & pricing (tiered subscription, credits); SRQ3 scalable governance & leakage prevention (retention, backups, moral hazard).
 
-**Theoretical anchors:** Akerlof (1970) *Market for Lemons*; Klepper (1997) industry life cycles; Vigneron & Johnson (2004) Brand Luxury Index; Zeithaml (1988) means-end model; McKnight et al. (2002) e-commerce trust typology; Spence (1973) signaling; Petty & Cacioppo (1986) ELM; Kapferer & Bastien (2012) *The Luxury Strategy*; Lynn (1991) scarcity effects.
+**Theoretical framework (four pillars):** Akerlof (1970) adverse selection / "lemons"; Spence (1973) signaling; Arrow (1963) & Eisenhardt (1989) agency theory & moral hazard; Hagiu & Wright (2015) two-sided platforms & Zervas et al. (2021) rating inflation / disintermediation.
 
-**Methodological stance:** sequential mixed methods + evidence-based experimentation with a running **hypothesis log** (hypothesis → test → metric → result → decision). Technology/Innovation Readiness Level assessment applied to Zoélys. Every chapter ends with an explicit "so what for Zoélys" sentence.
+**Methodological stance:** mixed-methods triangulation (macro review-mining, micro survey N=43, qualitative interviews); hypothesis log; every chapter closes with an explicit "so what" for the platform.
 
-### T2. Thesis structure (workshop template — 25 pages individual + unlimited appendix)
+### T2. Thesis structure (workshop format — 25 pages individual + unlimited appendix; draft `docs/thesis-draft.md`)
 
-The prescribed individual structure. A–C are the empirical subtopics (the C1→C4 research chain is reorganized into three subtopics).
+The thesis follows a five-chapter structure:
 
-1. **Topic** — what the thesis will talk about. (0.5 pp)
-2. **Pertinence** — why the jury should spend time on this: market context, industry reports, why it matters now. (1 pp)
-3. **Literature Review** — what is known: academic research, industry reports, startup documentation; establishes the author's credibility. (4 pp)
-   - Stream A: market failure & information asymmetry (Akerlof; Spence signaling; Klepper).
-   - Stream B: premium/luxury perception (Vigneron & Johnson; Zeithaml; Kapferer & Bastien; Lynn scarcity).
-   - Stream C: platform trust (McKnight; Petty & Cacioppo ELM; Spence).
-4. **The Void** — what is *not* known; the gap the thesis fills. (1 pp)
-5. **Methodology** — research design, frameworks (TRL/IRL, hypothesis log), data-sources table, interview ethics. (2.5 pp)
+1. **Introduction & practical motivation** — macro context ($150B+ industry, pet humanization), the problem statement (open-directory failure: safety risk, information asymmetry, scroll fatigue), main RQ + 3 sub-RQs, Zoélys introduced as applied case study.
+2. **Literature review & theoretical framework** — Akerlof (lemons), Spence (signaling), Arrow/Eisenhardt (agency & moral hazard), Hagiu-Wright/Zervas (platform economics, rating inflation, leakage) → synthesis.
+3. **Empirical market diagnostics (mixed methods)** — computational review mining (macro: rating inflation, complaint themes), survey N=43 + interviews (micro: verified safety, scroll fatigue, pain points), willingness-to-pay & pricing analysis.
+4. **The Zoélys managed platform model** — 4.1 zero-scroll concierge workflow (intake → rule-based matching → curated shortlist); 4.2 five-stage vetting (identity audit, CPPS/NAPPS-aligned certification, video interview, practical assessment, supervised trial); 4.3 retention & leakage prevention (living pet dossiers, Emergency Backup Sitter Protocol, zero-deductible institutional insurance + 24/7 tele-vet).
+5. **Strategic implications, limitations, conclusion** — feasibility/scalability (serverless stack), managerial & academic contributions, limitations & future research.
 
-| Data source | Type | Tool | Output |
-|---|---|---|---|
-| Provider scrape (Miami) | Secondary | Python/BeautifulSoup on Rover, Yelp, Google Maps | Supply-side dataset: pricing dispersion, review variance |
-| Laddering interviews (n=12–15, HHI>$150k) | Primary | Semi-structured guide, eConsent, thematic coding | Candidate premium dimensions |
-| Van Westendorp PSM (n≥150) | Primary | Survey | WTP thresholds per service type |
-| Conjoint experiment (n≈200) | Primary | Conjoint.ly / Sawtooth | Part-worth utilities per trust attribute |
-| Live A/B tests on Zoélys | Primary | Landing variants on production stack | Causal design effects on exclusivity/intent |
-
-6. **Subtopic A — The Premium Void** (4 pp) — market failure diagnosis: pricing dispersion, premium supply density, review variance in Miami; Akerlof framing; binding constraint identified.
-7. **Subtopic B — Defining Premium & Trust** (4 pp) — what "premium" means to affluent owners (interviews + PSM) and which trust signals move them (conjoint). The empirical centerpiece.
-8. **Subtopic C — Can the Platform Deliver Premium?** (4 pp) — A/B variants on the live Zoélys stack: access model (gated vs. open) × friction (high vs. low); perceived exclusivity & intent; design recommendations.
-9. **Conclusion** — answers to the overarching RQ and each subtopic; novel insights stated plainly. (2 pp)
-10. **Limitations** — single city, sample sizes, self-report bias, seasonality. (1 pp)
-11. **Future Work** — what comes next after the thesis. (1 pp)
-12. **Appendix — unlimited** — full hypothesis log, interview guide, eConsent form, survey + conjoint instruments, dataset codebook, full §19 legal/compliance annex.
+The platform build implements Chapter 4 directly: the intake → `/api/match` journey is 4.1, the `/trust` charter documents 4.2, and dashboard/dossier features support 4.3.
 
 **Interview ethics (workshop notes):** ask interviewees for permission to (a) be named, (b) mention their company if relevant, (c) record + transcribe; conduct in English; transcribe with software — typos are acceptable.
 
