@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys. Contact Your Concierge.</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    main.container { max-width: 920px; margin: 0 auto 7rem auto; padding: 0 1.5rem; }
+
+    .lede { max-width: 560px; margin: 0 auto 4rem auto; text-align: center; font-size: 0.98rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.85; }
+    .lede em { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-style: italic; font-size: 1.15em; color: var(--ink, #191512); }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 2.2rem; align-items: start; }
+    @media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    .plain-card { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2rem 1.9rem; }
+    .plain-card h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; }
+    .plain-line { padding: 0.85rem 0; border-bottom: 1px solid var(--hairline, #E5DED2); }
+    .plain-line:last-of-type { border-bottom: none; }
+    .plain-line .k { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600; margin-bottom: 0.25rem; }
+    .plain-line .v { font-size: 0.92rem; color: var(--ink, #191512); }
+    .plain-line .v a { color: var(--ink, #191512); text-decoration: none; border-bottom: 1px solid var(--ink, #191512); }
+
+    .form-card { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2.25rem 2rem; }
+    .form-card h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.7rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .form-card .form-intro { font-size: 0.85rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.7; margin-bottom: 1.6rem; }
+
+    .form-label-style { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 0.4rem; color: var(--ink, #191512); }
+    .form-input-style { width: 100%; padding: 0.8rem 0.95rem; border-radius: 4px; border: 1px solid var(--hairline, #E5DED2); background: var(--bg-card, #FFFFFF); font-family: var(--font-sans); font-size: 0.88rem; box-sizing: border-box; outline: none; transition: border-color 0.25s var(--ease); }
+    .form-input-style:focus { border-color: var(--accent, #C1623F); }
+
+    .btn-coral { display: inline-flex; align-items: center; gap: 0.7rem; background: var(--accent, #C1623F); color: #fff; border: none; border-radius: 4px; padding: 0.95rem 1.9rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: background 0.3s var(--ease); }
+    .btn-coral:hover { background: var(--accent-deep, #A94E2F); }
+    .btn-coral:disabled { opacity: 0.55; cursor: wait; }
+
+    .form-note { font-size: 0.72rem; color: var(--ink-faint, #A29A90); margin-top: 0.9rem; line-height: 1.6; }
+
+    #contactForm { display: block; }
+    #contactSuccess { display: none; border: 1px solid #2E5A34; background: #EDF5EE; padding: 2rem; text-align: center; }
+    #contactSuccess h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.6rem; font-weight: 500; margin-bottom: 0.6rem; }
+    #contactSuccess p { font-size: 0.85rem; color: var(--ink-muted, #6E675F); line-height: 1.7; }
+    #contactMsg { display: none; font-size: 0.8rem; font-weight: 500; margin-top: 0.9rem; }
+    #contactMsg.err { color: #9A4B38; }
+  </style>
+</head>
+<body>
+
+  <div class="page-head">
+    <div class="eyebrow">Contact</div>
+    <h1>Talk to a real human</h1>
+    <p>No ticket queues, no bots. You reach the concierge who will actually know your pet&rsquo;s name.</p>
+  </div>
+
+  <main class="container">
+    <p class="lede">Whether you are a pet parent, a caregiver thinking of joining the roster, or simply curious, write to us. A person reads every message, and we answer <em>within one business day</em>.</p>
+
+    <div class="contact-grid">
+      <div class="plain-card">
+        <h3>The concierge desk</h3>
+        <div class="plain-line">
+          <div class="k">Direct line</div>
+          <div class="v"><a href="mailto:concierge@zoelys.com">concierge@zoelys.com</a></div>
+        </div>
+        <div class="plain-line">
+          <div class="k">Caregiver applications</div>
+          <div class="v"><a href="mailto:team@zoelys.com">team@zoelys.com</a></div>
+        </div>
+        <div class="plain-line">
+          <div class="k">Concierge hours</div>
+          <div class="v">7am to 10pm, Miami time, every day</div>
+        </div>
+        <div class="plain-line">
+          <div class="k">While care is happening</div>
+          <div class="v">Immediate. Your caregiver plus a live concierge, reached in seconds.</div>
+        </div>
+        <div class="plain-line">
+          <div class="k">Because</div>
+          <div class="v">Your pet&rsquo;s routine should never wait for a support SLA.</div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3>Write to us</h3>
+        <p class="form-intro">Tell us what is on your mind. If it concerns a specific sitting, add the pet name so we land ready.</p>
+
+        <form id="contactForm">
+          <div style="margin-bottom: 1rem;">
+            <label class="form-label-style">Your name</label>
+            <input type="text" id="ctName" placeholder="Jane Okafor" class="form-input-style" required>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label class="form-label-style">Email</label>
+            <input type="email" id="ctEmail" placeholder="you@email.com" class="form-input-style" required>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label class="form-label-style">Topic</label>
+            <select id="ctSubject" class="form-input-style">
+              <option value="General">A general question</option>
+              <option value="Caregiver application">Applying as a caregiver</option>
+              <option value="Billing and credits">Billing and Strategic Credits</option>
+              <option value="A current sitting">About a current sitting</option>
+              <option value="Press and partners">Press or partnership</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label class="form-label-style">Pet&rsquo;s name (if this is about a sitting)</label>
+            <input type="text" id="ctPet" placeholder="e.g. Milo" class="form-input-style">
+          </div>
+          <div style="margin-bottom: 1.4rem;">
+            <label class="form-label-style">Your message</label>
+            <textarea id="ctMessage" rows="5" class="form-input-style" required placeholder="Tell us what we should know."></textarea>
+          </div>
+          <button type="submit" class="btn-coral" id="ctSend">Send to your concierge <span>&rarr;</span></button>
+          <div id="contactMsg"></div>
+        </form>
+
+        <div id="contactSuccess">
+          <h3>Received, and noted</h3>
+          <p>Your message is with a human. We answer within one business day, usually much sooner. Thank you for trusting us with the details.</p>
+        </div>
+
+        <p class="form-note">We never sell your details, and we never use your message for anything except answering it.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/apply">Become a Sitter</a></li>
+          <li><a href="/join">Member Portal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
+  <script src="/navbar.js"></script>
+  <script>
+    const ctForm = document.getElementById('contactForm');
+    if (ctForm) {
+      ctForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const msg = document.getElementById('contactMsg');
+        msg.style.display = 'none';
+        const sendBtn = document.getElementById('ctSend');
+        sendBtn.disabled = true;
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              full_name: document.getElementById('ctName').value,
+              email: document.getElementById('ctEmail').value,
+              subject: document.getElementById('ctSubject').value,
+              message: document.getElementById('ctMessage').value,
+              in_reply_to_sitting: document.getElementById('ctPet').value
+            })
+          });
+          const data = await res.json();
+          if (data.success) {
+            ctForm.style.display = 'none';
+            document.getElementById('contactSuccess').style.display = 'block';
+          } else {
+            msg.style.display = 'block';
+            msg.className = 'err';
+            msg.textContent = data.error || 'Could not send. Please try once more.';
+            msg.style.display = 'block';
+            sendBtn.disabled = false;
+          }
+        } catch (err) {
+          msg.style.display = 'block';
+          msg.className = 'err';
+          msg.textContent = 'Could not reach the concierge. Please try once more.';
+          sendBtn.disabled = false;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys. Pricing &amp; Strategic Credits.</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    main.container { max-width: 960px; margin: 0 auto 7rem auto; padding: 0 1.5rem; }
+
+    .lede { max-width: 560px; margin: 0 auto 4.5rem auto; text-align: center; font-size: 0.98rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.85; }
+    .lede em { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-style: italic; font-size: 1.15em; color: var(--ink, #191512); }
+
+    .section-kicker { text-align: center; margin: 4.5rem 0 2.25rem; }
+    .section-kicker .eyebrow { display: block; margin-bottom: 0.7rem; }
+    .section-kicker h2 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2.35rem; font-weight: 400; letter-spacing: -0.01em; }
+
+    .price-band { border-top: 1px solid var(--ink, #191512); }
+    .price-band .band-row { display: grid; grid-template-columns: 1.2fr 1fr 1.6fr; gap: 1.5rem; padding: 1.9rem 0.4rem; border-bottom: 1px solid var(--hairline, #E5DED2); align-items: baseline; }
+    @media (max-width: 640px) { .price-band .band-row { grid-template-columns: 1fr; gap: 0.5rem; } }
+    .band-range { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.7rem; }
+    .band-cost { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.7rem; color: var(--accent, #C1623F); }
+    .band-cost small { font-family: var(--font-sans); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); display: block; margin-top: 0.2rem; }
+    .band-note { font-size: 0.82rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.7; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0 3.5rem; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+    .plain-card { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2.1rem 2rem; }
+    .plain-card h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.55rem; font-weight: 500; margin-bottom: 0.9rem; }
+    .plain-card p { font-size: 0.85rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.75; }
+    .plain-card ul { list-style: none; margin-top: 0.6rem; }
+    .plain-card li { font-size: 0.85rem; font-weight: 300; color: var(--ink, #191512); line-height: 1.7; padding-left: 1.3rem; position: relative; }
+    .plain-card li::before { content: '·'; position: absolute; left: 0.3rem; color: var(--accent, #C1623F); font-weight: 600; }
+
+    .small-print { font-size: 0.74rem; color: var(--ink-faint, #A29A90); line-height: 1.7; max-width: 640px; margin: 0 auto; text-align: center; }
+    .cta-row-final { display: flex; gap: 1.1rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+  </style>
+</head>
+<body>
+
+  <div class="page-head">
+    <div class="eyebrow">Pricing</div>
+    <h1>Clear, quiet pricing</h1>
+    <p>You set a budget. Your concierge stays inside it. There are no surge fees, no surprise line items, and no price games at pickup time.</p>
+  </div>
+
+  <main class="container">
+    <p class="lede">Care on Zoélys runs on <em>Strategic Credits</em>. Every sitting costs a small number of credits depending on the nightly budget you choose, and the caregiver you approve is paid in full from that same envelope, straight into their wallet the moment they accept. What you plan is what you pay.</p>
+
+    <div class="section-kicker">
+      <span class="eyebrow">What a sitting costs</span>
+      <h2>One rate, decided by your budget</h2>
+    </div>
+
+    <div class="price-band">
+      <div class="band-row">
+        <div class="band-range">Under $50</div>
+        <div class="band-cost">1 credit <small>per night</small></div>
+        <div class="band-note">Quiet, essential care. Walks, feeding, medication on schedule, and the daily care log.</div>
+      </div>
+      <div class="band-row">
+        <div class="band-range">$50 to $99</div>
+        <div class="band-cost">2 credits <small>per night</small></div>
+        <div class="band-note">Our most chosen tier. Experienced caregivers with vet-tech or specialist backgrounds, plus photo updates and full care planning.</div>
+      </div>
+      <div class="band-row">
+        <div class="band-range">$100 to $149</div>
+        <div class="band-cost">2 credits <small>per night</small></div>
+        <div class="band-note">Senior and high-need pets. Medication management, separation-anxiety care, and a concierge who checks in personally.</div>
+      </div>
+      <div class="band-row">
+        <div class="band-range">$150 and above</div>
+        <div class="band-cost">3 credits <small>per night</small></div>
+        <div class="band-note">The full white-glove tier. Premium hourly enrichment, vet-tech caregivers, and priority concierge support all hours.</div>
+      </div>
+    </div>
+
+    <p class="small-print">Credits buy the whole sitting, not a percentage. The caregiver receives the full nightly rate you agreed to; your credit balance simply deducts the published cost for your tier. Unused credits never expire while your membership is active.</p>
+
+    <div class="section-kicker">
+      <span class="eyebrow">Where your credit goes</span>
+      <h2>One envelope, three honest hands</h2>
+    </div>
+
+    <div class="two-col">
+      <div class="plain-card">
+        <h3>To the caregiver</h3>
+        <p>The largest share. Your caregiver earns their full nightly rate into a personal wallet the moment they accept, and can withdraw it anytime, like any payout they own.</p>
+      </div>
+      <div class="plain-card">
+        <h3>To the vetting</h3>
+        <p>A share funds what makes Zoélys different: in-person interviews, background checks, certification verification, insurance checks, and the oversight that keeps the roster small.</p>
+      </div>
+      <div class="plain-card">
+        <h3>To the concierge</h3>
+        <p>A share runs your private concierge desk. The human who studies your pet's dossier, negotiates nothing you did not approve, and stays reachable while care is happening.</p>
+      </div>
+      <div class="plain-card">
+        <h3>What is never charged</h3>
+        <ul>
+          <li>Booking or service fees on top of your rate</li>
+          <li>Surge pricing during holidays</li>
+          <li>Fees to contact your concierge</li>
+          <li>Anything your budget did not approve</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-kicker">
+      <span class="eyebrow">Getting started</span>
+      <h2>Members start with credits already in hand</h2>
+    </div>
+
+    <div class="two-col">
+      <div class="plain-card">
+        <h3>First sitting, covered</h3>
+        <p>Every new member account opens with a starter gift of credits, enough to book an early sitting and feel how the system works before you ever add more.</p>
+      </div>
+      <div class="plain-card">
+        <h3>Top-ups on your terms</h3>
+        <p>When you run low, your concierge adds the credits you ask for, no subscription lock-in and no monthly minimum. For large or recurring needs, members keep a standing balance the concierge monitors.</p>
+      </div>
+    </div>
+
+    <div class="cta-row-final">
+      <a class="btn btn-ink" href="/join">Become a member <span class="arrow">&rarr;</span></a>
+      <a class="link-underline" href="/contact">Ask your concierge a question</a>
+    </div>
+  </main>
+
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/apply">Become a Sitter</a></li>
+          <li><a href="/join">Member Portal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
+  <script src="/navbar.js"></script>
+</body>
+</html>

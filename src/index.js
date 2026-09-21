@@ -78,6 +78,15 @@ function nightsFor(start, end) {
   return Math.max(1, days + 1);
 }
 
+const SITTER_STAGES = ['submitted', 'documents', 'interview', 'background_check', 'approved'];
+
+function sitterStageIndex(stage) {
+  const i = SITTER_STAGES.indexOf(stage);
+  return i === -1 ? 0 : i;
+}
+
+const applyStageFor = (stage) => SITTER_STAGES.includes(stage) ? stage : 'submitted';
+
 async function creditWallet(env, matchId) {
   const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(matchId).first();
   if (!match || Number(match.earnings || 0) > 0) return;
@@ -154,6 +163,16 @@ async function ensureMatchmaking(env) {
   await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN tagline TEXT DEFAULT ''`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN bio TEXT DEFAULT ''`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN gallery TEXT DEFAULT '[]'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN application_stage TEXT DEFAULT 'submitted'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS contact_messages (
+    id TEXT PRIMARY KEY,
+    full_name TEXT DEFAULT '',
+    email TEXT DEFAULT '',
+    subject TEXT DEFAULT '',
+    message TEXT DEFAULT '',
+    in_reply_to_sitting TEXT DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`).run();
 
   await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS sitter_wallets (
     id TEXT PRIMARY KEY,
@@ -509,8 +528,8 @@ export default {
         const id = 'sitter-' + crypto.randomUUID().slice(0, 6);
         const types = Array.isArray(body.accepted_pet_types) ? body.accepted_pet_types.join(',') : (body.accepted_pet_types || 'Dog');
         await env.zoelys_db.prepare(`
-          INSERT INTO sitters (id, full_name, neighbourhood, experience_years, vet_tech_background, accepted_pet_types, can_handle_anxiety, can_handle_medication, has_outdoor_space, nightly_rate_usd, is_active)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO sitters (id, full_name, neighbourhood, experience_years, vet_tech_background, accepted_pet_types, can_handle_anxiety, can_handle_medication, has_outdoor_space, nightly_rate_usd, is_active, application_stage)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           id, body.full_name, body.neighbourhood,
           Number(body.experience_years) || 1,
@@ -520,13 +539,38 @@ export default {
           body.can_handle_medication ? 1 : 0,
           body.has_outdoor_space ? 1 : 0,
           Number(body.nightly_rate_usd) || 60,
-          0
+          0,
+          'submitted'
         ).run();
-        return new Response(JSON.stringify({ success: true, sitterId: id, status: 'pending' }), { headers: corsHeaders });
+        return new Response(JSON.stringify({ success: true, sitterId: id, status: 'pending', application_stage: 'submitted' }), { headers: corsHeaders });
       } catch (e) {
         return new Response(JSON.stringify({ error: 'Sitter application could not be saved' }), { status: 400, headers: corsHeaders });
       }
     }
+    // PUBLIC: contact / concierge message
+    if (request.method === 'POST' && url.pathname === '/api/contact') {
+      await ensureMatchmaking(env);
+      const body = await request.json().catch(() => ({}));
+      const fullName = String(body.full_name || '').trim();
+      const email = String(body.email || '').trim().toLowerCase();
+      const subject = String(body.subject || 'General').trim();
+      const message = String(body.message || '').trim();
+      if (!fullName || !email || !message) return new Response(JSON.stringify({ error: 'Please add your name, a contact email, and a short message.' }), { status: 400, headers: corsHeaders });
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return new Response(JSON.stringify({ error: 'That email address does not look right.' }), { status: 400, headers: corsHeaders });
+      await env.zoelys_db.prepare(`INSERT INTO contact_messages (id, full_name, email, subject, message, in_reply_to_sitting) VALUES (?, ?, ?, ?, ?, ?)`).bind(
+        'msg-' + crypto.randomUUID().slice(0, 6), fullName, email, subject, message, String(body.in_reply_to_sitting || '')
+      ).run();
+      return new Response(JSON.stringify({ success: true, ref: 'msg-' + Date.now().toString(36).toUpperCase() }), { headers: corsHeaders });
+    }
+
+    if (request.method === 'GET' && url.pathname === '/api/contact') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member || !member.is_admin) return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
+      const { results = [] } = await env.zoelys_db.prepare(`SELECT * FROM contact_messages ORDER BY created_at DESC`).all();
+      return new Response(JSON.stringify({ messages: results || [] }), { headers: corsHeaders });
+    }
+
     if (request.method === 'GET' && url.pathname === '/api/sitters') {
       await ensureMatchmaking(env);
       const member = await memberFromRequest(env, url);
@@ -833,7 +877,7 @@ export default {
         incoming.push(...rows);
       }
       return new Response(JSON.stringify({
-        profile: profile ? { ...profile, application_status: profile.is_active ? 'active' : 'pending' } : null,
+        profile: profile ? { ...profile, application_status: profile.is_active ? 'active' : 'pending', application_stage: (profile.application_stage || (profile.is_active ? 'approved' : 'submitted')), stages: SITTER_STAGES, stage_index: sitterStageIndex(profile.application_stage || (profile.is_active ? 'approved' : 'submitted')) } : null,
         incoming
       }), { headers: corsHeaders });
     }
@@ -844,8 +888,18 @@ export default {
       const member = await memberFromRequest(env, url);
       if (!member || !member.is_admin) return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
       const id = url.pathname.split('/')[3];
-      await env.zoelys_db.prepare(`UPDATE sitters SET is_active = 1 WHERE id = ?`).bind(id).run();
+      await env.zoelys_db.prepare(`UPDATE sitters SET is_active = 1, application_stage = 'approved' WHERE id = ?`).bind(id).run();
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+    if (request.method === 'POST' && url.pathname.startsWith('/api/sitters/') && url.pathname.endsWith('/stage')) {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member || !member.is_admin) return new Response(JSON.stringify({ error: 'Admin only' }), { status: 403, headers: corsHeaders });
+      const id = url.pathname.split('/')[3];
+      const body = await request.json().catch(() => ({}));
+      const stage = applyStageFor(body.stage);
+      await env.zoelys_db.prepare(`UPDATE sitters SET application_stage = ? WHERE id = ?`).bind(stage, id).run();
+      return new Response(JSON.stringify({ success: true, application_stage: stage }), { headers: corsHeaders });
     }
     if (request.method === 'POST' && url.pathname.startsWith('/api/sitters/') && url.pathname.endsWith('/reject')) {
       await ensureMatchmaking(env);

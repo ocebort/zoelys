@@ -16,8 +16,9 @@ function initNavigation() {
   const linkList = [
     ['/get-matched', 'get-matched', 'Find a Sitter'],
     ['/how-it-works', 'how-it-works', 'How It Works'],
+    ['/pricing', 'pricing', 'Pricing'],
     ['/trust', 'trust', 'Trust & Safety'],
-    ['/journal', 'journal', 'Journal']
+    ['/contact', 'contact', 'Contact']
   ];
 
   const links = linkList;

@@ -30,19 +30,43 @@
     .step-body { padding-top: 0.55rem; }
     .step-body h3 { font-family: var(--font-serif); font-size: 1.45rem; font-weight: 500; margin-bottom: 0.45rem; letter-spacing: -0.01em; }
     .step-body p { font-size: 0.88rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; max-width: 480px; }
-    .step-badge { display: inline-block; margin-top: 0.65rem; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-coral, #C96F5A); border: 1px solid currentColor; border-radius: 100px; padding: 0.32rem 0.85rem; }
+    .step-badge { display: inline-block; margin-top: 0.65rem; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-coral, #C96F5A); border: 1px solid currentColor; border-radius: 6px; padding: 0.32rem 0.85rem; }
 
     /* PROTECTION LAYERS */
     .layers { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 5rem; }
     @media (max-width: 700px) { .layers { grid-template-columns: 1fr; } }
-    .layer-card { background: var(--bg-card, #fff); border: 1px solid var(--hairline); border-radius: 1.25rem; padding: 2.25rem 2rem; box-shadow: 0 18px 40px -30px rgba(25,21,18,0.15); }
+    .layer-card { background: var(--bg-card, #fff); border: 1px solid var(--hairline); border-radius: 12px; padding: 2.25rem 2rem; box-shadow: 0 18px 40px -30px rgba(25,21,18,0.15); }
     .layer-tag { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 1rem; display: block; }
     .layer-card h3 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 500; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
     .layer-card p { font-size: 0.86rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; }
     .layer-card strong { color: var(--ink); font-weight: 600; }
 
+    /* WHAT COVERAGE COVERS */
+    .cedi { margin: 0 auto 5.5rem auto; max-width: 720px; }
+    .cede { display: grid; grid-template-columns: 230px 1fr; gap: 0.5rem 2.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--hairline); }
+    .cede:first-of-type { border-top: 1px solid var(--hairline); }
+    .cede-term { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); padding-top: 0.2rem; }
+    .cede-def { font-size: 0.86rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; }
+    .cede-def strong { color: var(--ink); font-weight: 600; }
+    @media (max-width: 600px) { .cede { grid-template-columns: 1fr; gap: 0.4rem; } }
+
+    /* EMERGENCY PROTOCOL */
+    .protocol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 5.5rem; }
+    @media (max-width: 700px) { .protocol-grid { grid-template-columns: 1fr; } }
+    .proto-card { border: 1px solid var(--hairline); background: var(--bg-card, #fff); border-radius: 12px; padding: 2rem 1.9rem; }
+    .proto-card .proto-no { font-family: var(--font-serif); font-size: 1.05rem; color: var(--accent-coral, #C96F5A); display: block; margin-bottom: 0.7rem; }
+    .proto-card h3 { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 500; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
+    .proto-card p { font-size: 0.84rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; }
+
+    /* PLEDGE STRIP */
+    .pledge-strip { border: 1px solid var(--hairline); background: var(--bg-cream-soft, #FDFBF7); border-radius: 12px; padding: 2.6rem 2.75rem; margin-bottom: 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    @media (max-width: 700px) { .pledge-strip { grid-template-columns: 1fr; } }
+    .pledge-strip h3 { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 400; margin-bottom: 0.8rem; }
+    .pledge-strip p { font-size: 0.86rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; }
+    .pledge-strip p strong { color: var(--ink); font-weight: 600; }
+
     /* BOOKING PROTECTION BAND */
-    .protection-band { background: var(--bg-cream-soft, #FDFBF7); border: 1px solid var(--hairline); border-radius: 1.5rem; padding: 3rem 2.75rem; text-align: center; margin-bottom: 5rem; }
+    .protection-band { background: var(--bg-cream-soft, #FDFBF7); border: 1px solid var(--hairline); border-radius: 12px; padding: 3rem 2.75rem; text-align: center; margin-bottom: 5rem; }
     .protection-band h3 { font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin-bottom: 0.9rem; }
     .protection-band p { font-size: 0.88rem; font-weight: 300; color: var(--ink-muted); line-height: 1.75; max-width: 520px; margin: 0 auto 1.9rem auto; }
 
@@ -125,6 +149,85 @@
       </div>
     </div>
 
+    <!-- WHAT COVERAGE COVERS -->
+    <div class="section-label">
+      <span class="eyebrow">The Fine Print, Plainly</span>
+      <h2>What is covered, and what is not</h2>
+    </div>
+
+    <div class="cedi">
+      <div class="cede">
+        <div class="cede-term">Injury to a pet in our care</div>
+        <div class="cede-def">Liability responds where the caregiver&rsquo;s own policy carries the incident. What matters to us more than the clause is the response: a phone call to you within the hour, never a claim number alone.</div>
+      </div>
+      <div class="cede">
+        <div class="cede-term">Mishaps in your home</div>
+        <div class="cede-def">Accidents to your property are handled the same way. Our concierge stays with the incident from first report until it settles, so you are never translating insurance paperwork on your own.</div>
+      </div>
+      <div class="cede">
+        <div class="cede-term">Prevention comes first</div>
+        <div class="cede-def">Protection is a backstop, not the product. The real safeguards happen before anything happens: written care plans, daily logs, vet permissions on file, and a caregiver who has already met your animal.</div>
+      </div>
+      <div class="cede">
+        <div class="cede-term">What is not covered</div>
+        <div class="cede-def">Pre-existing conditions, care chosen outside your written care plan, and incidents reported late. Plain language matters to us, so the full terms are sent to you before a booking, never after one.</div>
+      </div>
+    </div>
+
+    <!-- EMERGENCY PROTOCOL -->
+    <div class="section-label">
+      <span class="eyebrow">If Something Happens</span>
+      <h2>A protocol we rehearse, not improvise</h2>
+    </div>
+
+    <div class="protocol-grid">
+      <div class="proto-card">
+        <span class="proto-no">Protocol 01</span>
+        <h3>You are called first</h3>
+        <p>Your number and your vet&rsquo;s number are on file before day one. When something goes off plan, one of those two calls happens at once, with you first.</p>
+      </div>
+      <div class="proto-card">
+        <span class="proto-no">Protocol 02</span>
+        <h3>The approved plan governs</h3>
+        <p>The caregiver acts on what you wrote down: the vet, the medication, the quiet protocol. No improvisation where a written plan already exists.</p>
+      </div>
+      <div class="proto-card">
+        <span class="proto-no">Protocol 03</span>
+        <h3>An incident report within the hour</h3>
+        <p>What happened is written down while it is fresh, photographs where you allow them, and the next step is agreed with you before anything else happens.</p>
+      </div>
+      <div class="proto-card">
+        <span class="proto-no">Protocol 04</span>
+        <h3>We settle it through</h3>
+        <p>Our team routes the incident through the caregiver&rsquo;s policy or our own platform coverage, and stays with you until resolution, not until the paperwork lands.</p>
+      </div>
+    </div>
+
+    <!-- IN-HOME PRIVACY -->
+    <div class="section-label">
+      <span class="eyebrow">In Your Home</span>
+      <h2>On your terms, on your schedule</h2>
+    </div>
+
+    <div class="pledge-strip">
+      <div>
+        <h3>Your keys stay yours</h3>
+        <p>Keys are returned and logged the moment a sitting ends. No copies held, no quiet retention, and every entry into your home appears in the daily log your caregiver keeps for you.</p>
+      </div>
+      <div>
+        <h3>Nothing behind closed doors</h3>
+        <p>Care follows the care plan: feeding, walks, medication, calm time. The caregiver moves through your home the way you would, and the log always tells the truth about it.</p>
+      </div>
+      <div>
+        <h3>Cameras, if you run them</h3>
+        <p>If you keep cameras at home, say so in the care plan. The caregiver plans around them kindly, and we record the arrangement so there is no surprise on either side.</p>
+      </div>
+      <div>
+        <h3>Oversight never stops</h3>
+        <p>Credentials and liability policies are <strong>re-verified periodically</strong>, not assumed. Authorized status is renewed by evidence, and revoked quietly when it stops arriving.</p>
+      </div>
+    </div>
+
     <!-- OPTIONAL BOOKING PROTECTION -->
     <div class="protection-band">
       <span class="layer-tag">For Members. Coming Soon</span>
@@ -151,6 +254,8 @@
           <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
           <li><a href="/journal">Journal</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/contact">Contact Us</a></li>
         </ul>
       </div>
       <div>

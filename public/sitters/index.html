@@ -16,17 +16,17 @@
 
     /* ROSTER GRID */
     .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-    .roster-card { background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 1.5rem; padding: 2rem; box-shadow: 0 18px 40px -30px rgba(25,21,18,0.15); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease); cursor: pointer; }
+    .roster-card { background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 12px; padding: 2rem; box-shadow: 0 18px 40px -30px rgba(25,21,18,0.15); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease); cursor: pointer; }
     .roster-card:hover { transform: translateY(-3px); box-shadow: 0 26px 52px -32px rgba(25,21,18,0.28); }
     .roster-avatar { width: 3.6rem; height: 3.6rem; border-radius: 50%; background: var(--ink); color: var(--bg-cream); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.1rem; }
     .roster-card h3 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 500; margin-bottom: 0.2rem; }
     .roster-meta { font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 1rem; }
     .roster-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .roster-badge { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.28rem 0.65rem; border-radius: 100px; border: 1px solid var(--hairline); color: var(--ink); background: var(--bg-card); }
+    .roster-badge { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.28rem 0.65rem; border-radius: 6px; border: 1px solid var(--hairline); color: var(--ink); background: var(--bg-card); }
     .roster-badge.hi { border-color: var(--accent-coral, #C96F5A); color: var(--accent-coral, #C96F5A); }
 
     /* PROFILE VIEW */
-    .profile-hero { display: grid; grid-template-columns: auto 1fr auto; gap: 1.75rem; align-items: center; background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 1.75rem; padding: 2.75rem; margin-bottom: 2rem; }
+    .profile-hero { display: grid; grid-template-columns: auto 1fr auto; gap: 1.75rem; align-items: center; background: var(--bg-cream-soft); border: 1px solid var(--hairline); border-radius: 12px; padding: 2.75rem; margin-bottom: 2rem; }
     @media (max-width: 620px) { .profile-hero { grid-template-columns: 1fr; text-align: center; } }
     .profile-avatar { width: 6rem; height: 6rem; border-radius: 50%; background: var(--ink); color: var(--bg-cream); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 2.6rem; }
     .profile-hero h1 { font-family: var(--font-serif); font-weight: 500; font-size: 2.4rem; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
@@ -35,7 +35,7 @@
     .profile-rate .num { font-family: var(--font-serif); font-size: 2.8rem; }
     .profile-rate .lbl { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-muted); }
 
-    .profile-section { background: var(--bg-card); border: 1px solid var(--hairline); border-radius: 1.5rem; padding: 2.25rem 2.5rem; margin-bottom: 1.5rem; }
+    .profile-section { background: var(--bg-card); border: 1px solid var(--hairline); border-radius: 12px; padding: 2.25rem 2.5rem; margin-bottom: 1.5rem; }
     .profile-section h4 { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 500; margin-bottom: 1.25rem; }
     .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2rem; }
     @media (max-width: 600px) { .profile-grid { grid-template-columns: 1fr; } }
@@ -47,16 +47,16 @@
 
     /* GALLERY (Tinder-style photo moments) */
     .gal-wrap { position: relative; max-width: 620px; margin: 0 auto; }
-    .gal-stage { position: relative; border-radius: 1.5rem; overflow: hidden; border: 1px solid var(--hairline); aspect-ratio: 4 / 3; background: #EDE7DC; }
+    .gal-stage { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--hairline); aspect-ratio: 4 / 3; background: #EDE7DC; }
     .gal-img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .gal-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 2.7rem; height: 2.7rem; border-radius: 50%; border: none; background: rgba(25,21,18,0.55); color: #fff; font-size: 1.1rem; cursor: pointer; z-index: 5; backdrop-filter: blur(4px); }
     .gal-nav:hover { background: var(--ink); }
     .gal-prev { left: 0.9rem; }
     .gal-next { right: 0.9rem; }
-    .gal-count { position: absolute; top: 0.9rem; right: 1.1rem; font-size: 0.66rem; letter-spacing: 0.14em; color: #fff; background: rgba(25,21,18,0.55); padding: 0.3rem 0.75rem; border-radius: 100px; backdrop-filter: blur(4px); }
+    .gal-count { position: absolute; top: 0.9rem; right: 1.1rem; font-size: 0.66rem; letter-spacing: 0.14em; color: #fff; background: rgba(25,21,18,0.55); padding: 0.3rem 0.75rem; border-radius: 6px; backdrop-filter: blur(4px); }
     .gal-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.9rem; }
     .gal-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--hairline); cursor: pointer; transition: all 0.2s ease; }
-    .gal-dot.on { background: var(--accent-coral, #C96F5A); width: 1.1rem; border-radius: 100px; }
+    .gal-dot.on { background: var(--accent-coral, #C96F5A); width: 1.1rem; border-radius: 6px; }
 
     .loading { text-align: center; padding: 5rem 1rem; color: var(--ink-muted); font-weight: 300; }
     .empty { text-align: center; padding: 4rem 1rem; color: var(--ink-muted); }
@@ -88,6 +88,8 @@
           <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
           <li><a href="/journal">Journal</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/contact">Contact Us</a></li>
         </ul>
       </div>
       <div>
@@ -134,7 +136,7 @@
         <div class="empty" style="max-width: 560px; margin: 3rem auto; text-align: center;">
           <h3 style="font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.9rem; font-weight: 400; color: var(--ink, #191512); margin-bottom: 0.8rem;">No browsing, ever</h3>
           <p style="color: var(--ink-muted, #6E675F); line-height: 1.7; font-size: 0.9rem;">At Zoélys you never scroll through a roster. Your concierge studies your pet&rsquo;s dossier and handpicks the caregivers who truly fit; they appear privately in your portal once approved.</p>
-          <a href="/get-matched" style="display: inline-block; margin-top: 1.6rem; background: var(--ink, #191512); color: #FFF; text-decoration: none; padding: 0.9rem 1.9rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;">Start your journey &rarr;</a>
+          <a href="/get-matched" style="display: inline-block; margin-top: 1.6rem; background: var(--ink, #191512); color: #FFF; text-decoration: none; padding: 0.9rem 1.9rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;">Start your journey &rarr;</a>
         </div>`;
     }
 
@@ -227,7 +229,7 @@
 
           <div class="cta-row">
             <a class="btn btn-ink" href="/get-matched">Start a matching journey <span class="arrow">&rarr;</span></a>
-            <button class="btn btn-ghost-sm" onclick="history.back()" style="border:1px solid var(--hairline); background:transparent; color:var(--ink); border-radius:100px; padding:0.9rem 1.6rem; font-size:0.7rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; cursor:pointer;">Back</button>
+            <button class="btn btn-ghost-sm" onclick="history.back()" style="border:1px solid var(--hairline); background:transparent; color:var(--ink); border-radius: 6px; padding:0.9rem 1.6rem; font-size:0.7rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; cursor:pointer;">Back</button>
           </div>`;
       } catch (err) {
         area.innerHTML = '<div class="empty"><h3>Not found</h3></div>';
