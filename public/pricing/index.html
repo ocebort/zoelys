@@ -20,13 +20,9 @@
     .section-kicker .eyebrow { display: block; margin-bottom: 0.7rem; }
     .section-kicker h2 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2.35rem; font-weight: 400; letter-spacing: -0.01em; }
 
-    .price-band { border-top: 1px solid var(--ink, #191512); }
-    .price-band .band-row { display: grid; grid-template-columns: 1.2fr 1fr 1.6fr; gap: 1.5rem; padding: 1.9rem 0.4rem; border-bottom: 1px solid var(--hairline, #E5DED2); align-items: baseline; }
-    @media (max-width: 640px) { .price-band .band-row { grid-template-columns: 1fr; gap: 0.5rem; } }
-    .band-range { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.7rem; }
-    .band-cost { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.7rem; color: var(--accent, #C1623F); }
-    .band-cost small { font-family: var(--font-sans); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); display: block; margin-top: 0.2rem; }
-    .band-note { font-size: 0.82rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.7; }
+    .standard-banner { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2.7rem 2.4rem; text-align: center; margin: 3.5rem 0 0.5rem; }
+    .standard-banner .eyebrow { display: block; margin-bottom: 1rem; }
+    .standard-banner p { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: clamp(1.3rem, 2.4vw, 1.7rem); line-height: 1.55; max-width: 700px; margin: 0 auto; color: var(--ink, #191512); }
 
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0 3.5rem; }
     @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
@@ -108,37 +104,12 @@
       </div>
     </div>
 
-    <p class="small-print">One credit is &euro;5, always: a &euro;50 sitter rate appears as 10 credits, a &euro;75 rate as 15. Every sitter sets their own price inside a published range, and the figure you approve is the figure you pay. Comfort is the minimum at Zo&eacute;lys: a full day of care includes at least two walks, meals, and medication on schedule - all part of the sitting, never add-ons. The only extra is what your pet genuinely needs beyond that: grooming, or a visit to the vet.</p>
+    <p class="small-print">One credit is &euro;5, always: a &euro;50 sitter rate appears as 10 credits, a &euro;75 rate as 15. Every sitter sets their own price inside a published range, and the figure you approve is the figure you pay.</p>
 
-    <div class="section-kicker">
-      <span class="eyebrow">What your credits buy</span>
-      <h2>Real care, set prices</h2>
+    <div class="standard-banner">
+      <span class="eyebrow">The Zo&eacute;lys standard</span>
+      <p>Comfort is the minimum. A full day of care brings at least two walks, meals exactly as written, and medication on schedule, all folded into one quiet figure. Only what your pet truly needs beyond that, a moment with the groomer or the vet, is ever extra.</p>
     </div>
-
-    <div class="price-band">
-      <div class="band-row">
-        <div class="band-range">&euro;35 to &euro;120</div>
-        <div class="band-cost">Overnight <small>per night</small></div>
-        <div class="band-note">Quiet, essential care with a caregiver in your home. Meals, medication on schedule, walks, and the daily care log.</div>
-      </div>
-      <div class="band-row">
-        <div class="band-range">&euro;18 to &euro;45</div>
-        <div class="band-cost">Hour-long walk <small>per walk</small></div>
-        <div class="band-note">The full hour of real exercise, fresh water on return, and a short note on how it went.</div>
-      </div>
-      <div class="band-row">
-        <div class="band-range">&euro;10 to &euro;30</div>
-        <div class="band-cost">Half-hour walk <small>per walk</small></div>
-        <div class="band-note">A calm, consistent pop-out that keeps a senior or city pet on a healthy rhythm.</div>
-      </div>
-      <div class="band-row">
-        <div class="band-range">&euro;25 to &euro;70</div>
-        <div class="band-cost">Four-hour sitting <small>per visit</small></div>
-        <div class="band-note">Companion care for pets who want company more than walks: the shy cat, the work-from-home companion.</div>
-      </div>
-    </div>
-
-    <p class="small-print">Every caregiver sets a price inside these ranges, to the exact euro and in multiples of &euro;5. Giving medication, grooming, and vet visits are part of sitting, not extras. There are no booking fees, no peak pricing, and nothing that turns routine needs into add-ons.</p>
 
     <div class="section-kicker">
       <span class="eyebrow">In the open</span>
