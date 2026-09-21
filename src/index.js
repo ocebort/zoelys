@@ -1,4 +1,59 @@
 let postsBootstrapped = false;
+let matchmakingBootstrapped = false;
+
+async function ensureMatchmaking(env) {
+  if (matchmakingBootstrapped) return;
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS client_requests (
+    id TEXT PRIMARY KEY,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    neighbourhood TEXT,
+    pet_type TEXT,
+    pet_name TEXT,
+    breed TEXT,
+    behavioral_traits TEXT,
+    medical_conditions TEXT,
+    exercise_needs TEXT,
+    service_type TEXT,
+    start_date TEXT,
+    end_date TEXT,
+    outdoor_space TEXT,
+    experience_level TEXT
+  )`).run();
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS sitters (
+    id TEXT PRIMARY KEY,
+    full_name TEXT NOT NULL,
+    neighbourhood TEXT NOT NULL,
+    experience_years INTEGER DEFAULT 1,
+    vet_tech_background BOOLEAN DEFAULT 0,
+    accepted_pet_types TEXT NOT NULL,
+    can_handle_anxiety BOOLEAN DEFAULT 1,
+    can_handle_medication BOOLEAN DEFAULT 0,
+    has_outdoor_space BOOLEAN DEFAULT 0,
+    nightly_rate_usd REAL NOT NULL,
+    is_active BOOLEAN DEFAULT 1
+  )`).run();
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS matches (
+    id TEXT PRIMARY KEY,
+    request_id TEXT NOT NULL,
+    sitter_id TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`).run();
+
+  const row = await env.zoelys_db.prepare(`SELECT COUNT(*) AS c FROM sitters`).first();
+  if (row && row.c === 0) {
+    const seeds = [
+      ['sitter-1', 'Elena Rostova', 'Brickell', 5, 1, 'Dog,Cat', 1, 1, 1, 85.00],
+      ['sitter-2', 'Marcus Vance', 'Coconut Grove', 4, 0, 'Dog', 1, 0, 1, 65.00],
+      ['sitter-3', 'Sophia Chen', 'South Beach', 3, 0, 'Cat', 1, 0, 0, 70.00]
+    ];
+    for (const s of seeds) {
+      await env.zoelys_db.prepare(`INSERT OR IGNORE INTO sitters (id, full_name, neighbourhood, experience_years, vet_tech_background, accepted_pet_types, can_handle_anxiety, can_handle_medication, has_outdoor_space, nightly_rate_usd) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(...s).run();
+    }
+  }
+  matchmakingBootstrapped = true;
+}
 
 async function ensurePosts(env) {
   if (postsBootstrapped) return;
@@ -216,6 +271,133 @@ export default {
       const body = await request.json();
       await env.zoelys_db.prepare(`UPDATE users SET credit_balance = credit_balance + ? WHERE id = ?`).bind(body.amount || 5, body.user_id).run().catch(() => {});
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    }
+
+    // CLIENT MATCHMAKING REQUEST (owner intake)
+    if (request.method === 'POST' && url.pathname === '/api/requests') {
+      try {
+        await ensureMatchmaking(env);
+        const body = await request.json();
+        const id = 'req-' + crypto.randomUUID().slice(0, 8);
+        await env.zoelys_db.prepare(`
+          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          id,
+          body.full_name, body.email, body.neighbourhood,
+          body.pet_type, body.pet_name, body.breed,
+          body.behavioral_traits, body.medical_conditions, body.exercise_needs,
+          body.service_type, body.start_date, body.end_date,
+          body.outdoor_space, body.experience_level
+        ).run();
+        return new Response(JSON.stringify({ success: true, requestId: id }), { headers: corsHeaders });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: 'Request could not be saved' }), { status: 400, headers: corsHeaders });
+      }
+    }
+    if (request.method === 'GET' && url.pathname === '/api/requests') {
+      await ensureMatchmaking(env);
+      const email = (url.searchParams.get('email') || '').trim().toLowerCase();
+      const { results } = email
+        ? await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE LOWER(TRIM(email)) = ? ORDER BY created_at DESC`).bind(email).all()
+        : await env.zoelys_db.prepare(`SELECT * FROM client_requests ORDER BY created_at DESC`).all();
+      return new Response(JSON.stringify({ requests: results || [] }), { headers: corsHeaders });
+    }
+
+    // SITTERS ROSTER API
+    if (request.method === 'POST' && url.pathname === '/api/sitters') {
+      try {
+        await ensureMatchmaking(env);
+        const body = await request.json();
+        const id = 'sitter-' + crypto.randomUUID().slice(0, 6);
+        const types = Array.isArray(body.accepted_pet_types) ? body.accepted_pet_types.join(',') : (body.accepted_pet_types || 'Dog');
+        await env.zoelys_db.prepare(`
+          INSERT INTO sitters (id, full_name, neighbourhood, experience_years, vet_tech_background, accepted_pet_types, can_handle_anxiety, can_handle_medication, has_outdoor_space, nightly_rate_usd)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          id, body.full_name, body.neighbourhood,
+          Number(body.experience_years) || 1,
+          body.vet_tech_background ? 1 : 0,
+          types,
+          body.can_handle_anxiety ? 1 : 1,
+          body.can_handle_medication ? 1 : 0,
+          body.has_outdoor_space ? 1 : 0,
+          Number(body.nightly_rate_usd) || 60
+        ).run();
+        return new Response(JSON.stringify({ success: true, sitterId: id }), { headers: corsHeaders });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: 'Sitter application could not be saved' }), { status: 400, headers: corsHeaders });
+      }
+    }
+    if (request.method === 'GET' && url.pathname === '/api/sitters') {
+      await ensureMatchmaking(env);
+      const { results } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1 ORDER BY full_name ASC`).all();
+      return new Response(JSON.stringify({ sitters: results || [] }), { headers: corsHeaders });
+    }
+    if (request.method === 'GET' && url.pathname.startsWith('/api/sitters/')) {
+      await ensureMatchmaking(env);
+      const id = url.pathname.split('/')[3];
+      const sitter = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE id = ? AND is_active = 1`).bind(id).first();
+      return new Response(JSON.stringify({ sitter: sitter || null }), { headers: corsHeaders });
+    }
+
+    // MATCH ENGINE + RECORDED MATCHES
+    if (request.method === 'GET' && url.pathname === '/api/match') {
+      await ensureMatchmaking(env);
+      const requestId = url.searchParams.get('requestId');
+      const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(requestId).first();
+      if (!req) return new Response(JSON.stringify({ error: 'Request not found' }), { status: 404, headers: corsHeaders });
+
+      const { results: sitters } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1`).all();
+      const needs = {
+        species: (req.pet_type || '').toLowerCase(),
+        meds: /yes/i.test(req.medical_conditions || ''),
+        anxiety: /anxiety/i.test(req.behavioral_traits || ''),
+        outdoor: /yes/i.test(req.outdoor_space || ''),
+        neighbourhood: (req.neighbourhood || '').trim().toLowerCase()
+      };
+
+      const matches = (sitters || []).map(s => {
+        const reasons = [];
+        let score = 0;
+
+        const accepted = (s.accepted_pet_types || '').split(',').map(t => t.trim().toLowerCase());
+        if (needs.species && !accepted.includes(needs.species)) return null;
+
+        score += 25; reasons.push('Perfect species match');
+        if (needs.neighbourhood && s.neighbourhood.trim().toLowerCase() === needs.neighbourhood) {
+          score += 20; reasons.push('In your neighbourhood');
+        } else {
+          score += 10; reasons.push('Nearby in Miami');
+        }
+        if (needs.meds && s.can_handle_medication) { score += 15; reasons.push('Confident with medications'); }
+        if (needs.anxiety && s.can_handle_anxiety) { score += 10; reasons.push('Calms separation anxiety'); }
+        if (needs.outdoor && s.has_outdoor_space) { score += 15; reasons.push('Fenced outdoor space'); }
+        else if (!needs.outdoor) { score += 10; reasons.push('Outdoor ready'); }
+        if (s.vet_tech_background) { score += 15; reasons.push('Certified vet tech'); }
+        else if (s.experience_years >= 5) { score += 12; reasons.push(5 + '+ years experience'); }
+        else { score += 8; reasons.push('Experienced caregiver'); }
+
+        score = Math.min(score, 100);
+        return { ...s, match_score: score, match_reasons: reasons };
+      }).filter(Boolean).sort((a, b) => b.match_score - a.match_score);
+
+      return new Response(JSON.stringify({ matches, request: req }), { headers: corsHeaders });
+    }
+    if (request.method === 'POST' && url.pathname === '/api/matches') {
+      await ensureMatchmaking(env);
+      const body = await request.json();
+      const id = 'mch-' + crypto.randomUUID().slice(0, 6);
+      await env.zoelys_db.prepare(`INSERT INTO matches (id, request_id, sitter_id) VALUES (?, ?, ?)`).bind(id, body.request_id, body.sitter_id).run().catch(() => {});
+      return new Response(JSON.stringify({ success: true, matchId: id }), { headers: corsHeaders });
+    }
+    if (request.method === 'GET' && url.pathname === '/api/matches') {
+      await ensureMatchmaking(env);
+      const requestIds = (url.searchParams.get('requestIds') || '').split(',').filter(Boolean);
+      if (!requestIds.length) return new Response(JSON.stringify({ matches: [] }), { headers: corsHeaders });
+      const clause = requestIds.map(() => '?').join(',');
+      const { results } = await env.zoelys_db.prepare(`SELECT m.id, m.request_id, m.sitter_id, s.full_name AS sitter_name, s.neighbourhood, s.nightly_rate_usd, s.vet_tech_background, r.full_name AS owner_name FROM matches m JOIN sitters s ON s.id = m.sitter_id JOIN client_requests r ON r.id = m.request_id WHERE m.request_id IN (${clause}) ORDER BY m.created_at DESC`).bind(...requestIds).all();
+      return new Response(JSON.stringify({ matches: results || [] }), { headers: corsHeaders });
     }
 
     // EVENTS & PARTNERS APIs
