@@ -139,6 +139,14 @@
       try { return JSON.parse(r || '[]'); } catch (e) { return []; }
     }
 
+    function rateLine(s) {
+      try {
+        const r = JSON.parse(s.rates_eur || '{}') || {};
+        if (r.overnight) return '€' + Number(r.overnight).toFixed(0) + '/night';
+      } catch (e) {}
+      return '€' + Math.round((Number(s.nightly_rate_usd) || 60) / 5) * 5 + '/night';
+    }
+
     function renderMatches(matches, status) {
       const area = document.getElementById('contentArea');
       const revealed = status === 'confirmed' || status === 'in_care' || status === 'completed';
@@ -147,7 +155,7 @@
           <div class="match-rank ${i === 0 ? 'best' : ''}">${String(i + 1).padStart(2, '0')}</div>
           <div class="match-main">
             <h3>${m.full_name}</h3>
-            <div class="match-sub"><b>${m.neighbourhood}</b> &middot; ${m.experience_years}+ years &middot; $${Number(m.nightly_rate_usd).toFixed(0)}/night${m.vet_tech_background ? ' &middot; <b>Vet tech</b>' : ''}</div>
+            <div class="match-sub"><b>${m.neighbourhood}</b> &middot; ${m.experience_years}+ years &middot; ${rateLine(m)}${m.vet_tech_background ? ' &middot; <b>Vet tech</b>' : ''}</div>
             <div class="reason-tags">${parseReasons(m.match_reasons).map(r => `<span class="reason-tag">${r}</span>`).join('')}</div>
           </div>
           <div class="score-pill">
@@ -182,6 +190,11 @@
       } else {
         btn.disabled = false;
         btn.textContent = 'Confirm ' + matchId;
+        const label = data.code === 'MEET_GREET_PENDING'
+          ? 'This owner requested a meet and greet before a sitting can be confirmed. Complete it in your dashboard journey first.'
+          : (data.error || 'Could not confirm. Try again.');
+        alert(label);
+        if (data.code === 'MEET_GREET_PENDING') loadMatches();
       }
     }
 

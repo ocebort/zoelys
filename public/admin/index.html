@@ -415,7 +415,7 @@
           <div class="sitter-match-header">
             <div>
               <strong>${m.full_name || m.sitter_name}</strong>
-              <div style="font-size:0.75rem; color:var(--text-muted);">${m.neighbourhood} &bull; $${Number(m.nightly_rate_usd).toFixed(0)}/night${m.vet_tech_background ? ' &bull; Vet tech' : ''}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${m.neighbourhood} &bull; ${(() => { try { const r = JSON.parse(m.rates_eur || '{}') || {}; return r.overnight ? '€' + Number(r.overnight).toFixed(0) + '/night' : ''; } catch (e) { return ''; } })() || '€' + Math.round((Number(m.nightly_rate_usd) || 60) / 5) * 5 + '/night'}${m.vet_tech_background ? ' &bull; Vet tech' : ''}</div>
             </div>
             <div class="match-score">${m.match_score}%</div>
           </div>

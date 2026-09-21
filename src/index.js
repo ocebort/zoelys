@@ -43,7 +43,7 @@ async function computeMatches(env, req) {
     else { score += 8; reasons.push('Experienced caregiver'); }
 
     if (budgetMax != null) {
-      if (Number(s.nightly_rate_usd) <= budgetMax) {
+      if (sitterOvernightEur(s) <= budgetMax) {
         score += 10; reasons.push('Within your budget');
       } else {
         score -= 8; reasons.push('Above your budget range');
@@ -57,18 +57,47 @@ async function computeMatches(env, req) {
 
 function parseBudget(range) {
   const r = (range || '').toLowerCase();
-  if (/under\s*\$?50/.test(r)) return 50;
-  if (/\$50/.test(r) && /\$99/.test(r)) return 99;
-  if (/\$100/.test(r) && /\$149/.test(r)) return 149;
+  if (/under\s*[€$]?50/.test(r)) return 50;
+  if (/[€$]?50/.test(r) && /[€$]?99/.test(r)) return 99;
+  if (/[€$]?100/.test(r) && /[€$]?149/.test(r)) return 149;
   return null;
 }
 
-function creditCostForBudget(range) {
-  const r = (range || '').toLowerCase();
-  if (/under\s*\$?50/.test(r)) return 1;
-  if (/\$150\s*\+|over\s*\$?150/.test(r)) return 3;
-  return 2;
+const EUR_PER_CREDIT = 5;
+const PLATFORM_SPREAD = 0.20;
+const SIT_SERVICES = [
+  { id: 'overnight', label: 'Overnight sitting', unit: 'night', min: 35, max: 120 },
+  { id: 'walk60', label: 'Hour-long walk', unit: 'walk', min: 18, max: 45 },
+  { id: 'walk30', label: 'Half-hour walk', unit: 'walk', min: 10, max: 30 },
+  { id: 'sit4h', label: 'Four-hour sitting', unit: 'visit', min: 25, max: 70 }
+];
+
+function serviceById(id) { return SIT_SERVICES.find(s => s.id === id) || null; }
+function creditsForEuro(amount) { return Math.max(1, Math.round((Number(amount) || 0) / EUR_PER_CREDIT)); }
+function eurosFromCredits(credits) { return (Number(credits) || 0) * EUR_PER_CREDIT; }
+function netAfterSpread(euros) { return Math.round((Number(euros) || 0) * (1 - PLATFORM_SPREAD) * 100) / 100; }
+function spreadOf(euros) { return Math.round((Number(euros) || 0) * PLATFORM_SPREAD * 100) / 100; }
+function roundToFive(v) { return Math.round((Number(v) || 0) / 5) * 5; }
+function clampRate(id, v) {
+  const s = serviceById(id); if (!s) return null;
+  const r = roundToFive(v);
+  return Math.min(s.max, Math.max(s.min, r));
 }
+function cleanRates(raw) {
+  const out = {};
+  for (const s of SIT_SERVICES) {
+    const v = roundToFive(Number((raw && raw[s.id])));
+    if (Number.isFinite(v) && v > 0) out[s.id] = Math.min(s.max, Math.max(s.min, v));
+  }
+  return out;
+}
+function parseRates(s) {
+  let r = {};
+  try { r = JSON.parse(s.rates_eur || '{}') || {}; } catch (e) { r = {}; }
+  if (!Object.keys(r).length) r = { overnight: Math.min(120, Math.max(35, roundToFive(Number(s.nightly_rate_usd || 60)))) };
+  return r;
+}
+function sitterOvernightEur(s) { return Number(parseRates(s).overnight) || 0; }
 
 function nightsFor(start, end) {
   if (!start) return 1;
@@ -87,17 +116,49 @@ function sitterStageIndex(stage) {
 
 const applyStageFor = (stage) => SITTER_STAGES.includes(stage) ? stage : 'submitted';
 
+function bookingTotals(sitter, req) {
+  const rates = parseRates(sitter);
+  let overnight = Number(rates.overnight) || sitterOvernightEur(sitter) || 0;
+  const nights = nightsFor(req.start_date, req.end_date);
+  let totalEur = overnight * nights;
+  let micro = ['Nights at ' + overnight + ' EUR x ' + nights + ' = ' + totalEur + ' EUR'];
+  let services = [];
+  try { services = JSON.parse(req.services || '[]'); } catch (e) { services = []; }
+  for (const svc of services) {
+    if (!svc || !svc.id || svc.id === 'overnight') continue;
+    const rate = Number(rates[svc.id]) || 0;
+    const count = Math.max(1, Math.round(Number(svc.count) || 1));
+    if (rate > 0) { totalEur += rate * count; micro.push(rate + ' EUR x ' + count + ' ' + svc.id + ' = ' + rate * count + ' EUR'); }
+  }
+  totalEur = Math.round(totalEur * 100) / 100;
+  const sitterPayout = netAfterSpread(totalEur);
+  const platformFee = spreadOf(totalEur);
+  const credits = creditsForEuro(totalEur);
+  return { rates, overnight, nights, totalEur, sitterPayout, platformFee, credits, micro };
+}
+
 async function creditWallet(env, matchId) {
   const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(matchId).first();
-  if (!match || Number(match.earnings || 0) > 0) return;
+  if (!match || Number(match.earnings || 0) > 0) return { ok: true, already: true };
   const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(match.request_id).first();
-  const sitter = await env.zoelys_db.prepare(`SELECT nightly_rate_usd FROM sitters WHERE id = ?`).bind(match.sitter_id).first();
-  if (!req || !sitter) return;
-  const earnings = Number(sitter.nightly_rate_usd || 0) * nightsFor(req.start_date, req.end_date);
-  await env.zoelys_db.prepare(`UPDATE matches SET earnings = ? WHERE id = ?`).bind(earnings, matchId).run().catch(() => {});
+  const sitter = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE id = ?`).bind(match.sitter_id).first();
+  if (!req || !sitter) return { ok: false, error: 'Booking details missing' };
+
+  const bt = bookingTotals(sitter, req);
+  const owner = req.email ? await env.zoelys_db.prepare(`SELECT * FROM users WHERE LOWER(TRIM(email)) = ?`).bind(String(req.email).toLowerCase()).first() : null;
+  const balance = Number(owner && owner.credit_balance || 0);
+  if (bt.credits > balance) return { ok: false, need: bt.credits - balance, credits: bt.credits, totalEur: bt.totalEur, error: 'Insufficient credits. Top up to continue.' };
+
+  await env.zoelys_db.prepare(`INSERT INTO ledger (id, match_id, request_id, owner_id, sitter_id, pet_name, service_note, total_eur, total_credits, sitter_payout, platform_fee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+    'led-' + crypto.randomUUID().slice(0, 6), matchId, match.request_id, owner ? owner.id : '', match.sitter_id, req.pet_name || 'Pet care', bt.micro.join('. '), bt.totalEur, bt.credits, bt.sitterPayout, bt.platformFee
+  ).run().catch(() => {});
+
+  await env.zoelys_db.prepare(`UPDATE matches SET earnings = ? WHERE id = ?`).bind(bt.totalEur, matchId).run().catch(() => {});
+  await env.zoelys_db.prepare(`UPDATE users SET credit_balance = credit_balance - ? WHERE id = ?`).bind(bt.credits, owner.id).run().catch(() => {});
   await env.zoelys_db.prepare(`INSERT INTO sitter_wallets (id, sitter_id, available, withdrawn) VALUES (?, ?, 0, 0) ON CONFLICT (sitter_id) DO NOTHING`).bind('wl-' + crypto.randomUUID().slice(0, 6), match.sitter_id).run().catch(() => {});
-  await env.zoelys_db.prepare(`UPDATE sitter_wallets SET available = available + ? WHERE sitter_id = ?`).bind(earnings, match.sitter_id).run().catch(() => {});
-  await env.zoelys_db.prepare(`INSERT INTO wallet_txns (id, sitter_id, match_id, kind, amount, note) VALUES (?, ?, ?, 'earning', ?, ?)`).bind('txn-' + crypto.randomUUID().slice(0, 6), match.sitter_id, matchId, earnings, `Sitting payout: ${req.pet_name || 'pet care'}`).run().catch(() => {});
+  await env.zoelys_db.prepare(`UPDATE sitter_wallets SET available = available + ? WHERE sitter_id = ?`).bind(bt.sitterPayout, match.sitter_id).run().catch(() => {});
+  await env.zoelys_db.prepare(`INSERT INTO wallet_txns (id, sitter_id, match_id, kind, amount, note) VALUES (?, ?, ?, 'earning', ?, ?)`).bind('txn-' + crypto.randomUUID().slice(0, 6), match.sitter_id, matchId, bt.sitterPayout, 'Payout for ' + (req.pet_name || 'pet care') + ': ' + bt.credits + ' credits (' + bt.totalEur + ' EUR), platform keeps ' + bt.platformFee + ' EUR').run().catch(() => {});
+  return { ok: true, totalEur: bt.totalEur, credits: bt.credits, sitterPayout: bt.sitterPayout, platformFee: bt.platformFee };
 }
 
 function matchParticipant(env, member, match) {
@@ -129,7 +190,10 @@ async function ensureMatchmaking(env) {
     end_date TEXT,
     outdoor_space TEXT,
     experience_level TEXT,
-    status TEXT DEFAULT 'matching'
+    status TEXT DEFAULT 'matching',
+    meet_greet_required BOOLEAN DEFAULT 0,
+    meet_greet_completed BOOLEAN DEFAULT 0,
+    meet_greet_done_at DATETIME DEFAULT NULL
   )`).run();
   await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS sitters (
     id TEXT PRIMARY KEY,
@@ -164,6 +228,25 @@ async function ensureMatchmaking(env) {
   await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN bio TEXT DEFAULT ''`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN gallery TEXT DEFAULT '[]'`).run().catch(() => {});
   await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN application_stage TEXT DEFAULT 'submitted'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE sitters ADD COLUMN rates_eur TEXT DEFAULT '{}'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE client_requests ADD COLUMN services TEXT DEFAULT '[]'`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE client_requests ADD COLUMN meet_greet_required BOOLEAN DEFAULT 0`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE client_requests ADD COLUMN meet_greet_completed BOOLEAN DEFAULT 0`).run().catch(() => {});
+  await env.zoelys_db.prepare(`ALTER TABLE client_requests ADD COLUMN meet_greet_done_at DATETIME DEFAULT NULL`).run().catch(() => {});
+  await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS ledger (
+    id TEXT PRIMARY KEY,
+    match_id TEXT DEFAULT '',
+    request_id TEXT DEFAULT '',
+    owner_id TEXT DEFAULT '',
+    sitter_id TEXT DEFAULT '',
+    pet_name TEXT DEFAULT '',
+    service_note TEXT DEFAULT '',
+    total_eur REAL DEFAULT 0,
+    total_credits INTEGER DEFAULT 0,
+    sitter_payout REAL DEFAULT 0,
+    platform_fee REAL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`).run();
   await env.zoelys_db.prepare(`CREATE TABLE IF NOT EXISTS contact_messages (
     id TEXT PRIMARY KEY,
     full_name TEXT DEFAULT '',
@@ -330,6 +413,22 @@ Learn to check the guaranteed analysis and the calorie content (kcal per cup or 
   postsBootstrapped = true;
 }
 
+async function decorateLedger(env, rows) {
+  if (!rows || !rows.length) return rows;
+  const ids = new Set(rows.map(r => r.request_id || ''));
+  const sids = new Set(rows.map(r => r.sitter_id || ''));
+  const { results: reqs = [] } = ids.size ? await env.zoelys_db.prepare(`SELECT id, full_name, pet_name, service_type FROM client_requests WHERE id IN (${Array.from(ids).map(() => '?').join(',')})`).bind(...Array.from(ids)).all() : { results: [] };
+  const { results: sitters = [] } = sids.size ? await env.zoelys_db.prepare(`SELECT id, full_name FROM sitters WHERE id IN (${Array.from(sids).map(() => '?').join(',')})`).bind(...Array.from(sids)).all() : { results: [] };
+  const reqMap = {}; reqs.forEach(r => reqMap[r.id] = r);
+  const sitMap = {}; sitters.forEach(s => sitMap[s.id] = s);
+  return rows.map(r => ({
+    ...r,
+    owner_name: reqMap[r.request_id] ? (reqMap[r.request_id].full_name || '') : '',
+    sitter_name: sitMap[r.sitter_id] ? sitMap[r.sitter_id].full_name : '',
+    service_type: reqMap[r.request_id] ? (reqMap[r.request_id].service_type || '') : ''
+  }));
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -357,7 +456,7 @@ export default {
         const passClean = (body.password || '').trim();
         const role = body.role || 'owner';
         const id = (role === 'sitter' ? 'sit-' : 'usr-') + crypto.randomUUID().slice(0, 8);
-        const tier = body.tier || 'Platinum ($125/mo)';
+        const tier = body.tier || 'Platinum (€50/mo)';
         const credits = tier.includes('Gold') ? 5 : tier.includes('Platinum') ? 10 : 15;
 
         await env.zoelys_db.prepare(`
@@ -414,7 +513,7 @@ export default {
         
         if (!user) {
           return new Response(JSON.stringify({ 
-            user: { id: userId, email: 'member@zoelys.com', full_name: 'Member', subscription_tier: 'Platinum ($125/mo)', credit_balance: 8, role: 'owner', is_admin: 0 } 
+            user: { id: userId, email: 'member@zoelys.com', full_name: 'Member', subscription_tier: 'Platinum (€50/mo)', credit_balance: 8, role: 'owner', is_admin: 0 } 
           }), { headers: corsHeaders });
         }
 
@@ -452,15 +551,12 @@ export default {
         const member = await memberFromRequest(env, url);
         if (!member) return new Response(JSON.stringify({ error: 'Members only — sign in to begin' }), { status: 401, headers: corsHeaders });
         const body = await request.json();
-        const cost = creditCostForBudget(body.budget_range);
-        const balance = Number(member.credit_balance || 0);
-        if (balance < cost) {
-          return new Response(JSON.stringify({ error: 'Not enough credits for this request', required: cost, balance }), { status: 402, headers: corsHeaders });
-        }
+        const services = Array.isArray(body.services) ? JSON.stringify(body.services) : '[]';
+        const meetGreetRequired = Number(body.meet_greet_required) === 1;
         const id = 'req-' + crypto.randomUUID().slice(0, 8);
         await env.zoelys_db.prepare(`
-          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level, status, budget_range)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO client_requests (id, full_name, email, neighbourhood, pet_type, pet_name, breed, behavioral_traits, medical_conditions, exercise_needs, service_type, start_date, end_date, outdoor_space, experience_level, status, budget_range, services, meet_greet_required)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           id,
           body.full_name, member.email, body.neighbourhood,
@@ -469,11 +565,11 @@ export default {
           body.service_type, body.start_date, body.end_date,
           body.outdoor_space, body.experience_level,
           'pending',
-          body.budget_range || ''
+          body.budget_range || '',
+          services,
+          meetGreetRequired ? 1 : 0
         ).run();
-        const newBalance = balance - cost;
-        await env.zoelys_db.prepare(`UPDATE users SET credit_balance = ? WHERE id = ?`).bind(newBalance, member.id).run();
-        return new Response(JSON.stringify({ success: true, requestId: id, status: 'pending', credits_charged: cost, balance: newBalance }), { headers: corsHeaders });
+        return new Response(JSON.stringify({ success: true, requestId: id, status: 'pending', balance: Number(member.credit_balance || 0) }), { headers: corsHeaders });
       } catch (e) {
         return new Response(JSON.stringify({ error: 'Request could not be saved' }), { status: 400, headers: corsHeaders });
       }
@@ -525,11 +621,13 @@ export default {
       try {
         await ensureMatchmaking(env);
         const body = await request.json();
+        const rates = cleanRates(body.rates || (body.nightly_rate_usd ? { overnight: body.nightly_rate_usd } : {}));
+        if (!rates.overnight) return new Response(JSON.stringify({ error: 'Set a rate for at least the overnight sitting, within the allowed floor and ceiling.' }), { status: 400, headers: corsHeaders });
         const id = 'sitter-' + crypto.randomUUID().slice(0, 6);
         const types = Array.isArray(body.accepted_pet_types) ? body.accepted_pet_types.join(',') : (body.accepted_pet_types || 'Dog');
         await env.zoelys_db.prepare(`
-          INSERT INTO sitters (id, full_name, neighbourhood, experience_years, vet_tech_background, accepted_pet_types, can_handle_anxiety, can_handle_medication, has_outdoor_space, nightly_rate_usd, is_active, application_stage)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO sitters (id, full_name, neighbourhood, experience_years, vet_tech_background, accepted_pet_types, can_handle_anxiety, can_handle_medication, has_outdoor_space, nightly_rate_usd, rates_eur, is_active, application_stage)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           id, body.full_name, body.neighbourhood,
           Number(body.experience_years) || 1,
@@ -538,11 +636,12 @@ export default {
           body.can_handle_anxiety ? 1 : 0,
           body.can_handle_medication ? 1 : 0,
           body.has_outdoor_space ? 1 : 0,
-          Number(body.nightly_rate_usd) || 60,
+          Number(rates.overnight) || 60,
+          JSON.stringify(rates),
           0,
           'submitted'
         ).run();
-        return new Response(JSON.stringify({ success: true, sitterId: id, status: 'pending', application_stage: 'submitted' }), { headers: corsHeaders });
+        return new Response(JSON.stringify({ success: true, sitterId: id, status: 'pending', application_stage: 'submitted', rates }), { headers: corsHeaders });
       } catch (e) {
         return new Response(JSON.stringify({ error: 'Sitter application could not be saved' }), { status: 400, headers: corsHeaders });
       }
@@ -649,7 +748,7 @@ export default {
       const { results: requests = [] } = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE LOWER(TRIM(email)) = ? ORDER BY created_at DESC`).bind(member.email.toLowerCase()).all();
       const tracked = [];
       for (const r of requests) {
-        const { results: mch = [] } = await env.zoelys_db.prepare(`SELECT m.id, m.sitter_id, m.status, m.match_score, m.match_reasons, m.created_at, s.full_name, s.neighbourhood, s.nightly_rate_usd, s.vet_tech_background, s.experience_years FROM matches m JOIN sitters s ON s.id = m.sitter_id WHERE m.request_id = ? ORDER BY m.created_at DESC`).bind(r.id).all();
+        const { results: mch = [] } = await env.zoelys_db.prepare(`SELECT m.id, m.sitter_id, m.status, m.match_score, m.match_reasons, m.created_at, s.full_name, s.neighbourhood, s.nightly_rate_usd, s.rates_eur, s.vet_tech_background, s.experience_years FROM matches m JOIN sitters s ON s.id = m.sitter_id WHERE m.request_id = ? ORDER BY m.created_at DESC`).bind(r.id).all();
         tracked.push({ ...r, status: r.status || 'pending', matches: mch });
       }
       return new Response(JSON.stringify({ requests: tracked }), { headers: corsHeaders });
@@ -667,16 +766,44 @@ export default {
       if (!member.is_admin && req.email.toLowerCase() !== member.email.toLowerCase()) {
         return new Response(JSON.stringify({ error: 'Not your request' }), { status: 403, headers: corsHeaders });
       }
+      if (status === 'confirmed') {
+        if (Number(req.meet_greet_required) === 1 && Number(req.meet_greet_completed) !== 1) {
+          return new Response(JSON.stringify({ error: 'Meet and greet required before you can confirm. Complete it in the journey first.', code: 'MEET_GREET_PENDING', meet_greet_required: 1, meet_greet_completed: 0 }), { status: 400, headers: corsHeaders });
+        }
+        const { results: ms = [] } = await env.zoelys_db.prepare(`SELECT id FROM matches WHERE request_id = ? AND status IN ('proposed','confirmed','accepted')`).bind(body.request_id).all();
+        const booked = body.sitter_id ? ms.filter(m => m.id === body.sitter_id) : ms.slice(0, 1);
+        for (const m of booked) {
+          const ch = await creditWallet(env, m.id);
+          if (ch && ch.ok === false && ch.need) {
+            return new Response(JSON.stringify({ error: ch.error || 'Insufficient credits', need: ch.need, credits: ch.credits, totalEur: ch.totalEur, balance: Number(member.credit_balance || 0) }), { status: 402, headers: corsHeaders });
+          }
+        }
+      }
       await env.zoelys_db.prepare(`UPDATE client_requests SET status = ? WHERE id = ?`).bind(status, body.request_id).run();
-      const matchesToUpdate = status === 'declined'
-        ? ['proposed', 'confirmed', 'accepted']
-        : ['proposed', 'confirmed', 'accepted'];
       await env.zoelys_db.prepare(`UPDATE matches SET status = ? WHERE request_id = ? AND status IN ('proposed', 'confirmed', 'accepted')`).bind(status, body.request_id).run().catch(() => {});
       if (['accepted', 'in_care', 'completed'].includes(status)) {
         const { results: all = [] } = await env.zoelys_db.prepare(`SELECT id FROM matches WHERE request_id = ?`).bind(body.request_id).all();
         for (const m of all) await creditWallet(env, m.id);
       }
       return new Response(JSON.stringify({ success: true, status }), { headers: corsHeaders });
+    }
+
+    // OWNER MARKS THE MEET AND GREET AS DONE
+    if (request.method === 'POST' && url.pathname === '/api/meet-greet/done') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const body = await request.json();
+      const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(body.request_id).first();
+      if (!req) return new Response(JSON.stringify({ error: 'Request not found' }), { status: 404, headers: corsHeaders });
+      if (!member.is_admin && req.email.toLowerCase() !== member.email.toLowerCase()) {
+        const participant = await env.zoelys_db.prepare(`SELECT id FROM matches WHERE request_id = ? AND sitter_id = ? LIMIT 1`).bind(body.request_id, member.id).first();
+        const isSitterParticipant = member.role === 'sitter' && !!participant;
+        if (!isSitterParticipant) return new Response(JSON.stringify({ error: 'Not your request' }), { status: 403, headers: corsHeaders });
+      }
+      await env.zoelys_db.prepare(`UPDATE client_requests SET meet_greet_completed = 1, meet_greet_done_at = CURRENT_TIMESTAMP WHERE id = ?`).bind(body.request_id).run();
+      const updated = await env.zoelys_db.prepare(`SELECT meet_greet_required, meet_greet_completed, meet_greet_done_at FROM client_requests WHERE id = ?`).bind(body.request_id).first();
+      return new Response(JSON.stringify({ success: true, ...(updated || {}) }), { headers: corsHeaders });
     }
 
     // SITTER ACCEPTS OR DECLINES A SITTING (third gate in the chain)
@@ -700,6 +827,9 @@ export default {
           return new Response(JSON.stringify({ error: `This sitting is currently ${match.status}; it can only be accepted after the owner confirms.` }), { status: 400, headers: corsHeaders });
         }
         const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(match.request_id).first();
+        if (req && Number(req.meet_greet_required) === 1 && Number(req.meet_greet_completed) !== 1) {
+          return new Response(JSON.stringify({ error: 'This owner requested a meet and greet before the sitting can be accepted. They must complete it first.', code: 'MEET_GREET_PENDING', meet_greet_required: 1, meet_greet_completed: 0 }), { status: 400, headers: corsHeaders });
+        }
         await env.zoelys_db.prepare(`UPDATE matches SET status = 'accepted' WHERE id = ?`).bind(matchId).run();
         if (req && req.status === 'confirmed') {
           await env.zoelys_db.prepare(`UPDATE client_requests SET status = 'accepted' WHERE id = ?`).bind(match.request_id).run();
@@ -790,6 +920,67 @@ export default {
       return new Response(JSON.stringify({ success: true, balance: updated ? updated.credit_balance : null }), { headers: corsHeaders });
     }
 
+    // CREDIT PACKS: instant self top-up (payment provider integration pending; grants immediately)
+    if (request.method === 'POST' && url.pathname === '/api/credits/packs') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const body = await request.json();
+      const pack = Number(body.credits);
+      if (![10, 20, 50, 100].includes(pack)) return new Response(JSON.stringify({ error: 'Choose a credit pack' }), { status: 400, headers: corsHeaders });
+      const bonus = pack >= 50 ? Math.round(pack * 0.10) : 0;
+      const granted = pack + bonus;
+      await env.zoelys_db.prepare(`UPDATE users SET credit_balance = credit_balance + ? WHERE id = ?`).bind(granted, member.id).run();
+      const updated = await env.zoelys_db.prepare(`SELECT credit_balance FROM users WHERE id = ?`).bind(member.id).first();
+      return new Response(JSON.stringify({ success: true, credits: pack, bonus, granted, balance: updated ? updated.credit_balance : null, amountEur: eurosFromCredits(pack) }), { headers: corsHeaders });
+    }
+
+    // CHECKOUT PREVIEW: how a sitter's rates translate to credits for the owner
+    if (request.method === 'GET' && url.pathname === '/api/checkout/preview') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      const matchId = url.searchParams.get('matchId') || '';
+      const match = await env.zoelys_db.prepare(`SELECT * FROM matches WHERE id = ?`).bind(matchId).first();
+      if (!match) return new Response(JSON.stringify({ error: 'Match not found' }), { status: 404, headers: corsHeaders });
+      if (!(await matchParticipant(env, member, match))) {
+        return new Response(JSON.stringify({ error: 'Not your booking' }), { status: 403, headers: corsHeaders });
+      }
+      const req = await env.zoelys_db.prepare(`SELECT * FROM client_requests WHERE id = ?`).bind(match.request_id).first();
+      const sitter = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE id = ?`).bind(match.sitter_id).first();
+      if (!req || !sitter) return new Response(JSON.stringify({ error: 'Booking details missing' }), { status: 404, headers: corsHeaders });
+      const bt = bookingTotals(sitter, req);
+      const existing = await env.zoelys_db.prepare(`SELECT * FROM ledger WHERE match_id = ?`).bind(matchId).first();
+      return new Response(JSON.stringify({
+        match, sitter: { id: sitter.id, full_name: sitter.full_name, neighbourhood: sitter.neighbourhood, rates: parseRates(sitter), tagline: sitter.tagline || '' },
+        request: req,
+        services: SIT_SERVICES,
+        breakdown: bt,
+        balance: Number(member.credit_balance || 0),
+        already_paid: !!existing
+      }), { headers: corsHeaders });
+    }
+
+    // LEDGER: transparent money flow per member role
+    if (request.method === 'GET' && url.pathname === '/api/ledger') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      if (member.is_admin) {
+        const { results: rows = [] } = await env.zoelys_db.prepare(`SELECT * FROM ledger ORDER BY created_at DESC LIMIT 100`).all();
+        const { results: agg = [] } = await env.zoelys_db.prepare(`SELECT COALESCE(SUM(total_credits),0) AS credits_spent, COALESCE(SUM(total_eur),0) AS volume_eur, COALESCE(SUM(sitter_payout),0) AS sitters_paid, COALESCE(SUM(platform_fee),0) AS platform_kept FROM ledger`).all();
+        return new Response(JSON.stringify({ rows: await decorateLedger(env, rows || []), totals: agg[0] || {} }), { headers: corsHeaders });
+      }
+      if (member.role === 'sitter') {
+        const { results: sitters = [] } = await env.zoelys_db.prepare(`SELECT * FROM sitters`).all();
+        const profile = sitters.find(s => (s.full_name || '').toLowerCase() === (member.full_name || '').toLowerCase());
+        const { results: rows = [] } = await env.zoelys_db.prepare(`SELECT * FROM ledger WHERE sitter_id = ? ORDER BY created_at DESC`).bind(profile ? profile.id : 'nobody').all();
+        return new Response(JSON.stringify({ rows: await decorateLedger(env, rows || []), totals: { sitter_payout: rows.reduce((t, r) => t + Number(r.sitter_payout || 0), 0) } }), { headers: corsHeaders });
+      }
+      const { results: rows = [] } = await env.zoelys_db.prepare(`SELECT * FROM ledger WHERE owner_id = ? OR request_id IN (SELECT id FROM client_requests WHERE LOWER(TRIM(email)) = ?) ORDER BY created_at DESC LIMIT 100`).bind(member.id, member.email.toLowerCase()).all();
+      return new Response(JSON.stringify({ rows: await decorateLedger(env, rows || []), totals: {} }), { headers: corsHeaders });
+    }
+
     // CARE PROFILE + DAILY LOGS (sitter dashboards)
     if (request.method === 'GET' && url.pathname === '/api/care') {
       await ensureMatchmaking(env);
@@ -859,8 +1050,16 @@ export default {
       if (!member.is_admin && !isSelf) return new Response(JSON.stringify({ error: 'You can only edit your own profile' }), { status: 403, headers: corsHeaders });
       const body = await request.json();
       const gallery = Array.isArray(body.gallery) ? JSON.stringify(body.gallery.filter(Boolean)) : (body.gallery || '[]');
-      await env.zoelys_db.prepare(`UPDATE sitters SET tagline = ?, bio = ?, gallery = ? WHERE id = ?`)
-        .bind(body.tagline || '', body.bio || '', gallery, id).run();
+      let overnight = Number(sitter.nightly_rate_usd) || 0;
+      if (body.rates) {
+        const rates = cleanRates(body.rates);
+        if (rates.overnight) overnight = rates.overnight;
+        await env.zoelys_db.prepare(`UPDATE sitters SET tagline = ?, bio = ?, gallery = ?, rates_eur = ?, nightly_rate_usd = ? WHERE id = ?`)
+          .bind(body.tagline || '', body.bio || '', gallery, JSON.stringify(rates), overnight, id).run();
+      } else {
+        await env.zoelys_db.prepare(`UPDATE sitters SET tagline = ?, bio = ?, gallery = ? WHERE id = ?`)
+          .bind(body.tagline || '', body.bio || '', gallery, id).run();
+      }
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
 

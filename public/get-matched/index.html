@@ -156,6 +156,12 @@
           <h2>Step 5. Sitter Preferences</h2>
           <div class="form-group"><label>Experience level preferred</label><select id="expLevel"><option value="">Select...</option><option value="Vet Tech">Vet tech / medical</option><option value="Professional">Professional 5+ years</option><option value="Professional">Professional caregiver</option></select></div>
           <div class="form-group"><label>Special notes</label><textarea id="otherQualities" rows="3"></textarea></div>
+          <div class="form-group" style="margin-top:0.2rem;">
+            <label style="display:flex; gap:0.7rem; align-items:flex-start; cursor:pointer;">
+              <input type="checkbox" id="meetGreet" style="width:auto; margin-top:0.25rem; flex:none;">
+              <span style="font-weight:400; line-height:1.5; font-size:0.85rem;">I would like a first meet and greet with the caregiver before any sitting, so my pet can warm to them. If I choose this, I arrange and attend the meeting myself.</span>
+            </label>
+          </div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(4)">&larr; Back</button>
             <button type="button" class="btn-continue" onclick="nextStep(6)">CONTINUE &rarr;</button>
@@ -169,10 +175,10 @@
             <label>What is your nightly care budget?</label>
             <select id="budget" onchange="updateCreditNote()">
               <option value="">Select your range...</option>
-              <option value="Under $50">Under $50 / night</option>
-              <option value="$50-$99">$50 to $99 / night</option>
-              <option value="$100-$149">$100 to $149 / night</option>
-              <option value="$150+">$150+ / night</option>
+              <option value="Under €50">Under €50 / night</option>
+              <option value="€50-99">€50 to €99 / night</option>
+              <option value="€100-149">€100 to €149 / night</option>
+              <option value="€150+">€150+ / night</option>
             </select>
             <div class="field-hint">Your budget shapes the caregivers your concierge proposes. It also sets how many Strategic Credits this request uses.</div>
           </div>
@@ -292,7 +298,8 @@
         start_date: fieldVal('startDate'),
         end_date: fieldVal('endDate'),
         experience_level: fieldVal('expLevel'),
-        budget_range: fieldVal('budget')
+        budget_range: fieldVal('budget'),
+        meet_greet_required: !!document.getElementById('meetGreet').checked
       };
 
       try {

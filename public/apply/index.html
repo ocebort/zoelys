@@ -112,6 +112,46 @@
       margin-top: 0.5rem;
     }
 
+    .rates-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.9rem;
+    }
+
+    .rate-item {
+      background: var(--card-white);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+    }
+
+    .rate-item label {
+      margin-bottom: 0.6rem;
+    }
+
+    .rate-note {
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .rate-item input {
+      margin-bottom: 0.4rem;
+    }
+
+    .rate-range {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .rates-hint {
+      margin-top: 0.8rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
     .pill {
       background: var(--card-white);
       border: 1px solid var(--border-color);
@@ -209,9 +249,31 @@
             <input type="number" id="experienceYears" placeholder="e.g. 4" min="1" max="25" required>
           </div>
 
-          <div class="form-group half">
-            <label>Nightly Rate (USD $)</label>
-            <input type="number" id="nightlyRate" placeholder="e.g. 75" min="20" max="300" required>
+          <div class="form-group">
+            <label>Your Rates (EUR, per service)</label>
+            <div class="rates-grid">
+              <div class="rate-item">
+                <label>Overnight sitting <span class="rate-note">per night</span></label>
+                <input type="number" id="rateOvernight" placeholder="e.g. 60" min="35" max="120" step="5" required>
+                <div class="rate-range">&euro;35 to &euro;120</div>
+              </div>
+              <div class="rate-item">
+                <label>Hour-long walk</label>
+                <input type="number" id="rateWalk60" placeholder="e.g. 30" min="18" max="45" step="5" required>
+                <div class="rate-range">&euro;18 to &euro;45</div>
+              </div>
+              <div class="rate-item">
+                <label>Half-hour walk</label>
+                <input type="number" id="rateWalk30" placeholder="e.g. 15" min="10" max="30" step="5" required>
+                <div class="rate-range">&euro;10 to &euro;30</div>
+              </div>
+              <div class="rate-item">
+                <label>Four-hour sitting <span class="rate-note">per visit</span></label>
+                <input type="number" id="rateSit4h" placeholder="e.g. 40" min="25" max="70" step="5" required>
+                <div class="rate-range">&euro;25 to &euro;70</div>
+              </div>
+            </div>
+            <p class="rates-hint">Exact euro figures welcome, in multiples of &euro;5. The stream is billable at the ranges above; everything inside a booking, medication, vet visits, grooming included, is never an add-on.</p>
           </div>
 
           <div class="form-group half">
@@ -307,11 +369,18 @@
       const vetTechSelected = document.querySelector('#vetTechGroup .pill.selected');
       const isVetTech = vetTechSelected ? vetTechSelected.innerText.trim() === 'Yes' : false;
 
+      const rates = {
+        overnight: Number(document.getElementById('rateOvernight').value),
+        walk60: Number(document.getElementById('rateWalk60').value),
+        walk30: Number(document.getElementById('rateWalk30').value),
+        sit4h: Number(document.getElementById('rateSit4h').value)
+      };
+
       const payload = {
         full_name: document.getElementById('fullName').value,
         neighbourhood: document.getElementById('neighbourhood').value,
         experience_years: document.getElementById('experienceYears').value,
-        nightly_rate_usd: document.getElementById('nightlyRate').value,
+        rates,
         vet_tech_background: isVetTech,
         accepted_pet_types: selectedPets.join(','),
         can_handle_anxiety: document.getElementById('anxietyPill').classList.contains('selected'),
