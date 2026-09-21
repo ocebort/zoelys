@@ -424,6 +424,10 @@ export default {
       await ensureMatchmaking(env);
       const member = await memberFromRequest(env, url);
       if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      if (member.is_admin) {
+        const { results } = await env.zoelys_db.prepare(`SELECT * FROM sitters ORDER BY is_active DESC, full_name ASC`).all();
+        return new Response(JSON.stringify({ sitters: results || [] }), { headers: corsHeaders });
+      }
       const { results } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1 ORDER BY full_name ASC`).all();
       return new Response(JSON.stringify({ sitters: results || [] }), { headers: corsHeaders });
     }
@@ -432,7 +436,10 @@ export default {
       const member = await memberFromRequest(env, url);
       if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
       const id = url.pathname.split('/')[3];
-      const sitter = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE id = ? AND is_active = 1`).bind(id).first();
+      const sql = member.is_admin
+        ? `SELECT * FROM sitters WHERE id = ?`
+        : `SELECT * FROM sitters WHERE id = ? AND is_active = 1`;
+      const sitter = await env.zoelys_db.prepare(sql).bind(id).first();
       return new Response(JSON.stringify({ sitter: sitter || null }), { headers: corsHeaders });
     }
 

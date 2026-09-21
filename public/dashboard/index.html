@@ -81,6 +81,23 @@
     .j-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
 
     .panel:not(.active) { display: none; }
+
+    /* ---- Concierge desk ---- */
+    .desk-toast { display:none; background:#F2F8F3; border:1px solid #9FCFA6; color:#2E5A34; border-radius:.9rem; padding:1rem 1.3rem; margin-bottom:1.5rem; font-size:.85rem; }
+    .desk-sub { font-size:.78rem; color:var(--ink-muted,#6E675F); margin-bottom:1.25rem; }
+    .compare-pane { display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin:2rem 0; }
+    @media (max-width: 860px) { .compare-pane { grid-template-columns: 1fr; } }
+    .cmp-col { background:var(--bg-cream-soft,#FBF9F4); border:1px solid var(--hairline,#E5DED2); border-radius:1.1rem; padding:1.6rem; }
+    .cmp-col h4 { font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.35rem; font-weight:500; margin-bottom:1.1rem; padding-bottom:.8rem; border-bottom:1px solid var(--hairline,#E5DED2); }
+    .cmp-grid { display:grid; grid-template-columns: 1fr 1fr; gap:.7rem 1rem; font-size:.78rem; }
+    .cmp-grid div span { display:block; font-size:.6rem; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-muted,#6E675F); font-weight:600; margin-bottom:.18rem; }
+    .cmp-grid div b { font-weight:600; color:var(--ink,#191512); }
+    .cmp-full { grid-column: 1 / -1; }
+    .sugg { display:flex; justify-content:space-between; align-items:center; gap:.6rem; background:rgba(255,255,255,.5); border:1px solid var(--hairline,#E5DED2); border-radius:.7rem; padding:.8rem 1rem; margin-bottom:.6rem; }
+    .sugg-name { font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.1rem; }
+    .sugg-score { font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.3rem; color:var(--accent-coral,#C1623F); }
+    .sugg-tags { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.35rem; }
+    .sugg-tags span { font-size:.58rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; border:1px solid var(--hairline,#E5DED2); padding:.22rem .55rem; border-radius:100px; color:var(--ink-muted,#6E675F); }
     .admin-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--hairline, #E5DED2); }
     .admin-row:last-child { border-bottom: none; }
     .admin-row .btn-pill { white-space: nowrap; }
@@ -288,7 +305,7 @@
         <div class="metric-card"><div class="metric-val">$14,250</div><div class="metric-lbl">Estimated MRR</div></div>
         <div class="metric-card"><div class="metric-val">12</div><div class="metric-lbl">Active Pet Parents</div></div>
         <div class="metric-card"><div class="metric-val">8</div><div class="metric-lbl">Vetted Vet Tech Sitters</div></div>
-        <div class="metric-card"><div class="metric-val">3</div><div class="metric-lbl">Pending Matches</div></div>
+        <div class="metric-card"><div class="metric-val" id="adminPendingCount">—</div><div class="metric-lbl">Pending Concierge Review</div></div>
       </div>
 
       <div class="admin-nav">
@@ -301,25 +318,33 @@
       <!-- ADMIN PANELS -->
       <div class="panel active" id="tab-matches">
         <div class="card-box">
-          <h3><span>Pending Match Proposals</span></h3>
+          <div class="desk-toast" id="deskToast"></div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:.5rem;">
+            <h3><span>Match Requests Inbox</span></h3>
+            <div class="desk-sub" id="deskCount">Loading...</div>
+          </div>
+          <p class="desk-sub" style="margin-top:.25rem;">Every intake is reviewed here before anything is revealed to the owner. Approve only what you would send with your own name.</p>
           <table class="table-list">
-            <thead><tr><th>Member Name</th><th>Companion</th><th>Service Required</th><th>Dates Needed</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Océane B.</strong></td><td>Zoé (Golden Retriever)</td><td>Overnight Stay</td><td>Sept 18 - Sept 20</td><td><span style="color: var(--accent-coral, #C1623F); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Camila R. assigned!')">Assign Camila R. &rarr;</button></td></tr>
-              <tr><td><strong>Sarah M.</strong></td><td>Milo (French Bulldog)</td><td>Day Care & Walk</td><td>Sept 22</td><td><span style="color: var(--accent-coral, #C1623F); font-weight: 600;">Pending Sitter</span></td><td><button class="btn-pill" onclick="alert('Marcus T. assigned!')">Assign Marcus T. &rarr;</button></td></tr>
+            <thead><tr><th>Member</th><th>Pet Dossier</th><th>Neighbourhood</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="adminRequestsBody">
+              <tr><td colspan="6" style="color: var(--ink-muted, #6E675F); text-align:center;">Loading the inbox...</td></tr>
             </tbody>
           </table>
+          <div id="comparePane"></div>
         </div>
       </div>
 
       <div class="panel" id="tab-sitters">
         <div class="card-box">
-          <h3><span>Vetted Pet Sitter Roster</span></h3>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:.5rem;">
+            <h3><span>Sitter Pipeline</span></h3>
+            <div class="desk-sub" id="sitterDeskCount">Loading...</div>
+          </div>
+          <p class="desk-sub" style="margin-top:.25rem;">Caregiver applications land here pending review. Approve to make them visible to the match engine; reject removes the application.</p>
           <table class="table-list">
-            <thead><tr><th>Sitter Name</th><th>Specialty</th><th>Background Check</th><th>Status</th><th>Rating</th></tr></thead>
-            <tbody>
-              <tr><td>Camila Rodriguez</td><td>Certified Vet Tech &bull; Medication Admin</td><td><span style="color: #2E7D4F; font-weight: 600;">Passed</span></td><td>Active Sitter</td><td>5.0 &bull; 32 sittings</td></tr>
-              <tr><td>Marcus Thorne</td><td>High-Energy Breed Specialist</td><td><span style="color: #2E7D4F; font-weight: 600;">Passed</span></td><td>Active Sitter</td><td>4.9 &bull; 18 sittings</td></tr>
+            <thead><tr><th>Sitter</th><th>Specialty</th><th>Rate</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="adminSittersBody">
+              <tr><td colspan="5" style="color: var(--ink-muted, #6E675F); text-align:center;">Loading...</td></tr>
             </tbody>
           </table>
         </div>
@@ -581,6 +606,8 @@
           document.getElementById('adminMasterView').style.display = 'block';
           document.getElementById('sitterMasterView').style.display = 'none';
           document.getElementById('parentMasterView').style.display = 'none';
+          loadAdminDesk();
+          loadAdminSitters();
         } else {
           document.getElementById('parentMasterView').style.display = 'block';
           document.getElementById('sitterMasterView').style.display = 'none';
@@ -750,11 +777,163 @@
       } catch (err) { /* profile card hidden on failure */ }
     }
 
+    function deskToast(msg) {
+      const t = document.getElementById('deskToast');
+      t.style.display = 'block';
+      t.textContent = msg;
+      setTimeout(() => { t.style.display = 'none'; }, 6000);
+    }
+
+    async function loadAdminDesk() {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const count = document.getElementById('deskCount');
+      try {
+        const res = await fetch('/api/requests?userId=' + encodeURIComponent(memberId));
+        if (res.status !== 200) { count.textContent = 'Could not load inbox.'; return; }
+        const data = await res.json();
+        const requests = data.requests || [];
+        const pending = requests.filter(r => ['pending', 'matching'].includes(r.status));
+        document.getElementById('adminPendingCount').textContent = pending.length;
+        count.textContent = pending.length + ' awaiting review · ' + requests.length + ' total';
+        const tbody = document.getElementById('adminRequestsBody');
+        if (!requests.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--ink-muted,#6E675F);">No requests yet — new intakes appear here.</td></tr>'; return; }
+        tbody.innerHTML = requests.map(req => {
+          const st = req.status || 'pending';
+          const dateStr = req.created_at ? new Date((req.created_at.includes('Z') ? req.created_at : req.created_at.replace(' ', 'T') + 'Z')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          const action = (st === 'pending' || st === 'matching')
+            ? `<button class="btn-pill" onclick="reviewAdminRequest('${req.id}')">Review &amp; approve</button>`
+            : `<span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${st === 'proposed' ? 'Awaiting owner' : '&mdash;'}</span>`;
+          return `<tr>
+            <td><strong>${req.full_name || '&mdash;'}</strong><br><span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${req.email || ''}</span></td>
+            <td>${req.pet_name || 'Pet'} (${req.pet_type || ''})<br><span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${req.breed ? req.breed + ' · ' : ''}${req.service_type || ''}${req.start_date ? ' · ' + req.start_date + ' &rarr; ' + (req.end_date || 'open') : ''}</span></td>
+            <td>${req.neighbourhood || '&mdash;'}</td>
+            <td style="font-size:0.75rem; color:var(--ink-muted,#6E675F);">${dateStr}</td>
+            <td><span style="font-size:0.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.25rem .6rem; border-radius:100px; border:1px solid var(--hairline,#E5DED2); color:${st === 'proposed' ? '#8A6A3F' : (st === 'confirmed' || st === 'in_care' || st === 'completed') ? '#2E5A34' : '#9A7B2F'};">${st.replace(/_/g, ' ')}</span></td>
+            <td>${action}</td>
+          </tr>`;
+        }).join('');
+      } catch (e) { count.textContent = 'Could not load inbox.'; }
+    }
+
+    async function reviewAdminRequest(requestId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const pane = document.getElementById('comparePane');
+      pane.innerHTML = '<div style="padding:1.5rem; color:var(--ink-muted,#6E675F);">Consulting the algorithm...</div>';
+      try {
+        const res = await fetch('/api/match?requestId=' + encodeURIComponent(requestId) + '&userId=' + encodeURIComponent(memberId));
+        if (!res.ok) { pane.innerHTML = '<div style="padding:1.2rem; color:#9A4B38;">Could not load the proposal preview.</div>'; return; }
+        const data = await res.json();
+        const req = data.request || {};
+        const matches = data.matches || [];
+        const dossier = [
+          ['Pet', (req.pet_name || '&mdash;') + (req.breed ? ' &middot; ' + req.breed : '')],
+          ['Species', req.pet_type || '&mdash;'],
+          ['Neighbourhood', req.neighbourhood || '&mdash;'],
+          ['Service', req.service_type || '&mdash;'],
+          ['Dates', [req.start_date, req.end_date].filter(Boolean).join(' &rarr; ') || '&mdash;'],
+          ['Medical conditions', req.medical_conditions || '&mdash;'],
+          ['Behaviour', req.behavioral_traits || '&mdash;'],
+          ['Exercise needs', req.exercise_needs || '&mdash;'],
+          ['Outdoor space', req.outdoor_space || '&mdash;'],
+          ['Experience pref.', req.experience_level || '&mdash;'],
+          ['Owner', req.full_name + (req.email ? ' &middot; ' + req.email : '')]
+        ];
+        const dossierHtml = dossier.map(([k, v]) => `<div class="${k === 'Owner' ? 'cmp-full' : ''}"><span>${k}</span><b>${v}</b></div>`).join('');
+        const suggHtml = matches.length
+          ? matches.map((m, i) => `<div class="sugg">
+              <div>
+                <div class="sugg-name">${i + 1}. ${m.full_name}</div>
+                <div style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">${m.neighbourhood} &middot; $${Number(m.nightly_rate_usd).toFixed(0)}/night &middot; ${m.experience_years}+ yrs${m.vet_tech_background ? ' &middot; Vet tech' : ''}</div>
+                <div class="sugg-tags">${(m.match_reasons || []).slice(0, 5).map(r => `<span>${r}</span>`).join('')}</div>
+              </div>
+              <div class="sugg-score">${m.match_score}</div>
+            </div>`).join('')
+          : '<div style="color:var(--ink-muted,#6E675F); font-size:0.82rem;">No caregiver can meet these needs yet &mdash; the concierge must design a custom solution.</div>';
+        pane.innerHTML = `
+          <div style="margin:2rem 0 0; border-top:1px solid var(--hairline,#E5DED2);">
+            <h3 style="font-family:var(--font-serif,'Cormorant Garamond'),serif; font-size:1.5rem; font-weight:500; margin:1.5rem 0 1rem;">Compare &amp; decide &mdash; ${req.pet_name || 'this request'}</h3>
+            <div class="compare-pane">
+              <div class="cmp-col"><h4>Owner &amp; pet dossier</h4><div class="cmp-grid">${dossierHtml}</div></div>
+              <div class="cmp-col"><h4>Algorithm proposal</h4><div>${suggHtml}</div></div>
+            </div>
+            <div style="display:flex; gap:.9rem; flex-wrap:wrap; margin-top:.5rem;">
+              <button class="btn-pill" onclick="approveAdminRequest('${requestId}')">Approve &mdash; reveal ${matches.length} match(es) to owner</button>
+              <button class="btn-pill" style="background:transparent; border:1px solid var(--hairline,#E5DED2); color:var(--ink,#191512);" onclick="declineAdminRequest('${requestId}')">Decline request</button>
+            </div>
+          </div>`;
+        pane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) { pane.innerHTML = '<div style="padding:1.2rem; color:#9A4B38;">Could not reach the algorithm preview.</div>'; }
+    }
+
+    async function approveAdminRequest(requestId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/requests/' + requestId + '/approve?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      deskToast('Approved &mdash; ' + (data.matched || []).length + ' match(es) now visible in the owner\'s portal.');
+      document.getElementById('comparePane').innerHTML = '';
+      loadAdminDesk();
+    }
+
+    async function declineAdminRequest(requestId) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/requests/' + requestId + '/decline?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      if (data.success) { deskToast('Request declined &mdash; the owner will see it is under review.'); } else { deskToast('Could not decline.'); }
+      document.getElementById('comparePane').innerHTML = '';
+      loadAdminDesk();
+    }
+
+    async function loadAdminSitters() {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const tbody = document.getElementById('adminSittersBody');
+      try {
+        const res = await fetch('/api/sitters?userId=' + encodeURIComponent(memberId));
+        if (res.status !== 200) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink-muted,#6E675F);">Could not load.</td></tr>'; return; }
+        const data = await res.json();
+        const sitters = data.sitters || [];
+        const pending = sitters.filter(s => !s.is_active);
+        document.getElementById('sitterDeskCount').textContent = pending.length + ' pending review · ' + sitters.filter(s => s.is_active).length + ' active';
+        if (!sitters.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink-muted,#6E675F);">No caregiver applications yet.</td></tr>'; return; }
+        tbody.innerHTML = sitters.map(s => {
+          const active = !!s.is_active;
+          const specialty = [s.vet_tech_background ? 'Vet tech' : '', s.can_handle_medication ? 'Medication aware' : '', s.can_handle_anxiety ? 'Separation anxiety' : '', s.has_outdoor_space ? 'Outdoor space' : '', (s.accepted_pet_types || '').replace(/,/g, ' · ')].filter(Boolean).join(' · ') || 'General care';
+          const action = active
+            ? '<span style="font-size:0.72rem; color:var(--ink-muted,#6E675F);">On the engine</span>'
+            : `<button class="btn-pill" onclick="adminSitterApprove('${s.id}')">Approve</button> <button class="btn-pill" style="background:transparent; border:1px solid var(--hairline,#E5DED2); color:#9A4B38;" onclick="adminSitterReject('${s.id}')">Reject</button>`;
+          return `<tr>
+            <td><strong>${s.full_name}</strong></td>
+            <td>${specialty}</td>
+            <td>$${Number(s.nightly_rate_usd).toFixed(0)}/night</td>
+            <td><span style="font-size:0.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.25rem .6rem; border-radius:100px; border:1px solid var(--hairline,#E5DED2); color:${active ? '#2E5A34' : '#9A7B2F'};">${active ? 'active' : 'pending review'}</span></td>
+            <td>${action}</td>
+          </tr>`;
+        }).join('');
+      } catch (e) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink-muted,#6E675F);">Could not load the sitter pipeline.</td></tr>'; }
+    }
+
+    async function adminSitterApprove(id) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      const res = await fetch('/api/sitters/' + id + '/approve?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      deskToast(data.success ? 'Caregiver approved &mdash; now visible to the match engine.' : 'Could not approve.');
+      loadAdminSitters();
+    }
+
+    async function adminSitterReject(id) {
+      const memberId = localStorage.getItem('zoelys_user_id') || '';
+      if (!confirm('Remove this caregiver application?')) return;
+      const res = await fetch('/api/sitters/' + id + '/reject?userId=' + encodeURIComponent(memberId), { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const data = await res.json();
+      deskToast(data.success ? 'Application removed.' : 'Could not remove.');
+      loadAdminSitters();
+    }
+
     function switchTab(tabId, btn) {
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + tabId).classList.add('active');
+      if (tabId === 'sitters') loadAdminSitters();
       if (tabId === 'cms') loadCmsTracker();
     }
 
