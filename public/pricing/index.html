@@ -19,37 +19,38 @@
     .section-kicker { text-align: center; margin: 4.5rem 0 2.25rem; }
     .section-kicker .eyebrow { display: block; margin-bottom: 0.7rem; }
     .section-kicker h2 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2.35rem; font-weight: 400; letter-spacing: -0.01em; }
+.standard-banner { border: 1px solid var(--ink); background: var(--bg-cream-soft); padding: 2.5rem 2rem; text-align: center; margin: 2rem 0 1.5rem; }
 
-    .standard-banner { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2.7rem 2.4rem; text-align: center; margin: 3.5rem 0 0.5rem; }
-    .standard-banner .eyebrow { display: block; margin-bottom: 1rem; }
-    .standard-banner p { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: clamp(1.3rem, 2.4vw, 1.7rem); line-height: 1.55; max-width: 700px; margin: 0 auto; color: var(--ink, #191512); }
+    .standard-banner .eyebrow { display: block; margin-bottom: 0.5rem; }
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0 3.5rem; }
+    .standard-banner p { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.5; max-width: 680px; margin: 0 auto; color: var(--ink); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2.5rem; }
     @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
-    .plain-card { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2.1rem 2rem; }
-    .plain-card h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.55rem; font-weight: 500; margin-bottom: 0.9rem; }
-    .plain-card p { font-size: 0.85rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.75; }
-    .plain-card ul { list-style: none; margin-top: 0.6rem; }
-    .plain-card li { font-size: 0.85rem; font-weight: 300; color: var(--ink, #191512); line-height: 1.7; padding-left: 1.3rem; position: relative; }
-    .plain-card li::before { content: '·'; position: absolute; left: 0.3rem; color: var(--accent, #C1623F); font-weight: 600; }
+    .plain-card { border: 1px solid var(--ink); background: var(--bg-cream-soft); padding: 1.8rem 1.5rem; }
+    .plain-card h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.4rem; font-weight: 500; margin-bottom: 0.6rem; }
+    .plain-card p { font-size: 0.78rem; font-weight: 300; color: var(--ink-muted); line-height: 1.6; }
+    .plain-card ul { list-style: none; margin-top: 0.4rem; }
+    .plain-card li { font-size: 0.78rem; font-weight: 300; color: var(--ink); line-height: 1.5; padding-left: 1rem; position: relative; }
+    .plain-card li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--accent); font-weight: 600; }
 
-    .small-print { font-size: 0.74rem; color: var(--ink-faint, #A29A90); line-height: 1.7; max-width: 640px; margin: 0 auto; text-align: center; }
-    .cta-row-final { display: flex; gap: 1.1rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+    .small-print { font-size: 0.68rem; color: var(--ink-muted); line-height: 1.6; max-width: 640px; margin: 0 auto; text-align: center; }
+    .cta-row-final { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
 
-    .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin: 1.5rem 0 2.5rem; }
+    .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0 2rem; }
     @media (max-width: 760px) { .tiers { grid-template-columns: 1fr; } }
-    .tier { border: 1px solid var(--ink, #191512); background: var(--bg-cream-soft, #FBF9F4); padding: 2rem 1.8rem; display: flex; flex-direction: column; }
-    .tier.featured { border: 2px solid var(--ink, #191512); }
-    .tier-tag { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 600; margin-bottom: 0.9rem; }
-    .tier-name { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2rem; font-weight: 500; margin-bottom: 0.4rem; }
-    .tier-price { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.9rem; color: var(--accent, #C1623F); }
-    .tier-price small { font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted, #6E675F); display: block; margin-top: 0.15rem; }
-    .tier-credits { margin: 0.8rem 0 0.9rem; font-size: 0.82rem; font-weight: 600; color: var(--ink, #191512); }
-    .tier-credits span { display: block; font-weight: 300; color: var(--ink-muted, #6E675F); font-size: 0.78rem; margin-top: 0.15rem; }
-    .tier ul { list-style: none; margin: 0 0 1.4rem; flex: 1; }
-    .tier li { font-size: 0.83rem; font-weight: 300; color: var(--ink, #191512); line-height: 1.7; padding-left: 1.2rem; position: relative; }
-    .tier li::before { content: '·'; position: absolute; left: 0.25rem; color: var(--accent, #C1623F); font-weight: 600; }
-    .tier-cta { display: inline-block; text-align: center; padding: 0.85rem 1.2rem; background: var(--ink, #191512); color: #fff; text-decoration: none; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 6px; }
+    .tier { border: 1px solid var(--ink); background: var(--bg-cream-soft); padding: 1.8rem 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .tier.featured { border: 2px solid var(--accent); }
+    .tier-tag { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin-bottom: 0.5rem; }
+    .tier-name { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 0.2rem; }
+    .tier-price { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; color: var(--accent, #C1623F); margin: 0.3rem 0; }
+    .tier-price small { font-family: var(--font-sans); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-top: 0; display: inline; }
+    .tier-credits { margin: 0.5rem 0 0.6rem; font-size: 0.7rem; font-weight: 600; color: var(--ink, #191512); }
+    .tier-credits span { display: block; font-weight: 300; color: var(--ink-muted, #6E675F); font-size: 0.65rem; margin-top: 0.05rem; }
+    .tier ul { list-style: none; margin: 0.5rem 0 1rem; }
+    .tier li { font-size: 0.75rem; line-height: 1.5; color: var(--ink, #191512); padding-left: 1rem; position: relative; margin: 0.3rem 0; }
+    .tier li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--accent, #C1623F); font-weight: 600; }
+    .tier-cta { display: inline-block; text-align: center; padding: 0.6rem 1rem; background: var(--ink); color: #fff; text-decoration: none; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 6px; margin-top: 0.5rem; }
+    .tier-cta:hover { background: var(--accent); color: #FFFFFF; }
   </style>
 </head>
 <body>

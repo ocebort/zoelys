@@ -13,7 +13,106 @@ async function memberFromRequest(env, url) {
 
 async function computeMatches(env, req) {
   const { results: sitters } = await env.zoelys_db.prepare(`SELECT * FROM sitters WHERE is_active = 1`).all();
-  const needs = {
+  const need
+    // SMART AVAILABILITY CALENDAR SYSTEM
+    if (request.method === 'POST' && url.pathname === '/api/calendar' && member.role === 'owner') {
+      await ensureMatchmaking(env);
+      const body = await request.json();
+      const sitterId = body.sitter_id;
+      const status = body.status || 'AVAILABLE';
+      const date = body.date || new Date().toISOString().split('T')[0];
+      
+      // Update or insert calendar entry
+      await env.zoelys_db.prepare(
+        'INSERT OR REPLACE INTO sitter_calendar_entries (id, sitter_id, date, time_slot_type, status, capacity_used, max_capacity)'
+      ).bind(uuidv4(), sitterId, date, body.time_slot_type || 'ALL_DAY', status, body.capacity_used || 0, body.max_capacity || 2).run().catch(() => {});
+      
+      // Return updated calendar entries
+      const { results: entries } = await env.zoelys_db.prepare(
+        'SELECT * FROM sitter_calendar_entries WHERE sitter_id = ? ORDER BY date DESC'
+      ).bind(sitterId).all();
+      
+      return new Response(JSON.stringify({ entries }), { headers: corsHeaders });
+    }
+
+    // Search available sitters for a date range
+    if (request.method === 'GET' && url.pathname === '/api/calendar/search') {
+      await ensureMatchmaking(env);
+      const member = await memberFromRequest(env, url);
+      if (!member) return new Response(JSON.stringify({ error: 'Members only' }), { status: 401, headers: corsHeaders });
+      
+      const startDate = url.searchParams.get('start') || '';
+      const endDate = url.searchParams.get('end') || '';
+      
+      let query = 'SELECT * FROM sitters WHERE is_active = 1';
+      const queryParams = [];
+      
+      if (startDate && endDate) {
+        query += ' AND id IN (SELECT DISTINCT sitter_id FROM sitter_calendar_entries WHERE status = 'AVAILABLE' AND date BETWEEN ? AND ?)';
+      } else {
+        query += ' LIMIT 20';
+      }
+      
+      const { results: sitters } = await env.zoelys_db.prepare(query).bind(startDate, endDate).all();
+      return new Response(JSON.stringify({ sitters }), { headers: corsHeaders });
+    }
+    
+    // Get sitter calendar entries
+    if (request.method === 'GET' && url.pathname === '/api/calendar/:sitter_id') {
+      const sitterId = url.pathname.split('/')[3];
+      const { results: entries } = await env.zoelys_db.prepare(
+        'SELECT * FROM sitter_calendar_entries WHERE sitter_id = ? ORDER BY date DESC'
+      ).bind(sitterId).all();
+      return new Response(JSON.stringify({ entries }), { headers: corsHeaders });
+    }
+    
+    // Sitter quotes a date
+    if (request.method === 'POST' && url.pathname === '/api/calendar/quote') {
+      const body = await request.json();
+      const sitterId = body.sitter_id;
+      const date = body.date;
+      const credits = body.credits;
+      
+      // Validate sitter exists and is active
+      const sitter = await env.zoelys_db.prepare('SELECT * FROM sitters WHERE id = ?').bind(sitterId).first();
+      if (!sitter) return new Response(JSON.stringify({ error: 'Sitter not found' }), { status: 404, headers: corsHeaders });
+      
+      // Update sitter rates/availability
+      const rates = body.rates || {};
+      await env.zoelys_db.prepare(
+        'UPDATE sitters SET rates_eur = ? WHERE id = ?'
+      ).bind(JSON.stringify(rates), sitterId).run().catch(() => {});
+      
+      return new Response(JSON.stringify({ success: true, sitter_rate: rates }), { headers: corsHeaders });
+    }
+    
+    // Sitter accepts a calendar entry
+    if (request.method === 'POST' && url.pathname === '/api/calendar/accept') {
+      const body = await request.json();
+      const sitterId = body.sitter_id;
+      const requestId = body.request_id;
+      
+      // Mark calendar entry as booked
+      await env.zoelys_db.prepare(
+        'UPDATE sitter_calendar_entries SET status = 'BOOKED', updated_at = CURRENT_TIMESTAMP WHERE sitter_id = ? AND date = ?'
+      ).bind(sitterId, body.date).run().catch(() => {});
+      
+      // Deduct credits from owner
+      const owner = await env.zoelys_db.prepare(
+        'SELECT credit_balance FROM users WHERE id = ?'
+      ).bind(body.owner_id).first();
+      
+      if (!owner || owner.credit_balance < body.credits) {
+        return new Response(JSON.stringify({ error: 'Insufficient credits' }), { status: 400, headers: corsHeaders });
+      }
+      
+      await env.zoelys_db.prepare(
+        'UPDATE users SET credit_balance = credit_balance - ? WHERE id = ?'
+      ).bind(body.credits, body.owner_id).run().catch(() => {});
+      
+      return new Response(JSON.stringify({ success: true, remaining_credits: owner.credit_balance - body.credits }), { headers: corsHeaders });
+    }
+s = {
     species: (req.pet_type || '').toLowerCase(),
     meds: /yes/i.test(req.medical_conditions || ''),
     anxiety: /anxiety/i.test(req.behavioral_traits || ''),

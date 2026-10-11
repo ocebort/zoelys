@@ -230,22 +230,23 @@ header.master-navbar {
 }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 1.15rem 2.3rem;
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
   border-radius: var(--corner);
-  border: 1px solid var(--ink, #191512);
-  font-size: 0.72rem;
+  border: 1px solid var(--ink);
+  font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: all 0.4s var(--ease);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
 }
 
 .btn-ink { background: var(--ink); color: var(--bg-cream); border-color: var(--ink); }
-.btn-ink:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+.btn-ink:hover { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
+
+.btn .arrow { font-size: 0.85rem; line-height: 1; transition: transform 0.4s var(--ease); }
+.btn:hover .arrow { transform: translateX(2px); }
 
 .btn .arrow { font-size: 1rem; line-height: 1; transition: transform 0.4s var(--ease); }
 .btn:hover .arrow { transform: translateX(4px); }
@@ -279,9 +280,9 @@ header.master-navbar {
 
 /* ============ MASTER FOOTER ============ */
 footer.master-footer {
-  background: var(--ink);
-  color: #ECE6DC;
-  padding: 5.5rem 4.5rem 2.5rem;
+  background: var(--bg-cream-soft);
+  color: var(--ink);
+  padding: 4.5rem 4.5rem 2.5rem;
 }
 
 .master-footer .footer-inner {
