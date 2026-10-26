@@ -9,19 +9,22 @@ This repository houses the complete code-driven analysis pipeline, review-mining
 ### 1. Competitor Star Rating Distribution
 ![Rating Distribution](rating_distribution.png)
 
-### 2. Longitudinal Evolution of Competitor Ratings (2018–2026)
+### 2. Competitor Sentiment Overview (Positive vs. Negative Share)
+![Competitor Sentiment Overview](competitor_sentiment_overview.png)
+
+### 3. Longitudinal Evolution of Competitor Ratings (2018–2026)
 ![Temporal Trend](rating_temporal_trend_clean.png)
 
-### 3. Operational Failure Themes in Negative Reviews
+### 4. Operational Failure Themes in Negative Reviews
 ![Complaint Themes](complaint_themes_breakdown.png)
 
-### 4. Cross-Platform Failure Theme Breakdown
+### 5. Cross-Platform Failure Theme Breakdown
 ![Platform Breakdown](platform_theme_breakdown_stacked.png)
 
-### 5. Van Westendorp Price Sensitivity Meter (N = 47)
+### 6. Van Westendorp Price Sensitivity Meter (N = 47)
 ![Van Westendorp Curves](van_westendorp_curves.png)
 
-### 6. Willingness-to-Pay Across Income Brackets (N = 47)
+### 7. Willingness-to-Pay Across Income Brackets (N = 47)
 ![WTP Income Distribution](wtp_categorical_distribution.png)
 
 ---
