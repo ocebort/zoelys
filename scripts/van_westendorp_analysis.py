@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+survey_file_path = '/Users/ocebort/Downloads/Zoelys Premium Pet Care & Trust Survey (réponses)-2.xlsx'
+df_survey = pd.read_excel(survey_file_path)
+
+vw_cols = {}
+for col in df_survey.columns:
+    col_lower = col.lower()
+    if any(k in col_lower for k in ['too cheap', 'doute', 'qualité']):
+        if 'Too Cheap' not in vw_cols: vw_cols['Too Cheap'] = col
+    elif any(k in col_lower for k in ['bargain', 'great deal', 'bonne affaire']):
+        if 'Bargain' not in vw_cols: vw_cols['Bargain'] = col
+    elif any(k in col_lower for k in ['expensive', 'still', 'cher']) and 'too' not in col_lower:
+        if 'Expensive' not in vw_cols: vw_cols['Expensive'] = col
+    elif any(k in col_lower for k in ['too expensive', 'prohibitif', 'trop cher']):
+        if 'Too Expensive' not in vw_cols: vw_cols['Too Expensive'] = col
+
+price_df = pd.DataFrame()
+for label, col_name in vw_cols.items():
+    price_df[label] = pd.to_numeric(
+        df_survey[col_name].astype(str).str.replace(r'[^0-9.]', '', regex=True), 
+        errors='coerce'
+    )
+price_df = price_df.dropna()
+
+plt.figure(figsize=(11, 6))
+sns.set_theme(style="whitegrid")
+prices = np.linspace(price_df.min().min(), min(price_df.max().max(), 250), 300)
+
+too_cheap_cum = [(price_df['Too Cheap'] <= p).mean() * 100 for p in prices]
+bargain_cum = [(price_df['Bargain'] <= p).mean() * 100 for p in prices]
+expensive_cum = [(price_df['Expensive'] >= p).mean() * 100 for p in prices]
+too_expensive_cum = [(price_df['Too Expensive'] >= p).mean() * 100 for p in prices]
+
+plt.plot(prices, too_cheap_cum, label='Too Cheap', color='firebrick', linewidth=2)
+plt.plot(prices, bargain_cum, label='Bargain', color='orange', linewidth=2, linestyle='--')
+plt.plot(prices, expensive_cum, label='Expensive', color='royalblue', linewidth=2, linestyle='--')
+plt.plot(prices, too_expensive_cum, label='Too Expensive', color='darkblue', linewidth=2)
+
+plt.title('Van Westendorp Price Sensitivity Meter Curves (N = 47)', fontsize=12, pad=15)
+plt.xlabel('Price per Night ($ USD)', fontsize=10)
+plt.ylabel('Percentage of Respondents (%)', fontsize=10)
+plt.legend(title='Pricing Thresholds', loc='center right')
+plt.tight_layout()
+plt.savefig('van_westendorp_curves.png', dpi=300, bbox_inches='tight')
+print("Generated: van_westendorp_curves.png")
