@@ -14,8 +14,8 @@
     /* ============ HERO ============ */
     .hero {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 4.5rem;
       align-items: center;
       padding: 5rem 4.5rem 6rem;
       max-width: 1320px;
@@ -49,34 +49,41 @@
       margin-top: 2.5rem;
     }
 
-    /* Dual Hero Media Collage */
+    /* Interactive Dual Hero Media */
     .hero-media-collage {
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: 1.15fr 0.95fr;
       gap: 1.2rem;
-      align-items: center;
+      align-items: stretch;
       position: relative;
     }
 
-    .hero-img-main {
+    .hero-img-box {
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 24px 48px -16px rgba(25, 21, 18, 0.15);
-      height: 460px;
+      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
+      position: relative;
+      background: var(--bg-cream-soft);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
 
-    .hero-img-secondary {
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px -12px rgba(25, 21, 18, 0.12);
-      height: 360px;
-      margin-top: 3rem;
+    .hero-img-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 28px 56px -18px rgba(25, 21, 18, 0.18);
     }
 
-    .hero-media-collage img {
+    .hero-img-main { height: 480px; }
+    .hero-img-secondary { height: 410px; align-self: flex-end; }
+
+    .hero-img-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: scale 0.5s ease;
+    }
+
+    .hero-img-box:hover img {
+      scale: 1.03;
     }
 
     /* ============ MANIFESTO ============ */
@@ -156,7 +163,7 @@
     .pillar-title { font-family: var(--font-serif); font-size: 1.35rem; margin: 0 0 0.8rem; color: var(--ink); font-weight: 500; }
     .pillar-text { font-size: 0.82rem; line-height: 1.7; color: var(--ink-muted); font-weight: 300; }
 
-    /* ============ 2-COLUMN COZY VETTING SECTION ============ */
+    /* ============ BALANCED 2-COLUMN VETTING SECTION ============ */
     .standard {
       background: var(--bg-cream-soft);
       border-top: 1px solid var(--hairline);
@@ -168,26 +175,41 @@
       max-width: 1280px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 5rem;
-      align-items: center;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 4.5rem;
+      align-items: stretch;
     }
 
-    .standard-sticky-media {
-      position: relative;
+    .standard-left {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     .standard-img-frame {
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 24px 48px -18px rgba(25, 21, 18, 0.15);
-      height: 580px;
+      flex-grow: 1;
+      min-height: 520px;
+      position: relative;
     }
 
     .standard-img-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: scale 0.5s ease;
+    }
+
+    .standard-img-frame:hover img {
+      scale: 1.02;
+    }
+
+    .standard-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .standard-title {
@@ -203,21 +225,21 @@
       font-weight: 300;
       font-size: 0.95rem;
       line-height: 1.8;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.2rem;
     }
 
     .standard-stages {
       display: flex;
       flex-direction: column;
-      gap: 1.8rem;
+      gap: 1.4rem;
     }
 
     .stage {
       display: grid;
-      grid-template-columns: 50px 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 48px 1fr;
+      gap: 1.2rem;
       align-items: baseline;
-      padding-bottom: 1.5rem;
+      padding-bottom: 1.4rem;
       border-bottom: 1px solid var(--hairline);
     }
 
@@ -253,6 +275,7 @@
       border: 1px solid var(--hairline);
       border-radius: 8px;
       padding: 0.7rem 1.4rem;
+      align-self: flex-start;
     }
 
     .badge-dot {
@@ -293,7 +316,7 @@
       .hero-media-collage { max-width: 600px; }
       .pillars-grid { grid-template-columns: repeat(2, 1fr); }
       .standard-inner { grid-template-columns: 1fr; gap: 3.5rem; }
-      .standard-img-frame { height: 400px; }
+      .standard-img-frame { height: 420px; min-height: auto; }
       .pillars, .standard { padding-left: 1.75rem; padding-right: 1.75rem; }
     }
 
@@ -318,13 +341,13 @@
       </div>
     </div>
     
-    <!-- Cozy Dual Image Grid -->
+    <!-- Realistic Dual Photo Collage -->
     <div class="hero-media-collage reveal" style="--d:.2s">
-      <div class="hero-img-main">
-        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Happy dog resting on a cozy rug">
+      <div class="hero-img-box hero-img-main">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Happy dog resting in a warm home space">
       </div>
-      <div class="hero-img-secondary">
-        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600" alt="Cat relaxing comfortably in warm sunlight">
+      <div class="hero-img-box hero-img-secondary">
+        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600" alt="Relaxed cat resting in soft indoor lighting">
       </div>
     </div>
   </section>
@@ -364,16 +387,16 @@
     </div>
   </section>
 
-  <!-- 2-COLUMN COZY VETTING PROTOCOL -->
+  <!-- BALANCED 2-COLUMN VETTING PROTOCOL -->
   <section class="standard">
     <div class="standard-inner">
-      <div class="standard-sticky-media reveal">
+      <div class="standard-left reveal">
         <div class="standard-img-frame">
-          <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=900" alt="Attentive caregiver bonding with a dog at home">
+          <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=900" alt="Professional caregiver calmly bonding with a dog">
         </div>
       </div>
 
-      <div class="reveal">
+      <div class="standard-right reveal">
         <h2 class="standard-title">Premium is the people we let through.</h2>
         <p class="standard-sub">To ensure absolute safety, Zoélys uses a structured four-stage vetting protocol. By combining automated compliance checks, professional certification fast-tracking, and live human review, we protect your peace of mind without compromise.</p>
 
