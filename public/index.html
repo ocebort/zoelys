@@ -223,95 +223,75 @@
 
     .badge-text { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--ink); }
 
-    /* ============ MEMBERSHIP ============ */
-    .membership {
+    /* ============ MEMBERSHIP & FAQ OVERVIEW ============ */
+    .membership-overview {
       padding: 9rem 4.5rem;
       max-width: 1320px;
       margin: 0 auto;
     }
 
-    .tiers-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-top: 3.5rem;
-      align-items: stretch;
-    }
-
-    .tier-card {
-      background: var(--bg-card, #FFFFFF);
-      border: 1px solid var(--hairline);
-      border-radius: 12px;
-      padding: 3rem 2.2rem;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-    }
-
-    .tier-card:hover {
-      box-shadow: 0 20px 40px -20px rgba(25, 21, 18, 0.12);
-    }
-
-    .tier-card.featured {
-      border-color: var(--accent);
-      box-shadow: 0 24px 48px -20px rgba(193, 98, 63, 0.25);
-    }
-
-    .tier-tag { font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.7rem; }
-
-    .tier-name { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 500; margin: 0; }
-
-    .tier-price { display: flex; align-items: baseline; gap: 0.5rem; margin: 1.5rem 0 0.5rem; }
-    .tier-price .amt { font-family: var(--font-serif); font-size: 3.2rem; line-height: 1; }
-    .tier-price .per { font-size: 0.78rem; color: var(--ink-muted); }
-
-    .tier-desc { font-size: 0.84rem; color: var(--ink-muted); line-height: 1.7; min-height: 2.8rem; }
-
-    .tier-features { list-style: none; padding: 0; margin: 2rem 0; flex-grow: 1; border-top: 1px solid var(--hairline); }
-
-    .tier-features li {
-      padding: 0.8rem 0;
-      font-size: 0.8rem;
-      line-height: 1.5;
-      color: var(--ink-muted);
-      border-bottom: 1px solid var(--hairline);
+    .membership-header-box {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      gap: 2rem;
     }
 
-    .tier-features li .credits { font-weight: 600; color: var(--ink); }
+    .membership-header-box .btn { flex-shrink: 0; }
 
-    .tier-cta {
-      display: block;
-      text-align: center;
-      padding: 0.9rem 1.5rem;
-      background: var(--ink);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border-radius: 6px;
+    /* FAQ ACCORDION */
+    .faq-wrapper {
+      max-width: 860px;
+      margin: 4rem auto 0;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--hairline);
       transition: background 0.2s ease;
     }
 
-    .tier-cta:hover { background: var(--accent); color: #FFFFFF; }
+    .faq-question {
+      width: 100%;
+      padding: 1.8rem 1rem;
+      background: none;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 500;
+    }
 
-    .tier-card.featured .tier-cta { background: var(--accent); color: #FFFFFF; }
-    .tier-card.featured .tier-cta:hover { background: var(--accent-deep, #A04D27); }
+    .faq-question .icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+      color: var(--accent);
+    }
 
-    .membership-note {
-      margin-top: 3.5rem;
-      text-align: center;
-      font-size: 0.82rem;
-      letter-spacing: 0.04em;
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 1rem;
+      transition: max-height 0.35s ease, padding 0.35s ease;
       color: var(--ink-muted);
-      max-width: 60ch;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.6;
+      font-size: 0.92rem;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding-bottom: 1.8rem;
+    }
+
+    .faq-item.open .faq-question .icon {
+      transform: rotate(45deg);
     }
 
     /* ============ CTA ============ */
@@ -339,8 +319,8 @@
       .hero { grid-template-columns: 1fr; gap: 3.5rem; padding: 4rem 1.75rem 5rem; }
       .pillars-grid { grid-template-columns: repeat(2, 1fr); }
       .standard-stages { grid-template-columns: 1fr; }
-      .tiers-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
-      .pillars, .membership, .standard { padding-left: 2rem; padding-right: 2rem; }
+      .membership-header-box { flex-direction: column; align-items: flex-start; }
+      .pillars, .membership-overview, .standard { padding-left: 2rem; padding-right: 2rem; }
     }
 
     @media (max-width: 720px) {
@@ -410,29 +390,29 @@
     <div class="standard-inner">
       <div class="reveal">
         <h2 class="standard-title">Premium is the people we let through.</h2>
-        <p class="standard-sub">Every caregiver is thoroughly evaluated to protect your peace of mind. To maintain professional excellence, candidates with certified veterinary or formal animal care credentials bypass preliminary screening to enter directly into identity and in-person assessment.</p>
+        <p class="standard-sub">To ensure absolute safety, Zoélys uses a structured four-stage vetting protocol. By combining automated compliance checks, professional certification fast-tracking, and live human review, we protect your peace of mind without compromise.</p>
       </div>
 
       <div class="standard-stages">
         <div class="stage reveal" style="--d:.02s">
           <div class="stage-num">01</div>
-          <h3 class="stage-title">Dossier & Experience Review</h3>
-          <p class="stage-text">Detailed evaluation of animal care background, verified personal references, and home setup. Certified veterinary professionals bypass this stage upon credential verification.</p>
+          <h3 class="stage-title">Identity & Safety Verification</h3>
+          <p class="stage-text">Automated identity checks and criminal background screening through secure compliance databases. An upfront commitment fee screens for serious caregivers and is fully reimbursed upon their first bookings.</p>
         </div>
         <div class="stage reveal" style="--d:.08s">
           <div class="stage-num">02</div>
-          <h3 class="stage-title">Identity & Background Audit</h3>
-          <p class="stage-text">Comprehensive identity verification and criminal record background checks conducted for every single caregiver applicant without exception.</p>
+          <h3 class="stage-title">Professional Fast-Track & Testing</h3>
+          <p class="stage-text">Grounded in NAPPS care standards. Caregivers holding active veterinary technician or professional pet care licenses bypass theoretical testing directly into scenario evaluation.</p>
         </div>
         <div class="stage reveal" style="--d:.14s">
           <div class="stage-num">03</div>
-          <h3 class="stage-title">Concierge Video Interview</h3>
-          <p class="stage-text">Structured 1-on-1 interview assessing crisis protocols, animal handling empathy, and alignment with high-trust concierge service standards.</p>
+          <h3 class="stage-title">Real-World Scenario Assessment</h3>
+          <p class="stage-text">Virtual situational testing evaluating decision-making during real-life events, including dog reactivity on walks, separation anxiety, and sudden medical responses.</p>
         </div>
         <div class="stage reveal" style="--d:.2s">
           <div class="stage-num">04</div>
-          <h3 class="stage-title">Monitored Sittings & Certification</h3>
-          <p class="stage-text">Supervised trial care sessions and owner feedback reviews before receiving the official Zoélys Certified credential and active roster placement.</p>
+          <h3 class="stage-title">Live Concierge Video Interview</h3>
+          <p class="stage-text">A 15-minute structured video evaluation assessing professionalism, empathy, and calm crisis management before granting full Zoélys Certification.</p>
         </div>
       </div>
 
@@ -443,57 +423,31 @@
     </div>
   </section>
 
-  <!-- MEMBERSHIP -->
-  <section class="membership">
-    <div class="section-head reveal">
-      <h2 class="section-title">Choose your rhythm.</h2>
+  <!-- MEMBERSHIP OVERVIEW (NO PRICE TAGS - DIRECTS TO PRICING PAGE) -->
+  <section class="membership-overview">
+    <div class="membership-header-box reveal">
+      <div>
+        <h2 class="section-title">Designed around your lifestyle.</h2>
+        <p class="standard-sub" style="margin-top: 1rem;">Simple credit allocations, dedicated concierge support, and zero hidden fees. Explore our membership tiers to find your rhythm.</p>
+      </div>
+      <a href="/pricing" class="btn btn-ink">View Tier Pricing <span class="arrow">&rarr;</span></a>
     </div>
 
-    <div class="tiers-grid">
-      <div class="tier-card reveal" style="--d:.02s">
-        <p class="tier-tag">Occasional Traveler</p>
-        <h3 class="tier-name">Gold</h3>
-        <div class="tier-price"><span class="amt">&euro;25</span><span class="per">/ month</span></div>
-        <p class="tier-desc">Five credits for the pet owner who travels now and then.</p>
-        <ul class="tier-features">
-          <li>Credits each month <span class="credits">5</span></li>
-          <li>Any sitter, any service <span class="credits">&check;</span></li>
-          <li>Platform access <span class="credits">&check;</span></li>
-          <li>Concierge desk <span class="credits">Standard</span></li>
-        </ul>
-        <a href="/join" class="tier-cta">Choose Gold</a>
+    <!-- ACCORDION FAQ -->
+    <div class="faq-wrapper reveal">
+      <div class="faq-item">
+        <button class="faq-question">How does credit-based booking work? <span class="icon">+</span></button>
+        <div class="faq-answer">Each membership tier grants a monthly allocation of credits that you can spend across any sitter or service. Credits roll over seamlessly within your subscription cycle.</div>
       </div>
-
-      <div class="tier-card featured reveal" style="--d:.12s">
-        <p class="tier-tag">Most Chosen</p>
-        <h3 class="tier-name">Platinum</h3>
-        <div class="tier-price"><span class="amt">&euro;50</span><span class="per">/ month</span></div>
-        <p class="tier-desc">Ten credits for the regular rhythm of city life and travel.</p>
-        <ul class="tier-features">
-          <li>Credits each month <span class="credits">10</span></li>
-          <li>Any sitter, any service <span class="credits">&check;</span></li>
-          <li>Platform access <span class="credits">&check;</span></li>
-          <li>Concierge desk <span class="credits">Priority</span></li>
-        </ul>
-        <a href="/join" class="tier-cta">Choose Platinum</a>
+      <div class="faq-item">
+        <button class="faq-question">What if my pet has special medical needs? <span class="icon">+</span></button>
+        <div class="faq-answer">Your concierge explicitly pairs you with caregivers experienced in medical administration or certified veterinary technicians who fast-track through our rigorous screening.</div>
       </div>
-
-      <div class="tier-card reveal" style="--d:.22s">
-        <p class="tier-tag">Frequent Flyer</p>
-        <h3 class="tier-name">Diamond</h3>
-        <div class="tier-price"><span class="amt">&euro;75</span><span class="per">/ month</span></div>
-        <p class="tier-desc">Fifteen credits for the pet parent who is always on the move.</p>
-        <ul class="tier-features">
-          <li>Credits each month <span class="credits">15</span></li>
-          <li>Any sitter, any service <span class="credits">&check;</span></li>
-          <li>Platform access <span class="credits">&check;</span></li>
-          <li>Concierge desk <span class="credits">First-Call</span></li>
-        </ul>
-        <a href="/join" class="tier-cta">Choose Diamond</a>
+      <div class="faq-item">
+        <button class="faq-question">How are sitters vetted for emergency readiness? <span class="icon">+</span></button>
+        <div class="faq-answer">Every sitter completes scenario assessments on emergency health response and behavioral reactivity, alongside a 1-on-1 video interview before being certified.</div>
       </div>
     </div>
-
-    <p class="membership-note reveal">Flat pricing. No surge pricing, no hidden fees. Your budget dictates sitting allocation, and unused credits roll over safely within your membership cycle.</p>
   </section>
 
   <!-- CTA -->
@@ -544,6 +498,7 @@
 
   <script src="/navbar.js"></script>
   <script>
+    // Intersection Observer for animation reveals
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -554,6 +509,14 @@
     }, { threshold: 0.12 });
 
     document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+    // FAQ Accordion Interaction
+    document.querySelectorAll('.faq-question').forEach((button) => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        item.classList.toggle('open');
+      });
+    });
   </script>
 </body>
 </html>
