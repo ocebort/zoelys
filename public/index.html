@@ -39,7 +39,7 @@
       font-size: 1rem;
       font-weight: 300;
       line-height: 1.85;
-      max-width: 44ch;
+      max-width: 48ch;
     }
 
     .hero-actions {
@@ -48,13 +48,6 @@
       gap: 2.4rem;
       margin-top: 2.9rem;
     }
-
-    .hero-lead {
-      max-width: 48ch;
-      margin: 1.5rem 0 2rem;
-    }
-
-    .hero-actions { margin-top: 2rem; gap: 1.8rem; }
 
     .hero-facts {
       display: none;
@@ -76,7 +69,7 @@
       z-index: 2;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 34px 64px -22px rgba(25, 21, 18, 0.4);
+      box-shadow: 0 34px 64px -22px rgba(25, 21, 18, 0.15);
     }
 
     .hero-frame img { width: 100%; height: 540px; object-fit: cover; }
@@ -85,27 +78,17 @@
       position: absolute;
       inset: 0;
       transform: translate(20px, 20px);
-      border: 1px solid var(--ink);
+      border: 1px solid var(--hairline-dark, #D6CEC2);
       border-radius: 12px;
       z-index: 1;
     }
 
-    .hero-caption {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      font-size: 0.62rem;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-      z-index: 3;
-    }
-
     /* ============ MANIFESTO ============ */
     .manifesto {
-      padding: 9rem 2rem;
+      padding: 8rem 2rem;
       text-align: center;
       border-top: 1px solid var(--hairline);
+      background: var(--bg-cream-soft);
     }
 
     .manifesto-inner { max-width: 780px; margin: 0 auto; }
@@ -138,12 +121,12 @@
 
     /* ============ PILLARS ============ */
     .pillars {
-      padding: 0 4.5rem 9rem;
+      padding: 7rem 4.5rem;
       max-width: 1320px;
       margin: 0 auto;
     }
 
-    .section-head { margin-bottom: 4.5rem; }
+    .section-head { margin-bottom: 4rem; }
     .section-head .eyebrow { margin-bottom: 1.4rem; }
 
     .section-title {
@@ -157,35 +140,34 @@
     .pillars-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.2rem;
-      background: var(--bg-cream-soft);
-      border: 1px solid var(--hairline);
-      padding: 2rem 0;
+      gap: 1.5rem;
     }
 
     .pillar-card {
-      background: var(--bg-cream-soft);
+      background: var(--bg-card, #FFFFFF);
       border: 1px solid var(--hairline);
-      padding: 2rem 1.5rem;
-      transition: all 0.3s var(--ease);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
     }
 
     .pillar-card:hover {
-      background: var(--bg-card);
-      transform: none;
-      box-shadow: 0 12px 24px -8px rgba(25, 21, 18, 0.15);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -10px rgba(25, 21, 18, 0.08);
+      border-color: var(--accent);
     }
 
-    .pillar-num { display: none; }
+    .pillar-title { font-family: var(--font-serif); font-size: 1.4rem; margin: 0 0 0.8rem; color: var(--ink); font-weight: 500; }
+    .pillar-text { font-size: 0.82rem; line-height: 1.7; color: var(--ink-muted); }
 
-    .pillar-title { font-size: 1.4rem; margin: 1rem 0 0.5rem; }
-
-    .pillar-text { font-size: 0.78rem; line-height: 1.6; color: var(--ink-muted); }
-
-    /* ============ STANDARD (dark) ============ */
+    /* ============ STANDARD (Harmonized Warm Tone) ============ */
     .standard {
-      background: var(--ink);
-      color: #ECE6DC;
+      background: var(--bg-cream-soft);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
       padding: 8rem 4.5rem;
     }
 
@@ -197,7 +179,7 @@
       font-family: var(--font-serif);
       font-weight: 400;
       font-size: clamp(2.3rem, 3.8vw, 3.1rem);
-      max-width: 19ch;
+      max-width: 22ch;
       line-height: 1.12;
       letter-spacing: -0.01em;
       margin-bottom: 1.6rem;
@@ -206,56 +188,60 @@
     .standard-sub {
       color: var(--ink-muted);
       font-weight: 300;
-      font-size: 0.95rem;
-      max-width: 46ch;
+      font-size: 1rem;
+      max-width: 52ch;
       line-height: 1.8;
     }
 
-    .standard-stages { margin-top: 3rem; border: none; }
-
-    .stage {
+    .standard-stages {
+      margin-top: 3.5rem;
       display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 1.5rem;
-      padding: 1.3rem 0;
-      border-bottom: 1px solid var(--hairline);
-      align-items: center;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
     }
 
-    .stage-num { font-family: var(--font-serif); font-size: 1rem; color: var(--accent); width: 48px; }
+    .stage {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
 
-    .stage-title { font-size: 1.4rem; font-weight: 500; margin-bottom: 0.2rem; }
-
-    .stage-text { color: var(--ink-muted); font-size: 0.8rem; line-height: 1.6; max-width: 58ch; }
+    .stage-num { font-family: var(--font-serif); font-size: 1.2rem; color: var(--accent); font-weight: 600; }
+    .stage-title { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; margin: 0; color: var(--ink); }
+    .stage-text { color: var(--ink-muted); font-size: 0.82rem; line-height: 1.7; margin: 0; }
 
     .standard-badge {
-      margin-top: 2.5rem;
+      margin-top: 3rem;
       display: inline-flex;
       align-items: center;
       gap: 0.8rem;
-      background: var(--bg-cream-soft);
+      background: var(--bg-card, #FFFFFF);
       border: 1px solid var(--hairline);
-      border-radius: 6px;
-      padding: 0.6rem 1.5rem 0.6rem 0.7rem;
+      border-radius: 8px;
+      padding: 0.8rem 1.8rem 0.8rem 1rem;
     }
 
     .badge-dot {
-      width: 1.6rem;
-      height: 1.6rem;
+      width: 1.8rem;
+      height: 1.8rem;
       border-radius: 50%;
       background: var(--accent);
       color: #FFFFFF;
       display: grid;
       place-items: center;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       flex-shrink: 0;
     }
 
-    .badge-text { font-size: 0.6rem; letter-spacing: 0.18em; }
+    .badge-text { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--ink); }
 
     /* ============ MEMBERSHIP ============ */
     .membership {
-      padding: 9rem 4.5rem 6rem;
+      padding: 9rem 4.5rem;
       max-width: 1320px;
       margin: 0 auto;
     }
@@ -263,114 +249,94 @@
     .tiers-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.6rem;
+      gap: 2rem;
       margin-top: 4.5rem;
+      align-items: stretch;
     }
 
     .tier-card {
-      background: var(--bg-cream-soft);
+      background: var(--bg-card, #FFFFFF);
       border: 1px solid var(--hairline);
       border-radius: 12px;
-      padding: 2.5rem 2rem;
+      padding: 3rem 2.2rem;
       display: flex;
       flex-direction: column;
-      transition: box-shadow 0.3s var(--ease);
+      transition: all 0.3s ease;
     }
 
     .tier-card:hover {
-      box-shadow: 0 20px 40px -20px rgba(25, 21, 18, 0.2);
+      box-shadow: 0 20px 40px -20px rgba(25, 21, 18, 0.12);
     }
 
     .tier-card.featured {
       border-color: var(--accent);
-      box-shadow: 0 34px 64px -30px rgba(193, 98, 63, 0.4);
+      box-shadow: 0 24px 48px -20px rgba(193, 98, 63, 0.25);
+      position: relative;
     }
 
     .tier-tag { font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.7rem; }
 
-    .tier-name { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 500; }
+    .tier-name { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 500; margin: 0; }
 
-    .tier-price { display: flex; align-items: baseline; gap: 0.5rem; margin: 1.5rem 0 0.3rem; }
-    .tier-price .amt { font-family: var(--font-serif); font-size: 3rem; line-height: 1; }
+    .tier-price { display: flex; align-items: baseline; gap: 0.5rem; margin: 1.5rem 0 0.5rem; }
+    .tier-price .amt { font-family: var(--font-serif); font-size: 3.2rem; line-height: 1; }
     .tier-price .per { font-size: 0.78rem; color: var(--ink-muted); }
 
-    .tier-desc { font-size: 0.82rem; color: var(--ink-muted); line-height: 1.7; }
+    .tier-desc { font-size: 0.84rem; color: var(--ink-muted); line-height: 1.7; min-height: 2.8rem; }
 
-    .tier-features { list-style: none; margin: 1.5rem 0 2rem; }
+    .tier-features { list-style: none; padding: 0; margin: 2rem 0; flex-grow: 1; border-top: 1px solid var(--hairline); }
 
     .tier-features li {
-      padding: 0.5rem 0;
-      font-size: 0.78rem;
-      line-height: 1.6;
+      padding: 0.8rem 0;
+      font-size: 0.8rem;
+      line-height: 1.5;
       color: var(--ink-muted);
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .tier-features li .credits { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .tier-features li .credits { font-weight: 600; color: var(--ink); }
 
     .tier-cta {
-      display: inline-block;
+      display: block;
       text-align: center;
-      padding: 0.7rem 1.2rem;
+      padding: 0.9rem 1.5rem;
       background: var(--ink);
       color: #fff;
       text-decoration: none;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       border-radius: 6px;
-      margin-top: 1rem;
+      transition: background 0.2s ease;
     }
 
     .tier-cta:hover { background: var(--accent); color: #FFFFFF; }
 
-    .tier-card.featured .tier-cta { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
+    .tier-card.featured .tier-cta { background: var(--accent); color: #FFFFFF; }
     .tier-card.featured .tier-cta:hover { background: var(--accent-deep, #A04D27); }
-
-    .tier-card.featured .tier-features li { border-color: var(--hairline-dark); color: #A79E95; }
-    .tier-card.featured .tier-features li .credits { color: #FFFFFF; }
-    .tier-card.featured .tier-desc { color: #A79E95; }
-    .tier-card.featured .tier-price .per { color: #A79E95; }
 
     .membership-note {
       margin-top: 3.5rem;
       text-align: center;
-      font-size: 0.8rem;
-      letter-spacing: 0.06em;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
       color: var(--ink-muted);
-    }
-
-    /* ============ TESTIMONIAL ============ */
-    .testimonial {
-      padding: 8rem 2rem 9rem;
-      max-width: 860px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .testimonial blockquote {
-      font-family: var(--font-serif);
-      font-size: clamp(1.7rem, 3.2vw, 2.35rem);
-      font-style: italic;
-      font-weight: 400;
-      line-height: 1.45;
-    }
-
-    .testimonial cite {
-      display: block;
-      margin-top: 2rem;
-      font-style: normal;
-      font-size: 0.66rem;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
+      max-width: 60ch;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
     }
 
     /* ============ CTA ============ */
     .cta {
       text-align: center;
-      padding: 5rem 2rem 10rem;
+      padding: 7rem 2rem 10rem;
       border-top: 1px solid var(--hairline);
+      background: var(--bg-cream-soft);
     }
 
     .cta-title {
@@ -383,32 +349,21 @@
       margin: 1.6rem auto 1.6rem;
     }
 
-    .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 3rem; }
-
-    .cta .btn { margin-top: 0.5rem; }
+    .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 3rem; font-size: 1rem; }
 
     /* ============ RESPONSIVE ============ */
     @media (max-width: 1020px) {
       .hero { grid-template-columns: 1fr; gap: 3.5rem; padding: 4rem 1.75rem 5rem; }
-      .hero-facts { gap: 2.6rem; }
-      .hero-media { max-width: 640px; }
       .pillars-grid { grid-template-columns: repeat(2, 1fr); }
-      .tiers-grid { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; }
+      .standard-stages { grid-template-columns: 1fr; }
+      .tiers-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+      .pillars, .membership, .standard { padding-left: 2rem; padding-right: 2rem; }
     }
 
     @media (max-width: 720px) {
-      .pillars, .membership { padding-left: 1.75rem; padding-right: 1.75rem; }
-      .standard { padding: 6rem 1.75rem; }
-      .stage { grid-template-columns: 1fr; gap: 0.5rem; }
+      .pillars-grid { grid-template-columns: 1fr; }
       .hero-title { font-size: 2.7rem; }
       .hero-actions { flex-direction: column; align-items: flex-start; gap: 1.6rem; }
-      .hero-facts { flex-wrap: wrap; gap: 2rem; }
-      .hero-frame img { height: 420px; }
-      .hero-frame-shadow { transform: translate(12px, 12px); }
-    }
-
-    @media (max-width: 560px) {
-      .pillars-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -423,11 +378,6 @@
       <div class="hero-actions reveal" style="--d:.24s">
         <a class="btn btn-ink" href="/get-matched">Find a sitter <span class="arrow">&rarr;</span></a>
         <a class="link-underline" href="/how-it-works">How it works</a>
-      </div>
-      <div class="hero-facts reveal" style="--d:.32s">
-        <div class="fact"><span class="fact-num">01</span><span class="fact-label">Private concierge</span></div>
-        <div class="fact"><span class="fact-num">02</span><span class="fact-label">Match that truly fits</span></div>
-        <div class="fact"><span class="fact-num">05</span><span class="fact-label">Vetting stages</span></div>
       </div>
     </div>
     <div class="hero-media reveal" style="--d:.2s">
@@ -455,84 +405,65 @@
     </div>
 
     <div class="pillars-grid">
-      <a class="pillar-card reveal" href="/get-matched" style="--d:.02s; text-decoration:none; display:block;">
-        <div class="pillar-num">1</div>
+      <a class="pillar-card reveal" href="/get-matched" style="--d:.02s;">
         <h3 class="pillar-title">Personalized Matching</h3>
         <p class="pillar-text">Your concierge studies your pet's dossier and handpicks caregivers who truly fit your needs and lifestyle.</p>
-      </div>
-      <a class="pillar-card reveal" href="/get-matched" style="--d:.1s; text-decoration:none; display:block;">
-        <div class="pillar-num">2</div>
+      </a>
+      <a class="pillar-card reveal" href="/get-matched" style="--d:.1s;">
         <h3 class="pillar-title">Verified Caregivers</h3>
         <p class="pillar-text">Every sitter undergoes rigorous interviews, background checks, and vetting in person before joining the roster.</p>
-      </div>
-      <a class="pillar-card reveal" href="/get-matched" style="--d:.18s; text-decoration:none; display:block;">
-        <div class="pillar-num">3</div>
+      </a>
+      <a class="pillar-card reveal" href="/get-matched" style="--d:.18s;">
         <h3 class="pillar-title">Daily Transparency</h3>
         <p class="pillar-text">Every walk, meal, and medication is logged in a daily care log you can view anytime from your portal.</p>
-      </div>
-      <a class="pillar-card reveal" href="/join" style="--d:.26s; text-decoration:none; display:block;">
-        <div class="pillar-num">4</div>
+      </a>
+      <a class="pillar-card reveal" href="/join" style="--d:.26s;">
         <h3 class="pillar-title">Comfort & Safety</h3>
-        <p class="pillar-text">Comfort is the minimum: at least two walks daily, scheduled feedings, medication on time, and a sitter who respects your home and routines.</p>
-      </div>
+        <p class="pillar-text">Comfort is the minimum: at least two walks daily, scheduled feedings, medication on time, and a sitter who respects your home.</p>
+      </a>
     </div>
   </section>
 
-  <!-- STANDARD -->
+  <!-- STANDARD (4-STEP VETTING & CERTIFICATION BYPASS) -->
   <section class="standard">
     <div class="standard-inner">
       <div class="reveal">
         <p class="eyebrow">The Zoélys Standard</p>
         <h2 class="standard-title">Premium is the people we let through.</h2>
-        <p class="standard-sub">Every caregiver is interviewed, background checked, and vetted in person. Every booking is held to the same standard. No exceptions.</p>
+        <p class="standard-sub">Every caregiver is meticulously evaluated. Sitters holding recognized professional veterinary or advanced animal care certifications may bypass preliminary screening stages to enter directly into the trial evaluation.</p>
       </div>
 
       <div class="standard-stages">
         <div class="stage reveal" style="--d:.02s">
           <div class="stage-num">01</div>
-          <div>
-            <h3 class="stage-title">Application</h3>
-            <p class="stage-text">A detailed profile, verifiable experience, references and a complete home-setup review.</p>
-          </div>
+          <h3 class="stage-title">Application & Dossier Review</h3>
+          <p class="stage-text">Detailed professional history, verified references, and home-setup review. Certified veterinary professionals fast-track directly past this initial stage.</p>
         </div>
         <div class="stage reveal" style="--d:.08s">
           <div class="stage-num">02</div>
-          <div>
-            <h3 class="stage-title">Background check</h3>
-            <p class="stage-text">Full identity verification and criminal record check on every sitter. No exceptions.</p>
-          </div>
+          <h3 class="stage-title">Comprehensive Background Check</h3>
+          <p class="stage-text">Full identity verification, criminal record screening, and safety audit on every approved caregiver candidate without exception.</p>
         </div>
         <div class="stage reveal" style="--d:.14s">
           <div class="stage-num">03</div>
-          <div>
-            <h3 class="stage-title">Zoélys interview</h3>
-            <p class="stage-text">A personal video interview assessing values, empathy and fit with our standards.</p>
-          </div>
+          <h3 class="stage-title">Zoélys Concierge Interview</h3>
+          <p class="stage-text">Rigorous personal video evaluation testing situational judgment, empathy, crisis response, and alignment with quiet-luxury hospitality standards.</p>
         </div>
         <div class="stage reveal" style="--d:.2s">
           <div class="stage-num">04</div>
-          <div>
-            <h3 class="stage-title">Trial period</h3>
-            <p class="stage-text">Monitored first sittings with continuous rating review before full approval.</p>
-          </div>
-        </div>
-        <div class="stage reveal" style="--d:.26s">
-          <div class="stage-num">05</div>
-          <div>
-            <h3 class="stage-title">Certified badge</h3>
-            <p class="stage-text">Only those who pass every stage earn the Zoélys Certified badge.</p>
-          </div>
+          <h3 class="stage-title">Trial Period & Certified Badge</h3>
+          <p class="stage-text">Monitored live sittings and client feedback reviews before earning the official Zoélys Certified badge and entering the active roster.</p>
         </div>
       </div>
 
       <div class="standard-badge reveal">
         <span class="badge-dot">&#10003;</span>
-        <span class="badge-text">Zoélys Certified, the mark of trust</span>
+        <span class="badge-text">Zoélys Certified, the mark of absolute trust</span>
       </div>
     </div>
   </section>
 
-  <!-- MEMBERSHIP -->
+  <!-- MEMBERSHIP (ALIGNED TIERS) -->
   <section class="membership">
     <div class="section-head reveal">
       <p class="eyebrow">Membership</p>
@@ -541,56 +472,56 @@
 
     <div class="tiers-grid">
       <div class="tier-card reveal" style="--d:.02s">
-        <p class="tier-tag">For the occasional traveler</p>
+        <p class="tier-tag">Occasional Traveler</p>
         <h3 class="tier-name">Gold</h3>
         <div class="tier-price"><span class="amt">&euro;25</span><span class="per">/ month</span></div>
         <p class="tier-desc">Five credits for the pet owner who travels now and then.</p>
         <ul class="tier-features">
           <li>Credits each month <span class="credits">5</span></li>
-          <li>Spend them on any sitter, any service</li>
-          <li>Platform access</li>
-          <li>Concierge desk</li>
+          <li>Any sitter, any service <span class="credits">&check;</span></li>
+          <li>Platform access <span class="credits">&check;</span></li>
+          <li>Concierge desk <span class="credits">Standard</span></li>
         </ul>
         <a href="/join" class="tier-cta">Choose Gold</a>
       </div>
 
       <div class="tier-card featured reveal" style="--d:.12s">
-        <p class="tier-tag">Most chosen</p>
+        <p class="tier-tag">Most Chosen</p>
         <h3 class="tier-name">Platinum</h3>
         <div class="tier-price"><span class="amt">&euro;50</span><span class="per">/ month</span></div>
-        <p class="tier-desc">Ten credits for the regular rhythm of city life.</p>
+        <p class="tier-desc">Ten credits for the regular rhythm of city life and travel.</p>
         <ul class="tier-features">
           <li>Credits each month <span class="credits">10</span></li>
-          <li>Spend them on any sitter, any service</li>
-          <li>Platform access</li>
-          <li>Priority concierge desk</li>
+          <li>Any sitter, any service <span class="credits">&check;</span></li>
+          <li>Platform access <span class="credits">&check;</span></li>
+          <li>Concierge desk <span class="credits">Priority</span></li>
         </ul>
         <a href="/join" class="tier-cta">Choose Platinum</a>
       </div>
 
       <div class="tier-card reveal" style="--d:.22s">
-        <p class="tier-tag">For the frequent flyer</p>
+        <p class="tier-tag">Frequent Flyer</p>
         <h3 class="tier-name">Diamond</h3>
         <div class="tier-price"><span class="amt">&euro;75</span><span class="per">/ month</span></div>
         <p class="tier-desc">Fifteen credits for the pet parent who is always on the move.</p>
         <ul class="tier-features">
           <li>Credits each month <span class="credits">15</span></li>
-          <li>Spend them on any sitter, any service</li>
-          <li>Platform access</li>
-          <li>First-call concierge line</li>
+          <li>Any sitter, any service <span class="credits">&check;</span></li>
+          <li>Platform access <span class="credits">&check;</span></li>
+          <li>Concierge desk <span class="credits">First-Call</span></li>
         </ul>
         <a href="/join" class="tier-cta">Choose Diamond</a>
       </div>
     </div>
 
-    <p class="membership-note reveal">Flat pricing. No surge, no hidden fees. Your budget decides how many Strategic Credits a sitting costs, and you can top up anytime.</p>
+    <p class="membership-note reveal">Flat pricing. No surge pricing, no hidden fees. Your budget dictates sitting allocation, and unused credits roll over safely within your membership cycle.</p>
   </section>
 
   <!-- CTA -->
   <section class="cta">
     <p class="eyebrow reveal">Begin</p>
     <h2 class="cta-title reveal" style="--d:.08s">The moment you walk out the door.</h2>
-    <p class="cta-sub reveal" style="--d:.16s">Your pet&rsquo;s care, handled by a concierge who knows them by name. Begin with a two-minute intake.</p>
+    <p class="cta-sub reveal" style="--d:.16s">Your pet&rsquo;s care, handled by a concierge who knows them by name.</p>
     <a class="btn btn-ink reveal" style="--d:.24s" href="/get-matched">Get matched <span class="arrow">&rarr;</span></a>
   </section>
 
@@ -628,7 +559,7 @@
     </div>
 
     <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>&copy; 2026 Zoélys. Crafted with care.</div>
       <div>Premium pet care, redefined.</div>
     </div>
   </footer>
