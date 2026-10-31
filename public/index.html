@@ -62,7 +62,7 @@
       margin-top: 2.5rem;
     }
 
-    /* Dual Hero Media with Specified Unsplash Photos */
+    /* Dual Hero Media Collage */
     .hero-media-collage {
       display: grid;
       grid-template-columns: 1.15fr 0.95fr;
@@ -95,9 +95,7 @@
       transition: scale 0.6s ease;
     }
 
-    .hero-img-box:hover img {
-      scale: 1.04;
-    }
+    .hero-img-box:hover img { scale: 1.04; }
 
     /* ============ MANIFESTO ============ */
     .manifesto {
@@ -139,13 +137,13 @@
     .video-hero-section {
       position: relative;
       width: 100%;
-      height: 90vh;
-      min-height: 580px;
+      height: 85vh;
+      min-height: 520px;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #111;
+      background: #191512;
     }
 
     .video-hero-section video {
@@ -158,7 +156,7 @@
       height: auto;
       transform: translate(-50%, -50%);
       object-fit: cover;
-      opacity: 0.72;
+      opacity: 0.65;
     }
 
     .video-overlay-content {
@@ -186,7 +184,7 @@
       opacity: 0.9;
     }
 
-    /* ============ CARE STANDARDS (PURE INFO CARDS - NO BUTTONS / NO ARROWS) ============ */
+    /* ============ CARE STANDARDS (INFO CARDS ONLY) ============ */
     .pillars {
       padding: 7rem 4.5rem;
       max-width: 1320px;
@@ -239,7 +237,7 @@
       margin: 0;
     }
 
-    /* ============ 2-COLUMN VETTING SECTION WITH EXACT UNSPLASH PHOTOS ============ */
+    /* ============ VETTING SECTION (ALIGNED SINGLE BORDER COLLIE PHOTO) ============ */
     .standard {
       background: var(--bg-cream-soft);
       border-top: 1px solid var(--hairline);
@@ -251,7 +249,7 @@
       max-width: 1280px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1fr 1.1fr;
+      grid-template-columns: 0.9fr 1.1fr;
       gap: 5rem;
       align-items: stretch;
     }
@@ -262,38 +260,23 @@
       height: 100%;
     }
 
-    .standard-media-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem;
+    .standard-single-frame {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 48px -18px rgba(25, 21, 18, 0.15);
       height: 100%;
+      min-height: 560px;
+      position: relative;
     }
 
-    .standard-img-frame {
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
-      height: 250px;
-    }
-
-    .standard-img-frame-large {
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
-      grid-column: span 2;
-      height: 310px;
-    }
-
-    .standard-img-frame img, .standard-img-frame-large img {
+    .standard-single-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: scale 0.6s ease;
     }
 
-    .standard-img-frame:hover img, .standard-img-frame-large:hover img {
-      scale: 1.04;
-    }
+    .standard-single-frame:hover img { scale: 1.03; }
 
     .standard-right {
       display: flex;
@@ -405,6 +388,7 @@
       .hero-media-collage { max-width: 600px; }
       .pillars-grid { grid-template-columns: repeat(2, 1fr); }
       .standard-inner { grid-template-columns: 1fr; gap: 3.5rem; }
+      .standard-single-frame { height: 420px; min-height: auto; }
       .pillars, .standard { padding-left: 1.75rem; padding-right: 1.75rem; }
       .video-hero-section { height: 60vh; }
     }
@@ -430,10 +414,10 @@
       </div>
     </div>
     
-    <!-- Hero Media Collage (Vos liens Unsplash 1 et 2) -->
+    <!-- Hero Media Collage -->
     <div class="hero-media-collage reveal">
       <div class="hero-img-box hero-img-main">
-        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Border collie holding wildflowers in mountains">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=800" alt="Two dogs playing together">
       </div>
       <div class="hero-img-box hero-img-secondary">
         <img src="https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&q=80&w=600" alt="Dog running on beach during daytime">
@@ -452,8 +436,8 @@
 
   <!-- FULLSCREEN VIDEO SECTION -->
   <section class="video-hero-section reveal">
-    <video autoplay loop muted playsinline>
-      <source src="https://assets.mixkit.co/videos/preview/mixkit-cute-dog-laying-on-the-floor-41443-large.mp4" type="video/mp4">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="https://cdn.coverr.co/videos/coverr-a-dog-resting-in-the-sun-5582/1080p.mp4" type="video/mp4">
     </video>
     <div class="video-overlay-content">
       <h2 class="video-overlay-title">Thoughtful care in the comfort of home.</h2>
@@ -461,7 +445,7 @@
     </div>
   </section>
 
-  <!-- CARE STANDARDS (PURE INFO CARDS - NO ARROWS / NO BUTTONS) -->
+  <!-- CARE STANDARDS -->
   <section class="pillars">
     <div class="section-head reveal">
       <h2 class="section-title">Care Standards</h2>
@@ -487,20 +471,12 @@
     </div>
   </section>
 
-  <!-- 2-COLUMN VETTING SECTION (Vos liens Unsplash 3, 4 et 5) -->
+  <!-- VETTING SECTION (ALIGNED SINGLE BORDER COLLIE PHOTO) -->
   <section class="standard">
     <div class="standard-inner">
       <div class="standard-left reveal">
-        <div class="standard-media-grid">
-          <div class="standard-img-frame">
-            <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=600" alt="Small white dog next to a tree">
-          </div>
-          <div class="standard-img-frame">
-            <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=600" alt="Two white and brown dogs playing">
-          </div>
-          <div class="standard-img-frame-large">
-            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=900" alt="White dog lying on green grass field">
-          </div>
+        <div class="standard-single-frame">
+          <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=1000" alt="Border Collie holding wildflowers in mountains">
         </div>
       </div>
 
@@ -595,7 +571,7 @@
 
   <script src="/navbar.js"></script>
   <script>
-    // Smooth Scroll Reveal Trigger for All Sections
+    // Smooth Scroll Reveal Observer
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
