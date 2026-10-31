@@ -133,57 +133,6 @@
       color: var(--ink-muted);
     }
 
-    /* ============ FULLSCREEN VIDEO SECTION ============ */
-    .video-hero-section {
-      position: relative;
-      width: 100%;
-      height: 85vh;
-      min-height: 520px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #191512;
-    }
-
-    .video-hero-section video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translate(-50%, -50%);
-      object-fit: cover;
-      opacity: 0.65;
-    }
-
-    .video-overlay-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      color: #FFFFFF;
-      max-width: 800px;
-      padding: 0 2rem;
-    }
-
-    .video-overlay-title {
-      font-family: var(--font-serif);
-      font-size: clamp(2.5rem, 5vw, 4.2rem);
-      font-weight: 400;
-      line-height: 1.15;
-      margin-bottom: 1.2rem;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-
-    .video-overlay-sub {
-      font-size: 1.05rem;
-      font-weight: 300;
-      letter-spacing: 0.04em;
-      opacity: 0.9;
-    }
-
     /* ============ CARE STANDARDS (INFO CARDS ONLY) ============ */
     .pillars {
       padding: 7rem 4.5rem;
@@ -237,7 +186,7 @@
       margin: 0;
     }
 
-    /* ============ VETTING SECTION (ALIGNED SINGLE BORDER COLLIE PHOTO) ============ */
+    /* ============ VETTING SECTION (BORDER COLLIE WITH FLOWERS PHOTO) ============ */
     .standard {
       background: var(--bg-cream-soft);
       border-top: 1px solid var(--hairline);
@@ -390,7 +339,6 @@
       .standard-inner { grid-template-columns: 1fr; gap: 3.5rem; }
       .standard-single-frame { height: 420px; min-height: auto; }
       .pillars, .standard { padding-left: 1.75rem; padding-right: 1.75rem; }
-      .video-hero-section { height: 60vh; }
     }
 
     @media (max-width: 720px) {
@@ -434,17 +382,6 @@
     </div>
   </section>
 
-  <!-- FULLSCREEN VIDEO SECTION -->
-  <section class="video-hero-section reveal">
-    <video autoplay loop muted playsinline preload="auto">
-      <source src="https://cdn.coverr.co/videos/coverr-a-dog-resting-in-the-sun-5582/1080p.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay-content">
-      <h2 class="video-overlay-title">Thoughtful care in the comfort of home.</h2>
-      <p class="video-overlay-sub">Peace of mind for pet parents who expect the exceptional.</p>
-    </div>
-  </section>
-
   <!-- CARE STANDARDS -->
   <section class="pillars">
     <div class="section-head reveal">
@@ -471,12 +408,12 @@
     </div>
   </section>
 
-  <!-- VETTING SECTION (ALIGNED SINGLE BORDER COLLIE PHOTO) -->
+  <!-- VETTING SECTION (BORDER COLLIE WITH FLOWERS PHOTO) -->
   <section class="standard">
     <div class="standard-inner">
       <div class="standard-left reveal">
         <div class="standard-single-frame">
-          <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=1000" alt="Border Collie holding wildflowers in mountains">
+          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=1000" alt="Border collie holding wildflowers in Berchtesgaden mountains">
         </div>
       </div>
 
