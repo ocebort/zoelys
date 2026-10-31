@@ -28,7 +28,7 @@
       font-size: clamp(3rem, 5.4vw, 4.7rem);
       line-height: 1.08;
       letter-spacing: -0.015em;
-      margin-top: 1.75rem;
+      margin-top: 0.5rem;
     }
 
     .hero-title em { font-style: italic; color: var(--accent); }
@@ -36,7 +36,7 @@
     .hero-lead {
       margin-top: 1.9rem;
       color: var(--ink-muted);
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 300;
       line-height: 1.85;
       max-width: 48ch;
@@ -49,19 +49,6 @@
       margin-top: 2.9rem;
     }
 
-    .hero-facts {
-      display: none;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 1.5rem;
-      padding-top: 0;
-      border: none;
-    }
-
-    .fact { flex-direction: row; align-items: center; gap: 0.5rem; }
-    .fact-num { font-family: var(--font-serif); font-size: 1.4rem; line-height: 1; min-width: 1.2rem; }
-    .fact-label { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-muted); }
-
     .hero-media { position: relative; padding-bottom: 3rem; }
 
     .hero-frame {
@@ -69,7 +56,7 @@
       z-index: 2;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 34px 64px -22px rgba(25, 21, 18, 0.15);
+      box-shadow: 0 34px 64px -22px rgba(25, 21, 18, 0.12);
     }
 
     .hero-frame img { width: 100%; height: 540px; object-fit: cover; }
@@ -126,8 +113,7 @@
       margin: 0 auto;
     }
 
-    .section-head { margin-bottom: 4rem; }
-    .section-head .eyebrow { margin-bottom: 1.4rem; }
+    .section-head { margin-bottom: 3.5rem; }
 
     .section-title {
       font-family: var(--font-serif);
@@ -163,7 +149,7 @@
     .pillar-title { font-family: var(--font-serif); font-size: 1.4rem; margin: 0 0 0.8rem; color: var(--ink); font-weight: 500; }
     .pillar-text { font-size: 0.82rem; line-height: 1.7; color: var(--ink-muted); }
 
-    /* ============ STANDARD (Harmonized Warm Tone) ============ */
+    /* ============ VETTING STANDARD ============ */
     .standard {
       background: var(--bg-cream-soft);
       border-top: 1px solid var(--hairline);
@@ -173,8 +159,6 @@
 
     .standard-inner { max-width: 1080px; margin: 0 auto; }
 
-    .standard .eyebrow { margin-bottom: 1.5rem; }
-
     .standard-title {
       font-family: var(--font-serif);
       font-weight: 400;
@@ -182,15 +166,15 @@
       max-width: 22ch;
       line-height: 1.12;
       letter-spacing: -0.01em;
-      margin-bottom: 1.6rem;
+      margin-bottom: 1.4rem;
     }
 
     .standard-sub {
       color: var(--ink-muted);
       font-weight: 300;
       font-size: 1rem;
-      max-width: 52ch;
-      line-height: 1.8;
+      max-width: 58ch;
+      line-height: 1.85;
     }
 
     .standard-stages {
@@ -204,15 +188,15 @@
       background: var(--bg-card, #FFFFFF);
       border: 1px solid var(--hairline);
       border-radius: 10px;
-      padding: 2rem;
+      padding: 2.2rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .stage-num { font-family: var(--font-serif); font-size: 1.2rem; color: var(--accent); font-weight: 600; }
     .stage-title { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; margin: 0; color: var(--ink); }
-    .stage-text { color: var(--ink-muted); font-size: 0.82rem; line-height: 1.7; margin: 0; }
+    .stage-text { color: var(--ink-muted); font-size: 0.84rem; line-height: 1.75; margin: 0; }
 
     .standard-badge {
       margin-top: 3rem;
@@ -250,7 +234,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
-      margin-top: 4.5rem;
+      margin-top: 3.5rem;
       align-items: stretch;
     }
 
@@ -271,7 +255,6 @@
     .tier-card.featured {
       border-color: var(--accent);
       box-shadow: 0 24px 48px -20px rgba(193, 98, 63, 0.25);
-      position: relative;
     }
 
     .tier-tag { font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.7rem; }
@@ -346,7 +329,7 @@
       line-height: 1.1;
       letter-spacing: -0.015em;
       max-width: 21ch;
-      margin: 1.6rem auto 1.6rem;
+      margin: 0 auto 1.6rem;
     }
 
     .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 3rem; font-size: 1rem; }
@@ -372,9 +355,8 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-copy">
-      <p class="eyebrow reveal">Concierge Pet Care</p>
       <h1 class="hero-title reveal" style="--d:.08s">Your pet, <em>cared for</em><br>like family.</h1>
-      <p class="hero-lead reveal" style="--d:.16s">Hand your concierge your pet&rsquo;s care brief, your dates, and your budget. They study the dossier and handpick the caregivers who truly fit. You approve the one you like.</p>
+      <p class="hero-lead reveal" style="--d:.16s">Share your pet&rsquo;s routine, your travel plans, and your preferences with your dedicated concierge. We get to know your pet first, curate caregivers who feel like a natural extension of home, and present you with choices you can trust.</p>
       <div class="hero-actions reveal" style="--d:.24s">
         <a class="btn btn-ink" href="/get-matched">Find a sitter <span class="arrow">&rarr;</span></a>
         <a class="link-underline" href="/how-it-works">How it works</a>
@@ -400,7 +382,6 @@
   <!-- PILLARS -->
   <section class="pillars">
     <div class="section-head reveal">
-      <p class="eyebrow">The Standard</p>
       <h2 class="section-title">Care Standards</h2>
     </div>
 
@@ -424,49 +405,47 @@
     </div>
   </section>
 
-  <!-- STANDARD (4-STEP VETTING & CERTIFICATION BYPASS) -->
+  <!-- STANDARD (4-STEP THESIS-ALIGNED VETTING) -->
   <section class="standard">
     <div class="standard-inner">
       <div class="reveal">
-        <p class="eyebrow">The Zoélys Standard</p>
         <h2 class="standard-title">Premium is the people we let through.</h2>
-        <p class="standard-sub">Every caregiver is meticulously evaluated. Sitters holding recognized professional veterinary or advanced animal care certifications may bypass preliminary screening stages to enter directly into the trial evaluation.</p>
+        <p class="standard-sub">Every caregiver is thoroughly evaluated to protect your peace of mind. To maintain professional excellence, candidates with certified veterinary or formal animal care credentials bypass preliminary screening to enter directly into identity and in-person assessment.</p>
       </div>
 
       <div class="standard-stages">
         <div class="stage reveal" style="--d:.02s">
           <div class="stage-num">01</div>
-          <h3 class="stage-title">Application & Dossier Review</h3>
-          <p class="stage-text">Detailed professional history, verified references, and home-setup review. Certified veterinary professionals fast-track directly past this initial stage.</p>
+          <h3 class="stage-title">Dossier & Experience Review</h3>
+          <p class="stage-text">Detailed evaluation of animal care background, verified personal references, and home setup. Certified veterinary professionals bypass this stage upon credential verification.</p>
         </div>
         <div class="stage reveal" style="--d:.08s">
           <div class="stage-num">02</div>
-          <h3 class="stage-title">Comprehensive Background Check</h3>
-          <p class="stage-text">Full identity verification, criminal record screening, and safety audit on every approved caregiver candidate without exception.</p>
+          <h3 class="stage-title">Identity & Background Audit</h3>
+          <p class="stage-text">Comprehensive identity verification and criminal record background checks conducted for every single caregiver applicant without exception.</p>
         </div>
         <div class="stage reveal" style="--d:.14s">
           <div class="stage-num">03</div>
-          <h3 class="stage-title">Zoélys Concierge Interview</h3>
-          <p class="stage-text">Rigorous personal video evaluation testing situational judgment, empathy, crisis response, and alignment with quiet-luxury hospitality standards.</p>
+          <h3 class="stage-title">Concierge Video Interview</h3>
+          <p class="stage-text">Structured 1-on-1 interview assessing crisis protocols, animal handling empathy, and alignment with high-trust concierge service standards.</p>
         </div>
         <div class="stage reveal" style="--d:.2s">
           <div class="stage-num">04</div>
-          <h3 class="stage-title">Trial Period & Certified Badge</h3>
-          <p class="stage-text">Monitored live sittings and client feedback reviews before earning the official Zoélys Certified badge and entering the active roster.</p>
+          <h3 class="stage-title">Monitored Sittings & Certification</h3>
+          <p class="stage-text">Supervised trial care sessions and owner feedback reviews before receiving the official Zoélys Certified credential and active roster placement.</p>
         </div>
       </div>
 
       <div class="standard-badge reveal">
         <span class="badge-dot">&#10003;</span>
-        <span class="badge-text">Zoélys Certified, the mark of absolute trust</span>
+        <span class="badge-text">Zoélys Certified, the mark of trust</span>
       </div>
     </div>
   </section>
 
-  <!-- MEMBERSHIP (ALIGNED TIERS) -->
+  <!-- MEMBERSHIP -->
   <section class="membership">
     <div class="section-head reveal">
-      <p class="eyebrow">Membership</p>
       <h2 class="section-title">Choose your rhythm.</h2>
     </div>
 
@@ -519,7 +498,6 @@
 
   <!-- CTA -->
   <section class="cta">
-    <p class="eyebrow reveal">Begin</p>
     <h2 class="cta-title reveal" style="--d:.08s">The moment you walk out the door.</h2>
     <p class="cta-sub reveal" style="--d:.16s">Your pet&rsquo;s care, handled by a concierge who knows them by name.</p>
     <a class="btn btn-ink reveal" style="--d:.24s" href="/get-matched">Get matched <span class="arrow">&rarr;</span></a>
