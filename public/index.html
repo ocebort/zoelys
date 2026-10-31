@@ -1,51 +1,593 @@
-cat << 'EOF' > scripts/van_westendorp_analysis.py
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys. Concierge Pet Care.</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
 
-survey_file_path = '/Users/ocebort/Downloads/Zoelys Premium Pet Care & Trust Survey (réponses)-2.xlsx'
-df_survey = pd.read_excel(survey_file_path)
+  <style>
+    /* ============ SMOOTH SCROLL REVEAL ANIMATIONS ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
 
-vw_cols = {}
-for col in df_survey.columns:
-    col_lower = col.lower()
-    if any(k in col_lower for k in ['too cheap', 'doute', 'qualité']):
-        if 'Too Cheap' not in vw_cols: vw_cols['Too Cheap'] = col
-    elif any(k in col_lower for k in ['bargain', 'great deal', 'bonne affaire']):
-        if 'Bargain' not in vw_cols: vw_cols['Bargain'] = col
-    elif any(k in col_lower for k in ['expensive', 'still', 'cher']) and 'too' not in col_lower:
-        if 'Expensive' not in vw_cols: vw_cols['Expensive'] = col
-    elif any(k in col_lower for k in ['too expensive', 'prohibitif', 'trop cher']):
-        if 'Too Expensive' not in vw_cols: vw_cols['Too Expensive'] = col
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-price_df = pd.DataFrame()
-for label, col_name in vw_cols.items():
-    price_df[label] = pd.to_numeric(
-        df_survey[col_name].astype(str).str.replace(r'[^0-9.]', '', regex=True), 
-        errors='coerce'
-    )
-price_df = price_df.dropna()
+    /* ============ HERO ============ */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 4.5rem;
+      align-items: center;
+      padding: 5rem 4.5rem 6rem;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
 
-plt.figure(figsize=(11, 6))
-sns.set_theme(style="whitegrid")
-prices = np.linspace(price_df.min().min(), min(price_df.max().max(), 250), 300)
+    .hero-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+      margin-top: 0.5rem;
+    }
 
-too_cheap_cum = [(price_df['Too Cheap'] <= p).mean() * 100 for p in prices]
-bargain_cum = [(price_df['Bargain'] <= p).mean() * 100 for p in prices]
-expensive_cum = [(price_df['Expensive'] >= p).mean() * 100 for p in prices]
-too_expensive_cum = [(price_df['Too Expensive'] >= p).mean() * 100 for p in prices]
+    .hero-title em { font-style: italic; color: var(--accent); }
 
-plt.plot(prices, too_cheap_cum, label='Too Cheap', color='firebrick', linewidth=2)
-plt.plot(prices, bargain_cum, label='Bargain', color='orange', linewidth=2, linestyle='--')
-plt.plot(prices, expensive_cum, label='Expensive', color='royalblue', linewidth=2, linestyle='--')
-plt.plot(prices, too_expensive_cum, label='Too Expensive', color='darkblue', linewidth=2)
+    .hero-lead {
+      margin-top: 1.8rem;
+      color: var(--ink-muted);
+      font-size: 1.02rem;
+      font-weight: 300;
+      line-height: 1.85;
+      max-width: 46ch;
+    }
 
-plt.title('Van Westendorp Price Sensitivity Meter Curves (N = 47)', fontsize=12, pad=15)
-plt.xlabel('Price per Night ($ USD)', fontsize=10)
-plt.ylabel('Percentage of Respondents (%)', fontsize=10)
-plt.legend(title='Pricing Thresholds', loc='center right')
-plt.tight_layout()
-plt.savefig('van_westendorp_curves.png', dpi=300, bbox_inches='tight')
-print("Successfully generated: van_westendorp_curves.png")
-EOF
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    /* Interactive Dual Hero Media with Custom Unsplash Photos */
+    .hero-media-collage {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 1.2rem;
+      align-items: stretch;
+      position: relative;
+    }
+
+    .hero-img-box {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
+      position: relative;
+      background: var(--bg-cream-soft);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .hero-img-box:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 56px -18px rgba(25, 21, 18, 0.18);
+    }
+
+    .hero-img-main { height: 480px; }
+    .hero-img-secondary { height: 410px; align-self: flex-end; }
+
+    .hero-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: scale 0.6s ease;
+    }
+
+    .hero-img-box:hover img {
+      scale: 1.04;
+    }
+
+    /* ============ MANIFESTO ============ */
+    .manifesto {
+      padding: 6rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      background: var(--bg-cream-soft);
+    }
+
+    .manifesto-inner { max-width: 760px; margin: 0 auto; }
+
+    .manifesto-mark {
+      font-family: var(--font-serif);
+      font-size: 4.5rem;
+      line-height: 0.4;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 1.8rem;
+    }
+
+    .manifesto-text {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    .manifesto-attr {
+      margin-top: 2rem;
+      font-size: 0.64rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    /* ============ INTERACTIVE CARE STANDARDS CARDS ============ */
+    .pillars {
+      padding: 7rem 4.5rem;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+      line-height: 1.12;
+      margin-bottom: 3.5rem;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.6rem;
+    }
+
+    .pillar-card {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 2.5rem 2rem 2.2rem;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 24px 48px -12px rgba(25, 21, 18, 0.12);
+      border-color: var(--accent);
+    }
+
+    .pillar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .pillar-title { 
+      font-family: var(--font-serif); 
+      font-size: 1.45rem; 
+      margin: 0; 
+      color: var(--ink); 
+      font-weight: 500; 
+    }
+
+    .pillar-arrow {
+      font-size: 1.1rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .pillar-card:hover .pillar-arrow {
+      transform: translateX(5px);
+      opacity: 1;
+    }
+
+    .pillar-text { 
+      font-size: 0.85rem; 
+      line-height: 1.75; 
+      color: var(--ink-muted); 
+      font-weight: 300; 
+      margin: 0;
+    }
+
+    /* ============ 2-COLUMN VETTING SECTION WITH VIDEO/GALLERY ============ */
+    .standard {
+      background: var(--bg-cream-soft);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      padding: 7rem 4.5rem;
+    }
+
+    .standard-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 5rem;
+      align-items: stretch;
+    }
+
+    .standard-left {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 1.5rem;
+    }
+
+    .standard-media-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      flex-grow: 1;
+    }
+
+    .standard-img-frame {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
+      height: 260px;
+    }
+
+    .standard-video-frame {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
+      grid-column: span 2;
+      height: 260px;
+    }
+
+    .standard-img-frame img, .standard-video-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: scale 0.6s ease;
+    }
+
+    .standard-img-frame:hover img {
+      scale: 1.04;
+    }
+
+    .standard-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .standard-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.2rem, 3.5vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .standard-sub {
+      color: var(--ink-muted);
+      font-weight: 300;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 2.4rem;
+    }
+
+    .standard-stages {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 1.2rem;
+      align-items: baseline;
+      padding-bottom: 1.4rem;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .stage-num {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .stage-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin: 0 0 0.4rem;
+      color: var(--ink);
+    }
+
+    .stage-text {
+      color: var(--ink-muted);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      margin: 0;
+      font-weight: 300;
+    }
+
+    .standard-badge {
+      margin-top: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      padding: 0.7rem 1.4rem;
+      align-self: flex-start;
+    }
+
+    .badge-dot {
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .badge-text { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--ink); }
+
+    /* ============ CTA ============ */
+    .cta {
+      text-align: center;
+      padding: 7rem 2rem 9rem;
+      background: var(--bg-cream-soft);
+    }
+
+    .cta-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      line-height: 1.1;
+      max-width: 21ch;
+      margin: 0 auto 1.4rem;
+    }
+
+    .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 2.5rem; font-size: 1rem; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1020px) {
+      .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.75rem 4rem; }
+      .hero-media-collage { max-width: 600px; }
+      .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+      .standard-inner { grid-template-columns: 1fr; gap: 3.5rem; }
+      .pillars, .standard { padding-left: 1.75rem; padding-right: 1.75rem; }
+    }
+
+    @media (max-width: 720px) {
+      .pillars-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.6rem; }
+      .hero-media-collage { grid-template-columns: 1fr; }
+      .hero-img-secondary { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-copy">
+      <h1 class="hero-title reveal">Your pet, <em>cared for</em><br>like family.</h1>
+      <p class="hero-lead reveal">Share your pet&rsquo;s routine, your travel plans, and your preferences with your dedicated concierge. We get to know your pet first, curate caregivers who feel like a natural extension of home, and present you with choices you can trust.</p>
+      <div class="hero-actions reveal">
+        <a class="btn btn-ink" href="/get-matched">Find a sitter <span class="arrow">&rarr;</span></a>
+        <a class="link-underline" href="/how-it-works">How it works</a>
+      </div>
+    </div>
+    
+    <!-- Hero Media Collage (Vos photos Unsplash sélectionnées) -->
+    <div class="hero-media-collage reveal">
+      <div class="hero-img-box hero-img-main">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Border collie holding wildflowers">
+      </div>
+      <div class="hero-img-box hero-img-secondary">
+        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=600" alt="Dog running on beach">
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="manifesto-inner reveal">
+      <span class="manifesto-mark">&ldquo;</span>
+      <p class="manifesto-text">&ldquo;Zoélys is the care you trust from the moment you walk out the door to the peace of mind you deserve when you walk back in.&rdquo;</p>
+      <p class="manifesto-attr">The Zoélys standard</p>
+    </div>
+  </section>
+
+  <!-- PILLARS (CARTES INTERACTIVES AVEC FLÈCHES) -->
+  <section class="pillars">
+    <div class="section-head reveal">
+      <h2 class="section-title">Care Standards</h2>
+    </div>
+
+    <div class="pillars-grid">
+      <a class="pillar-card reveal" href="/get-matched">
+        <div>
+          <div class="pillar-header">
+            <h3 class="pillar-title">Personalized Matching</h3>
+            <span class="pillar-arrow">&rarr;</span>
+          </div>
+          <p class="pillar-text">Your concierge studies your pet's dossier and handpicks caregivers who truly fit your needs and lifestyle.</p>
+        </div>
+      </a>
+      <a class="pillar-card reveal" href="/get-matched">
+        <div>
+          <div class="pillar-header">
+            <h3 class="pillar-title">Verified Caregivers</h3>
+            <span class="pillar-arrow">&rarr;</span>
+          </div>
+          <p class="pillar-text">Every sitter undergoes rigorous interviews, background checks, and vetting in person before joining the roster.</p>
+        </div>
+      </a>
+      <a class="pillar-card reveal" href="/get-matched">
+        <div>
+          <div class="pillar-header">
+            <h3 class="pillar-title">Daily Transparency</h3>
+            <span class="pillar-arrow">&rarr;</span>
+          </div>
+          <p class="pillar-text">Every walk, meal, and medication is logged in a daily care log you can view anytime from your portal.</p>
+        </div>
+      </a>
+      <a class="pillar-card reveal" href="/join">
+        <div>
+          <div class="pillar-header">
+            <h3 class="pillar-title">Comfort & Safety</h3>
+            <span class="pillar-arrow">&rarr;</span>
+          </div>
+          <p class="pillar-text">Comfort is the minimum: at least two walks daily, scheduled feedings, medication on time, and a sitter who respects your home.</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 2-COLUMN VETTING SECTION WITH YOUR PHOTOS & VIDEO -->
+  <section class="standard">
+    <div class="standard-inner">
+      <div class="standard-left reveal">
+        <div class="standard-media-grid">
+          <div class="standard-img-frame">
+            <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=600" alt="Small white dog next to a tree">
+          </div>
+          <div class="standard-img-frame">
+            <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=600" alt="Two dogs playing together">
+          </div>
+          <!-- Intégration d'une vidéo d'ambiance en boucle -->
+          <div class="standard-video-frame">
+            <video autoplay loop muted playsinline>
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-cute-dog-laying-on-the-floor-41443-large.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <div class="standard-right reveal">
+        <h2 class="standard-title">Premium is the people we let through.</h2>
+        <p class="standard-sub">To ensure absolute safety, Zoélys uses a structured four-stage vetting protocol. By combining automated compliance checks, professional certification fast-tracking, and live human review, we protect your peace of mind without compromise.</p>
+
+        <div class="standard-stages">
+          <div class="stage reveal">
+            <div class="stage-num">01</div>
+            <div>
+              <h3 class="stage-title">Identity & Safety Verification</h3>
+              <p class="stage-text">Automated identity checks and criminal background screening through secure databases. An upfront commitment fee screens for dedicated caregivers and is reimbursed upon first bookings.</p>
+            </div>
+          </div>
+          <div class="stage reveal">
+            <div class="stage-num">02</div>
+            <div>
+              <h3 class="stage-title">Professional Fast-Track & Testing</h3>
+              <p class="stage-text">Grounded in NAPPS standards. Caregivers holding active veterinary technician or professional pet care licenses bypass theoretical testing directly into scenario evaluation.</p>
+            </div>
+          </div>
+          <div class="stage reveal">
+            <div class="stage-num">03</div>
+            <div>
+              <h3 class="stage-title">Real-World Scenario Assessment</h3>
+              <p class="stage-text">Virtual situational testing evaluating decision-making during real-life events, including dog reactivity on walks, separation anxiety, and emergency responses.</p>
+            </div>
+          </div>
+          <div class="stage reveal">
+            <div class="stage-num">04</div>
+            <div>
+              <h3 class="stage-title">Live Concierge Video Interview</h3>
+              <p class="stage-text">A 15-minute structured video evaluation assessing professionalism, empathy, and calm crisis management before granting full Zoélys Certification.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="standard-badge reveal">
+          <span class="badge-dot">&#10003;</span>
+          <span class="badge-text">Zoélys Certified, the mark of trust</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2 class="cta-title reveal">The moment you walk out the door.</h2>
+    <p class="cta-sub reveal">Your pet&rsquo;s care, handled by a concierge who knows them by name.</p>
+    <a class="btn btn-ink reveal" href="/get-matched">Get matched <span class="arrow">&rarr;</span></a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/trust">Trust & Safety</a></li>
+          <li><a href="/journal">Journal</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/join">Member Portal</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
+  <script src="/navbar.js"></script>
+  <script>
+    // Smooth Intersection Observer for Scroll Animations
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+  </script>
+</body>
+</html>
