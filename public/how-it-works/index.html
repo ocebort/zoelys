@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys. How It Works.</title>
+  <title>How It Works — Zoélys Concierge Pet Care</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,55 +11,544 @@
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    .section-container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 6rem 2rem;
+    /* ============ SCROLL REVEAL ANIMATIONS ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============ PAGE HERO ============ */
+    .hiw-hero {
       text-align: center;
+      padding: 6.5rem 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    .section-title {
+    .hiw-title {
       font-family: var(--font-serif);
-      font-size: 2.35rem;
       font-weight: 400;
-      letter-spacing: -0.01em;
-      margin-bottom: 3rem;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin-bottom: 1.5rem;
     }
 
-    .eyebrow { display: block; margin-bottom: 1rem; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-muted, #6E675F); font-weight: 500; }
+    .hiw-title em { font-style: italic; color: var(--accent); }
 
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--d, 0s); }
-    .reveal.is-visible { opacity: 1; transform: none; }
+    .hiw-lead {
+      color: var(--ink-muted);
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 58ch;
+      margin: 0 auto 3rem;
+    }
+
+    /* ============ PERSONA TOGGLE TABS ============ */
+    .toggle-container {
+      display: inline-flex;
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 40px;
+      padding: 5px;
+      gap: 6px;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      padding: 0.8rem 2.2rem;
+      border-radius: 35px;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn.active {
+      background: var(--bg-card, #FFFFFF);
+      color: var(--ink);
+      box-shadow: 0 4px 16px rgba(25, 21, 18, 0.08);
+    }
+
+    /* ============ JOURNEY SECTIONS ============ */
+    .journey-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 4.5rem 7rem;
+    }
+
+    .journey-content {
+      display: none;
+    }
+
+    .journey-content.active {
+      display: block;
+    }
+
+    .journey-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+      position: relative;
+    }
+
+    .journey-timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 150px;
+      width: 1px;
+      background: var(--hairline);
+      z-index: 1;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .timeline-meta {
+      text-align: right;
+      padding-top: 0.4rem;
+    }
+
+    .phase-tag {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: var(--accent);
+      font-weight: 600;
+      display: block;
+    }
+
+    .phase-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-top: 0.3rem;
+    }
+
+    .timeline-card {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      gap: 3rem;
+      align-items: center;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(25, 21, 18, 0.08);
+      border-color: var(--accent);
+    }
+
+    .timeline-info h3 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 500;
+      margin: 0 0 1rem;
+      color: var(--ink);
+    }
+
+    .timeline-info p {
+      color: var(--ink-muted);
+      font-size: 0.92rem;
+      line-height: 1.8;
+      font-weight: 300;
+      margin: 0 0 1.5rem;
+    }
+
+    .timeline-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .timeline-info li {
+      font-size: 0.84rem;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .timeline-info li::before {
+      content: "•";
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .timeline-image-frame {
+      border-radius: 12px;
+      overflow: hidden;
+      height: 240px;
+      box-shadow: 0 12px 28px -10px rgba(25, 21, 18, 0.12);
+    }
+
+    .timeline-image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: scale 0.6s ease;
+    }
+
+    .timeline-card:hover .timeline-image-frame img {
+      scale: 1.04;
+    }
+
+    /* ============ SAFETY NET SECTION ============ */
+    .safety-net {
+      background: var(--bg-cream-soft);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      padding: 7rem 4.5rem;
+    }
+
+    .safety-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3.5rem;
+    }
+
+    .safety-card {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+    }
+
+    .safety-icon {
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .safety-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin: 0 0 0.8rem;
+    }
+
+    .safety-card p {
+      color: var(--ink-muted);
+      font-size: 0.85rem;
+      line-height: 1.75;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    /* ============ CTA ============ */
+    .cta {
+      text-align: center;
+      padding: 7rem 2rem 9rem;
+      background: var(--bg-cream-soft);
+    }
+
+    .cta-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      line-height: 1.1;
+      max-width: 21ch;
+      margin: 0 auto 1.4rem;
+    }
+
+    .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 2.5rem; font-size: 1rem; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1020px) {
+      .journey-wrapper, .safety-net { padding-left: 1.75rem; padding-right: 1.75rem; }
+      .journey-timeline::before { display: none; }
+      .timeline-item { grid-template-columns: 1fr; gap: 1rem; }
+      .timeline-meta { text-align: left; }
+      .timeline-card { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
+      .safety-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-
 <body>
 
-  <div class="page-head">
-    <div class="eyebrow">How it works</div>
-    <h1 class="reveal" style="--d:.08s">Cared for on both sides.</h1>
-  </div>
+  <!-- HERO SECTION -->
+  <section class="hiw-hero">
+    <h1 class="hiw-title reveal">An orchestration of trust,<br><em>from start to finish.</em></h1>
+    <p class="hiw-lead reveal">Whether you are entrusting us with family or joining our certified roster of caregivers, explore the end-to-end timeline designed for complete clarity.</p>
 
-  <main class="section-container">
-    <p>Zoélys is a private caregiving concierge for pets. You hand your concierge a care brief, your dates, and your budget. They study the dossier, handpick the caregivers who truly fit, and you approve the one you like.</p>
+    <div class="toggle-container reveal">
+      <button class="toggle-btn active" onclick="switchJourney('owners')">For Pet Owners</button>
+      <button class="toggle-btn" onclick="switchJourney('caregivers')">For Caregivers</button>
+    </div>
+  </section>
 
-    <div class="section-label">
-      <span class="eyebrow">The Zoélys standard</span>
-      <h2>Comfort is the minimum</h2>
-      <p>Comfort is the minimum. A full day of care brings at least two walks, meals exactly as written, and medication on schedule, all folded into one quiet figure. Only what your pet truly needs beyond that, a moment with the groomer or the vet, is ever extra.</p>
+  <!-- JOURNEY WRAPPER -->
+  <div class="journey-wrapper">
+
+    <!-- PET OWNER TIMELINE -->
+    <div id="owners-journey" class="journey-content active">
+      <div class="journey-timeline">
+
+        <!-- Phase I -->
+        <div class="timeline-item reveal">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 01</span>
+            <span class="phase-label">Before Departure</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>The Briefing & Intake</h3>
+              <p>You share your pet's precise profile with your dedicated concierge—covering daily routines, medical history, dietary rules, and behavioral nuances.</p>
+              <ul>
+                <li>Comprehensive pet dossier creation</li>
+                <li>Custom care plan definition</li>
+                <li>Concierge consultation</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=700" alt="Dog enjoying a quiet indoor moment">
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase II -->
+        <div class="timeline-item reveal">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 02</span>
+            <span class="phase-label">Curated Selection</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>Targeted Matching & Meet</h3>
+              <p>Rather than browsing public catalogs, your concierge handpicks sitters from our certified roster. You review detailed profiles and confirm fit through an introductory meet-and-greet.</p>
+              <ul>
+                <li>No open directory searching</li>
+                <li>100% Zoélys Certified caregivers</li>
+                <li>In-person or virtual intro meet</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=700" alt="Attentive sitter bonding with a pet">
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase III -->
+        <div class="timeline-item reveal">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 03</span>
+            <span class="phase-label">During The Stay</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>Daily Transparency & Portal</h3>
+              <p>While you travel, your private member portal logs every walk, meal, and medication in real time, accompanied by photo updates and direct messaging.</p>
+              <ul>
+                <li>Real-time daily care logs</li>
+                <li>Integrated 24/7 digital veterinary backup</li>
+                <li>Concierge monitoring behind the scenes</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&q=80&w=700" alt="Dog outdoors on a serene walk">
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase IV -->
+        <div class="timeline-item reveal">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 04</span>
+            <span class="phase-label">The Return</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>Peace of Mind Homecoming</h3>
+              <p>Return to a relaxed, happy pet and an immaculate home. Complete booking confirmation effortlessly through your credit subscription.</p>
+              <ul>
+                <li>Transparent escrow credit billing</li>
+                <li>Final stay summary report</li>
+                <li>Re-book favorite sitters with 1 click</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=700" alt="Peaceful cat resting happily at home">
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <p style="text-align:center; font-size:0.82rem; color:var(--ink-muted, #6E675F); margin-top:3rem;">
-      What is extra at Zoélys is only what your pet truly needs beyond that baseline: <em>grooming, and visits to the vet</em>. Everything essential, food, medication, walks, and comfort, is part of the agreed price, never an add-on.
-    </p>
-  </main>
+    <!-- CAREGIVER TIMELINE -->
+    <div id="caregivers-journey" class="journey-content">
+      <div class="journey-timeline">
 
+        <!-- Phase I -->
+        <div class="timeline-item">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 01</span>
+            <span class="phase-label">Application</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>Audit & Commitment Offset</h3>
+              <p>Submit your experience and references. An upfront €30 compliance fee covers identity validation and background audits—100% reimbursed across your first completed sittings.</p>
+              <ul>
+                <li>Automated identity & background screening</li>
+                <li>Intent-focused screening pipeline</li>
+                <li>Full €30 commission offset upon onboarding</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=700" alt="Caregivers interacting with pets">
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase II -->
+        <div class="timeline-item">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 02</span>
+            <span class="phase-label">Evaluation</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>NAPPS Fast-Track & Scenarios</h3>
+              <p>Certified veterinary professionals skip theoretical exams directly to scenario evaluation. Uncertified candidates complete real-world modules testing reactivity and health emergencies.</p>
+              <ul>
+                <li>Professional license fast-track option</li>
+                <li>Reactivity & separation anxiety scenarios</li>
+                <li>Emergency response evaluation</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=700" alt="Dog being attentively cared for">
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase III -->
+        <div class="timeline-item">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 03</span>
+            <span class="phase-label">Interview</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>Concierge Video Assessment</h3>
+              <p>A structured 15-minute live video interview with our team to evaluate empathy, communication skills, composure under stress, and quiet-luxury standards.</p>
+              <ul>
+                <li>1-on-1 human verification</li>
+                <li>Empathy & crisis decision review</li>
+                <li>Quiet-luxury service alignment</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=700" alt="Well-trained dog looking at caregiver">
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase IV -->
+        <div class="timeline-item">
+          <div class="timeline-meta">
+            <span class="phase-tag">Phase 04</span>
+            <span class="phase-label">Certification</span>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-info">
+              <h3>Certification & Roster Active</h3>
+              <p>Earn the official *Zoélys Certified* badge, unlock curated client pairings, set your availability, and enjoy guaranteed escrow payouts for every completed stay.</p>
+              <ul>
+                <li>Zoélys Certified roster badge</li>
+                <li>Curated matching (no bidding wars)</li>
+                <li>Guaranteed escrow payout protection</li>
+              </ul>
+            </div>
+            <div class="timeline-image-frame">
+              <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=700" alt="Happy dog relaxing outdoors">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SAFETY NET SECTION -->
+  <section class="safety-net">
+    <div class="safety-inner reveal">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto;">
+        <h2 class="section-title">Built on absolute security.</h2>
+        <p style="color: var(--ink-muted); font-weight: 300; line-height: 1.8;">Beyond matching, Zoélys maintains a constant background infrastructure so every stay proceeds without vulnerability.</p>
+      </div>
+
+      <div class="safety-grid">
+        <div class="safety-card">
+          <span class="safety-icon">&#9733;</span>
+          <h4>Escrow Credit System</h4>
+          <p>Payments are secured in escrow upon booking and released only when the sitting is successfully completed, protecting both owners and sitters.</p>
+        </div>
+        <div class="safety-card">
+          <span class="safety-icon">&#43;</span>
+          <h4>24/7 Digital Veterinary Support</h4>
+          <p>Caregivers have instant digital access to licensed veterinary backup for immediate guidance on any health or behavioral concern.</p>
+        </div>
+        <div class="safety-card">
+          <span class="safety-icon">&#10004;</span>
+          <h4>NAPPS Protocol Standard</h4>
+          <p>Our screening and testing standards are benchmarked against national professional pet sitting guidelines for continuous quality assurance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="cta">
+    <h2 class="cta-title reveal">Ready to experience Zoélys?</h2>
+    <p class="cta-sub reveal">Get matched with a dedicated concierge or apply to join our roster.</p>
+    <a class="btn btn-ink reveal" href="/get-matched">Get started <span class="arrow">&rarr;</span></a>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="master-footer">
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
         <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
       </div>
+
       <div>
         <h5>Explore</h5>
         <ul>
@@ -70,6 +559,7 @@
           <li><a href="/contact">Contact Us</a></li>
         </ul>
       </div>
+
       <div>
         <h5>Zoélys</h5>
         <ul>
@@ -77,27 +567,44 @@
           <li><a href="/join">Member Portal</a></li>
         </ul>
       </div>
+
       <div>
         <h5>Stay Close</h5>
         <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
       </div>
     </div>
+
     <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>&copy; 2026 Zoélys. Crafted with care.</div>
       <div>Premium pet care, redefined.</div>
     </div>
   </footer>
 
   <script src="/navbar.js"></script>
   <script>
+    // Tab Switcher Function
+    function switchJourney(type) {
+      document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.journey-content').forEach(content => content.classList.remove('active'));
+
+      if (type === 'owners') {
+        event.target.classList.add('active');
+        document.getElementById('owners-journey').classList.add('active');
+      } else {
+        event.target.classList.add('active');
+        document.getElementById('caregivers-journey').classList.add('active');
+      }
+    }
+
+    // Scroll Reveal Observer
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntervisible) {
+        if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
-          revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
     document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
   </script>
 </body>
