@@ -14,8 +14,8 @@
     /* ============ SMOOTH SCROLL REVEAL ANIMATIONS ============ */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(35px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: opacity, transform;
     }
 
@@ -62,7 +62,7 @@
       margin-top: 2.5rem;
     }
 
-    /* Interactive Dual Hero Media with Custom Unsplash Photos */
+    /* Dual Hero Media with Specified Unsplash Photos */
     .hero-media-collage {
       display: grid;
       grid-template-columns: 1.15fr 0.95fr;
@@ -101,7 +101,7 @@
 
     /* ============ MANIFESTO ============ */
     .manifesto {
-      padding: 6rem 2rem;
+      padding: 6.5rem 2rem;
       text-align: center;
       border-top: 1px solid var(--hairline);
       border-bottom: 1px solid var(--hairline);
@@ -135,7 +135,58 @@
       color: var(--ink-muted);
     }
 
-    /* ============ INTERACTIVE CARE STANDARDS CARDS ============ */
+    /* ============ FULLSCREEN VIDEO SECTION ============ */
+    .video-hero-section {
+      position: relative;
+      width: 100%;
+      height: 90vh;
+      min-height: 580px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+    }
+
+    .video-hero-section video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      opacity: 0.72;
+    }
+
+    .video-overlay-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #FFFFFF;
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+
+    .video-overlay-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .video-overlay-sub {
+      font-size: 1.05rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      opacity: 0.9;
+    }
+
+    /* ============ CARE STANDARDS (PURE INFO CARDS - NO BUTTONS / NO ARROWS) ============ */
     .pillars {
       padding: 7rem 4.5rem;
       max-width: 1320px;
@@ -161,45 +212,23 @@
       border: 1px solid var(--hairline);
       border-radius: 14px;
       padding: 2.5rem 2rem 2.2rem;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      text-decoration: none;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      position: relative;
     }
 
     .pillar-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 24px 48px -12px rgba(25, 21, 18, 0.12);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(25, 21, 18, 0.1);
       border-color: var(--accent);
-    }
-
-    .pillar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.2rem;
     }
 
     .pillar-title { 
       font-family: var(--font-serif); 
       font-size: 1.45rem; 
-      margin: 0; 
+      margin: 0 0 1rem; 
       color: var(--ink); 
       font-weight: 500; 
-    }
-
-    .pillar-arrow {
-      font-size: 1.1rem;
-      color: var(--accent);
-      transition: transform 0.3s ease;
-      opacity: 0.7;
-    }
-
-    .pillar-card:hover .pillar-arrow {
-      transform: translateX(5px);
-      opacity: 1;
     }
 
     .pillar-text { 
@@ -210,7 +239,7 @@
       margin: 0;
     }
 
-    /* ============ 2-COLUMN VETTING SECTION WITH VIDEO/GALLERY ============ */
+    /* ============ 2-COLUMN VETTING SECTION WITH EXACT UNSPLASH PHOTOS ============ */
     .standard {
       background: var(--bg-cream-soft);
       border-top: 1px solid var(--hairline);
@@ -231,39 +260,38 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      gap: 1.5rem;
     }
 
     .standard-media-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      flex-grow: 1;
+      gap: 1.2rem;
+      height: 100%;
     }
 
     .standard-img-frame {
       border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
-      height: 260px;
+      height: 250px;
     }
 
-    .standard-video-frame {
+    .standard-img-frame-large {
       border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.12);
       grid-column: span 2;
-      height: 260px;
+      height: 310px;
     }
 
-    .standard-img-frame img, .standard-video-frame video {
+    .standard-img-frame img, .standard-img-frame-large img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: scale 0.6s ease;
     }
 
-    .standard-img-frame:hover img {
+    .standard-img-frame:hover img, .standard-img-frame-large:hover img {
       scale: 1.04;
     }
 
@@ -378,6 +406,7 @@
       .pillars-grid { grid-template-columns: repeat(2, 1fr); }
       .standard-inner { grid-template-columns: 1fr; gap: 3.5rem; }
       .pillars, .standard { padding-left: 1.75rem; padding-right: 1.75rem; }
+      .video-hero-section { height: 60vh; }
     }
 
     @media (max-width: 720px) {
@@ -390,7 +419,7 @@
 </head>
 <body>
 
-  <!-- HERO -->
+  <!-- HERO SECTION -->
   <section class="hero">
     <div class="hero-copy">
       <h1 class="hero-title reveal">Your pet, <em>cared for</em><br>like family.</h1>
@@ -401,18 +430,18 @@
       </div>
     </div>
     
-    <!-- Hero Media Collage (Vos photos Unsplash sélectionnées) -->
+    <!-- Hero Media Collage (Vos liens Unsplash 1 et 2) -->
     <div class="hero-media-collage reveal">
       <div class="hero-img-box hero-img-main">
-        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Border collie holding wildflowers">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Border collie holding wildflowers in mountains">
       </div>
       <div class="hero-img-box hero-img-secondary">
-        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=600" alt="Dog running on beach">
+        <img src="https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&q=80&w=600" alt="Dog running on beach during daytime">
       </div>
     </div>
   </section>
 
-  <!-- MANIFESTO -->
+  <!-- MANIFESTO SECTION -->
   <section class="manifesto">
     <div class="manifesto-inner reveal">
       <span class="manifesto-mark">&ldquo;</span>
@@ -421,53 +450,44 @@
     </div>
   </section>
 
-  <!-- PILLARS (CARTES INTERACTIVES AVEC FLÈCHES) -->
+  <!-- FULLSCREEN VIDEO SECTION -->
+  <section class="video-hero-section reveal">
+    <video autoplay loop muted playsinline>
+      <source src="https://assets.mixkit.co/videos/preview/mixkit-cute-dog-laying-on-the-floor-41443-large.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay-content">
+      <h2 class="video-overlay-title">Thoughtful care in the comfort of home.</h2>
+      <p class="video-overlay-sub">Peace of mind for pet parents who expect the exceptional.</p>
+    </div>
+  </section>
+
+  <!-- CARE STANDARDS (PURE INFO CARDS - NO ARROWS / NO BUTTONS) -->
   <section class="pillars">
     <div class="section-head reveal">
       <h2 class="section-title">Care Standards</h2>
     </div>
 
     <div class="pillars-grid">
-      <a class="pillar-card reveal" href="/get-matched">
-        <div>
-          <div class="pillar-header">
-            <h3 class="pillar-title">Personalized Matching</h3>
-            <span class="pillar-arrow">&rarr;</span>
-          </div>
-          <p class="pillar-text">Your concierge studies your pet's dossier and handpicks caregivers who truly fit your needs and lifestyle.</p>
-        </div>
-      </a>
-      <a class="pillar-card reveal" href="/get-matched">
-        <div>
-          <div class="pillar-header">
-            <h3 class="pillar-title">Verified Caregivers</h3>
-            <span class="pillar-arrow">&rarr;</span>
-          </div>
-          <p class="pillar-text">Every sitter undergoes rigorous interviews, background checks, and vetting in person before joining the roster.</p>
-        </div>
-      </a>
-      <a class="pillar-card reveal" href="/get-matched">
-        <div>
-          <div class="pillar-header">
-            <h3 class="pillar-title">Daily Transparency</h3>
-            <span class="pillar-arrow">&rarr;</span>
-          </div>
-          <p class="pillar-text">Every walk, meal, and medication is logged in a daily care log you can view anytime from your portal.</p>
-        </div>
-      </a>
-      <a class="pillar-card reveal" href="/join">
-        <div>
-          <div class="pillar-header">
-            <h3 class="pillar-title">Comfort & Safety</h3>
-            <span class="pillar-arrow">&rarr;</span>
-          </div>
-          <p class="pillar-text">Comfort is the minimum: at least two walks daily, scheduled feedings, medication on time, and a sitter who respects your home.</p>
-        </div>
-      </a>
+      <div class="pillar-card reveal">
+        <h3 class="pillar-title">Personalized Matching</h3>
+        <p class="pillar-text">Your concierge studies your pet's dossier and handpicks caregivers who truly fit your needs and lifestyle.</p>
+      </div>
+      <div class="pillar-card reveal">
+        <h3 class="pillar-title">Verified Caregivers</h3>
+        <p class="pillar-text">Every sitter undergoes rigorous interviews, background checks, and vetting in person before joining the roster.</p>
+      </div>
+      <div class="pillar-card reveal">
+        <h3 class="pillar-title">Daily Transparency</h3>
+        <p class="pillar-text">Every walk, meal, and medication is logged in a daily care log you can view anytime from your portal.</p>
+      </div>
+      <div class="pillar-card reveal">
+        <h3 class="pillar-title">Comfort & Safety</h3>
+        <p class="pillar-text">Comfort is the minimum: at least two walks daily, scheduled feedings, medication on time, and a sitter who respects your home.</p>
+      </div>
     </div>
   </section>
 
-  <!-- 2-COLUMN VETTING SECTION WITH YOUR PHOTOS & VIDEO -->
+  <!-- 2-COLUMN VETTING SECTION (Vos liens Unsplash 3, 4 et 5) -->
   <section class="standard">
     <div class="standard-inner">
       <div class="standard-left reveal">
@@ -476,13 +496,10 @@
             <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=600" alt="Small white dog next to a tree">
           </div>
           <div class="standard-img-frame">
-            <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=600" alt="Two dogs playing together">
+            <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=600" alt="Two white and brown dogs playing">
           </div>
-          <!-- Intégration d'une vidéo d'ambiance en boucle -->
-          <div class="standard-video-frame">
-            <video autoplay loop muted playsinline>
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-cute-dog-laying-on-the-floor-41443-large.mp4" type="video/mp4">
-            </video>
+          <div class="standard-img-frame-large">
+            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=900" alt="White dog lying on green grass field">
           </div>
         </div>
       </div>
@@ -530,7 +547,7 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA SECTION -->
   <section class="cta">
     <h2 class="cta-title reveal">The moment you walk out the door.</h2>
     <p class="cta-sub reveal">Your pet&rsquo;s care, handled by a concierge who knows them by name.</p>
@@ -578,14 +595,14 @@
 
   <script src="/navbar.js"></script>
   <script>
-    // Smooth Intersection Observer for Scroll Animations
+    // Smooth Scroll Reveal Trigger for All Sections
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
   </script>
