@@ -107,6 +107,91 @@
       margin: 0 auto;
     }
 
+    /* ============ VETTING PROCESS SECTION (EDITORIAL TWO-COLUMN) ============ */
+    .vetting-section {
+      max-width: 1200px;
+      margin: 0 auto 6rem;
+      padding: 0 4.5rem;
+    }
+
+    .vetting-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .vetting-image-wrapper {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--hairline);
+      box-shadow: 0 20px 40px -15px rgba(25, 21, 18, 0.08);
+    }
+
+    .vetting-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .vetting-content .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .vetting-content h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 3.8vw, 3rem);
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+      line-height: 1.15;
+    }
+
+    .vetting-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .vetting-step-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    .vetting-step-num {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: 500;
+      line-height: 1;
+      padding-top: 0.2rem;
+    }
+
+    .vetting-step-text h4 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 0 0 0.3rem;
+      color: var(--ink);
+    }
+
+    .vetting-step-text p {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      font-weight: 300;
+      margin: 0;
+    }
+
     /* ============ THREE COLUMN FEATURES ============ */
     .home-container {
       max-width: 1200px;
@@ -223,7 +308,8 @@
     }
 
     @media (max-width: 1020px) {
-      .home-container { padding-left: 1.75rem; padding-right: 1.75rem; }
+      .home-container, .vetting-section { padding-left: 1.75rem; padding-right: 1.75rem; }
+      .vetting-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
   </style>
@@ -247,6 +333,56 @@
     <div class="editorial-quote-inner">
       <h2 class="editorial-quote-title">Quiet luxury meets absolute peace of mind.</h2>
       <p class="editorial-quote-text">We built Zoélys around a simple principle: subscription plans adapt to how often you travel, never the standard of care your pet receives. Every member accesses our exact 100% uncompromising vetting, 24/7 tele-vet backup, and real-time daily care updates.</p>
+    </div>
+  </section>
+
+  <!-- VETTING PROCESS SECTION WITH BORDER COLLIE PHOTO -->
+  <section class="vetting-section reveal">
+    <div class="vetting-grid">
+      <div class="vetting-image-wrapper">
+        <img src="/assets/border-collie.jpg" alt="Vetted caregiver with a happy border collie">
+      </div>
+      
+      <div class="vetting-content">
+        <span class="eyebrow">The Selection Standard</span>
+        <h2>Only 1 in 20 caregivers earn the Zoélys badge.</h2>
+        <p style="color: var(--ink-muted); font-size: 0.95rem; line-height: 1.75; font-weight: 300;">We don't operate an open marketplace. Every sitter on our roster undergoes a rigorous 4-stage evaluation before taking their first booking.</p>
+
+        <div class="vetting-steps">
+          <div class="vetting-step-item">
+            <span class="vetting-step-num">01</span>
+            <div class="vetting-step-text">
+              <h4>Identity &amp; Background Verification</h4>
+              <p>Comprehensive identity verification and criminal history screening across national and local registries.</p>
+            </div>
+          </div>
+
+          <div class="vetting-step-item">
+            <span class="vetting-step-num">02</span>
+            <div class="vetting-step-text">
+              <h4>Professional Certification Audit</h4>
+              <p>Verification of CPPS, Pet First Aid &amp; CPR certifications, and professional liability insurance active status.</p>
+            </div>
+          </div>
+
+          <div class="vetting-step-item">
+            <span class="vetting-step-num">03</span>
+            <div class="vetting-step-text">
+              <h4>Real-World Scenario Assessment</h4>
+              <p>Practical testing evaluating medication administration, behavior reading, and composure under pressure.</p>
+            </div>
+          </div>
+
+          <div class="vetting-step-item">
+            <span class="vetting-step-num">04</span>
+            <div class="vetting-step-text">
+              <h4>Live Concierge Interview</h4>
+              <p>In-person or video consultation evaluating communication quality, empathy, and attention to written briefing details.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
