@@ -27,7 +27,7 @@
     /* ============ PAGE HERO ============ */
     .pricing-hero {
       text-align: center;
-      padding: 6rem 2rem 4rem;
+      padding: 6rem 2rem 3.5rem;
       max-width: 860px;
       margin: 0 auto;
     }
@@ -62,11 +62,69 @@
       margin: 0 auto;
     }
 
+    /* ============ VALUES / CARE GUARANTEE BANNER ============ */
+    .care-guarantee-banner {
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      max-width: 1080px;
+      margin: 0 auto 4rem;
+      text-align: center;
+      box-shadow: 0 12px 32px -12px rgba(25, 21, 18, 0.05);
+    }
+
+    .care-guarantee-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 400;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    .care-guarantee-text {
+      color: var(--ink-muted);
+      font-size: 0.95rem;
+      line-height: 1.85;
+      font-weight: 300;
+      max-width: 78ch;
+      margin: 0 auto 2rem;
+    }
+
+    .non-negotiables-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      text-align: left;
+      border-top: 1px solid var(--hairline);
+      padding-top: 2rem;
+    }
+
+    .non-negotiable-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .non-negotiable-item strong {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .non-negotiable-item span {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
     /* ============ TIERS GRID ============ */
     .pricing-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem 4.5rem 6rem;
+      padding: 0 4.5rem 6rem;
     }
 
     .tiers-grid {
@@ -349,6 +407,11 @@
     @media (max-width: 1020px) {
       .pricing-container { padding-left: 1.75rem; padding-right: 1.75rem; }
       .tiers-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .non-negotiables-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    }
+
+    @media (max-width: 600px) {
+      .non-negotiables-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -358,7 +421,32 @@
   <section class="pricing-hero">
     <span class="eyebrow reveal">Pricing</span>
     <h1 class="reveal">Clear, <em>quiet</em> pricing</h1>
-    <p class="reveal">Subscribe monthly to receive steady credits, priority concierge matching, and zero booking markups. What the tier promises is what the month delivers.</p>
+    <p class="reveal">Subscriptions adapt to your travel frequency—not the quality of care your pet receives. Every pet deserves the absolute best, without compromise.</p>
+  </section>
+
+  <!-- VALUES & CARE GUARANTEE BANNER -->
+  <section class="care-guarantee-banner reveal">
+    <h2 class="care-guarantee-title">Care is never a price tier.</h2>
+    <p class="care-guarantee-text">At Zoélys, we firmly believe that subscription plans should adapt to how often you travel, never how well your pet is loved. Whether you choose Gold, Platinum, or Diamond, every pet receives our exact 100% uncompromising standard of care, safety, and attention.</p>
+
+    <div class="non-negotiables-grid">
+      <div class="non-negotiable-item">
+        <strong>100% Vetted Roster</strong>
+        <span>Rigorous 4-stage background & in-person concierge evaluation.</span>
+      </div>
+      <div class="non-negotiable-item">
+        <strong>Equal Attention</strong>
+        <span>Scheduled walks, meals, medication, and tailored affection daily.</span>
+      </div>
+      <div class="non-negotiable-item">
+        <strong>Daily Care Logs</strong>
+        <span>Real-time photo updates and transparent activity logs on every stay.</span>
+      </div>
+      <div class="non-negotiable-item">
+        <strong>24/7 Vet Backup</strong>
+        <span>Instant digital veterinary access for every caregiver on duty.</span>
+      </div>
+    </div>
   </section>
 
   <!-- PRICING TIERS CONTAINER -->
@@ -370,14 +458,15 @@
       <!-- GOLD TIER -->
       <div class="tier-card reveal">
         <div>
-          <div class="tier-tag">For the occasional traveler</div>
+          <div class="tier-tag">Occasional Getaways</div>
           <div class="tier-name">Gold</div>
           <div class="tier-price">&euro;99 <small>/ month</small></div>
           <div class="tier-credits">20 credits every month</div>
-          <div class="tier-value">&euro;100 credit value</div>
+          <div class="tier-value">&euro;100 redemption value</div>
           <ul class="tier-list">
-            <li>Standard concierge desk access</li>
-            <li>Credits roll over while subscribed</li>
+            <li>Uncompromising care & vetting standard</li>
+            <li>60-day credit rollover window</li>
+            <li>Concierge intake & matching desk</li>
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
@@ -388,15 +477,15 @@
       <div class="tier-card featured reveal">
         <span class="featured-badge">Most Chosen</span>
         <div>
-          <div class="tier-tag">Regular travel rhythm</div>
+          <div class="tier-tag">Regular Travel Rhythm</div>
           <div class="tier-name">Platinum</div>
           <div class="tier-price">&euro;249 <small>/ month</small></div>
           <div class="tier-credits">52 credits every month</div>
-          <div class="tier-value">&euro;260 credit value</div>
+          <div class="tier-value">&euro;260 redemption value</div>
           <ul class="tier-list">
-            <li>Priority concierge desk</li>
-            <li>Credits roll over while subscribed</li>
-            <li>Daily photo & activity care logs</li>
+            <li>Uncompromising care & vetting standard</li>
+            <li>120-day credit rollover window</li>
+            <li>Concierge intake & matching desk</li>
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
@@ -406,15 +495,15 @@
       <!-- DIAMOND TIER -->
       <div class="tier-card reveal">
         <div>
-          <div class="tier-tag">For the frequent flyer</div>
+          <div class="tier-tag">Frequent Travelers</div>
           <div class="tier-name">Diamond</div>
           <div class="tier-price">&euro;499 <small>/ month</small></div>
           <div class="tier-credits">110 credits every month</div>
-          <div class="tier-value">&euro;550 credit value</div>
+          <div class="tier-value">&euro;550 redemption value</div>
           <ul class="tier-list">
-            <li>First-call dedicated concierge line</li>
-            <li>Credits roll over while subscribed</li>
-            <li>Instant emergency backup priority</li>
+            <li>Uncompromising care & vetting standard</li>
+            <li>Unlimited credit rollover (never expires)</li>
+            <li>Concierge intake & matching desk</li>
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
@@ -478,7 +567,7 @@
             <span class="accordion-icon">&#43;</span>
           </button>
           <div class="accordion-body">
-            <p>Comfort is our minimum baseline. Every full day of care brings at least two comprehensive walks, scheduled feedings exactly as written, and medication administered on time. Only extra requests—like a visit to the groomer or vet—are billed separately.</p>
+            <p>Comfort is our minimum baseline across all tiers. Every full day of care brings at least two comprehensive walks, scheduled feedings exactly as written, 24/7 veterinary backup, and medication administered on time.</p>
           </div>
         </div>
 
