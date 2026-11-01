@@ -62,7 +62,7 @@
       margin: 0 auto;
     }
 
-    /* ============ ELEGANT CARE GUARANTEE STATEMENT (NO BUBBLE) ============ */
+    /* ============ EDITORIAL CARE GUARANTEE STATEMENT ============ */
     .care-statement-section {
       border-top: 1px solid var(--hairline);
       border-bottom: 1px solid var(--hairline);
@@ -285,7 +285,7 @@
       line-height: 1.7;
     }
 
-    /* ============ ACCORDION / DROPDOWN SECTION ============ */
+    /* ============ ACCORDION SECTION ============ */
     .details-accordion-section {
       max-width: 900px;
       margin: 0 auto 6rem;
@@ -368,7 +368,7 @@
     }
 
     .accordion-item.active .accordion-body {
-      max-height: 300px;
+      max-height: 380px;
       padding: 0 2rem 1.8rem;
     }
 
@@ -428,7 +428,7 @@
     <p class="reveal">Subscriptions adapt to your travel frequency—not the quality of care your pet receives. Every pet deserves the absolute best, without compromise.</p>
   </section>
 
-  <!-- EDITORIAL STATEMENT (NO BUBBLE CONTAINER) -->
+  <!-- EDITORIAL STATEMENT -->
   <section class="care-statement-section reveal">
     <div class="care-statement-inner">
       <h2 class="care-statement-title">Care is never a price tier.</h2>
@@ -437,7 +437,7 @@
       <div class="non-negotiables-row">
         <div class="non-negotiable-item">
           <strong>100% Vetted Roster</strong>
-          <span>Rigorous 4-stage background & in-person concierge evaluation.</span>
+          <span>Rigorous 4-stage background &amp; in-person concierge evaluation.</span>
         </div>
         <div class="non-negotiable-item">
           <strong>Equal Attention</strong>
@@ -462,17 +462,17 @@
     <div class="tiers-grid">
       
       <!-- GOLD TIER -->
-      <div class="tier-card reveal">
+      <div class="tier-card reveal" data-plan="gold" data-price="99" data-credits="20">
         <div>
           <div class="tier-tag">Occasional Getaways</div>
           <div class="tier-name">Gold</div>
           <div class="tier-price">&euro;99 <small>/ month</small></div>
           <div class="tier-credits">20 credits every month</div>
-          <div class="tier-value">&euro;100 redemption value</div>
+          <div class="tier-value">&euro;<span class="effective-rate">4.95</span> / credit effective rate</div>
           <ul class="tier-list">
-            <li>Uncompromising care & vetting standard</li>
+            <li>Uncompromising care &amp; vetting standard</li>
             <li>60-day credit rollover window</li>
-            <li>Concierge intake & matching desk</li>
+            <li>Concierge intake &amp; matching desk</li>
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
@@ -480,18 +480,18 @@
       </div>
 
       <!-- PLATINUM TIER (FEATURED) -->
-      <div class="tier-card featured reveal">
+      <div class="tier-card featured reveal" data-plan="platinum" data-price="249" data-credits="52">
         <span class="featured-badge">Most Chosen</span>
         <div>
           <div class="tier-tag">Regular Travel Rhythm</div>
           <div class="tier-name">Platinum</div>
           <div class="tier-price">&euro;249 <small>/ month</small></div>
           <div class="tier-credits">52 credits every month</div>
-          <div class="tier-value">&euro;260 redemption value</div>
+          <div class="tier-value">&euro;<span class="effective-rate">4.79</span> / credit effective rate</div>
           <ul class="tier-list">
-            <li>Uncompromising care & vetting standard</li>
+            <li>Uncompromising care &amp; vetting standard</li>
             <li>120-day credit rollover window</li>
-            <li>Concierge intake & matching desk</li>
+            <li>Concierge intake &amp; matching desk</li>
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
@@ -499,17 +499,17 @@
       </div>
 
       <!-- DIAMOND TIER -->
-      <div class="tier-card reveal">
+      <div class="tier-card reveal" data-plan="diamond" data-price="499" data-credits="110">
         <div>
           <div class="tier-tag">Frequent Travelers</div>
           <div class="tier-name">Diamond</div>
           <div class="tier-price">&euro;499 <small>/ month</small></div>
           <div class="tier-credits">110 credits every month</div>
-          <div class="tier-value">&euro;550 redemption value</div>
+          <div class="tier-value">&euro;<span class="effective-rate">4.54</span> / credit effective rate</div>
           <ul class="tier-list">
-            <li>Uncompromising care & vetting standard</li>
+            <li>Uncompromising care &amp; vetting standard</li>
             <li>Unlimited credit rollover (never expires)</li>
-            <li>Concierge intake & matching desk</li>
+            <li>Concierge intake &amp; matching desk</li>
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
@@ -523,7 +523,7 @@
       <p><strong>1 Credit = &euro;5 redemption value.</strong> A &euro;50 sitter rate equals 10 credits; a &euro;75 rate equals 15. Every sitter sets their own rate within a published range, and the figure you approve is the exact figure redeemed from your balance.</p>
     </div>
 
-    <!-- ACCORDION / DROPDOWN DETAILS SECTION -->
+    <!-- ACCORDION SECTION -->
     <section class="details-accordion-section">
       <div class="section-kicker reveal">
         <span class="eyebrow">In the open</span>
@@ -552,17 +552,12 @@
         <!-- Accordion 2 -->
         <div class="accordion-item">
           <button class="accordion-header" onclick="toggleAccordion(this)">
-            <h3 class="accordion-title">Prefer no monthly commitment? (Credit Packs)</h3>
+            <h3 class="accordion-title">Need extra credits or prefer no monthly commitment?</h3>
             <span class="accordion-icon">&#43;</span>
           </button>
           <div class="accordion-body">
-            <p>For months when your travel rhythm is lighter, credits can also be purchased in flexible non-subscription packs that never expire:</p>
-            <ul>
-              <li><strong>10 Credits:</strong> &euro;50</li>
-              <li><strong>20 Credits:</strong> &euro;100</li>
-              <li><strong>50 Credits:</strong> &euro;250 (+ 5 bonus credits free)</li>
-              <li><strong>100 Credits:</strong> &euro;500 (+ 10 bonus credits free)</li>
-            </ul>
+            <p><strong>For Non-Subscribers:</strong> A la carte credit packs are available at &euro;5.50/credit (&euro;55 for 10, &euro;110 for 20), or bulk packs at &euro;4.55/credit (&euro;250 for 55, &euro;500 for 110).</p>
+            <p style="margin-top: 0.8rem;"><strong>For Active Subscribers:</strong> Small top-ups (&lt; 20 credits) are &euro;5.50/credit. Large top-ups (&ge; 20 credits) automatically unlock your subscription's discounted rate (<span id="gold-rate-text">&euro;4.95</span> for Gold, <span id="plat-rate-text">&euro;4.79</span> for Platinum, and <span id="diam-rate-text">&euro;4.54</span> for Diamond).</p>
           </div>
         </div>
 
@@ -616,8 +611,9 @@
         <h5>Explore</h5>
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
-          <li><a href="/pricing">Pricing</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/contact">Contact Us</a></li>
         </ul>
       </div>
 
@@ -625,7 +621,8 @@
         <h5>Zoélys</h5>
         <ul>
           <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/apply">Become a Sitter</a></li>
           <li><a href="/join">Member Portal</a></li>
         </ul>
       </div>
@@ -637,22 +634,37 @@
     </div>
 
     <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys. Crafted with care.</div>
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
       <div>Premium pet care, redefined.</div>
     </div>
   </footer>
 
   <script src="/navbar.js"></script>
   <script>
+    // DYNAMIC CREDIT RATE CALCULATOR
+    // Automatically recalculates rate per credit = (Price / Credits) if prices change
+    document.querySelectorAll('.tier-card').forEach(card => {
+      const price = parseFloat(card.getAttribute('data-price'));
+      const credits = parseFloat(card.getAttribute('data-credits'));
+      const plan = card.getAttribute('data-plan');
+      
+      if (price && credits) {
+        const rate = (price / credits).toFixed(2);
+        card.querySelector('.effective-rate').textContent = rate;
+        
+        // Update accordion inline text
+        const targetTextEl = document.getElementById(`${plan}-rate-text`);
+        if (targetTextEl) targetTextEl.textContent = `€${rate}`;
+      }
+    });
+
     // Accordion Toggle Script
     function toggleAccordion(button) {
       const item = button.parentElement;
       const isActive = item.classList.contains('active');
       
-      // Close all accordion items
       document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
       
-      // Open clicked item if it wasn't active
       if (!isActive) {
         item.classList.add('active');
       }
