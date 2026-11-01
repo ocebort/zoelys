@@ -7,160 +7,506 @@
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    main.container { max-width: 960px; margin: 0 auto 7rem auto; padding: 0 1.5rem; }
+    /* ============ SMOOTH SCROLL REVEAL ANIMATIONS ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
 
-    .lede { max-width: 560px; margin: 0 auto 4.5rem auto; text-align: center; font-size: 0.98rem; font-weight: 300; color: var(--ink-muted, #6E675F); line-height: 1.85; }
-    .lede em { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-style: italic; font-size: 1.15em; color: var(--ink, #191512); }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-    .section-kicker { text-align: center; margin: 4.5rem 0 2.25rem; }
-    .section-kicker .eyebrow { display: block; margin-bottom: 0.7rem; }
-    .section-kicker h2 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 2.35rem; font-weight: 400; letter-spacing: -0.01em; }
-.standard-banner { border: 1px solid var(--ink); background: var(--bg-cream-soft); padding: 2.5rem 2rem; text-align: center; margin: 2rem 0 1.5rem; }
+    /* ============ PAGE HEADER ============ */
+    .pricing-hero {
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
 
-    .standard-banner .eyebrow { display: block; margin-bottom: 0.5rem; }
+    .pricing-hero .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
 
-    .standard-banner p { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.5; max-width: 680px; margin: 0 auto; color: var(--ink); }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2.5rem; }
-    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
-    .plain-card { border: 1px solid var(--ink); background: var(--bg-cream-soft); padding: 1.8rem 1.5rem; }
-    .plain-card h3 { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.4rem; font-weight: 500; margin-bottom: 0.6rem; }
-    .plain-card p { font-size: 0.78rem; font-weight: 300; color: var(--ink-muted); line-height: 1.6; }
-    .plain-card ul { list-style: none; margin-top: 0.4rem; }
-    .plain-card li { font-size: 0.78rem; font-weight: 300; color: var(--ink); line-height: 1.5; padding-left: 1rem; position: relative; }
-    .plain-card li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--accent); font-weight: 600; }
+    .pricing-hero h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin-bottom: 1.5rem;
+    }
 
-    .small-print { font-size: 0.68rem; color: var(--ink-muted); line-height: 1.6; max-width: 640px; margin: 0 auto; text-align: center; }
-    .cta-row-final { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .pricing-hero h1 em { font-style: italic; color: var(--accent); }
 
-    .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0 2rem; }
-    @media (max-width: 760px) { .tiers { grid-template-columns: 1fr; } }
-    .tier { border: 1px solid var(--ink); background: var(--bg-cream-soft); padding: 1.8rem 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
-    .tier.featured { border: 2px solid var(--accent); }
-    .tier-tag { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin-bottom: 0.5rem; }
-    .tier-name { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 0.2rem; }
-    .tier-price { font-family: var(--font-serif, 'Cormorant Garamond'), serif; font-size: 1.5rem; color: var(--accent, #C1623F); margin: 0.3rem 0; }
-    .tier-price small { font-family: var(--font-sans); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-top: 0; display: inline; }
-    .tier-credits { margin: 0.5rem 0 0.6rem; font-size: 0.7rem; font-weight: 600; color: var(--ink, #191512); }
-    .tier-credits span { display: block; font-weight: 300; color: var(--ink-muted, #6E675F); font-size: 0.65rem; margin-top: 0.05rem; }
-    .tier ul { list-style: none; margin: 0.5rem 0 1rem; }
-    .tier li { font-size: 0.75rem; line-height: 1.5; color: var(--ink, #191512); padding-left: 1rem; position: relative; margin: 0.3rem 0; }
-    .tier li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--accent, #C1623F); font-weight: 600; }
-    .tier-cta { display: inline-block; text-align: center; padding: 0.6rem 1rem; background: var(--ink); color: #fff; text-decoration: none; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 6px; margin-top: 0.5rem; }
-    .tier-cta:hover { background: var(--accent); color: #FFFFFF; }
+    .pricing-hero p {
+      color: var(--ink-muted);
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 58ch;
+      margin: 0 auto;
+    }
+
+    /* ============ TIERS GRID ============ */
+    .pricing-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 4.5rem 6rem;
+    }
+
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .tier-card {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 2.8rem 2.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+    }
+
+    .tier-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(25, 21, 18, 0.1);
+      border-color: var(--accent);
+    }
+
+    .tier-card.featured {
+      border: 1.5px solid var(--accent);
+      background: #FFFFFF;
+      box-shadow: 0 16px 36px -10px rgba(193, 98, 63, 0.12);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+    }
+
+    .tier-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .tier-name {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    .tier-price {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      color: var(--accent);
+      font-weight: 400;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .tier-price small {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      font-weight: 300;
+    }
+
+    .tier-credits {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .tier-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .tier-list li {
+      font-size: 0.85rem;
+      color: var(--ink);
+      font-weight: 300;
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .tier-list li::before {
+      content: "•";
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .tier-cta {
+      display: block;
+      text-align: center;
+      padding: 0.85rem 1.2rem;
+      background: var(--ink);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .tier-cta:hover {
+      background: var(--accent);
+    }
+
+    .small-print-banner {
+      text-align: center;
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 5rem;
+    }
+
+    .small-print-banner p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ============ ACCORDION / DROPDOWN SECTION ============ */
+    .details-accordion-section {
+      max-width: 900px;
+      margin: 0 auto 6rem;
+    }
+
+    .section-kicker {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-kicker .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .section-kicker h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+    }
+
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .accordion-item {
+      background: var(--bg-card, #FFFFFF);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    .accordion-item:hover {
+      border-color: var(--accent);
+    }
+
+    .accordion-header {
+      width: 100%;
+      padding: 1.6rem 2rem;
+      background: transparent;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .accordion-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .accordion-icon {
+      font-size: 1.2rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-item.active .accordion-icon {
+      transform: rotate(45deg);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      padding: 0 2rem;
+    }
+
+    .accordion-item.active .accordion-body {
+      max-height: 300px;
+      padding: 0 2rem 1.8rem;
+    }
+
+    .accordion-body p {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      line-height: 1.8;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    .accordion-body ul {
+      margin: 0.8rem 0 0;
+      padding-left: 1.2rem;
+      color: var(--ink-muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    /* ============ CTA ============ */
+    .cta {
+      text-align: center;
+      padding: 6rem 2rem 8rem;
+      background: var(--bg-cream-soft);
+      border-top: 1px solid var(--hairline);
+    }
+
+    .cta-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      line-height: 1.1;
+      max-width: 21ch;
+      margin: 0 auto 1.4rem;
+    }
+
+    .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 2.5rem; font-size: 1rem; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1020px) {
+      .pricing-container { padding-left: 1.75rem; padding-right: 1.75rem; }
+      .tiers-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="page-head">
-    <div class="eyebrow">Pricing</div>
-    <h1>Clear, quiet pricing</h1>
-    <p>One quiet membership, a steady number of credits each month, and a concierge who handles the rest. What the tier promises is what the month delivers.</p>
-  </div>
+  <!-- PAGE HERO -->
+  <section class="pricing-hero">
+    <span class="eyebrow reveal">Pricing</span>
+    <h1 class="reveal">Clear, <em>quiet</em> pricing</h1>
+    <p class="reveal">One quiet membership, a steady number of credits each month, and a concierge who handles the rest. What the tier promises is what the month delivers.</p>
+  </section>
 
-  <main class="container">
-    <p class="lede">Zoélys runs on a monthly rhythm. Choose a tier, receive your credits each month, and spend them on genuine care from a roster your concierge has already vetted and approved. There is nothing to compare at pickup time, no bills to chase, no arithmetic to do.</p>
+  <!-- PRICING TIERS CONTAINER -->
+  <main class="pricing-container">
 
-    <div class="section-kicker">
-      <span class="eyebrow">Membership</span>
-      <h2>Three quiet ways to belong</h2>
-    </div>
-
-    <div class="tiers">
-      <div class="tier">
-        <p class="tier-tag">For the occasional traveler</p>
-        <div class="tier-name">Gold</div>
-        <div class="tier-price">&euro;25 <small>per month</small></div>
-        <div class="tier-credits">5 credits every month</div>
-        <ul>
-          <li>Concierge desk</li>
-          <li>Credits roll over while you are a member</li>
-        </ul>
+    <!-- TIERS GRID -->
+    <div class="tiers-grid">
+      
+      <!-- GOLD TIER -->
+      <div class="tier-card reveal">
+        <div>
+          <div class="tier-tag">For the occasional traveler</div>
+          <div class="tier-name">Gold</div>
+          <div class="tier-price">&euro;25 <small>/ month</small></div>
+          <div class="tier-credits">5 credits every month</div>
+          <ul class="tier-list">
+            <li>Concierge desk access</li>
+            <li>Credits roll over while subscribed</li>
+            <li>Zero hidden booking or surge fees</li>
+          </ul>
+        </div>
         <a href="/join" class="tier-cta">Choose Gold</a>
       </div>
-      <div class="tier featured">
-        <p class="tier-tag">Most chosen</p>
-        <div class="tier-name">Platinum</div>
-        <div class="tier-price">&euro;50 <small>per month</small></div>
-        <div class="tier-credits">10 credits every month</div>
-        <ul>
-          <li>Priority concierge desk</li>
-          <li>Credits roll over while you are a member</li>
-        </ul>
+
+      <!-- PLATINUM TIER (FEATURED) -->
+      <div class="tier-card featured reveal">
+        <span class="featured-badge">Most Chosen</span>
+        <div>
+          <div class="tier-tag">Balanced travel rhythm</div>
+          <div class="tier-name">Platinum</div>
+          <div class="tier-price">&euro;50 <small>/ month</small></div>
+          <div class="tier-credits">10 credits every month</div>
+          <ul class="tier-list">
+            <li>Priority concierge desk</li>
+            <li>Credits roll over while subscribed</li>
+            <li>Daily photo & activity logs</li>
+            <li>Zero hidden booking or surge fees</li>
+          </ul>
+        </div>
         <a href="/join" class="tier-cta">Choose Platinum</a>
       </div>
-      <div class="tier">
-        <p class="tier-tag">For the frequent flyer</p>
-        <div class="tier-name">Diamond</div>
-        <div class="tier-price">&euro;75 <small>per month</small></div>
-        <div class="tier-credits">15 credits every month</div>
-        <ul>
-          <li>First-call concierge line</li>
-          <li>Credits roll over while you are a member</li>
-        </ul>
+
+      <!-- DIAMOND TIER -->
+      <div class="tier-card reveal">
+        <div>
+          <div class="tier-tag">For the frequent flyer</div>
+          <div class="tier-name">Diamond</div>
+          <div class="tier-price">&euro;75 <small>/ month</small></div>
+          <div class="tier-credits">15 credits every month</div>
+          <ul class="tier-list">
+            <li>First-call concierge line</li>
+            <li>Credits roll over while subscribed</li>
+            <li>Instant emergency backup priority</li>
+            <li>Zero hidden booking or surge fees</li>
+          </ul>
+        </div>
         <a href="/join" class="tier-cta">Choose Diamond</a>
       </div>
+
     </div>
 
-    <p class="small-print">One credit is &euro;5, always: a &euro;50 sitter rate appears as 10 credits, a &euro;75 rate as 15. Every sitter sets their own price inside a published range, and the figure you approve is the figure you pay.</p>
-
-    <div class="standard-banner">
-      <span class="eyebrow">The Zo&eacute;lys standard</span>
-      <p>Comfort is the minimum. A full day of care brings at least two walks, meals exactly as written, and medication on schedule, all folded into one quiet figure. Only what your pet truly needs beyond that, a moment with the groomer or the vet, is ever extra.</p>
+    <!-- CREDIT CONVERSION BANNER -->
+    <div class="small-print-banner reveal">
+      <p><strong>1 Credit = &euro;5, always.</strong> A &euro;50 sitter rate appears as 10 credits; a &euro;75 rate as 15. Every sitter sets their own rate inside a published range, and the figure you approve is the exact figure you pay.</p>
     </div>
 
-    <div class="section-kicker">
-      <span class="eyebrow">In the open</span>
-      <h2>What is never charged</h2>
-    </div>
-
-    <div class="two-col">
-      <div class="plain-card">
-        <h3>A single, honest figure</h3>
-        <p>The price you approve before a booking is the price you pay. When it settles, the caregiver is paid from that same envelope the moment they accept, and the line appears in your ledger: total, what they received, and what kept Zoélys running. Nothing moves in the dark.</p>
+    <!-- ACCORDION / DROPDOWN DETAILS SECTION -->
+    <section class="details-accordion-section">
+      <div class="section-kicker reveal">
+        <span class="eyebrow">In the open</span>
+        <h2>How Zoélys Pricing Operates</h2>
       </div>
-      <div class="plain-card">
-        <h3>What is never charged</h3>
-        <ul>
-          <li>Booking or service fees on top of the approved price</li>
-          <li>Surge pricing during holidays or busy nights</li>
-          <li>Fees to contact your concierge</li>
-          <li>Anything your approved figure did not include</li>
-        </ul>
-      </div>
-    </div>
 
-    <div class="section-kicker">
-      <span class="eyebrow">Getting started</span>
-      <h2>Members start with credits already in hand</h2>
-    </div>
+      <div class="accordion reveal">
+        
+        <!-- Accordion 1 -->
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <h3 class="accordion-title">What is never charged?</h3>
+            <span class="accordion-icon">&#43;</span>
+          </button>
+          <div class="accordion-body">
+            <p>We believe in total transparency. The price you approve before a booking is the exact figure you pay. We never charge:</p>
+            <ul>
+              <li>Booking or service fees on top of the approved price</li>
+              <li>Surge pricing during holidays or busy weekends</li>
+              <li>Fees to contact or message your concierge</li>
+              <li>Hidden add-ons not included in your approved briefing</li>
+            </ul>
+          </div>
+        </div>
 
-    <div class="two-col">
-      <div class="plain-card">
-        <h3>First month, covered</h3>
-        <p>Every new member account opens with a starter gift of credits, enough to book your first sitting and feel how the system works before your first billing month arrives.</p>
-      </div>
-      <div class="plain-card">
-        <h3>Prefer no commitment?</h3>
-        <p>Credits also come in packs: 10 for &euro;50, 20 for &euro;100, 50 for &euro;250 with 5 added free, and 100 for &euro;500 with 10 added free. Packs never expire and carry no monthly minimum, for the months your rhythm is lighter.</p>
-      </div>
-    </div>
+        <!-- Accordion 2 -->
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <h3 class="accordion-title">Prefer no monthly commitment? (Credit Packs)</h3>
+            <span class="accordion-icon">&#43;</span>
+          </button>
+          <div class="accordion-body">
+            <p>For months when your travel rhythm is lighter, credits can also be purchased in flexible non-subscription packs that never expire:</p>
+            <ul>
+              <li><strong>10 Credits:</strong> &euro;50</li>
+              <li><strong>20 Credits:</strong> &euro;100</li>
+              <li><strong>50 Credits:</strong> &euro;250 (+ 5 bonus credits free)</li>
+              <li><strong>100 Credits:</strong> &euro;500 (+ 10 bonus credits free)</li>
+            </ul>
+          </div>
+        </div>
 
-    <div class="cta-row-final">
-      <a class="btn btn-ink" href="/join">Become a member <span class="arrow">&rarr;</span></a>
-      <a class="link-underline" href="/contact">Ask your concierge a question</a>
-    </div>
+        <!-- Accordion 3 -->
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <h3 class="accordion-title">What is included in the Zoélys Standard?</h3>
+            <span class="accordion-icon">&#43;</span>
+          </button>
+          <div class="accordion-body">
+            <p>Comfort is our minimum baseline. Every full day of care brings at least two comprehensive walks, scheduled feedings exactly as written, and medication administered on time. Only extra requests—like a visit to the groomer or vet—are billed separately.</p>
+          </div>
+        </div>
+
+        <!-- Accordion 4 -->
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <h3 class="accordion-title">How do new members start?</h3>
+            <span class="accordion-icon">&#43;</span>
+          </button>
+          <div class="accordion-body">
+            <p>Every new member account opens with a starter gift of credits, allowing you to book your first sitting and experience how the system works before your first billing month arrives.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
+  <!-- CTA SECTION -->
+  <section class="cta">
+    <h2 class="cta-title reveal">Ready to start your membership?</h2>
+    <p class="cta-sub reveal">Speak with a concierge or choose your plan to begin.</p>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a class="btn btn-ink reveal" href="/join">Become a member <span class="arrow">&rarr;</span></a>
+      <a class="link-underline reveal" href="/contact">Ask your concierge a question</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="master-footer">
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
         <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
       </div>
+
       <div>
         <h5>Explore</h5>
         <ul>
@@ -169,26 +515,54 @@
           <li><a href="/trust">Trust &amp; Safety</a></li>
         </ul>
       </div>
+
       <div>
         <h5>Zoélys</h5>
         <ul>
           <li><a href="/how-it-works">How It Works</a></li>
           <li><a href="/contact">Contact Us</a></li>
-          <li><a href="/apply">Become a Sitter</a></li>
           <li><a href="/join">Member Portal</a></li>
         </ul>
       </div>
+
       <div>
         <h5>Stay Close</h5>
         <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
       </div>
     </div>
+
     <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>&copy; 2026 Zoélys. Crafted with care.</div>
       <div>Premium pet care, redefined.</div>
     </div>
   </footer>
 
   <script src="/navbar.js"></script>
+  <script>
+    // Accordion Toggle Script
+    function toggleAccordion(button) {
+      const item = button.parentElement;
+      const isActive = item.classList.contains('active');
+      
+      // Close all accordion items
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+      
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    }
+
+    // Scroll Reveal Observer
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+  </script>
 </body>
 </html>
