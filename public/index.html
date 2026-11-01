@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys. Trust & Safety.</title>
+  <title>Zoélys. Premium Pet Care, Redefined.</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    /* ============ SMOOTH SCROLL REVEAL ANIMATIONS ============ */
+    /* ============ REVEAL ANIMATIONS ============ */
     .reveal {
       opacity: 0;
       transform: translateY(35px);
@@ -24,15 +24,15 @@
       transform: translateY(0);
     }
 
-    /* ============ PAGE HERO ============ */
-    .trust-hero {
+    /* ============ HERO SECTION ============ */
+    .home-hero {
       text-align: center;
-      padding: 6.5rem 2rem 4rem;
-      max-width: 900px;
+      padding: 7.5rem 2rem 5rem;
+      max-width: 920px;
       margin: 0 auto;
     }
 
-    .trust-hero .eyebrow {
+    .home-hero .eyebrow {
       font-size: 0.68rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
@@ -42,28 +42,73 @@
       display: block;
     }
 
-    .trust-hero h1 {
+    .home-hero h1 {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(2.8rem, 5vw, 4.2rem);
-      line-height: 1.1;
+      font-size: clamp(3.2rem, 5.5vw, 4.8rem);
+      line-height: 1.08;
       letter-spacing: -0.015em;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.6rem;
+      color: var(--ink);
     }
 
-    .trust-hero h1 em { font-style: italic; color: var(--accent); }
+    .home-hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
 
-    .trust-hero p {
+    .home-hero p {
       color: var(--ink-muted);
-      font-size: 1.05rem;
+      font-size: 1.08rem;
       font-weight: 300;
-      line-height: 1.8;
-      max-width: 62ch;
+      line-height: 1.85;
+      max-width: 60ch;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ============ EDITORIAL FEATURE HIGHLIGHT ============ */
+    .editorial-quote-section {
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      background: var(--bg-cream-soft);
+      padding: 5rem 2rem 5.5rem;
+      margin: 3rem 0 5rem;
+      text-align: center;
+    }
+
+    .editorial-quote-inner {
+      max-width: 860px;
       margin: 0 auto;
     }
 
-    /* ============ CONTAINER ============ */
-    .trust-container {
+    .editorial-quote-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      color: var(--ink);
+    }
+
+    .editorial-quote-text {
+      color: var(--ink-muted);
+      font-size: 1rem;
+      line-height: 1.85;
+      font-weight: 300;
+      max-width: 68ch;
+      margin: 0 auto;
+    }
+
+    /* ============ THREE COLUMN FEATURES ============ */
+    .home-container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 4.5rem 6rem;
@@ -71,7 +116,7 @@
 
     .section-kicker {
       text-align: center;
-      margin: 4.5rem 0 3rem;
+      margin-bottom: 3.5rem;
     }
 
     .section-kicker .eyebrow {
@@ -86,63 +131,18 @@
 
     .section-kicker h2 {
       font-family: var(--font-serif);
-      font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+      font-size: clamp(2.2rem, 3.8vw, 3rem);
       font-weight: 400;
     }
 
-    /* ============ PROTOCOLS GRID ============ */
-    .protocol-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.8rem;
-      margin-bottom: 6rem;
-    }
-
-    .protocol-card {
-      background: var(--bg-cream-soft);
-      border: 1px solid var(--hairline);
-      border-radius: 14px;
-      padding: 2.5rem 2.2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .protocol-card .tag {
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
-      display: block;
-      margin-bottom: 0.6rem;
-    }
-
-    .protocol-card h3 {
-      font-family: var(--font-serif);
-      font-size: 1.55rem;
-      font-weight: 500;
-      margin: 0 0 0.8rem;
-      color: var(--ink);
-    }
-
-    .protocol-card p {
-      color: var(--ink-muted);
-      font-size: 0.88rem;
-      line-height: 1.8;
-      font-weight: 300;
-      margin: 0;
-    }
-
-    /* ============ INSURANCE GRID ============ */
-    .three-col-grid {
+    .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.8rem;
+      gap: 2rem;
       margin-bottom: 6rem;
     }
 
-    .info-card {
+    .feature-card {
       background: var(--bg-card, #FFFFFF);
       border: 1px solid var(--hairline);
       border-radius: 16px;
@@ -153,109 +153,52 @@
       transition: transform 0.4s ease, border-color 0.4s ease;
     }
 
-    .info-card:hover {
-      transform: translateY(-4px);
+    .feature-card:hover {
+      transform: translateY(-5px);
       border-color: var(--accent);
     }
 
-    .info-card .tag {
+    .feature-card .tag {
       font-size: 0.65rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
       font-weight: 600;
-      display: block;
       margin-bottom: 0.8rem;
+      display: block;
     }
 
-    .info-card h3 {
+    .feature-card h3 {
       font-family: var(--font-serif);
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       font-weight: 500;
-      margin: 0 0 1rem;
       color: var(--ink);
+      margin: 0 0 0.8rem;
     }
 
-    .info-card p {
+    .feature-card p {
       color: var(--ink-muted);
       font-size: 0.88rem;
       line-height: 1.8;
       font-weight: 300;
-      margin: 0;
+      margin: 0 0 1.5rem;
     }
 
-    /* ============ ACCORDION SECTION ============ */
-    .accordion {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 920px;
-      margin: 0 auto 6rem;
-    }
-
-    .accordion-item {
-      background: var(--bg-card, #FFFFFF);
-      border: 1px solid var(--hairline);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: border-color 0.3s ease;
-    }
-
-    .accordion-item:hover {
-      border-color: var(--accent);
-    }
-
-    .accordion-header {
-      width: 100%;
-      padding: 1.6rem 2rem;
-      background: transparent;
-      border: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .accordion-title {
-      font-family: var(--font-serif);
-      font-size: 1.35rem;
-      font-weight: 500;
+    .feature-card a {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--ink);
-      margin: 0;
+      text-decoration: none;
+      transition: color 0.3s ease;
     }
 
-    .accordion-icon {
-      font-size: 1.2rem;
+    .feature-card a:hover {
       color: var(--accent);
-      transition: transform 0.3s ease;
     }
 
-    .accordion-item.active .accordion-icon {
-      transform: rotate(45deg);
-    }
-
-    .accordion-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.4s ease;
-      padding: 0 2rem;
-    }
-
-    .accordion-item.active .accordion-body {
-      max-height: 400px;
-      padding: 0 2rem 1.8rem;
-    }
-
-    .accordion-body p {
-      font-size: 0.88rem;
-      color: var(--ink-muted);
-      line-height: 1.8;
-      font-weight: 300;
-      margin: 0;
-    }
-
-    /* ============ CTA ============ */
+    /* ============ CTA SECTION ============ */
     .cta {
       text-align: center;
       padding: 6rem 2rem 8rem;
@@ -272,149 +215,76 @@
       margin: 0 auto 1.4rem;
     }
 
-    .cta-sub { color: var(--ink-muted); font-weight: 300; margin-bottom: 2.5rem; font-size: 1rem; }
+    .cta-sub {
+      color: var(--ink-muted);
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
 
-    /* ============ RESPONSIVE ============ */
     @media (max-width: 1020px) {
-      .trust-container { padding-left: 1.75rem; padding-right: 1.75rem; }
-      .protocol-grid, .three-col-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .home-container { padding-left: 1.75rem; padding-right: 1.75rem; }
+      .features-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
   <!-- HERO SECTION -->
-  <section class="trust-hero">
-    <span class="eyebrow reveal">Trust &amp; Safety</span>
-    <h1 class="reveal">Built on legal clarity <em>&amp; instant care</em></h1>
-    <p class="reveal">Safety at Zoélys is governed by explicit medical authorization terms, 24/7 veterinary triage, and mandatory insurance standards across Florida.</p>
+  <section class="home-hero">
+    <span class="eyebrow reveal">Private Pet Care Concierge</span>
+    <h1 class="reveal">Pets aren&rsquo;t a side note. <em>They&rsquo;re family.</em></h1>
+    <p class="reveal">Zoélys connects discerning pet parents with a certified roster of vetted caregivers, backed by 24/7 veterinary triage and transparent credit pricing.</p>
+    
+    <div class="hero-actions reveal">
+      <a href="/get-matched" class="btn btn-ink">Find a Sitter <span class="arrow">&rarr;</span></a>
+      <a href="/pricing" class="link-underline">Explore Membership Plans</a>
+    </div>
   </section>
 
-  <main class="trust-container">
+  <!-- EDITORIAL STATEMENT -->
+  <section class="editorial-quote-section reveal">
+    <div class="editorial-quote-inner">
+      <h2 class="editorial-quote-title">Quiet luxury meets absolute peace of mind.</h2>
+      <p class="editorial-quote-text">We built Zoélys around a simple principle: subscription plans adapt to how often you travel, never the standard of care your pet receives. Every member accesses our exact 100% uncompromising vetting, 24/7 tele-vet backup, and real-time daily care updates.</p>
+    </div>
+  </section>
 
-    <!-- EMERGENCY PROTOCOL SECTION -->
+  <!-- MAIN FEATURES -->
+  <main class="home-container">
+    
     <div class="section-kicker reveal">
-      <span class="eyebrow">Emergency Protocol</span>
-      <h2>A Rehearsed Emergency Escalation Chain</h2>
+      <span class="eyebrow">The Zoélys Ecosystem</span>
+      <h2>Designed around your pet’s routine</h2>
     </div>
 
-    <div class="protocol-grid reveal">
+    <div class="features-grid reveal">
       
-      <div class="protocol-card">
+      <div class="feature-card">
         <div>
-          <span class="tag">Step 01</span>
-          <h3>Immediate Owner Contact</h3>
-          <p>If any health or safety concern arises during a sitting, the caregiver initiates direct contact with you immediately via phone call and in-app emergency alert.</p>
+          <span class="tag">01 / Match</span>
+          <h3>Concierge Matching</h3>
+          <p>Hand-picked, certified caregivers who align with your pet's temperament, medical needs, and specific household briefing.</p>
         </div>
+        <a href="/get-matched">Find your match &rarr;</a>
       </div>
 
-      <div class="protocol-card">
+      <div class="feature-card">
         <div>
-          <span class="tag">Step 02</span>
-          <h3>Integrated 24/7 Tele-Vet Triage</h3>
-          <p>If you are unreachable or unable to answer, your signed Member Authorization permits instant consultation via our integrated 24/7 Veterinary API—included in your membership at zero extra charge to evaluate urgency with a licensed vet.</p>
+          <span class="tag">02 / Safety</span>
+          <h3>Integrated 24/7 Vet API</h3>
+          <p>Every booking includes direct tele-vet access and emergency protocol backup for total peace of mind on every trip.</p>
         </div>
+        <a href="/trust">Safety standards &rarr;</a>
       </div>
 
-      <div class="protocol-card">
+      <div class="feature-card">
         <div>
-          <span class="tag">Step 03</span>
-          <h3>Designated Vet Transport</h3>
-          <p>If triage confirms medical urgency, your pet is transported immediately to your designated preferred veterinary clinic (or the nearest 24/7 emergency hospital if your primary clinic is closed).</p>
+          <span class="tag">03 / Pricing</span>
+          <h3>Credit Subscriptions</h3>
+          <p>Flexible credit tiers that scale with your travel frequency. Rollover unspent credits seamlessly without penalties.</p>
         </div>
-      </div>
-
-      <div class="protocol-card">
-        <div>
-          <span class="tag">Step 04</span>
-          <h3>Formal Incident Documentation</h3>
-          <p>A full, timestamped Incident Report—including photo documentation, vet triage logs, and next steps—is compiled and posted directly to your portal for complete transparency.</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- INSURANCE FRAMEWORK SECTION -->
-    <div class="section-kicker reveal">
-      <span class="eyebrow">Insurance &amp; Accountability</span>
-      <h2>Mandatory Protection Standards</h2>
-    </div>
-
-    <div class="three-col-grid reveal">
-      
-      <div class="info-card">
-        <div>
-          <span class="tag">Mandatory</span>
-          <h3>Caregiver Insurance</h3>
-          <p>Every Zoélys Authorized Caregiver must hold active Professional Pet Sitting &amp; Commercial Liability Insurance (minimum $1,000,000 coverage). Proof is verified prior to authorization and audited periodically.</p>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div>
-          <span class="tag">Member Partner</span>
-          <h3>Pet Owner Protection</h3>
-          <p>While our baseline care includes 24/7 vet triage, members are encouraged to maintain active Pet Health Insurance. For owners without coverage, we partner directly with licensed Florida pet insurance providers at setup.</p>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div>
-          <span class="tag">Platform Backstop</span>
-          <h3>Platform Liability</h3>
-          <p>Zoélys maintains commercial general liability coverage as the platform concierge. Our team personally coordinates documentation and stays with you from initial report through claim settlement.</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- LEGAL & HOME PRIVACY ACCORDION -->
-    <div class="section-kicker reveal">
-      <span class="eyebrow">Legal &amp; Home Privacy</span>
-      <h2>Clear Terms, Plain Language</h2>
-    </div>
-
-    <div class="accordion reveal">
-      
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          <h3 class="accordion-title">Can a sitter legally authorize medical decisions for my pet?</h3>
-          <span class="accordion-icon">&#43;</span>
-        </button>
-        <div class="accordion-body">
-          <p>Legally, veterinary clinics cannot perform non-routine medical care requested by a non-owner without written consent. Before your first stay, every Zoélys member signs an electronic <strong>Emergency Medical Care Authorization Form</strong>.</p>
-          <p style="margin-top: 0.8rem;">This agreement grants your authorized caregiver and our concierge desk limited medical proxy to seek emergency vet care if you are unreachable, governed by a pre-approved emergency spending limit and designated clinic permissions.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          <h3 class="accordion-title">Home Security &amp; Audio Privacy (Florida Compliance)</h3>
-          <span class="accordion-icon">&#43;</span>
-        </button>
-        <div class="accordion-body">
-          <p>If you operate security or nanny cameras, simply note their presence in your written Care Plan. In compliance with Florida two-party consent privacy laws (Fla. Stat. § 934.03), audio-recording devices in private sitting quarters must be explicitly disclosed prior to a sitting.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          <h3 class="accordion-title">Independent Contractor Separation (Fla. Stat. § 443.1216)</h3>
-          <span class="accordion-icon">&#43;</span>
-        </button>
-        <div class="accordion-body">
-          <p>Caregivers on Zoélys operate as independent, certified micro-entrepreneurs. They maintain operational independence over their sitting practices while adhering strictly to Zoélys safety standards, verification audits, and client briefing instructions.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          <h3 class="accordion-title">Key Security &amp; Access Protocol</h3>
-          <span class="accordion-icon">&#43;</span>
-        </button>
-        <div class="accordion-body">
-          <p>Keys and smart lock codes are logged and returned immediately upon completion of a sitting. No copies are ever retained, and entry/exit timestamps are automatically recorded within your daily care portal.</p>
-        </div>
+        <a href="/pricing">View credit tiers &rarr;</a>
       </div>
 
     </div>
@@ -423,12 +293,12 @@
 
   <!-- CTA SECTION -->
   <section class="cta">
-    <h2 class="cta-title reveal">Ready to experience Zoélys trust?</h2>
-    <p class="cta-sub reveal">Speak with a concierge or explore our certified roster.</p>
+    <h2 class="cta-title reveal">Ready to experience Zoélys?</h2>
+    <p class="cta-sub reveal">Speak with a concierge or explore available caregivers near you.</p>
 
     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-      <a class="btn btn-ink reveal" href="/get-matched">Find a sitter <span class="arrow">&rarr;</span></a>
-      <a class="link-underline reveal" href="/contact">Ask a safety question</a>
+      <a class="btn btn-ink reveal" href="/get-matched">Get Started <span class="arrow">&rarr;</span></a>
+      <a class="link-underline reveal" href="/contact">Ask a Concierge</a>
     </div>
   </section>
 
@@ -473,18 +343,6 @@
 
   <script src="/navbar.js"></script>
   <script>
-    // Accordion Toggle Script
-    function toggleAccordion(button) {
-      const item = button.parentElement;
-      const isActive = item.classList.contains('active');
-      
-      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
-      
-      if (!isActive) {
-        item.classList.add('active');
-      }
-    }
-
     // Scroll Reveal Observer
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
