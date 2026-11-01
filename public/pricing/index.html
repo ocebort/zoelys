@@ -27,7 +27,7 @@
     /* ============ PAGE HERO ============ */
     .pricing-hero {
       text-align: center;
-      padding: 6rem 2rem 3.5rem;
+      padding: 6.5rem 2rem 3.5rem;
       max-width: 860px;
       margin: 0 auto;
     }
@@ -62,59 +62,63 @@
       margin: 0 auto;
     }
 
-    /* ============ VALUES / CARE GUARANTEE BANNER ============ */
-    .care-guarantee-banner {
+    /* ============ ELEGANT CARE GUARANTEE STATEMENT (NO BUBBLE) ============ */
+    .care-statement-section {
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
       background: var(--bg-cream-soft);
-      border: 1px solid var(--hairline);
-      border-radius: 16px;
-      padding: 3rem 2.5rem;
-      max-width: 1080px;
-      margin: 0 auto 4rem;
+      padding: 5rem 2rem 5.5rem;
+      margin: 2rem 0 5rem;
       text-align: center;
-      box-shadow: 0 12px 32px -12px rgba(25, 21, 18, 0.05);
     }
 
-    .care-guarantee-title {
+    .care-statement-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .care-statement-title {
       font-family: var(--font-serif);
-      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-size: clamp(2.2rem, 3.8vw, 3rem);
       font-weight: 400;
-      margin-bottom: 1rem;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
       color: var(--ink);
     }
 
-    .care-guarantee-text {
+    .care-statement-text {
       color: var(--ink-muted);
-      font-size: 0.95rem;
+      font-size: 0.98rem;
       line-height: 1.85;
       font-weight: 300;
-      max-width: 78ch;
-      margin: 0 auto 2rem;
+      max-width: 72ch;
+      margin: 0 auto 3.5rem;
     }
 
-    .non-negotiables-grid {
+    .non-negotiables-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
+      gap: 2rem;
       text-align: left;
-      border-top: 1px solid var(--hairline);
-      padding-top: 2rem;
     }
 
     .non-negotiable-item {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.5rem;
+      border-left: 1px solid var(--hairline);
+      padding-left: 1.2rem;
     }
 
     .non-negotiable-item strong {
       font-family: var(--font-serif);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       color: var(--ink);
       font-weight: 500;
     }
 
     .non-negotiable-item span {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--ink-muted);
       font-weight: 300;
       line-height: 1.6;
@@ -407,11 +411,11 @@
     @media (max-width: 1020px) {
       .pricing-container { padding-left: 1.75rem; padding-right: 1.75rem; }
       .tiers-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-      .non-negotiables-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      .non-negotiables-row { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
     }
 
     @media (max-width: 600px) {
-      .non-negotiables-grid { grid-template-columns: 1fr; }
+      .non-negotiables-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -424,27 +428,29 @@
     <p class="reveal">Subscriptions adapt to your travel frequency—not the quality of care your pet receives. Every pet deserves the absolute best, without compromise.</p>
   </section>
 
-  <!-- VALUES & CARE GUARANTEE BANNER -->
-  <section class="care-guarantee-banner reveal">
-    <h2 class="care-guarantee-title">Care is never a price tier.</h2>
-    <p class="care-guarantee-text">At Zoélys, we firmly believe that subscription plans should adapt to how often you travel, never how well your pet is loved. Whether you choose Gold, Platinum, or Diamond, every pet receives our exact 100% uncompromising standard of care, safety, and attention.</p>
+  <!-- EDITORIAL STATEMENT (NO BUBBLE CONTAINER) -->
+  <section class="care-statement-section reveal">
+    <div class="care-statement-inner">
+      <h2 class="care-statement-title">Care is never a price tier.</h2>
+      <p class="care-statement-text">At Zoélys, subscription plans adapt to how often you travel, never how well your pet is loved. Every member, regardless of tier, accesses our exact 100% uncompromising standard of care, safety, and attention.</p>
 
-    <div class="non-negotiables-grid">
-      <div class="non-negotiable-item">
-        <strong>100% Vetted Roster</strong>
-        <span>Rigorous 4-stage background & in-person concierge evaluation.</span>
-      </div>
-      <div class="non-negotiable-item">
-        <strong>Equal Attention</strong>
-        <span>Scheduled walks, meals, medication, and tailored affection daily.</span>
-      </div>
-      <div class="non-negotiable-item">
-        <strong>Daily Care Logs</strong>
-        <span>Real-time photo updates and transparent activity logs on every stay.</span>
-      </div>
-      <div class="non-negotiable-item">
-        <strong>24/7 Vet Backup</strong>
-        <span>Instant digital veterinary access for every caregiver on duty.</span>
+      <div class="non-negotiables-row">
+        <div class="non-negotiable-item">
+          <strong>100% Vetted Roster</strong>
+          <span>Rigorous 4-stage background & in-person concierge evaluation.</span>
+        </div>
+        <div class="non-negotiable-item">
+          <strong>Equal Attention</strong>
+          <span>Scheduled walks, meals, medication, and tailored affection daily.</span>
+        </div>
+        <div class="non-negotiable-item">
+          <strong>Daily Care Logs</strong>
+          <span>Real-time photo updates and transparent activity logs on every stay.</span>
+        </div>
+        <div class="non-negotiable-item">
+          <strong>24/7 Vet Backup</strong>
+          <span>Instant digital veterinary access for every caregiver on duty.</span>
+        </div>
       </div>
     </div>
   </section>
@@ -470,7 +476,7 @@
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
-        <a href="/join" class="tier-cta">Choose Gold</a>
+        <a href="/join?plan=gold" class="tier-cta">Choose Gold</a>
       </div>
 
       <!-- PLATINUM TIER (FEATURED) -->
@@ -489,7 +495,7 @@
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
-        <a href="/join" class="tier-cta">Choose Platinum</a>
+        <a href="/join?plan=platinum" class="tier-cta">Choose Platinum</a>
       </div>
 
       <!-- DIAMOND TIER -->
@@ -507,7 +513,7 @@
             <li>Zero hidden booking or surge fees</li>
           </ul>
         </div>
-        <a href="/join" class="tier-cta">Choose Diamond</a>
+        <a href="/join?plan=diamond" class="tier-cta">Choose Diamond</a>
       </div>
 
     </div>
