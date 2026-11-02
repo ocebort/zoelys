@@ -156,12 +156,17 @@
         <input type="password" id="password" required placeholder="••••••••">
       </div>
 
+      <div class="field-group">
+        <label for="confirmPassword">Retype Password</label>
+        <input type="password" id="confirmPassword" required placeholder="••••••••">
+      </div>
+
       <div class="field-group" id="tierGroup">
         <label for="tier">Membership Tier</label>
         <select id="tier">
-          <option value="Platinum" selected>Platinum Concierge</option>
-          <option value="Black">Black Card</option>
-          <option value="Standard">Standard</option>
+          <option value="Platinum" selected>Platinum Concierge — €45 / month</option>
+          <option value="Black">Black Card Executive — €120 / month</option>
+          <option value="Standard">Standard Care — Free</option>
         </select>
       </div>
 
@@ -202,13 +207,23 @@
       const submitBtn = document.getElementById('submitBtn');
       
       errorAlert.style.display = 'none';
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        errorAlert.textContent = 'Passwords do not match. Please retype them.';
+        errorAlert.style.display = 'block';
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.textContent = 'Creating Account...';
 
       const payload = {
         full_name: document.getElementById('fullName').value.trim(),
         email: document.getElementById('email').value.trim(),
-        password: document.getElementById('password').value,
+        password: password,
         role: selectedRole,
         tier: selectedRole === 'sitter' ? 'Standard' : document.getElementById('tier').value
       };
