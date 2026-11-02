@@ -198,7 +198,7 @@
   <div class="auth-hero">
     <span class="eyebrow reveal">Member Portal</span>
     <h1 class="reveal" id="authTitle">Apply for <em>Access</em></h1>
-    <p class="reveal" id="authSub">Join Zoélys, a private caregiving concierge for discerning pet parents. Choose your role below to begin your application.</p>
+    <p class="reveal" id="authSub">Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers. Choose your role below to begin.</p>
   </div>
 
   <main class="container">
@@ -212,10 +212,10 @@
 
       <form onsubmit="handleAuth(event)">
         
-        <!-- FULL NAME -->
+        <!-- FULL NAME (HIDDEN ON LOGIN / FORGOT) -->
         <div class="form-group" id="nameGroup">
           <label class="form-label">Full Name</label>
-          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input">
+          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input" required>
         </div>
 
         <!-- EMAIL -->
@@ -227,10 +227,10 @@
         <!-- PASSWORD -->
         <div class="form-group" id="passGroup">
           <label class="form-label">Password</label>
-          <input type="password" id="authPass" placeholder="••••••••" class="form-input">
+          <input type="password" id="authPass" placeholder="••••••••" required class="form-input">
         </div>
 
-        <!-- PET PARENT TIER SELECTION -->
+        <!-- PET PARENT TIER SELECTION (REGISTRATION ONLY) -->
         <div class="form-group" id="tierGroup">
           <label class="form-label">Select Membership Tier</label>
           <select id="authTier" class="form-input">
@@ -240,12 +240,18 @@
           </select>
         </div>
 
-        <!-- SITTER VETTING CODE -->
+        <!-- SITTER EXPERIENCE FIELD (REGISTRATION ONLY) -->
+        <div class="form-group" id="experienceGroup" style="display: none;">
+          <label class="form-label">Primary Care Area &amp; Years Experience</label>
+          <input type="text" id="authExperience" placeholder="e.g. Miami Beach • 5 Years Professional Sitting" class="form-input">
+        </div>
+
+        <!-- SITTER VETTING AUTHORIZATION ID (LOGIN ONLY FOR APPROVED SITTERS) -->
         <div class="form-group" id="vettingGroup" style="display: none;">
           <label class="form-label" style="color: var(--accent);">Zoélys Vetting Authorization ID *</label>
           <input type="text" id="authVettingCode" placeholder="e.g. ZOELYS-VET-2026" class="form-input" style="border: 1.5px solid var(--accent); background: #FFF8F6; font-weight: 600; text-transform: uppercase;">
           <span style="font-size: 0.72rem; color: var(--ink-muted); display: block; margin-top: 0.35rem;">
-            Required for caregivers. Provided by Zoélys Concierge upon passing roster interviews.
+            Issued by Zoélys Concierge upon passing active roster vetting.
           </span>
         </div>
 
@@ -279,7 +285,6 @@
         <ul>
           <li><a href="/get-matched">Find a Sitter</a></li>
           <li><a href="/trust">Trust &amp; Safety</a></li>
-          <li><a href="/journal">Journal</a></li>
           <li><a href="/pricing">Pricing</a></li>
           <li><a href="/contact">Contact Us</a></li>
         </ul>
@@ -315,14 +320,19 @@
       btn.classList.add('active');
 
       const tierGroup = document.getElementById('tierGroup');
-      const vettingGroup = document.getElementById('vettingGroup');
+      const expGroup = document.getElementById('experienceGroup');
+      const legalNotice = document.getElementById('legalNotice');
 
-      if (role === 'sitter') {
-        if (tierGroup) tierGroup.style.display = 'none';
-        if (vettingGroup) vettingGroup.style.display = 'block';
-      } else {
-        if (tierGroup) tierGroup.style.display = 'block';
-        if (vettingGroup) vettingGroup.style.display = 'none';
+      if (isRegisterMode) {
+        if (role === 'sitter') {
+          if (tierGroup) tierGroup.style.display = 'none';
+          if (expGroup) expGroup.style.display = 'block';
+          if (legalNotice) legalNotice.innerText = 'By applying to our roster, you agree to undergo criminal background verification and complete our 4-stage evaluation process.';
+        } else {
+          if (tierGroup) tierGroup.style.display = 'block';
+          if (expGroup) expGroup.style.display = 'none';
+          if (legalNotice) legalNotice.innerText = 'By applying, you agree to execute our electronic Emergency Medical Care Authorization Form and acknowledge Florida privacy terms (Fla. Stat. § 934.03).';
+        }
       }
     }
 
@@ -334,6 +344,7 @@
       const sub = document.getElementById('authSub');
       const nameGrp = document.getElementById('nameGroup');
       const tierGrp = document.getElementById('tierGroup');
+      const expGrp = document.getElementById('experienceGroup');
       const vettingGrp = document.getElementById('vettingGroup');
       const passGrp = document.getElementById('passGroup');
       const roleBar = document.getElementById('roleToggleBar');
@@ -343,23 +354,32 @@
 
       if (isRegisterMode) {
         title.innerHTML = 'Apply for <em>Access</em>';
-        sub.innerText = 'Join Zoélys, a private caregiving concierge for discerning pet parents. Choose your role below to begin your application.';
+        sub.innerText = 'Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers. Choose your role below to begin.';
         nameGrp.style.display = 'block';
         passGrp.style.display = 'block';
         roleBar.style.display = 'grid';
         legalNotice.style.display = 'block';
+        vettingGrp.style.display = 'none';
         btn.innerText = 'Register & Continue →';
         link.innerHTML = 'Already have an account? <strong>Sign In Here</strong>';
         setRole(selectedRole, document.querySelector('.role-btn.active'));
       } else {
         title.innerHTML = 'Member <em>Access</em>';
-        sub.innerText = 'Sign in to your private concierge portal and review your upcoming sittings.';
+        sub.innerText = 'Sign in to your private concierge portal to manage your account or track active bookings.';
         nameGrp.style.display = 'none';
         tierGrp.style.display = 'none';
-        vettingGrp.style.display = 'none';
+        expGrp.style.display = 'none';
         roleBar.style.display = 'none';
         legalNotice.style.display = 'none';
         passGrp.style.display = 'block';
+        
+        // Show Vetting Authorization field on Login for Sitter accounts
+        if (selectedRole === 'sitter') {
+          vettingGrp.style.display = 'block';
+        } else {
+          vettingGrp.style.display = 'none';
+        }
+
         btn.innerText = 'Sign In to Portal →';
         link.innerHTML = 'Need an account? <strong>Register Here</strong>';
       }
@@ -371,6 +391,7 @@
       document.getElementById('authSub').innerText = 'Enter your account email to receive secure reset instructions.';
       document.getElementById('nameGroup').style.display = 'none';
       document.getElementById('tierGroup').style.display = 'none';
+      document.getElementById('experienceGroup').style.display = 'none';
       document.getElementById('vettingGroup').style.display = 'none';
       document.getElementById('roleToggleBar').style.display = 'none';
       document.getElementById('passGroup').style.display = 'none';
@@ -395,32 +416,42 @@
         localStorage.clear();
         const full_name = document.getElementById('authName').value;
         const tier = document.getElementById('authTier').value;
-        const vetting_code = document.getElementById('authVettingCode').value;
+        const experience = document.getElementById('authExperience').value;
 
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, full_name, tier, role: selectedRole, vetting_code })
+          body: JSON.stringify({ email, password, full_name, tier, experience, role: selectedRole })
         });
 
         const data = await res.json();
         if (data.success) {
           localStorage.setItem('zoelys_user_id', data.userId);
-          window.location.href = '/dashboard';
+          localStorage.setItem('zoelys_role', selectedRole);
+          
+          // Route Pet Parents to Onboarding, Sitters to Sitter Dashboard
+          if (selectedRole === 'owner') {
+            window.location.href = '/onboarding';
+          } else {
+            window.location.href = '/dashboard';
+          }
         } else {
           alert(data.error || 'Registration failed');
         }
       } else {
+        const vetting_code = document.getElementById('authVettingCode').value;
+
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email, password, vetting_code, role: selectedRole })
         });
 
         const data = await res.json();
         if (data.success) {
           localStorage.removeItem('zoelys_user_id');
           localStorage.setItem('zoelys_user_id', data.user.id);
+          localStorage.setItem('zoelys_role', data.user.role);
           window.location.href = '/dashboard';
         } else {
           alert(data.error || 'Invalid credentials');
