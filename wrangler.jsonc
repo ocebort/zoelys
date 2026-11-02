@@ -1,17 +1,16 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zoelys",
-  "main": "src/index.js",
-  "compatibility_date": "2026-08-12",
-  "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
+  "compatibility_date": "2026-03-01",
+  "pages_build_output_dir": "./public",
+  "vars": {
+    "ENVIRONMENT": "production"
   },
   "d1_databases": [
     {
       "binding": "zoelys_db",
       "database_name": "zoelys-db",
-      "database_id": "972d367b-c471-43f7-ac27-2290b414cb6a"
+      "database_id": "zoelys-db"
     }
   ]
 }
