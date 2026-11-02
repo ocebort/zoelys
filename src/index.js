@@ -2,11 +2,16 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Route API pour récupérer les animaux du propriétaire
+    // 1. Redirection / routage explicite pour le dashboard owner
+    if (url.pathname === '/dashboard/owner' || url.pathname === '/dashboard/owner/') {
+      const targetUrl = new URL('/dashboard/owner/index.html', request.url);
+      return env.ASSETS.fetch(new Request(targetUrl, request));
+    }
+
+    // 2. Route API pour récupérer les animaux du propriétaire
     if (url.pathname === '/api/owner/pets') {
       try {
-        // Pour l'instant, on récupère les animaux liés à notre utilisateur de test 'usr_owner_01'
-        const { results } = await env.DB.prepare(
+        const { results } = await env.zoelys_db.prepare(
           "SELECT * FROM pets WHERE owner_id = ?"
         ).bind('usr_owner_01').all();
 
@@ -21,14 +26,14 @@ export default {
       }
     }
 
-    // Route API générique existante
+    // 3. Route API générique
     if (url.pathname.startsWith('/api/')) {
       return new Response(JSON.stringify({ ok: true, service: 'zoelys' }), {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
-    // Sert les fichiers statiques du dossier public
+    // 4. Service des fichiers statiques du dossier public (avec fallback vers index.html général)
     try {
       let response = await env.ASSETS.fetch(request);
       if (response.status === 404) {
