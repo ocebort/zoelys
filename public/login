@@ -85,6 +85,10 @@
     button.submit-btn:hover {
       opacity: 0.9;
     }
+    button.submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     .error-msg {
       color: #B33A3A;
       font-size: 13px;
@@ -130,42 +134,50 @@
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const errorAlert = document.getElementById('errorAlert');
-      const submitBtn = document.getElementById('submitBtn');
-      
-      errorAlert.style.display = 'none';
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Signing in...';
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('loginForm');
+      if (!loginForm) return;
 
-      const payload = {
-        email: document.getElementById('email').value.trim(),
-        password: document.getElementById('password').value
-      };
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errorAlert = document.getElementById('errorAlert');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        errorAlert.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in...';
 
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        const payload = {
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value
+        };
 
-        const data = await res.json();
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
 
-        if (!res.ok || !data.success) {
-          throw new Error(data.error || 'Failed to sign in.');
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || 'Failed to sign in.');
+          }
+
+          // Save active user profile session to localStorage
+          localStorage.setItem('zoelys_user', JSON.stringify(data.user));
+
+          // Redirect directly to the dashboard
+          window.location.href = '/dashboard';
+
+        } catch (err) {
+          errorAlert.textContent = err.message;
+          errorAlert.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In \u2192';
         }
-
-        // Redirection réussie vers le tableau de bord
-        window.location.href = '/dashboard';
-
-      } catch (err) {
-        errorAlert.textContent = err.message;
-        errorAlert.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In \u2192';
-      }
+      });
     });
   </script>
 </body>
