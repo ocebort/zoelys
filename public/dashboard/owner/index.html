@@ -22,6 +22,7 @@
     cancelStep: 1,
     cancelReason: '',
     editingPetIndex: null,
+    subscriptionActive: true,
     pets: [
         { 
           name: 'Luna', 
@@ -66,17 +67,37 @@
     favorites: [
         { name: 'Sarah M.', rating: '4.98', location: 'Chiado, Lisbon', experience: '3 years with Zoélys' }
     ],
-    // Intake form steps state
+    // Multi-step Concierge Intake Form State (Full Home Page Parity)
     matchStep: 1,
     matchData: {
         fullName: 'Océane',
         email: 'owner@zoelys.local',
         phone: '+351 91 000 0000',
         neighbourhood: 'Chiado, Lisbon',
+        animalType: 'Dog',
+        petName: 'Luna',
+        breed: 'Golden Retriever',
+        petAge: '3',
+        petSize: '28 kg',
+        sex: 'Female',
+        temperament: 'Energetic',
+        houseTrained: 'Yes',
+        behavioralTraits: 'Separation anxiety',
+        medicalConditions: 'Yes',
+        vaccination: 'Up to date',
+        diet: 'Kibble',
+        outdoorSpace: 'Yes',
         serviceType: 'Residential Boarding',
+        serviceDesc: 'Full-time care at caregiver’s home with continuous presence (minimum 4 hours to multi-day stays).',
         startDate: '2026-11-01',
         endDate: '2026-11-05',
-        budget: '€100-149'
+        expLevel: 'Professional 5+ years',
+        otherQualities: '',
+        meetGreet: true,
+        budget: '€100-149',
+        usedSitterBefore: 'Yes',
+        hearAbout: 'Google',
+        finalNotes: ''
     },
     addPet() {
         if(this.newPet.name) {
@@ -107,18 +128,20 @@
         this.favorites.splice(index, 1);
     },
     confirmCancellation() {
-        alert('Your subscription has been canceled. All unused credits have been forfeited according to membership policy.');
+        this.subscriptionActive = false;
+        this.creditBalance = 0;
+        alert('Your subscription has been canceled. All unused credits have been permanently forfeited according to membership policy.');
         this.showCancelModal = false;
         this.cancelStep = 1;
     }
 }">
 
-    <!-- Top Navigation -->
+    <!-- Top Navigation with Safe Back Arrow -->
     <header class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 py-5 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center space-x-12">
-            <a href="/" class="text-xs uppercase tracking-widest text-[#8C8275] hover:text-[#2C2A29] transition flex items-center space-x-2">
-                <span>← Back to Home</span>
-            </a>
+            <button @click="activeTab = 'overview'" class="text-xs uppercase tracking-widest text-[#8C8275] hover:text-[#2C2A29] transition flex items-center space-x-2 bg-transparent border-none cursor-pointer">
+                <span>← Back to Dashboard Home</span>
+            </button>
             <span class="text-xl font-serif tracking-widest text-[#2C2A29] uppercase border-l border-[#E8E2D5] pl-6">Zoélys</span>
             <span class="text-xs uppercase tracking-widest text-[#8C8275] font-medium border-l border-[#E8E2D5] pl-6">Owner Portal</span>
         </div>
@@ -331,8 +354,8 @@
                 <h2 class="text-3xl font-serif text-[#2C2A29]">Credits, Subscriptions & Payment Methods</h2>
             </div>
 
-            <!-- Membership Tier Details -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Membership Tier Details (Hidden if Canceled) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12" x-show="subscriptionActive">
                 <div class="space-y-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Current Membership Tier</span>
                     <h3 class="text-2xl font-serif text-[#2C2A29]" x-text="membershipTier + ' (' + membershipPrice + ')'"></h3>
@@ -348,6 +371,13 @@
                     <p class="text-xs text-[#6C6255]">Shop for more credits to use towards priority bookings or expert care logs.</p>
                     <button onclick="alert('Redirecting to secure credit shop...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium mt-2">Shop More Credits</button>
                 </div>
+            </div>
+
+            <!-- State when Subscription is Canceled -->
+            <div x-show="!subscriptionActive" class="space-y-4 p-8 bg-[#F4EFE6] border border-[#E8E2D5]">
+                <h3 class="text-xl font-serif text-[#2C2A29]">No Active Subscription</h3>
+                <p class="text-xs text-[#6C6255]">Your membership was canceled and your remaining credits were forfeited. You can rejoin anytime to resume concierge matching and high-trust care.</p>
+                <button onclick="alert('Redirecting to membership plans...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Reactivate Membership</button>
             </div>
 
             <!-- Payment Methods Section -->
@@ -539,17 +569,17 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: CONCIERGE MATCHING DESK (MULTI-STEP INTAKE) ================= -->
+    <!-- ================= MODAL: CONCIERGE MATCHING DESK (FULL 7-STEP HOME PAGE PARITY) ================= -->
     <div x-show="showMatchModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
-        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-xl w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]" x-text="'Concierge Intake — Step ' + matchStep + ' of 3'"></h3>
+                <h3 class="font-serif text-xl text-[#2C2A29]" x-text="'Concierge Intake — Step ' + matchStep + ' of 7'"></h3>
                 <button @click="showMatchModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
             </div>
 
-            <!-- Step 1: Pre-filled Owner & Pet Review -->
+            <!-- Step 1: About You -->
             <div x-show="matchStep === 1" class="space-y-4 text-xs">
-                <p class="text-[#6C6255]">We pre-filled your request details using your verified vault profile.</p>
+                <p class="text-[#6C6255]">Step 1. About You (Pre-filled from your vault profile)</p>
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Full Name</label>
                     <input type="text" x-model="matchData.fullName" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
@@ -564,19 +594,87 @@
                         <input type="tel" x-model="matchData.phone" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                     </div>
                 </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Neighbourhood / Area</label>
+                    <input type="text" x-model="matchData.neighbourhood" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                </div>
                 <button @click="matchStep = 2" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Continue &rarr;</button>
             </div>
 
-            <!-- Step 2: Service & Dates -->
+            <!-- Step 2: Your Pet -->
             <div x-show="matchStep === 2" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255]">Step 2. Your Pet</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pet Name</label>
+                        <input type="text" x-model="matchData.petName" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Breed</label>
+                        <input type="text" x-model="matchData.breed" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Age</label>
+                        <input type="text" x-model="matchData.petAge" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Size / Weight</label>
+                        <input type="text" x-model="matchData.petSize" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                </div>
                 <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Service Type</label>
-                    <select x-model="matchData.serviceType" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Temperament</label>
+                    <input type="text" x-model="matchData.temperament" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                </div>
+                <div class="flex justify-between pt-4">
+                    <button @click="matchStep = 1" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="matchStep = 3" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Health & Care -->
+            <div x-show="matchStep === 3" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255]">Step 3. Health & Care</p>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Vaccination Status</label>
+                    <input type="text" x-model="matchData.vaccination" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Diet Type</label>
+                    <input type="text" x-model="matchData.diet" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Private Outdoor Space Available?</label>
+                    <input type="text" x-model="matchData.outdoorSpace" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                </div>
+                <div class="flex justify-between pt-4">
+                    <button @click="matchStep = 2" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="matchStep = 4" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Service Needed (With Clear Descriptions & Min 4h rule) -->
+            <div x-show="matchStep === 4" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255]">Step 4. Service Needed (Minimum 4 hours / High-Trust Extended Care)</p>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Select High-Trust Service</label>
+                    <select x-model="matchData.serviceType" @change="
+                        if(matchData.serviceType === 'Residential Boarding') matchData.serviceDesc = 'Full-time care at caregiver’s home with continuous presence and secure environment.';
+                        else if(matchData.serviceType === 'Overnight Stay') matchData.serviceDesc = 'Nighttime care at your home ensuring your pet is never left alone overnight.';
+                        else if(matchData.serviceType === 'Live-In Care') matchData.serviceDesc = 'Dedicated 24/7 in-home caregiver presence for constant companionship and elite oversight.';
+                        else matchData.serviceDesc = 'Extended care visit lasting a minimum of 4 hours with tailored routines and exercise.';
+                    " class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                         <option value="Residential Boarding">Residential Boarding</option>
                         <option value="Overnight Stay">Overnight Stay</option>
-                        <option value="Dog Walking">Dog Walking</option>
-                        <option value="Cat Sitting">Cat Sitting</option>
+                        <option value="Live-In Care">Live-In Care</option>
+                        <option value="Extended Care Visit (Min 4h)">Extended Care Visit (Min 4h)</option>
                     </select>
+                </div>
+                <div class="p-4 bg-[#F4EFE6] border border-[#E8E2D5] text-[#2C2A29] rounded-xs space-y-1">
+                    <strong class="block uppercase tracking-widest text-[9px] text-[#8C8275]">Authorized Service Description:</strong>
+                    <span x-text="matchData.serviceDesc"></span>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -589,13 +687,34 @@
                     </div>
                 </div>
                 <div class="flex justify-between pt-4">
-                    <button @click="matchStep = 1" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
-                    <button @click="matchStep = 3" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
+                    <button @click="matchStep = 3" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="matchStep = 5" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
                 </div>
             </div>
 
-            <!-- Step 3: Budget & Strategic Credits -->
-            <div x-show="matchStep === 3" class="space-y-4 text-xs" style="display: none;">
+            <!-- Step 5: Sitter Preferences -->
+            <div x-show="matchStep === 5" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255]">Step 5. Sitter Preferences</p>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Preferred Experience Level</label>
+                    <select x-model="matchData.expLevel" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        <option value="Professional 5+ years">Professional 5+ years</option>
+                        <option value="Vet Tech / Medical">Vet tech / medical background</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Special Notes / Qualities</label>
+                    <textarea x-model="matchData.otherQualities" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]" rows="2"></textarea>
+                </div>
+                <div class="flex justify-between pt-4">
+                    <button @click="matchStep = 4" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="matchStep = 6" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Budget & Credits -->
+            <div x-show="matchStep === 6" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255]">Step 6. Budget & Strategic Credits</p>
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Nightly Budget Range</label>
                     <select x-model="matchData.budget" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
@@ -605,12 +724,34 @@
                         <option value="€150+">€150+ / night</option>
                     </select>
                 </div>
-                <div class="p-4 bg-[#F4EFE6] border border-[#E8E2D5] text-[#2C2A29] space-y-1">
-                    <strong>Strategic Credits Note:</strong> This request uses 2 credits from your Platinum balance (52 available). Zero surge fees apply.
+                <div class="p-4 bg-[#F4EFE6] border border-[#E8E2D5] text-[#2C2A29]">
+                    This request uses <strong>2 Strategic Credits</strong> from your Platinum balance (52 available). Zero hidden booking or surge fees.
                 </div>
                 <div class="flex justify-between pt-4">
-                    <button @click="matchStep = 2" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
-                    <button @click="showMatchModal = false; alert('Request successfully submitted to your concierge!')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Send Request</button>
+                    <button @click="matchStep = 5" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="matchStep = 7" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Step 7: Final Details & Submit -->
+            <div x-show="matchStep === 7" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255]">Step 7. Final Details & Submission</p>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">How did you hear about Zoélys?</label>
+                    <select x-model="matchData.hearAbout" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        <option value="Google">Google</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Friends & family">Friends & family</option>
+                        <option value="Journal">Journal / Blog</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Final Notes for Concierge</label>
+                    <textarea x-model="matchData.finalNotes" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]" rows="2"></textarea>
+                </div>
+                <div class="flex justify-between pt-4">
+                    <button @click="matchStep = 6" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="showMatchModal = false; alert('Your comprehensive matching request has been submitted to your concierge desk!')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Send Request &rarr;</button>
                 </div>
             </div>
         </div>
