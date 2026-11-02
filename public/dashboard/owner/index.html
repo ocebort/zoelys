@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoélys - Tableau de bord Propriétaire</title>
+    <!-- Tailwind CSS pour un design pro -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navbar -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center space-x-3">
+            <span class="text-2xl font-bold text-indigo-600">Zoélys</span>
+            <span class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-medium">Espace Propriétaire</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="user-email" class="text-sm text-slate-600">Chargement...</span>
+            <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800 font-medium">Déconnexion</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Colonne principale : Gestion des Animaux -->
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-900">Vos Animaux</h2>
+                    <button onclick="loadPets()" class="text-xs bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-100 transition">Actualiser</button>
+                </div>
+                
+                <!-- Liste des animaux dynamique -->
+                <div id="pets-container" class="space-y-4">
+                    <div class="text-sm text-slate-500 py-4 text-center">Chargement de vos animaux depuis la base de données...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne latérale : Plan et Crédits -->
+        <div class="space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 class="text-md font-bold text-slate-900 mb-2">Membership & Plan</h3>
+                <p class="text-xs text-slate-500 mb-4">Votre niveau vous donne accès aux gardiens vérifiés et au matching prioritaire.</p>
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 mb-4">
+                    <span class="text-xs text-slate-400 block uppercase tracking-wider">Current Tier</span>
+                    <span class="text-lg font-bold text-indigo-600">PLATINUM</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 class="text-md font-bold text-slate-900 mb-2">Crédits Stratégiques</h3>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-3xl font-extrabold text-amber-700">20</span>
+                    <span class="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded font-medium">Actifs</span>
+                </div>
+                <button onclick="topUp()" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-medium py-2.5 rounded-xl transition text-sm shadow-sm">
+                    Recharger des crédits
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script de récupération des données D1 -->
+    <script>
+        async function loadPets() {
+            const container = document.getElementById('pets-container');
+            try {
+                const response = await fetch('/api/owner/pets');
+                const data = await response.json();
+                
+                if (data.pets && data.pets.length > 0) {
+                    container.innerHTML = data.pets.map(pet => `
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <div>
+                                <h4 class="font-bold text-slate-800">${pet.name || 'Animal'}</h4>
+                                <p class="text-xs text-slate-500">${pet.breed || 'Race non spécifiée'} • ${pet.age || '?'} ans</p>
+                            </div>
+                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Vérifié</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `<p class="text-sm text-slate-500 text-center py-4">Aucun animal enregistré pour le moment.</p>`;
+                }
+            } catch (err) {
+                container.innerHTML = `<p class="text-sm text-red-500 text-center py-4">Erreur lors du chargement des données.</p>`;
+            }
+        }
+
+        function logout() {
+            alert("Déconnexion simulée.");
+        }
+
+        // Lancer le chargement au démarrage
+        loadPets();
+    </script>
+</body>
+</html>
