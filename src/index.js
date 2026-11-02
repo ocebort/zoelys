@@ -2,13 +2,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 1. Redirection / routage explicite pour le dashboard owner
-    if (url.pathname === '/dashboard/owner' || url.pathname === '/dashboard/owner/') {
-      const targetUrl = new URL('/dashboard/owner/index.html', request.url);
-      return env.ASSETS.fetch(new Request(targetUrl, request));
-    }
-
-    // 2. Route API pour récupérer les animaux du propriétaire
+    // 1. Route API pour récupérer les animaux du propriétaire
     if (url.pathname === '/api/owner/pets') {
       try {
         const { results } = await env.zoelys_db.prepare(
@@ -26,14 +20,14 @@ export default {
       }
     }
 
-    // 3. Route API générique
+    // 2. Route API générique
     if (url.pathname.startsWith('/api/')) {
       return new Response(JSON.stringify({ ok: true, service: 'zoelys' }), {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
-    // 4. Service des fichiers statiques du dossier public (avec fallback vers index.html général)
+    // 3. Cloudflare sert automatiquement les fichiers de 'public/' (dont /dashboard/owner/index.html)
     try {
       let response = await env.ASSETS.fetch(request);
       if (response.status === 404) {
