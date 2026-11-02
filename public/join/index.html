@@ -1,10 +1,9 @@
-cat << 'EOF' > public/join/index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys. Apply for Access.</title>
+  <title>Zoélys. Member Portal.</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +49,7 @@ cat << 'EOF' > public/join/index.html
       <form id="authForm" onsubmit="handleAuth(event)">
         <div class="form-group" id="nameGroup">
           <label class="form-label">Full Name</label>
-          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input" required>
+          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input">
         </div>
 
         <div class="form-group">
@@ -59,13 +58,13 @@ cat << 'EOF' > public/join/index.html
         </div>
 
         <div class="form-group" id="passGroup">
-          <label class="form-label" id="passLabel">Create Password</label>
+          <label class="form-label" id="passLabel">Password</label>
           <input type="password" id="authPass" placeholder="••••••••" required class="form-input">
         </div>
 
         <div class="form-group" id="confirmPassGroup">
           <label class="form-label">Confirm Password</label>
-          <input type="password" id="authPassConfirm" placeholder="••••••••" required class="form-input">
+          <input type="password" id="authPassConfirm" placeholder="••••••••" class="form-input">
         </div>
 
         <div class="form-group" id="tierGroup">
@@ -79,12 +78,6 @@ cat << 'EOF' > public/join/index.html
 
         <button type="submit" class="btn-auth" id="submitBtn">Register &amp; Continue &rarr;</button>
       </form>
-
-      <div id="verifyNotice" style="display: none; text-align: center; padding: 2rem 1rem;">
-        <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Check Your Inbox</h3>
-        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">We’ve sent a secure verification link to <strong id="sentEmailDisplay" style="color: #C1785A;"></strong>.</p>
-        <button class="btn-auth" onclick="toggleAuthMode()">Back to Sign In &rarr;</button>
-      </div>
 
       <div class="toggle-link" id="switchLink" onclick="toggleAuthMode()">
         Already have an account? <strong>Sign In Here</strong>
@@ -108,15 +101,16 @@ cat << 'EOF' > public/join/index.html
 
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
-      document.getElementById('authForm').style.display = 'block';
-      document.getElementById('verifyNotice').style.display = 'none';
+      document.getElementById('authForm').reset();
+      
+      document.getElementById('authTitle').innerHTML = isRegisterMode ? 'Apply for <em>Access</em>' : 'Welcome <em>Back</em>';
+      document.getElementById('authSub').innerText = isRegisterMode ? 'Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers.' : 'Sign in to access your confidential care roster and active concierge threads.';
 
       document.getElementById('nameGroup').style.display = isRegisterMode ? 'block' : 'none';
       document.getElementById('confirmPassGroup').style.display = isRegisterMode ? 'block' : 'none';
       document.getElementById('tierGroup').style.display = (isRegisterMode && selectedRole === 'owner') ? 'block' : 'none';
       document.getElementById('roleToggleBar').style.display = isRegisterMode ? 'grid' : 'none';
 
-      document.getElementById('passLabel').innerText = isRegisterMode ? 'Create Password' : 'Password';
       document.getElementById('submitBtn').innerText = isRegisterMode ? 'Register & Continue →' : 'Sign In to Portal →';
       document.getElementById('switchLink').innerHTML = isRegisterMode ? 'Already have an account? <strong>Sign In Here</strong>' : 'Need an account? <strong>Register Here</strong>';
     }
@@ -135,37 +129,51 @@ cat << 'EOF' > public/join/index.html
           alert('Password must be at least 8 characters long.');
           return;
         }
-
         if (password !== confirmPassword) {
           alert('Passwords do not match.');
           return;
         }
 
         try {
-          console.log('Sending registration request to /api/auth/register...');
           const res = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
           });
-
           const data = await res.json();
-          console.log('Registration Response:', data);
-
           if (data.success) {
-            document.getElementById('authForm').style.display = 'none';
-            document.getElementById('sentEmailDisplay').innerText = email;
-            document.getElementById('verifyNotice').style.display = 'block';
+            alert('Verification email sent! Please check your inbox.');
           } else {
-            alert('Registration Error: ' + (data.error || 'Registration failed.'));
+            alert('Error: ' + (data.error || 'Registration failed.'));
           }
         } catch (err) {
-          console.error('Fetch Error:', err);
-          alert('Network Error: Unable to reach /api/auth/register');
+          alert('Network Error during registration');
+        }
+      } else {
+        // --- LOGIN REQUEST ---
+        try {
+          console.log('Sending login request to /api/auth/login...');
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await res.json();
+          console.log('Login Response:', data);
+
+          if (data.success) {
+            alert('Successfully signed in as ' + data.user.full_name);
+            window.location.reload();
+          } else {
+            alert('Sign In Error: ' + (data.error || 'Invalid credentials'));
+          }
+        } catch (err) {
+          console.error('Login Error:', err);
+          alert('Network Error: Unable to reach /api/auth/login');
         }
       }
     }
   </script>
 </body>
 </html>
-EOF
