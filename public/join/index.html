@@ -460,7 +460,7 @@
         const tier = document.getElementById('authTier').value;
 
         try {
-          const res = await fetch('/api/auth/register', {
+          const res = await fetch("/api/auth/register", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
