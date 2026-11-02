@@ -16,24 +16,73 @@
     showEditPetModal: false,
     showEmergencyModal: false,
     showMatchModal: false,
+    showTimelineModal: false,
+    showAiGuideModal: false,
     editingPetIndex: null,
     pets: [
-        { name: 'Luna', breed: 'Golden Retriever', age: '3', weight: '28', microchip: '250269608472910', medical: 'Joint supplement daily' }
+        { 
+          name: 'Luna', 
+          breed: 'Golden Retriever', 
+          age: '3', 
+          weight: '28', 
+          microchip: '250269608472910', 
+          medicationType: 'Joint supplement & Daily vitamins',
+          medicationSchedule: 'Evening with dinner',
+          medicationDosage: '1 tablet (500mg)',
+          routineWalks: 'Morning (08:00) & Evening (19:00)',
+          routineFeeding: 'Strictly specified brand kibble + omega oil',
+          behaviorQuirks: 'Friendly with dogs, mild separation anxiety > 4 hours',
+          houseRules: 'No sofas, crate trained for sleeping' 
+        }
     ],
-    newPet: { name: '', breed: '', age: '', weight: '', microchip: '', medical: '' },
-    editPetData: { name: '', breed: '', age: '', weight: '', microchip: '', medical: '' },
+    newPet: { 
+        name: '', 
+        breed: '', 
+        age: '', 
+        weight: '', 
+        microchip: '', 
+        medicationType: '',
+        medicationSchedule: '',
+        medicationDosage: '',
+        routineWalks: '',
+        routineFeeding: '',
+        behaviorQuirks: '',
+        houseRules: '' 
+    },
+    editPetData: { 
+        name: '', 
+        breed: '', 
+        age: '', 
+        weight: '', 
+        microchip: '', 
+        medicationType: '',
+        medicationSchedule: '',
+        medicationDosage: '',
+        routineWalks: '',
+        routineFeeding: '',
+        behaviorQuirks: '',
+        houseRules: '' 
+    },
     emergencyDoc: 'signed_emergency_authorization_2026.pdf',
     creditBalance: 52,
     membershipTier: 'Platinum',
     membershipPrice: '€249 / month',
     membershipRollover: '120-day credit rollover window',
+    savedCards: [
+        { brand: 'Visa', last4: '4242', expiry: '08/28', default: true },
+        { brand: 'Mastercard', last4: '8810', expiry: '12/27', default: false }
+    ],
+    timelineEvents: [
+        { time: '15 minutes ago', title: 'Park Walk Completed (4.2 km)', desc: 'Superb leash discipline along the river path. High energy and playful mood.', photo: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80' },
+        { time: '3 hours ago', title: 'Feeding Confirmation', desc: 'Full bowl consumed. Added omega-3 joint supplement as specified in vault.', photo: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80' }
+    ],
     favorites: [
         { name: 'Sarah M.', rating: '4.98', location: 'Chiado, Lisbon', experience: '3 years with Zoélys' }
     ],
     addPet() {
         if(this.newPet.name) {
             this.pets.push({...this.newPet});
-            this.newPet = { name: '', breed: '', age: '', weight: '', microchip: '', medical: '' };
+            this.newPet = { name: '', breed: '', age: '', weight: '', microchip: '', medicationType: '', medicationSchedule: '', medicationDosage: '', routineWalks: '', routineFeeding: '', behaviorQuirks: '', houseRules: '' };
             this.showPetModal = false;
         }
     },
@@ -54,7 +103,7 @@
         }
     },
     requestInstantUpdate() {
-        alert('Instant check-in request sent to Sarah M. It will appear on the petsitter\'s live interface immediately.');
+        alert('Instant check-in request sent to Sarah M.');
     },
     removeFavorite(index) {
         this.favorites.splice(index, 1);
@@ -82,7 +131,7 @@
         <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Pet Profiles & Medical</button>
         <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Bookings & Sitter Overview</button>
         <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Safety & Protocols</button>
-        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits & Membership</button>
+        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits & Billing</button>
         <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Settings & GDPR</button>
     </nav>
 
@@ -96,14 +145,14 @@
                 <div class="space-y-2">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Active Stay Status</span>
                     <h2 class="text-3xl font-serif text-[#2C2A29]">Luna is currently with Sarah M.</h2>
-                    <p class="text-xs text-[#6C6255] tracking-wide">Care log updated 15 minutes ago • Walk track & feeding confirmation logged securely.</p>
+                    <p class="text-xs text-[#6C6255] tracking-wide">Care log updated 15 minutes ago • Walk track & photos logged securely.</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button @click="requestInstantUpdate()" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-5 py-3 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
                         Request Instant Update
                     </button>
-                    <button onclick="alert('Opening live timeline feed...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-5 py-3 hover:opacity-90 transition font-medium">
-                        View Timeline
+                    <button @click="showTimelineModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-5 py-3 hover:opacity-90 transition font-medium">
+                        View Full Timeline
                     </button>
                 </div>
             </div>
@@ -113,7 +162,7 @@
                 <div @click="showMatchModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 01</span>
                     <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Book a Stay →</h4>
-                    <p class="text-xs text-[#6C6255]">Open concierge intake & matching desk pre-filled with Luna's profile.</p>
+                    <p class="text-xs text-[#6C6255]">Open concierge intake desk pre-filled with Luna's profile.</p>
                 </div>
                 <div @click="showPetModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 02</span>
@@ -127,25 +176,23 @@
                 </div>
             </div>
 
-            <!-- Timeline Care Feed -->
+            <!-- Timeline Care Feed Preview with Pictures -->
             <div class="space-y-6 border-t border-[#E8E2D5] pt-10">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-serif text-xl text-[#2C2A29]">Live Care Feed & Timeline</h3>
-                    <span class="text-xs text-[#8C8275]">Connected to Sitter App</span>
+                    <h3 class="font-serif text-xl text-[#2C2A29]">Live Care Feed & Photos</h3>
+                    <button @click="showTimelineModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">View Expanded Timeline →</button>
                 </div>
-                <div class="space-y-6 border-l border-[#E8E2D5] pl-6 ml-2">
-                    <div class="space-y-1 relative">
-                        <span class="absolute -left-[31px] top-1 w-2.5 h-2.5 bg-[#2C2A29] rounded-full"></span>
-                        <div class="text-[10px] uppercase tracking-widest text-[#8C8275]">15 minutes ago</div>
-                        <h4 class="font-serif text-base text-[#2C2A29]">Park Walk Completed (4.2 km)</h4>
-                        <p class="text-xs text-[#6C6255]">Superb leash discipline along the river path. High energy and playful mood.</p>
-                    </div>
-                    <div class="space-y-1 relative">
-                        <span class="absolute -left-[31px] top-1 w-2.5 h-2.5 bg-[#8C8275] rounded-full"></span>
-                        <div class="text-[10px] uppercase tracking-widest text-[#8C8275]">3 hours ago</div>
-                        <h4 class="font-serif text-base text-[#2C2A29]">Feeding Confirmation</h4>
-                        <p class="text-xs text-[#6C6255]">Full bowl consumed. Added omega-3 joint supplement as specified in vault.</p>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <template x-for="event in timelineEvents">
+                        <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
+                            <img :src="event.photo" alt="Care photo" class="w-full h-48 object-cover border border-[#E8E2D5]">
+                            <div class="space-y-1">
+                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275]" x-text="event.time"></span>
+                                <h4 class="font-serif text-base text-[#2C2A29]" x-text="event.title"></h4>
+                                <p class="text-xs text-[#6C6255]" x-text="event.desc"></p>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -157,7 +204,10 @@
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Vault & Records</span>
                     <h2 class="text-3xl font-serif text-[#2C2A29]">Pet Profiles & Medical Records</h2>
                 </div>
-                <button @click="showPetModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Add New Pet</button>
+                <div class="flex items-center space-x-4">
+                    <button @click="showAiGuideModal = true" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Review AI Sitter Guide</button>
+                    <button @click="showPetModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Add New Pet</button>
+                </div>
             </div>
 
             <div class="space-y-10">
@@ -174,14 +224,19 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs pt-4">
-                            <div class="space-y-2">
-                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Medical Details</span>
+                            <div class="space-y-3">
+                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Detailed Medication Specs</span>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Type:</strong> <span x-text="pet.medicationType"></span></p>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Schedule:</strong> <span x-text="pet.medicationSchedule"></span></p>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Dosage:</strong> <span x-text="pet.medicationDosage"></span></p>
                                 <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Microchip:</strong> <span class="font-mono" x-text="pet.microchip"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Routine Medication:</strong> <span x-text="pet.medical"></span></p>
                             </div>
-                            <div class="space-y-2">
-                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Designated Veterinarian</span>
-                                <p class="text-[#2C2A29]">LisboaVet Emergency Clinic • Av. Infante Santo 42, Lisbon</p>
+                            <div class="space-y-3">
+                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Detailed Routine & Quirks</span>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Walks:</strong> <span x-text="pet.routineWalks"></span></p>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Feeding:</strong> <span x-text="pet.routineFeeding"></span></p>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Behavior:</strong> <span x-text="pet.behaviorQuirks"></span></p>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">House Rules:</strong> <span x-text="pet.houseRules"></span></p>
                             </div>
                         </div>
                     </div>
@@ -255,7 +310,7 @@
                     <p class="text-xs text-[#6C6255]">Upload legally binding veterinary treatment authorization forms signed by the owner.</p>
                     <div class="flex items-center justify-between border border-[#E8E2D5] p-4 bg-white max-w-lg">
                         <span class="text-xs font-mono text-[#2C2A29]" x-text="emergencyDoc"></span>
-                        <button onclick="alert('Document viewer opened.')" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">View / Replace</button>
+                        <button @click="showEmergencyModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">View / Replace</button>
                     </div>
                 </div>
 
@@ -269,8 +324,8 @@
         <!-- ================= TAB 5: WALLET & MEMBERSHIP ================= -->
         <div x-show="activeTab === 'wallet'" class="space-y-12" style="display: none;">
             <div class="border-b border-[#E8E2D5] pb-8">
-                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Membership & Credits</span>
-                <h2 class="text-3xl font-serif text-[#2C2A29]">Credits, Billing & Membership</h2>
+                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Membership & Billing</span>
+                <h2 class="text-3xl font-serif text-[#2C2A29]">Credits, Subscriptions & Payment Methods</h2>
             </div>
 
             <!-- Membership Tier Details -->
@@ -289,6 +344,25 @@
                     <div class="text-5xl font-serif text-[#2C2A29]"><span x-text="creditBalance"></span> <span class="text-sm font-sans uppercase tracking-widest text-[#8C8275]">Credits</span></div>
                     <p class="text-xs text-[#6C6255]">Shop for more credits to use towards priority bookings or expert care logs.</p>
                     <button onclick="alert('Redirecting to secure credit shop...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium mt-2">Shop More Credits</button>
+                </div>
+            </div>
+
+            <!-- Payment Methods Section -->
+            <div class="border-t border-[#E8E2D5] pt-12 space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-serif text-xl text-[#2C2A29]">Saved Payment Methods</h3>
+                    <button onclick="alert('Card addition modal opened.')" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">+ Add New Card</button>
+                </div>
+                <div class="space-y-4 max-w-xl">
+                    <template x-for="card in savedCards">
+                        <div class="border border-[#E8E2D5] bg-white p-4 flex justify-between items-center text-xs">
+                            <div class="space-y-1">
+                                <p class="font-serif text-sm text-[#2C2A29]" x-text="card.brand + ' ending in ' + card.last4"></p>
+                                <p class="text-[#8C8275]" x-text="'Expires ' + card.expiry"></p>
+                            </div>
+                            <span x-show="card.default" class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2 py-1">Default</span>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -313,42 +387,104 @@
 
     </main>
 
-    <!-- ================= MODAL: ADD A PET ================= -->
+    <!-- ================= MODAL: ADD A PET (WITH DROPDOWNS & SPECIFICS) ================= -->
     <div x-show="showPetModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
-        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-2xl w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Register a New Pet</h3>
+                <h3 class="font-serif text-xl text-[#2C2A29]">Register a New Pet & Detailed Specifications</h3>
                 <button @click="showPetModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
             </div>
             <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pet Name</label>
-                    <input type="text" x-model="newPet.name" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
-                </div>
                 <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pet Name</label>
+                        <input type="text" x-model="newPet.name" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
                     <div>
                         <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Breed</label>
-                        <input type="text" x-model="newPet.breed" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
-                    </div>
-                    <div>
-                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Age (Years)</label>
-                        <input type="text" x-model="newPet.age" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                        <input type="text" x-model="newPet.breed" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Age (Years)</label>
+                        <input type="text" x-model="newPet.age" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
                     <div>
                         <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Weight (kg)</label>
-                        <input type="text" x-model="newPet.weight" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                        <input type="text" x-model="newPet.weight" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                     </div>
                     <div>
                         <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Microchip Number</label>
-                        <input type="text" x-model="newPet.microchip" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                        <input type="text" x-model="newPet.microchip" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                     </div>
                 </div>
-                <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Routine Medication / Notes</label>
-                    <input type="text" x-model="newPet.medical" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+
+                <!-- Detailed Medication Dropdowns & Specifics -->
+                <div class="border-t border-[#E8E2D5] pt-4 space-y-4">
+                    <h4 class="font-serif text-sm text-[#2C2A29]">Medication Specifics</h4>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Medication Type</label>
+                            <select x-model="newPet.medicationType" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                                <option value="None">None</option>
+                                <option value="Joint supplement & Daily vitamins">Joint supplement & Daily vitamins</option>
+                                <option value="Allergy Treatment">Allergy Treatment</option>
+                                <option value="Custom Prescription">Custom Prescription</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Schedule Timing</label>
+                            <select x-model="newPet.medicationSchedule" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                                <option value="Morning with breakfast">Morning with breakfast</option>
+                                <option value="Evening with dinner">Evening with dinner</option>
+                                <option value="Twice daily">Twice daily</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Dosage Format</label>
+                            <select x-model="newPet.medicationDosage" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                                <option value="1 tablet (500mg)">1 tablet (500mg)</option>
+                                <option value="2 drops liquid">2 drops liquid</option>
+                                <option value="1 scoop powder">1 scoop powder</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Routine Dropdowns & Specifics -->
+                <div class="border-t border-[#E8E2D5] pt-4 space-y-4">
+                    <h4 class="font-serif text-sm text-[#2C2A29]">Routine & Behavioral Specifics</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Walk Routine</label>
+                            <select x-model="newPet.routineWalks" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                                <option value="Morning (08:00) & Evening (19:00)">Morning & Evening</option>
+                                <option value="Three times daily">Three times daily</option>
+                                <option value="High intensity active runs">High intensity active runs</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Feeding Protocol</label>
+                            <select x-model="newPet.routineFeeding" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                                <option value="Strictly specified brand kibble + omega oil">Strictly specified brand kibble + omega oil</option>
+                                <option value="Raw food diet (BARF)">Raw food diet (BARF)</option>
+                                <option value="Grain-free wet food">Grain-free wet food</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Behavior Quirks</label>
+                            <input type="text" x-model="newPet.behaviorQuirks" placeholder="e.g. Friendly, mild anxiety" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        </div>
+                        <div>
+                            <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">House Rules</label>
+                            <input type="text" x-model="newPet.houseRules" placeholder="e.g. No sofas, crate trained" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        </div>
+                    </div>
+                </div>
+
                 <button @click="addPet()" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Save to Medical Vault</button>
             </div>
         </div>
@@ -356,7 +492,7 @@
 
     <!-- ================= MODAL: EDIT A PET ================= -->
     <div x-show="showEditPetModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
-        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
                 <h3 class="font-serif text-xl text-[#2C2A29]">Edit Pet Profile</h3>
                 <button @click="showEditPetModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
@@ -364,31 +500,17 @@
             <div class="space-y-4 text-xs">
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pet Name</label>
-                    <input type="text" x-model="editPetData.name" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                    <input type="text" x-model="editPetData.name" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Breed</label>
-                        <input type="text" x-model="editPetData.breed" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                        <input type="text" x-model="editPetData.breed" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                     </div>
                     <div>
                         <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Age (Years)</label>
-                        <input type="text" x-model="editPetData.age" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                        <input type="text" x-model="editPetData.age" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                     </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Weight (kg)</label>
-                        <input type="text" x-model="editPetData.weight" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
-                    </div>
-                    <div>
-                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Microchip Number</label>
-                        <input type="text" x-model="editPetData.microchip" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
-                    </div>
-                </div>
-                <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Routine Medication / Notes</label>
-                    <input type="text" x-model="editPetData.medical" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
                 </div>
                 <button @click="updatePet()" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Save Changes</button>
             </div>
@@ -405,15 +527,11 @@
             <div class="space-y-4 text-xs">
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pre-authorized Limit (€)</label>
-                    <input type="text" value="300" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                    <input type="text" value="300" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                 </div>
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Upload Signed Authorization (PDF)</label>
                     <input type="file" @change="emergencyDoc = 'new_signed_auth.pdf'" class="w-full bg-white border border-[#E8E2D5] p-2 text-[#2C2A29]">
-                </div>
-                <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Secondary Contact Name & Phone</label>
-                    <input type="text" value="João Castro • +351 91 234 5678" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
                 </div>
                 <button @click="showEmergencyModal = false; alert('Emergency protocols and signed document updated successfully.')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Save Protocols</button>
             </div>
@@ -428,7 +546,7 @@
                 <button @click="showMatchModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
             </div>
             <div class="space-y-4 text-xs">
-                <p class="text-[#6C6255]">Your request is pre-filled with <strong class="text-[#2C2A29]">Luna's profile</strong>. No surge fees or hidden costs apply under your Platinum membership.</p>
+                <p class="text-[#6C6255]">Your request is pre-filled with <strong class="text-[#2C2A29]">Luna's profile</strong> under your Platinum membership.</p>
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Dates Required</label>
                     <input type="text" value="Nov 15, 2026 – Nov 20, 2026" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
@@ -438,6 +556,48 @@
                     <textarea class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]" rows="3">Joint supplement daily with dinner. High energy walk requirements.</textarea>
                 </div>
                 <button @click="showMatchModal = false; alert('Matching request successfully submitted to the Zoélys Concierge Desk!')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Submit to Concierge Desk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: EXPANDED TIMELINE ================= -->
+    <div x-show="showTimelineModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-2xl w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Expanded Live Timeline & Photo Feed</h3>
+                <button @click="showTimelineModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
+            </div>
+            <div class="space-y-6">
+                <template x-for="event in timelineEvents">
+                    <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
+                        <img :src="event.photo" alt="Care photo" class="w-full h-64 object-cover border border-[#E8E2D5]">
+                        <div class="space-y-1">
+                            <span class="text-[10px] uppercase tracking-widest text-[#8C8275]" x-text="event.time"></span>
+                            <h4 class="font-serif text-lg text-[#2C2A29]" x-text="event.title"></h4>
+                            <p class="text-xs text-[#6C6255]" x-text="event.desc"></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: AI GENERATED SITTER GUIDE REVIEW ================= -->
+    <div x-show="showAiGuideModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-2xl w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-[#2C2A29]">AI-Generated Sitter Guide Review</h3>
+                <button @click="showAiGuideModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
+            </div>
+            <div class="space-y-4 text-xs text-[#6C6255] leading-relaxed">
+                <p class="text-[#2C2A29] font-medium">This is the finalized briefing guide automatically synthesized from Luna's medical vault, medication schedules, and behavioral rules. It will be securely transmitted to Sarah M. upon stay activation.</p>
+                <div class="border border-[#E8E2D5] bg-white p-6 space-y-4 font-sans text-xs text-[#2C2A29]">
+                    <h4 class="font-serif text-lg border-b border-[#E8E2D5] pb-2">ZOÉLYS COMPREHENSIVE CARE BRIEF: LUNA</h4>
+                    <p><strong>1. Daily Pacing & Walks:</strong> Dual daily walks scheduled at 08:00 and 19:00 along designated secure routes. High energy release required.</p>
+                    <p><strong>2. Medication Protocol:</strong> Joint supplement (1 tablet, 500mg) administered strictly during evening feeding with designated kibble and omega oil.</p>
+                    <p><strong>3. Emergency Protocols:</strong> LisboaVet clinic fallback active. Pre-authorized medical limit set to €300.</p>
+                </div>
+                <button @click="showAiGuideModal = false; alert('AI Guide approved and locked for sitter transmission.')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Approve & Lock Guide</button>
             </div>
         </div>
     </div>
