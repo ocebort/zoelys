@@ -4,245 +4,286 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zoélys — Owner Dashboard</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js for clean tab switching -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body { background-color: #FDFBF7; color: #2C2A29; font-family: system-ui, -apple-system, sans-serif; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col" x-data="{ activeTab: 'overview' }">
+<body class="min-h-screen flex flex-col" x-data="{ 
+    activeTab: 'overview', 
+    showPetModal: false, 
+    showEmergencyModal: false,
+    pets: [{ name: 'Luna', breed: 'Golden Retriever', age: '3', weight: '28', microchip: '250269608472910', medical: 'Joint supplement daily' }],
+    newPet: { name: '', breed: '', age: '', weight: '', microchip: '', medical: '' },
+    addPet() {
+        if(this.newPet.name) {
+            this.pets.push({...this.newPet});
+            this.newPet = { name: '', breed: '', age: '', weight: '', microchip: '', medical: '' };
+            this.showPetModal = false;
+        }
+    }
+}">
 
-    <!-- Top Navigation (Matched to Zoélys artistic design) -->
-    <header class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 py-5 flex justify-between items-center sticky top-0 z-50">
+    <!-- Top Navigation -->
+    <header class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 py-5 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center space-x-12">
             <span class="text-xl font-serif tracking-widest text-[#2C2A29] uppercase">Zoélys</span>
             <span class="text-xs uppercase tracking-widest text-[#8C8275] font-medium border-l border-[#E8E2D5] pl-4">Owner Portal</span>
         </div>
         <div class="flex items-center space-x-8">
-            <span id="user-email" class="text-xs tracking-wider text-[#6C6255]">owner@zoelys.local</span>
+            <span class="text-xs tracking-wider text-[#6C6255]">owner@zoelys.local</span>
             <button onclick="alert('Signed out.')" class="text-xs uppercase tracking-widest text-[#2C2A29] hover:opacity-60 transition font-medium">Sign out</button>
         </div>
     </header>
 
-    <!-- Clean Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 flex space-x-10 overflow-x-auto">
         <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Overview</button>
         <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Pet Profiles & Medical</button>
         <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Bookings & Messages</button>
         <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Safety & Protocols</button>
-        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits & Billing</button>
+        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits & Membership</button>
         <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Settings & GDPR</button>
     </nav>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-10 space-y-12">
+    <main class="flex-1 max-w-6xl w-full mx-auto px-10 py-12 space-y-16">
 
         <!-- ================= TAB 1: OVERVIEW ================= -->
-        <div x-show="activeTab === 'overview'" class="space-y-10">
-            <!-- Status Banner -->
-            <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div x-show="activeTab === 'overview'" class="space-y-12">
+            <!-- Active Stay Banner -->
+            <div class="border-b border-[#E8E2D5] pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div class="space-y-2">
-                    <span class="text-[10px] uppercase tracking-widest bg-[#E8E2D5] text-[#2C2A29] px-2.5 py-1 font-semibold">Active Stay</span>
-                    <h2 class="text-2xl font-serif text-[#2C2A29]">Luna is currently with Sarah</h2>
-                    <p class="text-xs text-[#6C6255] tracking-wide">Care Log updated 15m ago • Walk track & feeding confirmation logged securely.</p>
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Active Stay Status</span>
+                    <h2 class="text-3xl font-serif text-[#2C2A29]">Luna is currently with Sarah M.</h2>
+                    <p class="text-xs text-[#6C6255] tracking-wide">Care log updated 15 minutes ago • Walk track & feeding confirmation logged securely.</p>
                 </div>
-                <button onclick="alert('Opening live sitter feed...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 hover:opacity-90 transition font-medium">
-                    View Live Feed
+                <button onclick="alert('Opening live timeline feed...')" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
+                    View Live Timeline
                 </button>
             </div>
 
             <!-- Quick Actions -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onclick="alert('Opening booking workflow...')" class="bg-white border border-[#E8E2D5] p-6 cursor-pointer hover:border-[#2C2A29] transition space-y-2">
-                    <span class="text-xs uppercase tracking-widest text-[#8C8275]">Action</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29]">Book a Stay</h4>
-                    <p class="text-xs text-[#6C6255]">Schedule verified high-trust care</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <a href="/find-a-sitter/?prefill=luna" class="group space-y-2 block border-t border-[#E8E2D5] pt-4">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 01</span>
+                    <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Book a Stay →</h4>
+                    <p class="text-xs text-[#6C6255]">Instant booking pre-filled with Luna's profile preferences.</p>
+                </a>
+                <div @click="showPetModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 02</span>
+                    <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Add a Pet →</h4>
+                    <p class="text-xs text-[#6C6255]">Register a new companion into your medical vault.</p>
                 </div>
-                <div onclick="alert('Opening add pet workflow...')" class="bg-white border border-[#E8E2D5] p-6 cursor-pointer hover:border-[#2C2A29] transition space-y-2">
-                    <span class="text-xs uppercase tracking-widest text-[#8C8275]">Action</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29]">Add a Pet</h4>
-                    <p class="text-xs text-[#6C6255]">Register a new profile to vault</p>
-                </div>
-                <div onclick="alert('Emergency instructions generated.')" class="bg-white border border-[#E8E2D5] p-6 cursor-pointer hover:border-[#2C2A29] transition space-y-2">
-                    <span class="text-xs uppercase tracking-widest text-[#8C8275]">Action</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29]">Emergency Protocols</h4>
-                    <p class="text-xs text-[#6C6255]">Share vital instructions instantly</p>
+                <div @click="showEmergencyModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 03</span>
+                    <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Emergency Protocol →</h4>
+                    <p class="text-xs text-[#6C6255]">Configure veterinarian limits and emergency contacts.</p>
                 </div>
             </div>
 
-            <!-- Feed & Wallet Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2 bg-white border border-[#E8E2D5] p-8 space-y-6">
-                    <h3 class="font-serif text-lg text-[#2C2A29] border-b border-[#E8E2D5] pb-4">Real-Time Care Feed</h3>
-                    <div class="space-y-4">
-                        <div class="border-b border-[#F4EFE6] pb-4 space-y-1">
-                            <div class="flex justify-between text-xs text-[#8C8275]"><span>Park Walk Completed</span><span>15 mins ago</span></div>
-                            <p class="text-xs text-[#2C2A29]">4.2 km walk completed along the river path. Excellent leash discipline.</p>
-                        </div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-xs text-[#8C8275]"><span>Feeding Confirmation</span><span>3 hours ago</span></div>
-                            <p class="text-xs text-[#2C2A29]">Full bowl consumed with omega-3 supplement as specified.</p>
-                        </div>
+            <!-- Timeline Care Feed -->
+            <div class="space-y-6 border-t border-[#E8E2D5] pt-10">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Live Care Feed & Timeline</h3>
+                <div class="space-y-6 border-l border-[#E8E2D5] pl-6 ml-2">
+                    <div class="space-y-1 relative">
+                        <span class="absolute -left-[31px] top-1 w-2.5 h-2.5 bg-[#2C2A29] rounded-full"></span>
+                        <div class="text-[10px] uppercase tracking-widest text-[#8C8275]">15 minutes ago</div>
+                        <h4 class="font-serif text-base text-[#2C2A29]">Park Walk Completed (4.2 km)</h4>
+                        <p class="text-xs text-[#6C6255]">Superb leash discipline along the river path. High energy and playful mood.</p>
                     </div>
-                </div>
-
-                <div class="bg-white border border-[#E8E2D5] p-8 flex flex-col justify-between space-y-6">
-                    <div class="space-y-4">
-                        <h3 class="font-serif text-lg text-[#2C2A29]">Strategic Credits</h3>
-                        <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-6 space-y-1">
-                            <span class="text-3xl font-serif text-[#2C2A29]">20</span>
-                            <span class="text-[10px] uppercase tracking-widest text-[#6C6255] block">Available Balance</span>
-                        </div>
+                    <div class="space-y-1 relative">
+                        <span class="absolute -left-[31px] top-1 w-2.5 h-2.5 bg-[#8C8275] rounded-full"></span>
+                        <div class="text-[10px] uppercase tracking-widest text-[#8C8275]">3 hours ago</div>
+                        <h4 class="font-serif text-base text-[#2C2A29]">Feeding Confirmation</h4>
+                        <p class="text-xs text-[#6C6255]">Full bowl consumed. Added omega-3 joint supplement as specified in vault.</p>
                     </div>
-                    <button @click="activeTab = 'wallet'" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3 font-medium">Manage Wallet</button>
                 </div>
             </div>
         </div>
 
         <!-- ================= TAB 2: PET PROFILES ================= -->
-        <div x-show="activeTab === 'pets'" class="space-y-8" style="display: none;">
-            <div class="bg-white border border-[#E8E2D5] p-8 flex justify-between items-center">
+        <div x-show="activeTab === 'pets'" class="space-y-12" style="display: none;">
+            <div class="flex justify-between items-end border-b border-[#E8E2D5] pb-8">
                 <div>
-                    <h2 class="font-serif text-2xl text-[#2C2A29]">Pet Profiles & Medical Vault</h2>
-                    <p class="text-xs text-[#6C6255] mt-1">Structured medical records and care directives for sitters.</p>
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Vault & Records</span>
+                    <h2 class="text-3xl font-serif text-[#2C2A29]">Pet Profiles & Medical Records</h2>
                 </div>
-                <button onclick="alert('Downloading PDF...')" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">Download Care Summary (PDF)</button>
+                <button @click="showPetModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Add New Pet</button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white border border-[#E8E2D5] p-8 space-y-6">
-                    <div class="border-b border-[#E8E2D5] pb-4 flex justify-between items-start">
-                        <div>
-                            <h3 class="font-serif text-xl text-[#2C2A29]">Luna</h3>
-                            <p class="text-xs text-[#6C6255] mt-1">Golden Retriever • 3 years • Spayed • 28 kg</p>
+            <div class="space-y-10">
+                <template x-for="pet in pets">
+                    <div class="border-b border-[#E8E2D5] pb-10 space-y-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-serif text-2xl text-[#2C2A29]" x-text="pet.name"></h3>
+                                <p class="text-xs text-[#6C6255] mt-1" x-text="pet.breed + ' • ' + pet.age + ' years • ' + pet.weight + ' kg'"></p>
+                            </div>
+                            <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-3 py-1 font-medium">High-Trust Verified</span>
                         </div>
-                        <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1">Verified</span>
-                    </div>
-                    <div class="space-y-3 text-xs">
-                        <div class="flex justify-between border-b border-[#F4EFE6] pb-2"><span class="text-[#8C8275]">Microchip :</span><span class="font-mono text-[#2C2A29]">250269608472910</span></div>
-                        <div class="flex justify-between border-b border-[#F4EFE6] pb-2"><span class="text-[#8C8275]">Vaccination :</span><span class="text-[#2C2A29]">Up to Date (Valid Nov 2027)</span></div>
-                        <div class="flex justify-between border-b border-[#F4EFE6] pb-2"><span class="text-[#8C8275]">Allergies :</span><span class="text-[#2C2A29]">Gluten-free / Poultry sensitive</span></div>
-                        <div class="flex justify-between"><span class="text-[#8C8275]">Medication :</span><span class="text-[#2C2A29]">Joint supplement (1 daily)</span></div>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-[#E8E2D5] p-8 space-y-6">
-                    <div class="border-b border-[#E8E2D5] pb-4">
-                        <h3 class="font-serif text-xl text-[#2C2A29]">Behavior & Routines</h3>
-                        <p class="text-xs text-[#6C6255] mt-1">Sitter briefing guidelines.</p>
-                    </div>
-                    <div class="space-y-4 text-xs">
-                        <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-4 space-y-1">
-                            <span class="uppercase tracking-widest text-[10px] text-[#8C8275] block font-semibold">Daily Schedule</span>
-                            <p class="text-[#2C2A29]">Walks at 08:00 AM & 07:00 PM. Feeding at 08:30 AM & 08:00 PM.</p>
-                        </div>
-                        <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-4 space-y-1">
-                            <span class="uppercase tracking-widest text-[10px] text-[#8C8275] block font-semibold">House Rules</span>
-                            <p class="text-[#2C2A29]">Not allowed on sofas or beds. Crate trained for nighttime sleeping.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs pt-4">
+                            <div class="space-y-2">
+                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Medical Details</span>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Microchip:</strong> <span class="font-mono" x-text="pet.microchip"></span></p>
+                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Routine Medication:</strong> <span x-text="pet.medical"></span></p>
+                            </div>
+                            <div class="space-y-2">
+                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Designated Veterinarian</span>
+                                <p class="text-[#2C2A29]">LisboaVet Emergency Clinic • Av. Infante Santo 42, Lisbon</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </template>
             </div>
         </div>
 
         <!-- ================= TAB 3: BOOKINGS ================= -->
-        <div x-show="activeTab === 'bookings'" class="space-y-8" style="display: none;">
-            <div class="bg-white border border-[#E8E2D5] p-8 space-y-6">
-                <div class="border-b border-[#E8E2D5] pb-4 flex justify-between items-center">
-                    <h2 class="font-serif text-2xl text-[#2C2A29]">Bookings & Messages Hub</h2>
-                    <div class="flex space-x-2 text-xs">
-                        <button class="bg-[#2C2A29] text-[#FDFBF7] px-4 py-2 uppercase tracking-widest">Active (1)</button>
-                        <button class="border border-[#E8E2D5] text-[#6C6255] px-4 py-2 uppercase tracking-widest">History</button>
-                    </div>
-                </div>
-                <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div x-show="activeTab === 'bookings'" class="space-y-12" style="display: none;">
+            <div class="border-b border-[#E8E2D5] pb-8">
+                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Communication Hub</span>
+                <h2 class="text-3xl font-serif text-[#2C2A29]">Bookings & Secure Messages</h2>
+            </div>
+            <div class="space-y-6">
+                <div class="border-t border-b border-[#E8E2D5] py-6 flex justify-between items-center">
                     <div class="space-y-1">
-                        <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2 py-0.5">Active Stay</span>
-                        <h4 class="font-serif text-lg text-[#2C2A29] mt-2">Residential Boarding with Sarah M.</h4>
+                        <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Active Stay</span>
+                        <h4 class="font-serif text-lg text-[#2C2A29]">Residential Boarding with Sarah M.</h4>
                         <p class="text-xs text-[#6C6255]">Nov 01, 2026 – Nov 05, 2026 • 4 nights</p>
                     </div>
-                    <button onclick="alert('Opening chat...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Open Secure Chat</button>
+                    <button onclick="alert('Opening secure chat...')" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Open Chat</button>
                 </div>
             </div>
         </div>
 
         <!-- ================= TAB 4: SAFETY ================= -->
-        <div x-show="activeTab === 'safety'" class="space-y-8" style="display: none;">
-            <div class="bg-white border border-[#E8E2D5] p-8 space-y-6">
-                <div>
-                    <h2 class="font-serif text-2xl text-[#2C2A29]">Safety & Emergency Protocols</h2>
-                    <p class="text-xs text-[#6C6255] mt-1">Pre-authorized medical limits and emergency contacts.</p>
+        <div x-show="activeTab === 'safety'" class="space-y-12" style="display: none;">
+            <div class="border-b border-[#E8E2D5] pb-8">
+                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Emergency Protocols</span>
+                <h2 class="text-3xl font-serif text-[#2C2A29]">Safety & Medical Authorizations</h2>
+            </div>
+            <div class="space-y-6">
+                <div class="space-y-3">
+                    <h4 class="font-serif text-xl text-[#2C2A29]">Veterinary Care Pre-Authorization Limit</h4>
+                    <p class="text-xs text-[#6C6255] max-w-xl leading-relaxed">Maximum pre-approved expenditure for emergency care if you cannot be reached during an active stay.</p>
+                    <div class="text-4xl font-serif text-[#2C2A29] pt-2">€300 <span class="text-xs font-sans uppercase tracking-widest text-[#8C8275] font-normal">/ Incident limit</span></div>
                 </div>
-                <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-6 space-y-3">
-                    <h4 class="font-serif text-lg text-[#2C2A29]">Emergency Medical Pre-Authorization</h4>
-                    <p class="text-xs text-[#6C6255] leading-relaxed">Authorized veterinary care limit if unreachable:</p>
-                    <span class="text-3xl font-serif text-[#2C2A29] block">€300</span>
+                <div class="border-t border-[#E8E2D5] pt-6 space-y-2">
+                    <h4 class="font-serif text-lg text-[#2C2A29]">Secondary Emergency Contact</h4>
+                    <p class="text-xs text-[#6C6255]">João Castro (Family Member) • +351 91 234 5678</p>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 5: WALLET ================= -->
-        <div x-show="activeTab === 'wallet'" class="space-y-8" style="display: none;">
-            <div class="bg-white border border-[#E8E2D5] p-8 space-y-6">
-                <div>
-                    <h2 class="font-serif text-2xl text-[#2C2A29]">Credits & Billing</h2>
-                    <p class="text-xs text-[#6C6255] mt-1">Manage credits and download invoices.</p>
+        <!-- ================= TAB 5: WALLET & MEMBERSHIP ================= -->
+        <div x-show="activeTab === 'wallet'" class="space-y-12" style="display: none;">
+            <div class="border-b border-[#E8E2D5] pb-8">
+                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Membership & Credits</span>
+                <h2 class="text-3xl font-serif text-[#2C2A29]">Credits, Billing & Membership</h2>
+            </div>
+
+            <!-- Membership Tier Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-4">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Current Membership Tier</span>
+                    <h3 class="text-2xl font-serif text-[#2C2A29]">Platinum High-Trust</h3>
+                    <p class="text-xs text-[#6C6255] leading-relaxed">Selected during your initial registration. Provides priority matching, verified sitter access, and comprehensive insurance coverage.</p>
+                    <div class="pt-4">
+                        <button onclick="if(confirm('Warning: Canceling your membership will permanently forfeit all unused Zoélys credits remaining in your balance. Proceed?')) alert('Membership cancellation registered.')" class="text-xs uppercase tracking-widest text-red-800 hover:opacity-75 font-medium">Cancel Membership</button>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-8 flex flex-col justify-between space-y-6">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Balance</span>
-                            <span class="text-4xl font-serif text-[#2C2A29] mt-2 block">20 Credits</span>
-                        </div>
-                        <button onclick="alert('Top up...')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3 font-medium">Top Up Credits</button>
-                    </div>
-                    <div class="bg-[#F4EFE6] border border-[#E8E2D5] p-8 flex flex-col justify-between space-y-6">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Invoices</span>
-                            <p class="text-xs text-[#6C6255] mt-2">Download VAT-compliant receipts.</p>
-                        </div>
-                        <button onclick="alert('Downloading...')" class="w-full border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest py-3 font-medium">Download VAT Receipts (PDF)</button>
-                    </div>
+
+                <div class="space-y-4 border-l border-[#E8E2D5] pl-12">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Strategic Credits Balance</span>
+                    <div class="text-5xl font-serif text-[#2C2A29]">20 <span class="text-sm font-sans uppercase tracking-widest text-[#8C8275]">Credits</span></div>
+                    <p class="text-xs text-[#6C6255]">Shop for more credits to use towards priority bookings or expert care logs.</p>
+                    <button onclick="alert('Redirecting to secure credit shop...')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium mt-2">Shop More Credits</button>
                 </div>
             </div>
         </div>
 
         <!-- ================= TAB 6: SETTINGS ================= -->
-        <div x-show="activeTab === 'settings'" class="space-y-8" style="display: none;">
-            <div class="bg-white border border-[#E8E2D5] p-8 space-y-8">
-                <div>
-                    <h2 class="font-serif text-2xl text-[#2C2A29]">Settings & GDPR Governance</h2>
-                    <p class="text-xs text-[#6C6255] mt-1">Data privacy and account lifecycle management.</p>
-                </div>
-                <div class="border-t border-[#E8E2D5] pt-6 space-y-3">
+        <div x-show="activeTab === 'settings'" class="space-y-12" style="display: none;">
+            <div class="border-b border-[#E8E2D5] pb-8">
+                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Governance & Privacy</span>
+                <h2 class="text-3xl font-serif text-[#2C2A29]">Settings & GDPR Compliance</h2>
+            </div>
+            <div class="space-y-8">
+                <div class="space-y-3">
                     <h4 class="font-serif text-lg text-[#2C2A29]">GDPR Data Portability</h4>
-                    <button onclick="alert('Exporting data...')" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium">Export Personal Data (JSON / PDF)</button>
+                    <button onclick="alert('Generating JSON/PDF archive of your personal data...')" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium">Export Personal Data</button>
                 </div>
-                <div class="border-t border-[#E8E2D5] pt-6 space-y-3">
+                <div class="border-t border-[#E8E2D5] pt-8 space-y-3">
                     <h4 class="font-serif text-lg text-red-900">Danger Zone</h4>
-                    <button onclick="if(confirm('Delete account?')) alert('Requested.')" class="bg-red-900 text-white text-xs uppercase tracking-widest px-6 py-3 font-medium">Permanently Delete Account</button>
+                    <button onclick="if(confirm('Are you sure you want to permanently delete your account?')) alert('Account deletion requested.')" class="bg-red-900 text-white text-xs uppercase tracking-widest px-6 py-3 font-medium">Permanently Delete Account</button>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Script -->
-    <script>
-        async function fetchOwnerData() {
-            try {
-                const response = await fetch('/api/owner/pets');
-                const data = await response.json();
-                if (data.pets && data.pets.length > 0) {
-                    console.log("Pets loaded:", data.pets);
-                }
-            } catch (err) {
-                console.log("Using default fallback.");
-            }
-        }
-        fetchOwnerData();
-    </script>
+    <!-- ================= MODAL: ADD A PET ================= -->
+    <div x-show="showPetModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Register a New Pet</h3>
+                <button @click="showPetModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pet Name</label>
+                    <input type="text" x-model="newPet.name" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Breed</label>
+                        <input type="text" x-model="newPet.breed" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                    </div>
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Age (Years)</label>
+                        <input type="text" x-model="newPet.age" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Weight (kg)</label>
+                        <input type="text" x-model="newPet.weight" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                    </div>
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Microchip Number</label>
+                        <input type="text" x-model="newPet.microchip" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                    </div>
+                </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Routine Medication / Notes</label>
+                    <input type="text" x-model="newPet.medical" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                </div>
+                <button @click="addPet()" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Save to Medical Vault</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: EMERGENCY PROTOCOL ================= -->
+    <div x-show="showEmergencyModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-md w-full space-y-6 shadow-xl">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Emergency Protocols</h3>
+                <button @click="showEmergencyModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Pre-authorized Limit (€)</label>
+                    <input type="text" value="300" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                </div>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Secondary Contact Name & Phone</label>
+                    <input type="text" value="João Castro • +351 91 234 5678" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29] focus:outline-none focus:border-[#2C2A29]">
+                </div>
+                <button @click="showEmergencyModal = false; alert('Emergency protocols updated successfully.')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Update Protocols</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
