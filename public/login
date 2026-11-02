@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — Zoélys</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #FAF8F5;
+      color: #191512;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: #FFFFFF;
+      border: 1px solid #EBE6DF;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 24px rgba(25, 21, 18, 0.04);
+      box-sizing: border-box;
+    }
+    h1 {
+      font-family: "Baskerville", "Garamond", serif;
+      font-size: 28px;
+      font-weight: normal;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    p.subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    .field-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      color: #666;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #EBE6DF;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #FAF8F5;
+      color: #191512;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #191512;
+      background: #FFFFFF;
+    }
+    button.submit-btn {
+      width: 100%;
+      background: #191512;
+      color: #FAF8F5;
+      border: none;
+      padding: 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+    button.submit-btn:hover {
+      opacity: 0.9;
+    }
+    .error-msg {
+      color: #B33A3A;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .footer-link {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+    }
+    .footer-link a {
+      color: #191512;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sign In</h1>
+    <p class="subtitle">Welcome back to Zoélys. Enter your details to access your account.</p>
+    
+    <div id="errorAlert" class="error-msg"></div>
+
+    <form id="loginForm">
+      <div class="field-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required placeholder="oceane@example.com">
+      </div>
+
+      <div class="field-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="••••••••">
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Sign In &rarr;</button>
+    </form>
+
+    <div class="footer-link">
+      Don't have an account yet? <a href="/join">Create one</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorAlert = document.getElementById('errorAlert');
+      const submitBtn = document.getElementById('submitBtn');
+      
+      errorAlert.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in...';
+
+      const payload = {
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value
+      };
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Failed to sign in.');
+        }
+
+        // Redirection vers le dashboard après connexion réussie
+        window.location.href = '/dashboard';
+
+      } catch (err) {
+        errorAlert.textContent = err.message;
+        errorAlert.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In \u2192';
+      }
+    });
+  </script>
+</body>
+</html>
