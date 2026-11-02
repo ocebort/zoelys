@@ -1,3 +1,4 @@
+cat << 'EOF' > public/join/index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,253 +12,62 @@
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    /* ============ SMOOTH SCROLL REVEAL ANIMATIONS ============ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(35px);
-      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform;
-    }
+    .auth-hero { text-align: center; padding: 5rem 2rem 2rem; max-width: 800px; margin: 0 auto; }
+    .auth-hero .eyebrow { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent, #C1785A); font-weight: 600; margin-bottom: 0.8rem; display: block; }
+    .auth-hero h1 { font-family: var(--font-serif, 'Cormorant Garamond', serif); font-weight: 400; font-size: clamp(2.6rem, 4.5vw, 3.8rem); line-height: 1.1; margin-bottom: 1.2rem; color: var(--ink, #191512); }
+    .auth-hero h1 em { font-style: italic; color: var(--accent, #C1785A); }
+    .auth-hero p { color: var(--ink-muted, #666); font-size: 1rem; font-weight: 300; line-height: 1.8; max-width: 55ch; margin: 0 auto; }
 
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    main.container { max-width: 520px; width: 100%; margin: 0 auto 6rem auto; padding: 0 1.5rem; }
+    .auth-card { background: var(--bg-cream-soft, #FAF8F5); border: 1px solid var(--hairline, #EBE6DF); border-radius: 16px; padding: 3.2rem 2.8rem; box-shadow: 0 24px 48px -28px rgba(25, 21, 18, 0.12); }
+    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #F0EAE0; padding: 0.35rem; border-radius: 10px; margin-bottom: 2rem; border: 1px solid var(--hairline, #EBE6DF); }
+    .role-btn { border: none; background: transparent; padding: 0.8rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 8px; color: var(--ink-muted, #666); }
+    .role-btn.active { background: var(--ink, #191512); color: #FAF8F5; box-shadow: 0 4px 12px rgba(25, 21, 18, 0.1); }
 
-    /* ============ PAGE HERO ============ */
-    .auth-hero {
-      text-align: center;
-      padding: 6rem 2rem 3rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .auth-hero .eyebrow {
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
-      margin-bottom: 0.8rem;
-      display: block;
-    }
-
-    .auth-hero h1 {
-      font-family: var(--font-serif);
-      font-weight: 400;
-      font-size: clamp(2.6rem, 4.5vw, 3.8rem);
-      line-height: 1.1;
-      letter-spacing: -0.015em;
-      margin-bottom: 1.2rem;
-      color: var(--ink);
-    }
-
-    .auth-hero h1 em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    .auth-hero p {
-      color: var(--ink-muted);
-      font-size: 1rem;
-      font-weight: 300;
-      line-height: 1.8;
-      max-width: 55ch;
-      margin: 0 auto;
-    }
-
-    /* ============ CONTAINER & AUTH CARD ============ */
-    main.container {
-      max-width: 520px;
-      width: 100%;
-      margin: 0 auto 6rem auto;
-      padding: 0 1.5rem;
-    }
-
-    .auth-card {
-      background: var(--bg-cream-soft);
-      border: 1px solid var(--hairline);
-      border-radius: 16px;
-      padding: 3.2rem 2.8rem;
-      box-shadow: 0 24px 48px -28px rgba(25, 21, 18, 0.12);
-    }
-
-    .role-toggle {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: #F0EAE0;
-      padding: 0.35rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--hairline);
-    }
-
-    .role-btn {
-      border: none;
-      background: transparent;
-      padding: 0.8rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 8px;
-      color: var(--ink-muted);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .role-btn.active {
-      background: var(--ink);
-      color: var(--bg-cream);
-      box-shadow: 0 4px 12px rgba(25, 21, 18, 0.1);
-    }
-
-    .form-group {
-      margin-bottom: 1.4rem;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      color: var(--ink);
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 0.95rem 1.1rem;
-      border-radius: 8px;
-      border: 1px solid var(--hairline);
-      font-family: var(--font-sans);
-      background: var(--bg-card, #FFFFFF);
-      font-size: 0.9rem;
-      box-sizing: border-box;
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(193, 120, 90, 0.12);
-    }
-
-    .legal-notice {
-      font-size: 0.76rem;
-      color: var(--ink-muted);
-      line-height: 1.6;
-      font-weight: 300;
-      margin: 1.2rem 0 1.5rem;
-      padding: 0.8rem 1rem;
-      background: rgba(193, 120, 90, 0.04);
-      border-left: 2px solid var(--accent);
-      border-radius: 0 6px 6px 0;
-    }
-
-    .btn-auth {
-      background: var(--ink);
-      color: var(--bg-cream);
-      border: none;
-      padding: 1.05rem;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 0.5rem;
-      transition: background 0.35s ease, transform 0.35s ease;
-    }
-
-    .btn-auth:hover {
-      background: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .toggle-link {
-      text-align: center;
-      font-size: 0.82rem;
-      color: var(--ink-muted);
-      margin-top: 1.8rem;
-      cursor: pointer;
-    }
-
-    .toggle-link strong {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* Verification Notice Box */
-    .verify-box {
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-
-    .verify-box h3 {
-      font-family: var(--font-serif);
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: var(--ink);
-    }
-
-    .verify-box p {
-      color: var(--ink-muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
-      font-weight: 300;
-      margin-bottom: 1.5rem;
-    }
+    .form-group { margin-bottom: 1.4rem; }
+    .form-label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--ink, #191512); }
+    .form-input { width: 100%; padding: 0.95rem 1.1rem; border-radius: 8px; border: 1px solid var(--hairline, #EBE6DF); font-family: sans-serif; background: #FFFFFF; font-size: 0.9rem; box-sizing: border-box; color: var(--ink, #191512); outline: none; }
+    .btn-auth { background: var(--ink, #191512); color: #FAF8F5; border: none; padding: 1.05rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; width: 100%; margin-top: 0.5rem; }
+    .toggle-link { text-align: center; font-size: 0.82rem; color: var(--ink-muted, #666); margin-top: 1.8rem; cursor: pointer; }
+    .toggle-link strong { color: var(--accent, #C1785A); font-weight: 600; }
   </style>
 </head>
 <body>
 
-  <!-- HERO SECTION -->
   <div class="auth-hero">
-    <span class="eyebrow  ">Member Portal</span>
-    <h1 class=" " id="authTitle">Apply for <em>Access</em></h1>
-    <p class=" " id="authSub">Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers. Choose your role below to begin.</p>
+    <span class="eyebrow">Member Portal</span>
+    <h1 id="authTitle">Apply for <em>Access</em></h1>
+    <p id="authSub">Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers.</p>
   </div>
 
   <main class="container">
-    <div class="auth-card  " id="authCard">
-      
-      <!-- ROLE SELECTOR -->
+    <div class="auth-card" id="authCard">
       <div class="role-toggle" id="roleToggleBar">
-        <button type="button" class="role-btn active" onclick="setRole('owner', this)">Pet Parent</button>
-        <button type="button" class="role-btn" onclick="setRole('sitter', this)">Pet Sitter</button>
+        <button type="button" class="role-btn active" id="btnOwner" onclick="setRole('owner')">Pet Parent</button>
+        <button type="button" class="role-btn" id="btnSitter" onclick="setRole('sitter')">Pet Sitter</button>
       </div>
 
       <form id="authForm" onsubmit="handleAuth(event)">
-        
-        <!-- FULL NAME -->
         <div class="form-group" id="nameGroup">
           <label class="form-label">Full Name</label>
           <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input" required>
         </div>
 
-        <!-- EMAIL -->
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <input type="email" id="authEmail" placeholder="ocebort@gmail.com" required class="form-input">
         </div>
 
-        <!-- CREATE PASSWORD -->
         <div class="form-group" id="passGroup">
           <label class="form-label" id="passLabel">Create Password</label>
           <input type="password" id="authPass" placeholder="••••••••" required class="form-input">
         </div>
 
-        <!-- CONFIRM PASSWORD (REGISTRATION ONLY) -->
         <div class="form-group" id="confirmPassGroup">
           <label class="form-label">Confirm Password</label>
           <input type="password" id="authPassConfirm" placeholder="••••••••" required class="form-input">
         </div>
 
-        <!-- PET PARENT TIER SELECTION (REGISTRATION ONLY) -->
         <div class="form-group" id="tierGroup">
           <label class="form-label">Select Membership Tier</label>
           <select id="authTier" class="form-input">
@@ -267,183 +77,59 @@
           </select>
         </div>
 
-        <!-- SITTER VETTING AUTHORIZATION ID (LOGIN ONLY FOR APPROVED SITTERS) -->
-        <div class="form-group" id="vettingGroup" style="display: none;">
-          <label class="form-label" style="color: var(--accent);">Zoélys Vetting Authorization ID *</label>
-          <input type="text" id="authVettingCode" placeholder="e.g. ZOELYS-VET-2026" class="form-input" style="border: 1.5px solid var(--accent); background: #FFF8F6; font-weight: 600; text-transform: uppercase;">
-          <span style="font-size: 0.72rem; color: var(--ink-muted); display: block; margin-top: 0.35rem;">
-            Issued by Zoélys Concierge upon passing active roster vetting.
-          </span>
-        </div>
-
-        <!-- LEGAL COMPLIANCE NOTICE -->
-        <div class="legal-notice" id="legalNotice">
-          By applying, you agree to execute our electronic Emergency Medical Care Authorization Form and acknowledge Florida privacy terms (Fla. Stat. § 934.03).
-        </div>
-
         <button type="submit" class="btn-auth" id="submitBtn">Register &amp; Continue &rarr;</button>
       </form>
 
-      <!-- VERIFICATION SENT NOTICE (HIDDEN BY DEFAULT) -->
-      <div id="verifyNotice" class="verify-box" style="display: none;">
-        <h3>Check Your Inbox</h3>
-        <p>We’ve sent a secure verification link to <strong id="sentEmailDisplay" style="color: var(--accent);"></strong>. Please confirm your email address to activate your account and access your setup dashboard.</p>
+      <div id="verifyNotice" style="display: none; text-align: center; padding: 2rem 1rem;">
+        <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Check Your Inbox</h3>
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">We’ve sent a secure verification link to <strong id="sentEmailDisplay" style="color: #C1785A;"></strong>.</p>
         <button class="btn-auth" onclick="toggleAuthMode()">Back to Sign In &rarr;</button>
       </div>
 
       <div class="toggle-link" id="switchLink" onclick="toggleAuthMode()">
         Already have an account? <strong>Sign In Here</strong>
       </div>
-      
-      <div class="toggle-link" id="forgotLink" style="font-size: 0.76rem; margin-top: 0.8rem;" onclick="forgotPassMode()">
-        Forgot password?
-      </div>
     </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="master-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
-        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
-      </div>
-      <div>
-        <h5>Explore</h5>
-        <ul>
-          <li><a href="/get-matched">Find a Sitter</a></li>
-          <li><a href="/trust">Trust &amp; Safety</a></li>
-          <li><a href="/pricing">Pricing</a></li>
-          <li><a href="/contact">Contact Us</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Zoélys</h5>
-        <ul>
-          <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/trust">Trust &amp; Safety</a></li>
-          <li><a href="/join">Member Portal</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Stay Close</h5>
-        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
-      <div>Premium pet care, redefined.</div>
-    </div>
-  </footer>
-
-  <script src="/navbar.js"></script>
   <script>
     let selectedRole = 'owner';
     let isRegisterMode = true;
-    let isForgotMode = false;
 
-    function setRole(role, btn) {
+    function setRole(role) {
       selectedRole = role;
-      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const tierGroup = document.getElementById('tierGroup');
-      const legalNotice = document.getElementById('legalNotice');
-
-      if (isRegisterMode) {
-        if (role === 'sitter') {
-          if (tierGroup) tierGroup.style.display = 'none';
-          if (legalNotice) legalNotice.innerText = 'By applying to our roster, you agree to undergo criminal background verification and complete our 4-stage evaluation process.';
-        } else {
-          if (tierGroup) tierGroup.style.display = 'block';
-          if (legalNotice) legalNotice.innerText = 'By applying, you agree to execute our electronic Emergency Medical Care Authorization Form and acknowledge Florida privacy terms (Fla. Stat. § 934.03).';
-        }
+      document.getElementById('btnOwner').classList.toggle('active', role === 'owner');
+      document.getElementById('btnSitter').classList.toggle('active', role === 'sitter');
+      const tierGrp = document.getElementById('tierGroup');
+      if (tierGrp && isRegisterMode) {
+        tierGrp.style.display = (role === 'owner') ? 'block' : 'none';
       }
     }
 
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
-      isForgotMode = false;
-
       document.getElementById('authForm').style.display = 'block';
       document.getElementById('verifyNotice').style.display = 'none';
 
-      const title = document.getElementById('authTitle');
-      const sub = document.getElementById('authSub');
-      const nameGrp = document.getElementById('nameGroup');
-      const tierGrp = document.getElementById('tierGroup');
-      const vettingGrp = document.getElementById('vettingGroup');
-      const passLabel = document.getElementById('passLabel');
-      const confirmPassGrp = document.getElementById('confirmPassGroup');
-      const roleBar = document.getElementById('roleToggleBar');
-      const legalNotice = document.getElementById('legalNotice');
-      const btn = document.getElementById('submitBtn');
-      const link = document.getElementById('switchLink');
+      document.getElementById('nameGroup').style.display = isRegisterMode ? 'block' : 'none';
+      document.getElementById('confirmPassGroup').style.display = isRegisterMode ? 'block' : 'none';
+      document.getElementById('tierGroup').style.display = (isRegisterMode && selectedRole === 'owner') ? 'block' : 'none';
+      document.getElementById('roleToggleBar').style.display = isRegisterMode ? 'grid' : 'none';
 
-      if (isRegisterMode) {
-        title.innerHTML = 'Apply for <em>Access</em>';
-        sub.innerText = 'Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers. Choose your role below to begin.';
-        nameGrp.style.display = 'block';
-        passLabel.innerText = 'Create Password';
-        confirmPassGrp.style.display = 'block';
-        roleBar.style.display = 'grid';
-        legalNotice.style.display = 'block';
-        vettingGrp.style.display = 'none';
-        btn.innerText = 'Register & Continue →';
-        link.innerHTML = 'Already have an account? <strong>Sign In Here</strong>';
-        setRole(selectedRole, document.querySelector('.role-btn.active'));
-      } else {
-        title.innerHTML = 'Member <em>Access</em>';
-        sub.innerText = 'Sign in to your private concierge portal to manage your account or track active bookings.';
-        nameGrp.style.display = 'none';
-        tierGrp.style.display = 'none';
-        passLabel.innerText = 'Password';
-        confirmPassGrp.style.display = 'none';
-        roleBar.style.display = 'none';
-        legalNotice.style.display = 'none';
-        
-        if (selectedRole === 'sitter') {
-          vettingGrp.style.display = 'block';
-        } else {
-          vettingGrp.style.display = 'none';
-        }
-
-        btn.innerText = 'Sign In to Portal →';
-        link.innerHTML = 'Need an account? <strong>Register Here</strong>';
-      }
-    }
-
-    function forgotPassMode() {
-      isForgotMode = true;
-      document.getElementById('authForm').style.display = 'block';
-      document.getElementById('verifyNotice').style.display = 'none';
-
-      document.getElementById('authTitle').innerHTML = 'Reset <em>Password</em>';
-      document.getElementById('authSub').innerText = 'Enter your account email to receive secure reset instructions.';
-      document.getElementById('nameGroup').style.display = 'none';
-      document.getElementById('tierGroup').style.display = 'none';
-      document.getElementById('vettingGroup').style.display = 'none';
-      document.getElementById('roleToggleBar').style.display = 'none';
-      document.getElementById('confirmPassGroup').style.display = 'none';
-      document.getElementById('legalNotice').style.display = 'none';
-      document.getElementById('submitBtn').innerText = 'Send Reset Instructions →';
-      document.getElementById('switchLink').innerHTML = 'Back to <strong>Sign In</strong>';
+      document.getElementById('passLabel').innerText = isRegisterMode ? 'Create Password' : 'Password';
+      document.getElementById('submitBtn').innerText = isRegisterMode ? 'Register & Continue →' : 'Sign In to Portal →';
+      document.getElementById('switchLink').innerHTML = isRegisterMode ? 'Already have an account? <strong>Sign In Here</strong>' : 'Need an account? <strong>Register Here</strong>';
     }
 
     async function handleAuth(e) {
       e.preventDefault();
       const email = document.getElementById('authEmail').value;
-
-      if (isForgotMode) {
-        alert('Password reset link sent to ' + email);
-        toggleAuthMode();
-        return;
-      }
-
       const password = document.getElementById('authPass').value;
 
       if (isRegisterMode) {
         const confirmPassword = document.getElementById('authPassConfirm').value;
+        const full_name = document.getElementById('authName').value;
+        const tier = document.getElementById('authTier') ? document.getElementById('authTier').value : '';
 
         if (password.length < 8) {
           alert('Password must be at least 8 characters long.');
@@ -451,63 +137,35 @@
         }
 
         if (password !== confirmPassword) {
-          alert('Passwords do not match. Please re-enter your password.');
+          alert('Passwords do not match.');
           return;
         }
 
-        localStorage.clear();
-        const full_name = document.getElementById('authName').value;
-        const tier = document.getElementById('authTier').value;
-
         try {
-          const res = await fetch("/api/auth/register", {
+          console.log('Sending registration request to /api/auth/register...');
+          const res = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
           });
 
           const data = await res.json();
+          console.log('Registration Response:', data);
+
           if (data.success) {
             document.getElementById('authForm').style.display = 'none';
             document.getElementById('sentEmailDisplay').innerText = email;
             document.getElementById('verifyNotice').style.display = 'block';
           } else {
-            alert(`Registration Error: ${data.error || "Registration failed. Please check your inputs."}`));
+            alert('Registration Error: ' + (data.error || 'Registration failed.'));
           }
         } catch (err) {
-          alert('Network Error: Unable to reach the authentication server.');
-        }
-      } else {
-        const vetting_code = document.getElementById('authVettingCode').value;
-
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, vetting_code, role: selectedRole })
-        });
-
-        const data = await res.json();
-        if (data.success) {
-          localStorage.removeItem('zoelys_user_id');
-          localStorage.setItem('zoelys_user_id', data.user.id);
-          localStorage.setItem('zoelys_role', data.user.role);
-          window.location.href = '/dashboard';
-        } else {
-          alert(data.error || 'Invalid credentials. Please check your email and password.');
+          console.error('Fetch Error:', err);
+          alert('Network Error: Unable to reach /api/auth/register');
         }
       }
     }
-
-    // Scroll Reveal Observer
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
   </script>
 </body>
 </html>
+EOF
