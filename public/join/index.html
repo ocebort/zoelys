@@ -190,6 +190,27 @@
       color: var(--accent);
       font-weight: 600;
     }
+
+    /* Verification Notice Box */
+    .verify-box {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .verify-box h3 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    .verify-box p {
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+    }
   </style>
 </head>
 <body>
@@ -202,7 +223,7 @@
   </div>
 
   <main class="container">
-    <div class="auth-card reveal">
+    <div class="auth-card reveal" id="authCard">
       
       <!-- ROLE SELECTOR -->
       <div class="role-toggle" id="roleToggleBar">
@@ -210,9 +231,9 @@
         <button type="button" class="role-btn" onclick="setRole('sitter', this)">Pet Sitter</button>
       </div>
 
-      <form onsubmit="handleAuth(event)">
+      <form id="authForm" onsubmit="handleAuth(event)">
         
-        <!-- FULL NAME (HIDDEN ON LOGIN / FORGOT) -->
+        <!-- FULL NAME -->
         <div class="form-group" id="nameGroup">
           <label class="form-label">Full Name</label>
           <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input" required>
@@ -224,10 +245,16 @@
           <input type="email" id="authEmail" placeholder="ocebort@gmail.com" required class="form-input">
         </div>
 
-        <!-- PASSWORD -->
+        <!-- CREATE PASSWORD -->
         <div class="form-group" id="passGroup">
-          <label class="form-label">Password</label>
+          <label class="form-label" id="passLabel">Create Password</label>
           <input type="password" id="authPass" placeholder="••••••••" required class="form-input">
+        </div>
+
+        <!-- CONFIRM PASSWORD (REGISTRATION ONLY) -->
+        <div class="form-group" id="confirmPassGroup">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" id="authPassConfirm" placeholder="••••••••" required class="form-input">
         </div>
 
         <!-- PET PARENT TIER SELECTION (REGISTRATION ONLY) -->
@@ -238,12 +265,6 @@
             <option value="Platinum (€249/mo)" selected>Platinum Tier (€249/mo • Preferred Concierge)</option>
             <option value="Diamond (€499/mo)">Diamond Tier (€499/mo • Executive Roster)</option>
           </select>
-        </div>
-
-        <!-- SITTER EXPERIENCE FIELD (REGISTRATION ONLY) -->
-        <div class="form-group" id="experienceGroup" style="display: none;">
-          <label class="form-label">Primary Care Area &amp; Years Experience</label>
-          <input type="text" id="authExperience" placeholder="e.g. Miami Beach • 5 Years Professional Sitting" class="form-input">
         </div>
 
         <!-- SITTER VETTING AUTHORIZATION ID (LOGIN ONLY FOR APPROVED SITTERS) -->
@@ -262,6 +283,13 @@
 
         <button type="submit" class="btn-auth" id="submitBtn">Register &amp; Continue &rarr;</button>
       </form>
+
+      <!-- VERIFICATION SENT NOTICE (HIDDEN BY DEFAULT) -->
+      <div id="verifyNotice" class="verify-box" style="display: none;">
+        <h3>Check Your Inbox</h3>
+        <p>We’ve sent a secure verification link to <strong id="sentEmailDisplay" style="color: var(--accent);"></strong>. Please confirm your email address to activate your account and access your setup dashboard.</p>
+        <button class="btn-auth" onclick="toggleAuthMode()">Back to Sign In &rarr;</button>
+      </div>
 
       <div class="toggle-link" id="switchLink" onclick="toggleAuthMode()">
         Already have an account? <strong>Sign In Here</strong>
@@ -320,17 +348,14 @@
       btn.classList.add('active');
 
       const tierGroup = document.getElementById('tierGroup');
-      const expGroup = document.getElementById('experienceGroup');
       const legalNotice = document.getElementById('legalNotice');
 
       if (isRegisterMode) {
         if (role === 'sitter') {
           if (tierGroup) tierGroup.style.display = 'none';
-          if (expGroup) expGroup.style.display = 'block';
           if (legalNotice) legalNotice.innerText = 'By applying to our roster, you agree to undergo criminal background verification and complete our 4-stage evaluation process.';
         } else {
           if (tierGroup) tierGroup.style.display = 'block';
-          if (expGroup) expGroup.style.display = 'none';
           if (legalNotice) legalNotice.innerText = 'By applying, you agree to execute our electronic Emergency Medical Care Authorization Form and acknowledge Florida privacy terms (Fla. Stat. § 934.03).';
         }
       }
@@ -340,13 +365,16 @@
       isRegisterMode = !isRegisterMode;
       isForgotMode = false;
 
+      document.getElementById('authForm').style.display = 'block';
+      document.getElementById('verifyNotice').style.display = 'none';
+
       const title = document.getElementById('authTitle');
       const sub = document.getElementById('authSub');
       const nameGrp = document.getElementById('nameGroup');
       const tierGrp = document.getElementById('tierGroup');
-      const expGrp = document.getElementById('experienceGroup');
       const vettingGrp = document.getElementById('vettingGroup');
-      const passGrp = document.getElementById('passGroup');
+      const passLabel = document.getElementById('passLabel');
+      const confirmPassGrp = document.getElementById('confirmPassGroup');
       const roleBar = document.getElementById('roleToggleBar');
       const legalNotice = document.getElementById('legalNotice');
       const btn = document.getElementById('submitBtn');
@@ -356,7 +384,8 @@
         title.innerHTML = 'Apply for <em>Access</em>';
         sub.innerText = 'Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers. Choose your role below to begin.';
         nameGrp.style.display = 'block';
-        passGrp.style.display = 'block';
+        passLabel.innerText = 'Create Password';
+        confirmPassGrp.style.display = 'block';
         roleBar.style.display = 'grid';
         legalNotice.style.display = 'block';
         vettingGrp.style.display = 'none';
@@ -368,12 +397,11 @@
         sub.innerText = 'Sign in to your private concierge portal to manage your account or track active bookings.';
         nameGrp.style.display = 'none';
         tierGrp.style.display = 'none';
-        expGrp.style.display = 'none';
+        passLabel.innerText = 'Password';
+        confirmPassGrp.style.display = 'none';
         roleBar.style.display = 'none';
         legalNotice.style.display = 'none';
-        passGrp.style.display = 'block';
         
-        // Show Vetting Authorization field on Login for Sitter accounts
         if (selectedRole === 'sitter') {
           vettingGrp.style.display = 'block';
         } else {
@@ -387,14 +415,16 @@
 
     function forgotPassMode() {
       isForgotMode = true;
+      document.getElementById('authForm').style.display = 'block';
+      document.getElementById('verifyNotice').style.display = 'none';
+
       document.getElementById('authTitle').innerHTML = 'Reset <em>Password</em>';
       document.getElementById('authSub').innerText = 'Enter your account email to receive secure reset instructions.';
       document.getElementById('nameGroup').style.display = 'none';
       document.getElementById('tierGroup').style.display = 'none';
-      document.getElementById('experienceGroup').style.display = 'none';
       document.getElementById('vettingGroup').style.display = 'none';
       document.getElementById('roleToggleBar').style.display = 'none';
-      document.getElementById('passGroup').style.display = 'none';
+      document.getElementById('confirmPassGroup').style.display = 'none';
       document.getElementById('legalNotice').style.display = 'none';
       document.getElementById('submitBtn').innerText = 'Send Reset Instructions →';
       document.getElementById('switchLink').innerHTML = 'Back to <strong>Sign In</strong>';
@@ -413,28 +443,30 @@
       const password = document.getElementById('authPass').value;
 
       if (isRegisterMode) {
+        const confirmPassword = document.getElementById('authPassConfirm').value;
+
+        // Verify password confirmation matches
+        if (password !== confirmPassword) {
+          alert('Passwords do not match. Please re-enter your password.');
+          return;
+        }
+
         localStorage.clear();
         const full_name = document.getElementById('authName').value;
         const tier = document.getElementById('authTier').value;
-        const experience = document.getElementById('authExperience').value;
 
+        // Register User API Request
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, full_name, tier, experience, role: selectedRole })
+          body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
         });
 
         const data = await res.json();
         if (data.success) {
-          localStorage.setItem('zoelys_user_id', data.userId);
-          localStorage.setItem('zoelys_role', selectedRole);
-          
-          // Route Pet Parents to Onboarding, Sitters to Sitter Dashboard
-          if (selectedRole === 'owner') {
-            window.location.href = '/onboarding';
-          } else {
-            window.location.href = '/dashboard';
-          }
+          document.getElementById('authForm').style.display = 'none';
+          document.getElementById('sentEmailDisplay').innerText = email;
+          document.getElementById('verifyNotice').style.display = 'block';
         } else {
           alert(data.error || 'Registration failed');
         }
