@@ -1,250 +1,318 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoélys - Espace Propriétaire High-Trust</title>
+    <title>Zoélys - High-Trust Pet Owner Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js pour l'interactivité des onglets -->
+    <!-- Alpine.js for smooth tab interactivity -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col" x-data="{ activeTab: 'overview' }">
 
     <!-- Top Navbar -->
-    <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+    <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center shadow-xs sticky top-0 z-50">
         <div class="flex items-center space-x-3">
-            <span class="text-2xl font-bold text-indigo-600">Zoélys</span>
-            <span class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-medium">Espace Propriétaire High-Trust</span>
+            <span class="text-2xl font-bold text-indigo-600 tracking-tight">Zoélys</span>
+            <span class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-semibold border border-indigo-100">Owner Portal</span>
         </div>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-6">
             <span id="user-email" class="text-sm text-slate-600 font-medium">owner@zoelys.local</span>
-            <button onclick="alert('Déconnexion sécurisée')" class="text-sm text-red-600 hover:text-red-800 font-medium">Déconnexion</button>
+            <button onclick="alert('Secure logout simulated.')" class="text-sm text-red-600 hover:text-red-800 font-medium transition">Sign Out</button>
         </div>
     </header>
 
     <!-- Navigation Tabs Bar -->
-    <nav class="bg-white border-b border-slate-200 px-6 flex space-x-8 overflow-x-auto shadow-xs">
-        <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3 px-1 border-b-2 font-medium text-sm transition whitespace-nowrap">1. Overview & Séjour</button>
-        <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3 px-1 border-b-2 font-medium text-sm transition whitespace-nowrap">2. Profils & Médical</button>
-        <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3 px-1 border-b-2 font-medium text-sm transition whitespace-nowrap">3. Réservations & Chat</button>
-        <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3 px-1 border-b-2 font-medium text-sm transition whitespace-nowrap">4. Urgences & Sécurité</button>
-        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3 px-1 border-b-2 font-medium text-sm transition whitespace-nowrap">5. Wallet & Crédits</button>
-        <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3 px-1 border-b-2 font-medium text-sm transition whitespace-nowrap">6. Paramètres & RGPD</button>
+    <nav class="bg-white border-b border-slate-200 px-8 flex space-x-8 overflow-x-auto shadow-xs">
+        <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3.5 px-1 border-b-2 font-semibold text-sm transition whitespace-nowrap">1. Overview & Active Stays</button>
+        <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3.5 px-1 border-b-2 font-semibold text-sm transition whitespace-nowrap">2. Pet Profiles & Medical Vault</button>
+        <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3.5 px-1 border-b-2 font-semibold text-sm transition whitespace-nowrap">3. Bookings & Messages Hub</button>
+        <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3.5 px-1 border-b-2 font-semibold text-sm transition whitespace-nowrap">4. Safety & Emergencies</button>
+        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3.5 px-1 border-b-2 font-semibold text-sm transition whitespace-nowrap">5. Credits, Billing & Wallet</button>
+        <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'" class="py-3.5 px-1 border-b-2 font-semibold text-sm transition whitespace-nowrap">6. Settings & Governance</button>
     </nav>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto p-8 space-y-8">
 
-        <!-- TAB 1: OVERVIEW & ACTIVE STAYS -->
-        <div x-show="activeTab === 'overview'" class="space-y-6">
+        <!-- ================= TAB 1: OVERVIEW & ACTIVE STAYS ================= -->
+        <div x-show="activeTab === 'overview'" class="space-y-8">
             <!-- Status Banner -->
-            <div class="bg-gradient-to-r from-indigo-900 to-indigo-800 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="inline-block w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></span>
-                        <span class="text-xs uppercase tracking-wider bg-indigo-800 text-indigo-200 px-2.5 py-0.5 rounded-full font-semibold">Séjour Actif</span>
+            <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white rounded-2xl p-8 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="space-y-2">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="inline-block w-3 h-3 bg-emerald-400 rounded-full animate-pulse shadow-sm"></span>
+                        <span class="text-xs uppercase tracking-wider bg-indigo-950 text-indigo-200 px-3 py-1 rounded-full font-bold border border-indigo-700/50">Active Stay</span>
                     </div>
-                    <h2 class="text-xl font-bold">Luna est actuellement avec Sarah</h2>
-                    <p class="text-indigo-200 text-sm">Dernier Care Log mis à jour il y a 15 min (Promenade validée & photo transmise).</p>
+                    <h2 class="text-2xl font-bold tracking-tight">Luna is currently with Sarah</h2>
+                    <p class="text-indigo-200 text-sm">Care Log updated 15m ago • Walk track & feeding confirmation logged securely.</p>
                 </div>
-                <button onclick="alert('Ouverture du live feed en temps réel')" class="bg-white text-indigo-900 font-semibold px-5 py-2.5 rounded-xl shadow hover:bg-indigo-50 transition text-sm">
-                    Voir le Live Feed
+                <button onclick="alert('Opening live sitter feed in real time...')" class="bg-white text-indigo-900 font-bold px-6 py-3 rounded-xl shadow-sm hover:bg-indigo-50 transition text-sm">
+                    View Live Feed
                 </button>
             </div>
 
             <!-- Quick Actions Bar -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button onclick="alert Redirection vers le module de réservation..." class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs hover:border-indigo-300 transition flex items-center space-x-4 text-left">
-                    <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center font-bold text-lg">📅</div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm">Book a Stay</h4>
-                        <p class="text-xs text-slate-500">Planifier une garde vérifiée</p>
-                    </div>
-                </button>
-                <button onclick="alert('Ajout d\'un animal')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs hover:border-indigo-300 transition flex items-center space-x-4 text-left">
-                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center font-bold text-lg">🐾</div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm">Add a Pet</h4>
-                        <p class="text-xs text-slate-500">Enregistrer un nouveau profil</p>
-                    </div>
-                </button>
-                <button onclick="alert('Partage du protocole d\'urgence')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs hover:border-indigo-300 transition flex items-center space-x-4 text-left">
-                    <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center font-bold text-lg">🚨</div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm">Emergency Instructions</h4>
-                        <p class="text-xs text-slate-500">Partager les consignes vitales</p>
-                    </div>
-                </button>
-            </div>
-
-            <!-- Live Feed Preview & Aperçu Rapide -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-slate-900 mb-4">Flux d'activités en direct</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start space-x-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center font-bold text-indigo-600 shrink-0">📸</div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center"><h5 class="font-bold text-sm text-slate-800">Promenade au parc</h5><span class="text-xs text-slate-400">Il y a 15 min</span></div>
-                                <p class="text-xs text-slate-600 mt-1">Luna a fait une superbe balade de 4.2 km. Tout s'est parfaitement déroulé.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center font-bold text-emerald-600 shrink-0">🍲</div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center"><h5 class="font-bold text-sm text-slate-800">Repas du midi</h5><span class="text-xs text-slate-400">Il y a 3h</span></div>
-                                <p class="text-xs text-slate-600 mt-1">Gamelle entièrement terminée (croquettes premium + suppléments oméga).</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Wallet Widget compact -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-                    <h3 class="font-bold text-slate-900">Crédits Stratégiques</h3>
-                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-100 flex justify-between items-center">
-                        <div>
-                            <span class="text-3xl font-extrabold text-amber-800">20</span>
-                            <span class="text-xs text-amber-700 block font-medium">Disponibles</span>
-                        </div>
-                        <button onclick="activeTab = 'wallet'" class="text-xs bg-amber-700 text-white px-3 py-2 rounded-lg font-medium hover:bg-amber-800 transition">Gérer</button>
-                    </div>
-                    <div class="pt-2">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider block mb-1">Niveau d'adhésion</span>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-indigo-600">PLATINUM</span>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Vérifié High-Trust</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: PET PROFILES & MEDICAL VAULT -->
-        <div x-show="activeTab === 'pets'" class="space-y-6" style="display: none;">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between items-center">
-                <div>
-                    <h2 class="text-lg font-bold text-slate-900">Dossiers Médicaux & Profils Animaux</h2>
-                    <p class="text-xs text-slate-500">Vault sécurisé conforme aux standards vétérinaires pour les gardiens et admins.</p>
-                </div>
-                <button onclick="alert('Exportation du PDF Care Summary')" class="bg-indigo-600 text-white text-xs font-medium px-4 py-2.5 rounded-xl hover:bg-indigo-700 transition shadow-xs">Télécharger le PDF Care Summary</button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="pets-vault-container">
-                <!-- Carte Animal par défaut (Luna) -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold text-slate-900">Luna</h3>
-                            <p class="text-xs text-slate-500">Golden Retriever • 3 ans • Stérilisée • 28 kg</p>
-                        </div>
-                        <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">Profil Vérifié</span>
-                    </div>
-                    <div class="space-y-2 border-t border-slate-100 pt-4 text-sm">
-                        <div class="flex justify-between"><span class="text-slate-500">Microchip :</span><span class="font-mono text-slate-800">250269608472910</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500">Vaccins :</span><span class="text-emerald-600 font-medium">À jour (Expire nov. 2027)</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500">Allergies :</span><span class="text-slate-800">Sans gluten / Poulet sensible</span></div>
-                    </div>
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
-                        <span class="text-xs font-bold text-slate-700 block">Vétérinaire Désigné :</span>
-                        <p class="text-xs text-slate-600">Clinique Vétérinaire LisboaVet • +351 21 345 6789</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 3: BOOKINGS & MESSAGES HUB -->
-        <div x-show="activeTab === 'bookings'" class="space-y-6" style="display: none;">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <h2 class="text-lg font-bold text-slate-900 mb-4">Hub de Réservations & Sitter Communication</h2>
-                <div class="flex space-x-2 mb-6">
-                    <button class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium">Actives (1)</button>
-                    <button class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg font-medium hover:bg-slate-200 transition">À venir</button>
-                    <button class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg font-medium hover:bg-slate-200 transition">Historique</button>
-                </div>
-                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
+                <button onclick="alert('Opening booking workflow...')" class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:border-indigo-300 hover:shadow-sm transition flex items-center space-x-5 text-left group">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl group-hover:scale-105 transition">📅</div>
                     <div>
-                        <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full font-semibold">En cours</span>
-                        <h4 class="font-bold text-slate-800 mt-2">Garde résidentielle avec Sarah M.</h4>
-                        <p class="text-xs text-slate-500">Du 01 Nov 2026 au 05 Nov 2026 • 4 nuits</p>
+                        <h4 class="font-bold text-slate-900 text-base">Book a Stay</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Schedule verified high-trust care</p>
                     </div>
-                    <button onclick="alert('Ouverture du chat sécurisé avec Sarah')" class="bg-indigo-50 text-indigo-600 text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition">Ouvrir le Chat</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: SAFETY & EMERGENCY PROTOCOLS -->
-        <div x-show="activeTab === 'safety'" class="space-y-6" style="display: none;">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-                <h2 class="text-lg font-bold text-slate-900">Protocoles d'Urgence & Sécurité</h2>
-                <p class="text-xs text-slate-500">Paramétrez les autorisations vétérinaires d'urgence pour protéger votre animal en toute circonstance.</p>
-                <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-2">
-                    <h4 class="font-bold text-amber-900 text-sm">Autorisation Médicale Pré-approuvée</h4>
-                    <p class="text-xs text-amber-800">En cas d'urgence absolue et d'impossibilité de vous joindre, les frais vétérinaires sont couverts automatiquement jusqu'à :</p>
-                    <div class="flex items-center space-x-2 pt-1">
-                        <span class="text-2xl font-extrabold text-amber-900">€300</span>
-                        <span class="text-xs bg-amber-200 text-amber-900 px-2 py-1 rounded font-medium">Validé et Sécurisé</span>
+                </button>
+                <button onclick="alert('Opening add pet workflow...')" class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:border-indigo-300 hover:shadow-sm transition flex items-center space-x-5 text-left group">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xl group-hover:scale-105 transition">🐾</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Add a Pet</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Register a new profile to vault</p>
                     </div>
-                </div>
+                </button>
+                <button onclick="alert('Emergency instructions generated.')" class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:border-indigo-300 hover:shadow-sm transition flex items-center space-x-5 text-left group">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold text-xl group-hover:scale-105 transition">🚨</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Emergency Instructions</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Share vital protocols instantly</p>
+                    </div>
+                </button>
             </div>
-        </div>
 
-        <!-- TAB 5: CREDITS, BILLING & WALLET -->
-        <div x-show="activeTab === 'wallet'" class="space-y-6" style="display: none;">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-                <h2 class="text-lg font-bold text-slate-900">Wallet & Crédits Stratégiques</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-6 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
-                        <span class="text-xs text-slate-500 uppercase tracking-wider">Solde Actuel</span>
-                        <div class="flex items-baseline space-x-2">
-                            <span class="text-4xl font-extrabold text-amber-700">20</span>
-                            <span class="text-sm font-bold text-slate-600">crédits Zoélys</span>
+            <!-- Live Care Feed & Wallet Widget Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Live Feed -->
+                <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                        <h3 class="font-bold text-slate-900 text-lg">Real-Time Care Feed</h3>
+                        <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Updated live</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 p-5 bg-slate-50/70 rounded-xl border border-slate-100">
+                            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg shrink-0">📸</div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center"><h5 class="font-bold text-slate-800">Park Walk Completed</h5><span class="text-xs text-slate-400 font-medium">15 mins ago</span></div>
+                                <p class="text-xs text-slate-600 mt-1">4.2 km walk completed along the river path. Excellent leash discipline and high energy!</p>
+                            </div>
                         </div>
-                        <button onclick="alert('Redirection passerelle de paiement sécurisée')" class="w-full mt-4 bg-amber-700 text-white font-medium py-2.5 rounded-xl hover:bg-amber-800 transition text-sm shadow-xs">Recharger des Crédits</button>
+                        <div class="flex items-start space-x-4 p-5 bg-slate-50/70 rounded-xl border border-slate-100">
+                            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-lg shrink-0">🍲</div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center"><h5 class="font-bold text-slate-800">Feeding Confirmation</h5><span class="text-xs text-slate-400 font-medium">3 hours ago</span></div>
+                                <p class="text-xs text-slate-600 mt-1">Full bowl consumed. Added omega-3 supplement as specified in medical vault.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-6 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
-                        <span class="text-xs text-slate-500 uppercase tracking-wider">Facturation & Reçus</span>
-                        <p class="text-xs text-slate-600">Téléchargez vos factures conformes TVA pour chaque réservation passée.</p>
-                        <button onclick="alert('Téléchargement de la facture PDF')" class="w-full mt-4 bg-white border border-slate-300 text-slate-700 font-medium py-2.5 rounded-xl hover:bg-slate-100 transition text-sm">Télécharger les reçus (PDF)</button>
+                </div>
+
+                <!-- Wallet Quick Widget -->
+                <div class="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-4">Strategic Credits</h3>
+                        <div class="bg-amber-50/80 p-5 rounded-xl border border-amber-200/60 flex justify-between items-center">
+                            <div>
+                                <span class="text-4xl font-extrabold text-amber-800">20</span>
+                                <span class="text-xs text-amber-700 block font-semibold mt-0.5">Available Credits</span>
+                            </div>
+                            <button @click="activeTab = 'wallet'" class="text-xs bg-amber-700 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-amber-800 transition shadow-xs">Manage</button>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4 space-y-2">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold block">Membership Status</span>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-indigo-600 text-base">PLATINUM</span>
+                            <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-semibold">High-Trust Verified</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 6: ACCOUNT SETTINGS, PRIVACY & GOVERNANCE -->
-        <div x-show="activeTab === 'settings'" class="space-y-6" style="display: none;">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+        <!-- ================= TAB 2: PET PROFILES & MEDICAL VAULT ================= -->
+        <div x-show="activeTab === 'pets'" class="space-y-8" style="display: none;">
+            <div class="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-900">Paramètres, Gouvernance & RGPD</h2>
-                    <p class="text-xs text-slate-500">Gérez vos données personnelles, vos consentements et la vie de votre compte.</p>
+                    <h2 class="text-xl font-bold text-slate-900">Premium Pet Profiles & Medical Vault</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Complete veterinary records, care instructions, and behavioral briefs for sitters.</p>
                 </div>
-                <div class="border-t border-slate-100 pt-4 space-y-4">
-                    <h4 class="font-bold text-slate-800 text-sm">Conformité des Données (RGPD)</h4>
-                    <button onclick="alert('Exportation de toutes vos données personnelles en JSON/PDF en cours...')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium px-4 py-2.5 rounded-xl transition">Exporter mes données personnelles (JSON / PDF)</button>
+                <button onclick="alert('Generating official PDF care summary for offline sitter use...')" class="bg-indigo-600 text-white text-xs font-semibold px-5 py-3 rounded-xl hover:bg-indigo-700 transition shadow-xs">Download PDF Care Summary</button>
+            </div>
+
+            <!-- Pet Card Detailed -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-6">
+                    <div class="flex justify-between items-start border-b border-slate-100 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-900">Luna</h3>
+                            <p class="text-xs text-slate-500 mt-1">Golden Retriever • 3 years old • Spayed • 28 kg</p>
+                        </div>
+                        <span class="text-xs bg-emerald-100 text-emerald-700 px-3.5 py-1.5 rounded-full font-semibold">Verified Profile</span>
+                    </div>
+
+                    <!-- Health & Medical Vault -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Health & Medical Vault</h4>
+                        <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-100 space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-500">Microchip Number :</span><span class="font-mono text-slate-800 font-medium">250269608472910</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Vaccination Status :</span><span class="text-emerald-600 font-semibold">Up to Date (Valid Nov 2027)</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Allergies & Diet :</span><span class="text-slate-800 font-medium">Gluten-free / Poultry sensitive</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Routine Medication :</span><span class="text-slate-800 font-medium">Joint supplement (1 tablet daily with dinner)</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Designated Veterinarian -->
+                    <div class="space-y-2">
+                        <h4 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Designated Veterinarian</h4>
+                        <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-100 space-y-1">
+                            <p class="font-bold text-slate-800 text-sm">LisboaVet Emergency Clinic</p>
+                            <p class="text-xs text-slate-600">Av. Infante Santo 42, Lisbon • Phone: +351 21 345 6789</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="border-t border-slate-100 pt-4 space-y-4">
-                    <h4 class="font-bold text-red-600 text-sm">Zone de Danger & Suppression</h4>
-                    <p class="text-xs text-slate-500">La suppression définitive efface vos données personnelles tout en conservant les transactions financières anonymisées pour conformité légale.</p>
-                    <button onclick="if(confirm('Êtes-vous sûr de vouloir supprimer définitivement votre compte ?')) alert('Demande de suppression enregistrée.')" class="bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition">Supprimer mon compte définitivement</button>
+
+                <!-- Behavioral & Routine Briefing -->
+                <div class="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-6">
+                    <div class="border-b border-slate-100 pb-4">
+                        <h3 class="text-xl font-bold text-slate-900">Behavioral & Routine Briefing</h3>
+                        <p class="text-xs text-slate-500 mt-1">Daily routines and behavioral guidelines for sitters.</p>
+                    </div>
+
+                    <div class="space-y-4 text-sm">
+                        <div class="p-4 bg-slate-50/70 rounded-xl border border-slate-100 space-y-1">
+                            <span class="font-bold text-slate-900 block text-xs uppercase tracking-wider">Daily Schedule</span>
+                            <p class="text-xs text-slate-600">Walks at 08:00 AM and 07:00 PM. Feeding at 08:30 AM and 08:00 PM.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50/70 rounded-xl border border-slate-100 space-y-1">
+                            <span class="font-bold text-slate-900 block text-xs uppercase tracking-wider">Behavior Quirks & Triggers</span>
+                            <p class="text-xs text-slate-600">Friendly with all dogs. Mild separation anxiety when left alone for more than 4 hours. No fear of thunder.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50/70 rounded-xl border border-slate-100 space-y-1">
+                            <span class="font-bold text-slate-900 block text-xs uppercase tracking-wider">House Rules</span>
+                            <p class="text-xs text-slate-600">Not allowed on sofas or beds. Crate trained for nighttime sleeping.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: BOOKINGS & MESSAGES HUB ================= -->
+        <div x-show="activeTab === 'bookings'" class="space-y-8" style="display: none;">
+            <div class="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <h2 class="text-xl font-bold text-slate-900">Booking & Messages Hub</h2>
+                    <div class="flex space-x-2">
+                        <button class="text-xs bg-indigo-600 text-white px-4 py-2 rounded-xl font-semibold shadow-xs">Active (1)</button>
+                        <button class="text-xs bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-semibold hover:bg-slate-200 transition">Upcoming</button>
+                        <button class="text-xs bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-semibold hover:bg-slate-200 transition">History</button>
+                    </div>
+                </div>
+                
+                <div class="p-6 bg-slate-50/70 rounded-2xl border border-slate-200/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div class="space-y-2">
+                        <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold">Active Stay</span>
+                        <h4 class="font-bold text-slate-900 text-lg">Residential Boarding with Sarah M.</h4>
+                        <p class="text-xs text-slate-500">Nov 01, 2026 – Nov 05, 2026 • 4 nights • Verified High-Trust Sitter</p>
+                    </div>
+                    <button onclick="alert('Opening secure sitter chat hub...')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition shadow-xs">Open Secure Chat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: SAFETY & EMERGENCIES ================= -->
+        <div x-show="activeTab === 'safety'" class="space-y-8" style="display: none;">
+            <div class="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Safety & Emergency Protocols</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Pre-authorized medical limits and backup emergency contacts.</p>
+                </div>
+                
+                <div class="p-6 bg-amber-50/80 rounded-2xl border border-amber-200/80 space-y-3">
+                    <h4 class="font-bold text-amber-900 text-base">Emergency Medical Pre-Authorization</h4>
+                    <p class="text-xs text-amber-800 leading-relaxed">In the event of an urgent medical situation where the primary owner cannot be reached, authorized veterinary care is pre-approved up to:</p>
+                    <div class="flex items-center space-x-3 pt-2">
+                        <span class="text-3xl font-extrabold text-amber-900">€300</span>
+                        <span class="text-xs bg-amber-200/80 text-amber-900 px-3 py-1 rounded-full font-bold">Secured & Active</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <div class="p-6 bg-slate-50/70 rounded-2xl border border-slate-200/60 space-y-2">
+                        <h4 class="font-bold text-slate-900 text-sm">Secondary Emergency Contact</h4>
+                        <p class="text-xs text-slate-600">João Castro (Family Member) • +351 91 234 5678</p>
+                    </div>
+                    <div class="p-6 bg-slate-50/70 rounded-2xl border border-slate-200/60 space-y-2">
+                        <h4 class="font-bold text-slate-900 text-sm">Insurance Coverage Tier</h4>
+                        <p class="text-xs text-emerald-600 font-semibold">Platinum Comprehensive Tier Active for all current bookings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 5: CREDITS, BILLING & WALLET ================= -->
+        <div x-show="activeTab === 'wallet'" class="space-y-8" style="display: none;">
+            <div class="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Credits, Billing & Wallet</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Manage your Zoélys credit balance, saved payment cards, and VAT invoices.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-8 bg-slate-50/70 rounded-2xl border border-slate-200/60 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Available Credit Balance</span>
+                            <div class="flex items-baseline space-x-3 mt-2">
+                                <span class="text-5xl font-extrabold text-amber-700">20</span>
+                                <span class="text-base font-bold text-slate-700">Zoélys Credits</span>
+                            </div>
+                        </div>
+                        <button onclick="alert('Redirecting to secure checkout gateway...')" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-semibold py-3 rounded-xl transition text-sm shadow-xs">Top Up Credits</button>
+                    </div>
+
+                    <div class="p-8 bg-slate-50/70 rounded-2xl border border-slate-200/60 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Invoices & Receipts</span>
+                            <p class="text-xs text-slate-600 mt-2 leading-relaxed">Download VAT-compliant receipts for every completed booking and credit top-up.</p>
+                        </div>
+                        <button onclick="alert('Downloading VAT receipts PDF...')" class="w-full bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold py-3 rounded-xl transition text-sm shadow-xs">Download VAT Receipts (PDF)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 6: SETTINGS & GOVERNANCE ================= -->
+        <div x-show="activeTab === 'settings'" class="space-y-8" style="display: none;">
+            <div class="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-8">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Account Settings, Privacy & Governance</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Personal governance, GDPR compliance, and account lifecycle management.</p>
+                </div>
+
+                <div class="border-t border-slate-100 pt-6 space-y-4">
+                    <h4 class="font-bold text-slate-900 text-base">GDPR Data Privacy & Portability</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">Instantly export all stored personal account data and pet records in structured JSON or PDF format.</p>
+                    <button onclick="alert('Data export initiated. Your file will download shortly.')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-5 py-3 rounded-xl transition">Export Personal Data (JSON / PDF)</button>
+                </div>
+
+                <div class="border-t border-slate-100 pt-6 space-y-4">
+                    <h4 class="font-bold text-red-600 text-base">Danger Zone & Account Deletion</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">Permanent deletion clears sensitive personal data while retaining anonymized financial transaction records for compliance.</p>
+                    <button onclick="if(confirm('Are you absolutely sure you want to permanently delete your account?')) alert('Account deletion request registered.')" class="bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold px-5 py-3 rounded-xl transition">Permanently Delete Account</button>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Script de chargement dynamique optionnel -->
+    <!-- Script -->
     <script>
         async function fetchOwnerData() {
             try {
                 const response = await fetch('/api/owner/pets');
                 const data = await response.json();
                 if (data.pets && data.pets.length > 0) {
-                    // Si la base D1 renvoie des animaux, on peut dynamiser l'affichage ici
-                    console.log("Animaux chargés depuis D1:", data.pets);
+                    console.log("Pets loaded successfully:", data.pets);
                 }
             } catch (err) {
-                console.log("Utilisation des données de secours (fallback local).");
+                console.log("Using default fallback data.");
             }
         }
         fetchOwnerData();
