@@ -445,7 +445,11 @@
       if (isRegisterMode) {
         const confirmPassword = document.getElementById('authPassConfirm').value;
 
-        // Verify password confirmation matches
+        if (password.length < 8) {
+          alert('Password must be at least 8 characters long.');
+          return;
+        }
+
         if (password !== confirmPassword) {
           alert('Passwords do not match. Please re-enter your password.');
           return;
@@ -455,20 +459,23 @@
         const full_name = document.getElementById('authName').value;
         const tier = document.getElementById('authTier').value;
 
-        // Register User API Request
-        const res = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
-        });
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, full_name, tier, role: selectedRole })
+          });
 
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById('authForm').style.display = 'none';
-          document.getElementById('sentEmailDisplay').innerText = email;
-          document.getElementById('verifyNotice').style.display = 'block';
-        } else {
-          alert(data.error || 'Registration failed');
+          const data = await res.json();
+          if (data.success) {
+            document.getElementById('authForm').style.display = 'none';
+            document.getElementById('sentEmailDisplay').innerText = email;
+            document.getElementById('verifyNotice').style.display = 'block';
+          } else {
+            alert('Registration Error: ' + (data.error || 'Registration failed. Please check your inputs.'));
+          }
+        } catch (err) {
+          alert('Network Error: Unable to reach the authentication server.');
         }
       } else {
         const vetting_code = document.getElementById('authVettingCode').value;
@@ -486,7 +493,7 @@
           localStorage.setItem('zoelys_role', data.user.role);
           window.location.href = '/dashboard';
         } else {
-          alert(data.error || 'Invalid credentials');
+          alert(data.error || 'Invalid credentials. Please check your email and password.');
         }
       }
     }
