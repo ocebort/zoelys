@@ -49,7 +49,7 @@
       <form id="authForm" onsubmit="handleAuth(event)">
         <div class="form-group" id="nameGroup">
           <label class="form-label">Full Name</label>
-          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input">
+          <input type="text" id="authName" placeholder="e.g. Océane Bort" class="form-input" required>
         </div>
 
         <div class="form-group">
@@ -58,13 +58,13 @@
         </div>
 
         <div class="form-group" id="passGroup">
-          <label class="form-label" id="passLabel">Password</label>
+          <label class="form-label" id="passLabel">Create Password</label>
           <input type="password" id="authPass" placeholder="••••••••" required class="form-input">
         </div>
 
         <div class="form-group" id="confirmPassGroup">
           <label class="form-label">Confirm Password</label>
-          <input type="password" id="authPassConfirm" placeholder="••••••••" class="form-input">
+          <input type="password" id="authPassConfirm" placeholder="••••••••" required class="form-input">
         </div>
 
         <div class="form-group" id="tierGroup">
@@ -101,16 +101,33 @@
 
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode;
-      document.getElementById('authForm').reset();
       
       document.getElementById('authTitle').innerHTML = isRegisterMode ? 'Apply for <em>Access</em>' : 'Welcome <em>Back</em>';
       document.getElementById('authSub').innerText = isRegisterMode ? 'Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers.' : 'Sign in to access your confidential care roster and active concierge threads.';
 
-      document.getElementById('nameGroup').style.display = isRegisterMode ? 'block' : 'none';
-      document.getElementById('confirmPassGroup').style.display = isRegisterMode ? 'block' : 'none';
-      document.getElementById('tierGroup').style.display = (isRegisterMode && selectedRole === 'owner') ? 'block' : 'none';
-      document.getElementById('roleToggleBar').style.display = isRegisterMode ? 'grid' : 'none';
+      // Toggle visibility AND required attributes to prevent hidden field validation blocks
+      const nameField = document.getElementById('authName');
+      const confirmField = document.getElementById('authPassConfirm');
+      const tierGroup = document.getElementById('tierGroup');
+      const roleToggle = document.getElementById('roleToggleBar');
 
+      if (isRegisterMode) {
+        nameField.style.display = 'block';
+        nameField.required = true;
+        confirmField.style.display = 'block';
+        confirmField.required = true;
+        tierGroup.style.display = selectedRole === 'owner' ? 'block' : 'none';
+        roleToggle.style.display = 'grid';
+      } else {
+        nameField.style.display = 'none';
+        nameField.required = false;
+        confirmField.style.display = 'none';
+        confirmField.required = false;
+        tierGroup.style.display = 'none';
+        roleToggle.style.display = 'none';
+      }
+
+      document.getElementById('passLabel').innerText = isRegisterMode ? 'Create Password' : 'Password';
       document.getElementById('submitBtn').innerText = isRegisterMode ? 'Register & Continue →' : 'Sign In to Portal →';
       document.getElementById('switchLink').innerHTML = isRegisterMode ? 'Already have an account? <strong>Sign In Here</strong>' : 'Need an account? <strong>Register Here</strong>';
     }
@@ -150,7 +167,6 @@
           alert('Network Error during registration');
         }
       } else {
-        // --- LOGIN REQUEST ---
         try {
           console.log('Sending login request to /api/auth/login...');
           const res = await fetch('/api/auth/login', {
