@@ -2,14 +2,33 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Routage pour les appels API si nécessaire
+    // Route API pour récupérer les animaux du propriétaire
+    if (url.pathname === '/api/owner/pets') {
+      try {
+        // Pour l'instant, on récupère les animaux liés à notre utilisateur de test 'usr_owner_01'
+        const { results } = await env.DB.prepare(
+          "SELECT * FROM pets WHERE owner_id = ?"
+        ).bind('usr_owner_01').all();
+
+        return new Response(JSON.stringify({ pets: results }), {
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ error: err.message }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      }
+    }
+
+    // Route API générique existante
     if (url.pathname.startsWith('/api/')) {
       return new Response(JSON.stringify({ ok: true, service: 'zoelys' }), {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
-    // Sert les fichiers statiques du dossier public (HTML, CSS, images)
+    // Sert les fichiers statiques du dossier public
     try {
       let response = await env.ASSETS.fetch(request);
       if (response.status === 404) {
