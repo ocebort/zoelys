@@ -13,23 +13,23 @@ cat << 'EOF' > public/join/index.html
 
   <style>
     .auth-hero { text-align: center; padding: 5rem 2rem 2rem; max-width: 800px; margin: 0 auto; }
-    .auth-hero .eyebrow { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent, #C1785A); font-weight: 600; margin-bottom: 0.8rem; display: block; }
-    .auth-hero h1 { font-family: var(--font-serif, 'Cormorant Garamond', serif); font-weight: 400; font-size: clamp(2.6rem, 4.5vw, 3.8rem); line-height: 1.1; margin-bottom: 1.2rem; color: var(--ink, #191512); }
-    .auth-hero h1 em { font-style: italic; color: var(--accent, #C1785A); }
-    .auth-hero p { color: var(--ink-muted, #666); font-size: 1rem; font-weight: 300; line-height: 1.8; max-width: 55ch; margin: 0 auto; }
+    .auth-hero .eyebrow { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: #C1785A; font-weight: 600; margin-bottom: 0.8rem; display: block; }
+    .auth-hero h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(2.6rem, 4.5vw, 3.8rem); line-height: 1.1; margin-bottom: 1.2rem; color: #191512; }
+    .auth-hero h1 em { font-style: italic; color: #C1785A; }
+    .auth-hero p { color: #666; font-size: 1rem; font-weight: 300; line-height: 1.8; max-width: 55ch; margin: 0 auto; }
 
     main.container { max-width: 520px; width: 100%; margin: 0 auto 6rem auto; padding: 0 1.5rem; }
-    .auth-card { background: var(--bg-cream-soft, #FAF8F5); border: 1px solid var(--hairline, #EBE6DF); border-radius: 16px; padding: 3.2rem 2.8rem; box-shadow: 0 24px 48px -28px rgba(25, 21, 18, 0.12); }
-    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #F0EAE0; padding: 0.35rem; border-radius: 10px; margin-bottom: 2rem; border: 1px solid var(--hairline, #EBE6DF); }
-    .role-btn { border: none; background: transparent; padding: 0.8rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 8px; color: var(--ink-muted, #666); }
-    .role-btn.active { background: var(--ink, #191512); color: #FAF8F5; box-shadow: 0 4px 12px rgba(25, 21, 18, 0.1); }
+    .auth-card { background: #FAF8F5; border: 1px solid #EBE6DF; border-radius: 16px; padding: 3.2rem 2.8rem; box-shadow: 0 24px 48px -28px rgba(25, 21, 18, 0.12); }
+    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; background: #F0EAE0; padding: 0.35rem; border-radius: 10px; margin-bottom: 2rem; border: 1px solid #EBE6DF; }
+    .role-btn { border: none; background: transparent; padding: 0.8rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 8px; color: #666; }
+    .role-btn.active { background: #191512; color: #FAF8F5; box-shadow: 0 4px 12px rgba(25, 21, 18, 0.1); }
 
     .form-group { margin-bottom: 1.4rem; }
-    .form-label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--ink, #191512); }
-    .form-input { width: 100%; padding: 0.95rem 1.1rem; border-radius: 8px; border: 1px solid var(--hairline, #EBE6DF); font-family: sans-serif; background: #FFFFFF; font-size: 0.9rem; box-sizing: border-box; color: var(--ink, #191512); outline: none; }
-    .btn-auth { background: var(--ink, #191512); color: #FAF8F5; border: none; padding: 1.05rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; width: 100%; margin-top: 0.5rem; }
-    .toggle-link { text-align: center; font-size: 0.82rem; color: var(--ink-muted, #666); margin-top: 1.8rem; cursor: pointer; }
-    .toggle-link strong { color: var(--accent, #C1785A); font-weight: 600; }
+    .form-label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; color: #191512; }
+    .form-input { width: 100%; padding: 0.95rem 1.1rem; border-radius: 8px; border: 1px solid #EBE6DF; font-family: sans-serif; background: #FFFFFF; font-size: 0.9rem; box-sizing: border-box; color: #191512; outline: none; }
+    .btn-auth { background: #191512; color: #FAF8F5; border: none; padding: 1.05rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; width: 100%; margin-top: 0.5rem; }
+    .toggle-link { text-align: center; font-size: 0.82rem; color: #666; margin-top: 1.8rem; cursor: pointer; }
+    .toggle-link strong { color: #C1785A; font-weight: 600; }
   </style>
 </head>
 <body>
