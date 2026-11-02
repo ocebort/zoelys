@@ -18,6 +18,9 @@
     showMatchModal: false,
     showTimelineModal: false,
     showAiGuideModal: false,
+    showCancelModal: false,
+    cancelStep: 1,
+    cancelReason: '',
     editingPetIndex: null,
     pets: [
         { 
@@ -36,32 +39,16 @@
         }
     ],
     newPet: { 
-        name: '', 
-        breed: '', 
-        age: '', 
-        weight: '', 
-        microchip: '', 
-        medicationType: '',
-        medicationSchedule: '',
-        medicationDosage: '',
-        routineWalks: '',
-        routineFeeding: '',
-        behaviorQuirks: '',
-        houseRules: '' 
+        name: '', breed: '', age: '', weight: '', microchip: '', 
+        medicationType: 'None', medicationSchedule: 'Morning with breakfast', medicationDosage: '1 tablet (500mg)', 
+        routineWalks: 'Morning (08:00) & Evening (19:00)', routineFeeding: 'Strictly specified brand kibble + omega oil', 
+        behaviorQuirks: '', houseRules: '' 
     },
     editPetData: { 
-        name: '', 
-        breed: '', 
-        age: '', 
-        weight: '', 
-        microchip: '', 
-        medicationType: '',
-        medicationSchedule: '',
-        medicationDosage: '',
-        routineWalks: '',
-        routineFeeding: '',
-        behaviorQuirks: '',
-        houseRules: '' 
+        name: '', breed: '', age: '', weight: '', microchip: '', 
+        medicationType: 'None', medicationSchedule: 'Morning with breakfast', medicationDosage: '1 tablet (500mg)', 
+        routineWalks: 'Morning (08:00) & Evening (19:00)', routineFeeding: 'Strictly specified brand kibble + omega oil', 
+        behaviorQuirks: '', houseRules: '' 
     },
     emergencyDoc: 'signed_emergency_authorization_2026.pdf',
     creditBalance: 52,
@@ -79,10 +66,21 @@
     favorites: [
         { name: 'Sarah M.', rating: '4.98', location: 'Chiado, Lisbon', experience: '3 years with Zoélys' }
     ],
+    // Intake form steps state
+    matchStep: 1,
+    matchData: {
+        fullName: 'Océane',
+        email: 'owner@zoelys.local',
+        phone: '+351 91 000 0000',
+        neighbourhood: 'Chiado, Lisbon',
+        serviceType: 'Residential Boarding',
+        startDate: '2026-11-01',
+        endDate: '2026-11-05',
+        budget: '€100-149'
+    },
     addPet() {
         if(this.newPet.name) {
             this.pets.push({...this.newPet});
-            this.newPet = { name: '', breed: '', age: '', weight: '', microchip: '', medicationType: '', medicationSchedule: '', medicationDosage: '', routineWalks: '', routineFeeding: '', behaviorQuirks: '', houseRules: '' };
             this.showPetModal = false;
         }
     },
@@ -103,10 +101,15 @@
         }
     },
     requestInstantUpdate() {
-        alert('Instant check-in request sent to Sarah M.');
+        alert('Instant check-in request sent to Sarah M. It is now visible on the petsitter\'s live interface.');
     },
     removeFavorite(index) {
         this.favorites.splice(index, 1);
+    },
+    confirmCancellation() {
+        alert('Your subscription has been canceled. All unused credits have been forfeited according to membership policy.');
+        this.showCancelModal = false;
+        this.cancelStep = 1;
     }
 }">
 
@@ -131,7 +134,7 @@
         <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Pet Profiles & Medical</button>
         <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Bookings & Sitter Overview</button>
         <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Safety & Protocols</button>
-        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits & Billing</button>
+        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits, Billing & Subscriptions</button>
         <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Settings & GDPR</button>
     </nav>
 
@@ -159,7 +162,7 @@
 
             <!-- Quick Actions -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div @click="showMatchModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
+                <div @click="matchStep = 1; showMatchModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 01</span>
                     <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Book a Stay →</h4>
                     <p class="text-xs text-[#6C6255]">Open concierge intake desk pre-filled with Luna's profile.</p>
@@ -251,7 +254,7 @@
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Sitter Management & History</span>
                     <h2 class="text-3xl font-serif text-[#2C2A29]">Bookings & Current Sitter Overview</h2>
                 </div>
-                <button @click="showMatchModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">New Booking Request</button>
+                <button @click="matchStep = 1; showMatchModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">New Booking Request</button>
             </div>
 
             <!-- Current Sitter Overview Section -->
@@ -284,7 +287,7 @@
                             <p class="text-xs text-[#6C6255]" x-text="sitter.location + ' • Rating: ' + sitter.rating + ' • ' + sitter.experience"></p>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <button @click="showMatchModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] hover:underline">Book Again</button>
+                            <button @click="matchStep = 1; showMatchModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] hover:underline">Book Again</button>
                             <button @click="removeFavorite(index)" class="text-xs uppercase tracking-widest text-red-800 hover:underline">Remove</button>
                         </div>
                     </div>
@@ -335,7 +338,7 @@
                     <h3 class="text-2xl font-serif text-[#2C2A29]" x-text="membershipTier + ' (' + membershipPrice + ')'"></h3>
                     <p class="text-xs text-[#6C6255] leading-relaxed">Uncompromising care & vetting standard. Includes concierge intake & matching desk, zero hidden booking or surge fees, and a <span x-text="membershipRollover"></span>.</p>
                     <div class="pt-4">
-                        <button onclick="if(confirm('Warning: Canceling your membership will permanently forfeit all unused Zoélys credits remaining in your balance. Proceed?')) alert('Membership cancellation registered.')" class="text-xs uppercase tracking-widest text-red-800 hover:opacity-75 font-medium">Cancel Membership</button>
+                        <button @click="showCancelModal = true; cancelStep = 1;" class="text-xs uppercase tracking-widest text-red-800 hover:opacity-75 font-medium underline">Cancel Subscription / Membership</button>
                     </div>
                 </div>
 
@@ -387,7 +390,7 @@
 
     </main>
 
-    <!-- ================= MODAL: ADD A PET (WITH DROPDOWNS & SPECIFICS) ================= -->
+    <!-- ================= MODAL: ADD A PET ================= -->
     <div x-show="showPetModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
         <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-2xl w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
@@ -420,7 +423,6 @@
                     </div>
                 </div>
 
-                <!-- Detailed Medication Dropdowns & Specifics -->
                 <div class="border-t border-[#E8E2D5] pt-4 space-y-4">
                     <h4 class="font-serif text-sm text-[#2C2A29]">Medication Specifics</h4>
                     <div class="grid grid-cols-3 gap-4">
@@ -452,7 +454,6 @@
                     </div>
                 </div>
 
-                <!-- Routine Dropdowns & Specifics -->
                 <div class="border-t border-[#E8E2D5] pt-4 space-y-4">
                     <h4 class="font-serif text-sm text-[#2C2A29]">Routine & Behavioral Specifics</h4>
                     <div class="grid grid-cols-2 gap-4">
@@ -538,24 +539,79 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: CONCIERGE MATCHING DESK ================= -->
+    <!-- ================= MODAL: CONCIERGE MATCHING DESK (MULTI-STEP INTAKE) ================= -->
     <div x-show="showMatchModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
-        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-lg w-full space-y-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Concierge Intake & Matching Desk</h3>
+                <h3 class="font-serif text-xl text-[#2C2A29]" x-text="'Concierge Intake — Step ' + matchStep + ' of 3'"></h3>
                 <button @click="showMatchModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
             </div>
-            <div class="space-y-4 text-xs">
-                <p class="text-[#6C6255]">Your request is pre-filled with <strong class="text-[#2C2A29]">Luna's profile</strong> under your Platinum membership.</p>
+
+            <!-- Step 1: Pre-filled Owner & Pet Review -->
+            <div x-show="matchStep === 1" class="space-y-4 text-xs">
+                <p class="text-[#6C6255]">We pre-filled your request details using your verified vault profile.</p>
                 <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Dates Required</label>
-                    <input type="text" value="Nov 15, 2026 – Nov 20, 2026" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Full Name</label>
+                    <input type="text" x-model="matchData.fullName" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
                 </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Email</label>
+                        <input type="email" x-model="matchData.email" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Phone</label>
+                        <input type="tel" x-model="matchData.phone" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                </div>
+                <button @click="matchStep = 2" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Continue &rarr;</button>
+            </div>
+
+            <!-- Step 2: Service & Dates -->
+            <div x-show="matchStep === 2" class="space-y-4 text-xs" style="display: none;">
                 <div>
-                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Special Care Instructions</label>
-                    <textarea class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]" rows="3">Joint supplement daily with dinner. High energy walk requirements.</textarea>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Service Type</label>
+                    <select x-model="matchData.serviceType" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        <option value="Residential Boarding">Residential Boarding</option>
+                        <option value="Overnight Stay">Overnight Stay</option>
+                        <option value="Dog Walking">Dog Walking</option>
+                        <option value="Cat Sitting">Cat Sitting</option>
+                    </select>
                 </div>
-                <button @click="showMatchModal = false; alert('Matching request successfully submitted to the Zoélys Concierge Desk!')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Submit to Concierge Desk</button>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Start Date</label>
+                        <input type="date" x-model="matchData.startDate" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                    <div>
+                        <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">End Date</label>
+                        <input type="date" x-model="matchData.endDate" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                    </div>
+                </div>
+                <div class="flex justify-between pt-4">
+                    <button @click="matchStep = 1" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="matchStep = 3" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Continue &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Budget & Strategic Credits -->
+            <div x-show="matchStep === 3" class="space-y-4 text-xs" style="display: none;">
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Nightly Budget Range</label>
+                    <select x-model="matchData.budget" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        <option value="Under €50">Under €50 / night</option>
+                        <option value="€50-99">€50 to €99 / night</option>
+                        <option value="€100-149">€100 to €149 / night</option>
+                        <option value="€150+">€150+ / night</option>
+                    </select>
+                </div>
+                <div class="p-4 bg-[#F4EFE6] border border-[#E8E2D5] text-[#2C2A29] space-y-1">
+                    <strong>Strategic Credits Note:</strong> This request uses 2 credits from your Platinum balance (52 available). Zero surge fees apply.
+                </div>
+                <div class="flex justify-between pt-4">
+                    <button @click="matchStep = 2" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="showMatchModal = false; alert('Request successfully submitted to your concierge!')" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Send Request</button>
+                </div>
             </div>
         </div>
     </div>
@@ -598,6 +654,55 @@
                     <p><strong>3. Emergency Protocols:</strong> LisboaVet clinic fallback active. Pre-authorized medical limit set to €300.</p>
                 </div>
                 <button @click="showAiGuideModal = false; alert('AI Guide approved and locked for sitter transmission.')" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium mt-4">Approve & Lock Guide</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: MULTI-STEP SUBSCRIPTION CANCELLATION ================= -->
+    <div x-show="showCancelModal" class="fixed inset-0 bg-[#2C2A29]/40 backdrop-blur-xs flex items-center justify-center z-50 px-4" style="display: none;">
+        <div class="bg-[#FDFBF7] border border-[#E8E2D5] p-10 max-w-md w-full space-y-6 shadow-xl">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-red-900" x-text="'Cancel Subscription — Step ' + cancelStep + ' of 3'"></h3>
+                <button @click="showCancelModal = false; cancelStep = 1;" class="text-xs uppercase tracking-widest text-[#8C8275]">Close</button>
+            </div>
+
+            <!-- Cancel Step 1: Reason Dropdown & Warning -->
+            <div x-show="cancelStep === 1" class="space-y-4 text-xs">
+                <p class="text-[#6C6255] leading-relaxed">We are sorry to see you go. Please tell us why you are canceling your Zoélys membership:</p>
+                <div>
+                    <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Reason for Canceling</label>
+                    <select x-model="cancelReason" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                        <option value="">Select a reason...</option>
+                        <option value="No longer traveling">No longer traveling</option>
+                        <option value="Pricing / budget">Pricing / budget</option>
+                        <option value="Found alternative care">Found alternative care</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="p-4 bg-red-50 border border-red-200 text-red-900 space-y-1">
+                    <strong>Critical Warning:</strong> If you cancel your membership, you will <strong>immediately forfeit all unused Zoélys credits</strong> remaining in your balance. Credits cannot be recovered after cancellation.
+                </div>
+                <button @click="if(!cancelReason){alert('Please select a reason.'); return;} cancelStep = 2;" class="w-full bg-red-900 text-white text-xs uppercase tracking-widest py-3.5 font-medium mt-2">I Understand, Proceed &rarr;</button>
+            </div>
+
+            <!-- Cancel Step 2: Second Confirmation Prompt -->
+            <div x-show="cancelStep === 2" class="space-y-4 text-xs" style="display: none;">
+                <p class="text-[#6C6255] leading-relaxed font-medium">Are you completely sure? You are about to lose your Platinum tier status, concierge matching priority, and your remaining strategic credit balance.</p>
+                <div class="flex justify-between pt-4">
+                    <button @click="cancelStep = 1" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="cancelStep = 3" class="bg-red-900 text-white text-xs uppercase tracking-widest px-6 py-3 font-medium">Yes, Confirm Cancellation &rarr;</button>
+                </div>
+            </div>
+
+            <!-- Cancel Step 3: Final Affirmation & Action -->
+            <div x-show="cancelStep === 3" class="space-y-4 text-xs" style="display: none;" >
+                <p class="text-[#2C2A29] font-serif text-sm">Final Confirmation Required</p>
+                <p class="text-[#6C6255]">Type <strong class="text-[#2C2A29]">CANCEL</strong> below to permanently terminate your subscription.</p>
+                <input type="text" placeholder="Type CANCEL" id="confirmCancelInput" class="w-full bg-white border border-[#E8E2D5] p-3 text-[#2C2A29]">
+                <div class="flex justify-between pt-4">
+                    <button @click="cancelStep = 2" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
+                    <button @click="const val = document.getElementById('confirmCancelInput').value; if(val === 'CANCEL') { confirmCancellation(); } else { alert('Please type CANCEL exactly.'); }" class="bg-red-900 text-white text-xs uppercase tracking-widest px-6 py-3 font-medium">Complete Cancellation</button>
+                </div>
             </div>
         </div>
     </div>
