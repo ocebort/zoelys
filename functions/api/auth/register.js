@@ -2,7 +2,12 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { email, password, full_name, tier, role } = await request.json();
+    const body = await request.json();
+    const email = body.email ? body.email.trim().toLowerCase() : '';
+    const password = body.password;
+    const full_name = body.full_name;
+    const tier = body.tier;
+    const role = body.role;
 
     if (!email || !email.includes('@')) {
       return new Response(JSON.stringify({ success: false, error: 'Invalid email address.' }), { status: 400 });
@@ -25,8 +30,8 @@ export async function onRequestPost(context) {
       )
     `).run();
 
-    // Check if user already exists
-    const existing = await env.zoelys_db.prepare("SELECT email FROM users WHERE email = ?").bind(email).first();
+    // Check if user already exists (case-insensitive)
+    const existing = await env.zoelys_db.prepare("SELECT email FROM users WHERE LOWER(email) = ?").bind(email).first();
     if (existing) {
       return new Response(JSON.stringify({ success: false, error: 'An account with this email already exists.' }), { status: 400 });
     }

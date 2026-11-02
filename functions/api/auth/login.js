@@ -2,16 +2,22 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { email, password, role } = await request.json();
+    const body = await request.json();
+    console.log('Login attempt received for email:', body.email);
+
+    const email = body.email ? body.email.trim().toLowerCase() : '';
+    const password = body.password;
 
     if (!email || !password) {
       return new Response(JSON.stringify({ success: false, error: 'Please enter your email and password.' }), { status: 400 });
     }
 
-    // Query D1 database for user
+    // Query D1 database using LOWER() for case-insensitive matching
     const { results } = await env.zoelys_db.prepare(
-      "SELECT * FROM users WHERE email = ?"
+      "SELECT * FROM users WHERE LOWER(email) = ?"
     ).bind(email).all();
+
+    console.log('Database query results count:', results ? results.length : 0);
 
     if (!results || results.length === 0) {
       return new Response(JSON.stringify({ success: false, error: 'No account found with this email address.' }), { status: 404 });
@@ -31,6 +37,7 @@ export async function onRequestPost(context) {
     });
 
   } catch (err) {
+    console.error('Login error exception:', err.message);
     return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });
   }
 }
