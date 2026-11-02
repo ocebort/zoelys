@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoélys. Pet Care Onboarding.</title>
+  <link rel="icon" type="image/png" href="/assets/logo-paw.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    /* ============ REVEAL ANIMATIONS ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============ HERO & STEP TRACKER ============ */
+    .onboarding-hero {
+      text-align: center;
+      padding: 5.5rem 2rem 2.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .onboarding-hero .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .onboarding-hero h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      color: var(--ink);
+    }
+
+    .onboarding-hero h1 em { font-style: italic; color: var(--accent); }
+
+    .onboarding-hero p {
+      color: var(--ink-muted);
+      font-size: 0.98rem;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 58ch;
+      margin: 0 auto;
+    }
+
+    /* STEP PROGRESS BAR */
+    .step-tracker {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      max-width: 650px;
+      margin: 2rem auto 0;
+      padding-bottom: 1rem;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .step-item.active {
+      color: var(--accent);
+      opacity: 1;
+    }
+
+    .step-number-bubble {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--hairline);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .step-item.active .step-number-bubble {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: var(--hairline);
+    }
+
+    /* ============ WIZARD CONTAINER ============ */
+    main.onboarding-container {
+      max-width: 680px;
+      margin: 0 auto 6rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .wizard-card {
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 3.5rem 3rem;
+      box-shadow: 0 24px 48px -28px rgba(25, 21, 18, 0.12);
+    }
+
+    .form-section-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-section-sub {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 2.2rem;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 0.95rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid var(--hairline);
+      font-family: var(--font-sans);
+      background: var(--bg-card, #FFFFFF);
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.6;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(193, 120, 90, 0.12);
+    }
+
+    /* LEGAL BOX */
+    .legal-box {
+      background: #FFFFFF;
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .legal-box h4 {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      margin: 0 0 0.5rem;
+      color: var(--ink);
+    }
+
+    .legal-box p {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .checkbox-group input {
+      margin-top: 0.2rem;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-group label {
+      font-size: 0.8rem;
+      color: var(--ink);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    /* BUTTON ACTIONS */
+    .wizard-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--hairline);
+      color: var(--ink-muted);
+      padding: 0.95rem 1.8rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg-cream);
+      border: none;
+      padding: 1rem 2.2rem;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.35s ease, transform 0.35s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .wizard-card { padding: 2.2rem 1.6rem; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .step-tracker { gap: 0.6rem; }
+      .step-title-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO & TRACKER -->
+  <header class="onboarding-hero">
+    <span class="eyebrow reveal">Pet Parent Onboarding</span>
+    <h1 class="reveal">Welcome to <em>Zoélys</em></h1>
+    <p class="reveal">Let&rsquo;s establish your pet&rsquo;s profile and medical directives so you&rsquo;re completely prepared whenever travel comes up.</p>
+
+    <!-- STEP PROGRESS TRACKER -->
+    <div class="step-tracker reveal">
+      <div class="step-item active" id="stepIndicator1">
+        <span class="step-number-bubble">1</span>
+        <span class="step-title-text">Pet Briefing</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" id="stepIndicator2">
+        <span class="step-number-bubble">2</span>
+        <span class="step-title-text">Medical Proxy</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" id="stepIndicator3">
+        <span class="step-number-bubble">3</span>
+        <span class="step-title-text">Credit Wallet</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- WIZARD FORM -->
+  <main class="onboarding-container">
+    <div class="wizard-card reveal">
+      
+      <form id="onboardingForm" onsubmit="handleWizardSubmit(event)">
+
+        <!-- STEP 1: PET PROFILE & BRIEFING -->
+        <div id="step1" class="wizard-step">
+          <h2 class="form-section-title">Pet Briefing &amp; Routine</h2>
+          <p class="form-section-sub">Provide details regarding your pet's routine, dietary needs, and primary veterinary preferences.</p>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Pet Name *</label>
+              <input type="text" id="petName" placeholder="e.g. Winston" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Breed &amp; Species *</label>
+              <input type="text" id="petBreed" placeholder="e.g. Border Collie" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Age / Date of Birth</label>
+              <input type="text" id="petAge" placeholder="e.g. 3 Years Old" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Microchip ID (Optional)</label>
+              <input type="text" id="petMicrochip" placeholder="e.g. 98514100029384" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Primary Veterinary Clinic &amp; Phone *</label>
+            <input type="text" id="petVet" placeholder="e.g. Miami Beach Animal Hospital • (305) 555-0199" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Care Instructions &amp; Routine Briefing</label>
+            <textarea id="petRoutine" placeholder="Detail feeding schedules, walk preferences, temperament notes, or medications..." class="form-textarea"></textarea>
+          </div>
+        </div>
+
+        <!-- STEP 2: EMERGENCY MEDICAL & LEGAL PROXY -->
+        <div id="step2" class="wizard-step" style="display: none;">
+          <h2 class="form-section-title">Emergency Medical &amp; Legal Directives</h2>
+          <p class="form-section-sub">Establish legal proxy for your caregiver and specify emergency care financial limits.</p>
+
+          <div class="form-group">
+            <label class="form-label">Emergency Care Financial Authorization Limit *</label>
+            <select id="emergencyLimit" class="form-select">
+              <option value="500">Up to €500 Pre-Authorized</option>
+              <option value="1000" selected>Up to €1,000 Pre-Authorized (Recommended)</option>
+              <option value="2500">Up to €2,500 Pre-Authorized</option>
+              <option value="unlimited">Full Uncapped Authorization for Urgent Care</option>
+            </select>
+          </div>
+
+          <div class="legal-box">
+            <h4>Emergency Medical Care Authorization Proxy</h4>
+            <p>I hereby authorize Zoélys and assigned certified caregivers to act as temporary legal medical proxy to obtain emergency veterinary treatment for my pet up to the specified limit in the event I am unreachable during a sitting.</p>
+            
+            <div class="checkbox-group">
+              <input type="checkbox" id="legalAgree" required>
+              <label for="legalAgree">I agree to the Emergency Medical Authorization Terms and acknowledge Florida two-party privacy consent (Fla. Stat. § 934.03).</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Digital Signature (Full Legal Name) *</label>
+            <input type="text" id="legalSignature" placeholder="e.g. Océane Bort" class="form-input" required>
+          </div>
+        </div>
+
+        <!-- STEP 3: CREDIT WALLET & MEMBERSHIP CONFIRMATION -->
+        <div id="step3" class="wizard-step" style="display: none;">
+          <h2 class="form-section-title">Membership &amp; Credit Wallet</h2>
+          <p class="form-section-sub">Review your selected membership plan and initialize your starting care credits.</p>
+
+          <div style="background: #FFFFFF; border: 1px solid var(--hairline); border-radius: 12px; padding: 2rem; text-align: center; margin-bottom: 2rem;">
+            <span class="eyebrow" style="margin-bottom: 0.4rem;">Selected Subscription</span>
+            <h3 id="planTitleDisplay" style="font-family: var(--font-serif); font-size: 2rem; margin: 0 0 0.5rem; color: var(--ink);">Platinum Tier</h3>
+            <p style="color: var(--accent); font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;">€249 / month</p>
+            <p style="font-size: 0.85rem; color: var(--ink-muted); line-height: 1.6; font-weight: 300; max-width: 45ch; margin: 0 auto;">Includes 24/7 Tele-Vet Triage API, priority concierge matching, and 25 monthly care credits with rollover rollover protection.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Authorization Method</label>
+            <input type="text" placeholder="•••• •••• •••• 4242 (Demo Secured)" class="form-input" disabled style="background: #F8F6F2; cursor: not-allowed;">
+          </div>
+        </div>
+
+        <!-- NAVIGATION ACTIONS -->
+        <div class="wizard-actions">
+          <button type="button" class="btn-secondary" id="backBtn" onclick="navigateStep(-1)" style="visibility: hidden;">&larr; Back</button>
+          <button type="button" class="btn-primary" id="nextBtn" onclick="navigateStep(1)">Next Step &rarr;</button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="master-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="brand-logo"><img class="brand-logo-img" src="/assets/logo-paw-light.png" alt="Zoélys"><span class="brand-word">ZOÉLYS</span></a>
+        <p class="footer-tag">&ldquo;Pets aren&rsquo;t a side note. They&rsquo;re family. We treat them that way.&rdquo;</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Zoélys</h5>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/join">Member Portal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
+      <div>Premium pet care, redefined.</div>
+    </div>
+  </footer>
+
+  <script src="/navbar.js"></script>
+  <script>
+    let currentStep = 1;
+
+    function updateStepUI() {
+      // Step Display
+      document.querySelectorAll('.wizard-step').forEach((el, index) => {
+        el.style.display = (index + 1 === currentStep) ? 'block' : 'none';
+      });
+
+      // Step Tracker Indicators
+      for (let i = 1; i <= 3; i++) {
+        const indicator = document.getElementById(`stepIndicator${i}`);
+        if (i <= currentStep) {
+          indicator.classList.add('active');
+        } else {
+          indicator.classList.remove('active');
+        }
+      }
+
+      // Buttons
+      const backBtn = document.getElementById('backBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      backBtn.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+
+      if (currentStep === 3) {
+        nextBtn.innerText = 'Complete Setup & Go to Dashboard →';
+      } else {
+        nextBtn.innerText = 'Next Step →';
+      }
+    }
+
+    function navigateStep(direction) {
+      if (direction === 1) {
+        // Simple Step Validation
+        if (currentStep === 1) {
+          const name = document.getElementById('petName').value;
+          const breed = document.getElementById('petBreed').value;
+          const vet = document.getElementById('petVet').value;
+          if (!name || !breed || !vet) {
+            alert('Please fill out all required pet details (*).');
+            return;
+          }
+        } else if (currentStep === 2) {
+          const agree = document.getElementById('legalAgree').checked;
+          const signature = document.getElementById('legalSignature').value;
+          if (!agree || !signature) {
+            alert('Please sign and accept the Emergency Medical Authorization Terms.');
+            return;
+          }
+        } else if (currentStep === 3) {
+          // Finalize onboarding and proceed to dashboard
+          handleWizardFinalize();
+          return;
+        }
+      }
+
+      currentStep += direction;
+      updateStepUI();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    async function handleWizardFinalize() {
+      const petData = {
+        name: document.getElementById('petName').value,
+        breed: document.getElementById('petBreed').value,
+        age: document.getElementById('petAge').value,
+        microchip: document.getElementById('petMicrochip').value,
+        vet: document.getElementById('petVet').value,
+        routine: document.getElementById('petRoutine').value,
+        emergencyLimit: document.getElementById('emergencyLimit').value,
+        signature: document.getElementById('legalSignature').value,
+        user_id: localStorage.getItem('zoelys_user_id')
+      };
+
+      try {
+        const res = await fetch('/api/onboarding/pet-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(petData)
+        });
+        
+        // Redirect to member dashboard
+        window.location.href = '/dashboard';
+      } catch (err) {
+        // Graceful fallback to dashboard if offline
+        window.location.href = '/dashboard';
+      }
+    }
+
+    // Scroll Reveal Observer
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+  </script>
+</body>
+</html>
