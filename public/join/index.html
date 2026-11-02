@@ -472,7 +472,7 @@
             document.getElementById('sentEmailDisplay').innerText = email;
             document.getElementById('verifyNotice').style.display = 'block';
           } else {
-            alert('Registration Error: ' + (data.error || 'Registration failed. Please check your inputs.'));
+            alert(`Registration Error: ${data.error || "Registration failed. Please check your inputs."}`));
           }
         } catch (err) {
           alert('Network Error: Unable to reach the authentication server.');
