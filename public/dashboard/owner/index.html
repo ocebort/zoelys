@@ -67,7 +67,20 @@
     favorites: [
         { name: 'Sarah M.', rating: '4.98', location: 'Chiado, Lisbon', experience: '3 years with Zoélys' }
     ],
-    // Multi-step Concierge Intake Form State (Full Home Page Parity)
+    // Chat state
+    chatMessages: [
+        { sender: 'Sarah M.', text: 'Hello Océane! Luna had a wonderful walk this morning along the river path.', time: '10:15 AM' },
+        { sender: 'You', text: 'That is wonderful to hear, thank you Sarah! Did she finish her morning water?', time: '10:20 AM' },
+        { sender: 'Sarah M.', text: 'Yes, she drank right after we came back. Everything is going perfectly!', time: '10:22 AM' }
+    ],
+    newChatMessage: '',
+    sendChatMessage() {
+        if(this.newChatMessage.trim() !== '') {
+            this.chatMessages.push({ sender: 'You', text: this.newChatMessage, time: 'Just now' });
+            this.newChatMessage = '';
+        }
+    },
+    // Multi-step Concierge Intake Form State
     matchStep: 1,
     matchData: {
         fullName: 'Océane',
@@ -88,7 +101,7 @@
         diet: 'Kibble',
         outdoorSpace: 'Yes',
         serviceType: 'Residential Boarding',
-        serviceDesc: 'Full-time care at caregiver’s home with continuous presence (minimum 4 hours to multi-day stays).',
+        serviceDesc: 'Full-time residential care at the caregiver’s private home with continuous presence and elite oversight (minimum 4 hours to multi-day stays).',
         startDate: '2026-11-01',
         endDate: '2026-11-05',
         expLevel: 'Professional 5+ years',
@@ -156,6 +169,7 @@
         <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Overview</button>
         <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Pet Profiles & Medical</button>
         <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Bookings & Sitter Overview</button>
+        <button @click="activeTab = 'chat'" :class="activeTab === 'chat' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Sitter Chat</button>
         <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Safety & Protocols</button>
         <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits, Billing & Subscriptions</button>
         <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Settings & GDPR</button>
@@ -206,7 +220,7 @@
             <div class="space-y-6 border-t border-[#E8E2D5] pt-10">
                 <div class="flex justify-between items-center">
                     <h3 class="font-serif text-xl text-[#2C2A29]">Live Care Feed & Photos</h3>
-                    <button @click="showTimelineModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">View Expanded Timeline →</button>
+                    <button @click="showTimelineModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">View Full Timeline →</button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <template x-for="event in timelineEvents">
@@ -291,7 +305,7 @@
                         <p class="text-xs text-[#8C8275]">Rating: 4.98 / 5.0 • Verified High-Trust Sitter</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <button onclick="alert('Opening secure chat with Sarah...')" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Message Sitter</button>
+                        <button @click="activeTab = 'chat'" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Message Sitter</button>
                         <button onclick="alert('Added Sarah M. to your saved favorites list!')" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">Save to Favorites</button>
                     </div>
                 </div>
@@ -315,6 +329,32 @@
                         </div>
                     </div>
                 </template>
+            </div>
+        </div>
+
+        <!-- ================= TAB: SITTER CHAT ================= -->
+        <div x-show="activeTab === 'chat'" class="space-y-8" style="display: none;">
+            <div class="border-b border-[#E8E2D5] pb-6">
+                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Secure Messaging</span>
+                <h2 class="text-3xl font-serif text-[#2C2A29]">Chat with Sarah M. (Active Sitter)</h2>
+            </div>
+            
+            <div class="border border-[#E8E2D5] bg-white p-6 space-y-6 flex flex-col h-[500px]">
+                <!-- Chat Log Area -->
+                <div class="flex-1 overflow-y-auto space-y-4 pr-2">
+                    <template x-for="msg in chatMessages">
+                        <div class="flex flex-col" :class="msg.sender === 'You' ? 'items-end' : 'items-start'">
+                            <span class="text-[10px] text-[#8C8275] uppercase tracking-widest mb-1" x-text="msg.sender + ' • ' + msg.time"></span>
+                            <div class="p-4 max-w-md text-xs leading-relaxed" :class="msg.sender === 'You' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'bg-[#F4EFE6] text-[#2C2A29] border border-[#E8E2D5]'" x-text="msg.text"></div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Input Area -->
+                <div class="border-t border-[#E8E2D5] pt-4 flex gap-4">
+                    <input type="text" x-model="newChatMessage" @keydown.enter="sendChatMessage()" placeholder="Type a secure message to Sarah..." class="flex-1 bg-[#FDFBF7] border border-[#E8E2D5] p-3 text-xs text-[#2C2A29] outline-none">
+                    <button @click="sendChatMessage()" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Send</button>
+                </div>
             </div>
         </div>
 
@@ -661,7 +701,7 @@
                 <div>
                     <label class="block uppercase tracking-widest text-[10px] text-[#8C8275] mb-1">Select High-Trust Service</label>
                     <select x-model="matchData.serviceType" @change="
-                        if(matchData.serviceType === 'Residential Boarding') matchData.serviceDesc = 'Full-time care at caregiver’s home with continuous presence and secure environment.';
+                        if(matchData.serviceType === 'Residential Boarding') matchData.serviceDesc = 'Full-time residential care at the caregiver’s private home with continuous presence and elite oversight (minimum 4 hours to multi-day stays).';
                         else if(matchData.serviceType === 'Overnight Stay') matchData.serviceDesc = 'Nighttime care at your home ensuring your pet is never left alone overnight.';
                         else if(matchData.serviceType === 'Live-In Care') matchData.serviceDesc = 'Dedicated 24/7 in-home caregiver presence for constant companionship and elite oversight.';
                         else matchData.serviceDesc = 'Extended care visit lasting a minimum of 4 hours with tailored routines and exercise.';
@@ -673,7 +713,6 @@
                     </select>
                 </div>
                 <div class="p-4 bg-[#F4EFE6] border border-[#E8E2D5] text-[#2C2A29] rounded-xs space-y-1">
-                    <strong class="block uppercase tracking-widest text-[9px] text-[#8C8275]">Authorized Service Description:</strong>
                     <span x-text="matchData.serviceDesc"></span>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -723,9 +762,6 @@
                         <option value="€100-149">€100 to €149 / night</option>
                         <option value="€150+">€150+ / night</option>
                     </select>
-                </div>
-                <div class="p-4 bg-[#F4EFE6] border border-[#E8E2D5] text-[#2C2A29]">
-                    This request uses <strong>2 Strategic Credits</strong> from your Platinum balance (52 available). Zero hidden booking or surge fees.
                 </div>
                 <div class="flex justify-between pt-4">
                     <button @click="matchStep = 5" class="text-xs uppercase tracking-widest text-[#8C8275]">&larr; Back</button>
