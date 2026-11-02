@@ -2,16 +2,44 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { email, password, full_name, tier, role } = await request.json();
+    const body = await request.json();
+    const { email, password, full_name, tier, role } = body;
 
-    // 1. Generate unique verification token
+    // 1. Detailed Field Validations
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      return new Response(JSON.stringify({ success: false, error: 'Validation Error: Please enter a valid email address.' }), { status: 400 });
+    }
+
+    if (!password || password.length < 8) {
+      return new Response(JSON.stringify({ success: false, error: 'Validation Error: Password must be at least 8 characters long.' }), { status: 400 });
+    }
+
+    if (!full_name || full_name.trim().length === 0) {
+      return new Response(JSON.stringify({ success: false, error: 'Validation Error: Please enter your full name.' }), { status: 400 });
+    }
+
+    // 2. Check D1 Database for existing user safely
+    if (env.zoelys_db) {
+      try {
+        const existingUser = await env.zoelys_db.prepare("SELECT id FROM users WHERE email = ?").bind(email.toLowerCase()).first();
+        if (existingUser) {
+          return new Response(JSON.stringify({ success: false, error: 'An account with this email address already exists. Please sign in instead.' }), { status: 400 });
+        }
+      } catch (dbErr) {
+        console.log("D1 Table Check Note:", dbErr.message);
+      }
+    }
+
+    // 3. Ensure Resend API Key exists
+    if (!env.RESEND_API_KEY) {
+      return new Response(JSON.stringify({ success: false, error: 'Server Configuration Error: RESEND_API_KEY secret is missing on Cloudflare.' }), { status: 500 });
+    }
+
+    // 4. Generate token and dispatch email via Resend
     const verifyToken = crypto.randomUUID();
-
-    // 2. Build verification URL
     const origin = new URL(request.url).origin;
     const verifyLink = `${origin}/api/auth/verify?token=${verifyToken}&email=${encodeURIComponent(email)}`;
 
-    // 3. Send email using Resend API
     const resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -34,16 +62,22 @@ export async function onRequestPost(context) {
       })
     });
 
+    const resendData = await resendResponse.json();
+
     if (resendResponse.ok) {
       return new Response(JSON.stringify({ success: true }), {
         headers: { 'Content-Type': 'application/json' }
       });
     } else {
-      const errData = await resendResponse.json();
-      return new Response(JSON.stringify({ success: false, error: errData.message || 'Failed to dispatch email.' }), { status: 500 });
+      console.log("Resend Dispatch Error:", JSON.stringify(resendData));
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: resendData.message || 'Email dispatch failed via Resend.' 
+      }), { status: 400 });
     }
 
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });
+    console.log("Critical Registration Error:", err.message);
+    return new Response(JSON.stringify({ success: false, error: 'Registration failed. Server exception: ' + err.message }), { status: 500 });
   }
 }
