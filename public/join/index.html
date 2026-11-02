@@ -89,6 +89,14 @@
     let selectedRole = 'owner';
     let isRegisterMode = true;
 
+    // Check if URL has verified=true notice
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('verified') === 'true') {
+        alert('Email verified successfully! You can now sign in.');
+      }
+    });
+
     function setRole(role) {
       selectedRole = role;
       document.getElementById('btnOwner').classList.toggle('active', role === 'owner');
@@ -105,23 +113,24 @@
       document.getElementById('authTitle').innerHTML = isRegisterMode ? 'Apply for <em>Access</em>' : 'Welcome <em>Back</em>';
       document.getElementById('authSub').innerText = isRegisterMode ? 'Join Zoélys, a private caregiving concierge for discerning pet parents and certified caregivers.' : 'Sign in to access your confidential care roster and active concierge threads.';
 
-      // Toggle visibility AND required attributes to prevent hidden field validation blocks
+      const nameGroup = document.getElementById('nameGroup');
       const nameField = document.getElementById('authName');
+      const confirmGroup = document.getElementById('confirmPassGroup');
       const confirmField = document.getElementById('authPassConfirm');
       const tierGroup = document.getElementById('tierGroup');
       const roleToggle = document.getElementById('roleToggleBar');
 
       if (isRegisterMode) {
-        nameField.style.display = 'block';
+        nameGroup.style.display = 'block';
         nameField.required = true;
-        confirmField.style.display = 'block';
+        confirmGroup.style.display = 'block';
         confirmField.required = true;
         tierGroup.style.display = selectedRole === 'owner' ? 'block' : 'none';
         roleToggle.style.display = 'grid';
       } else {
-        nameField.style.display = 'none';
+        nameGroup.style.display = 'none';
         nameField.required = false;
-        confirmField.style.display = 'none';
+        confirmGroup.style.display = 'none';
         confirmField.required = false;
         tierGroup.style.display = 'none';
         roleToggle.style.display = 'none';
@@ -168,7 +177,6 @@
         }
       } else {
         try {
-          console.log('Sending login request to /api/auth/login...');
           const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -176,8 +184,6 @@
           });
 
           const data = await res.json();
-          console.log('Login Response:', data);
-
           if (data.success) {
             alert('Successfully signed in as ' + data.user.full_name);
             window.location.reload();
@@ -185,7 +191,6 @@
             alert('Sign In Error: ' + (data.error || 'Invalid credentials'));
           }
         } catch (err) {
-          console.error('Login Error:', err);
           alert('Network Error: Unable to reach /api/auth/login');
         }
       }
