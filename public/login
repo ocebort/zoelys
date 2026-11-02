@@ -157,7 +157,7 @@
           throw new Error(data.error || 'Failed to sign in.');
         }
 
-        // Redirection vers le dashboard après connexion réussie
+        // Redirection réussie vers le tableau de bord
         window.location.href = '/dashboard';
 
       } catch (err) {
