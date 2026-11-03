@@ -9,7 +9,7 @@ export default {
       return handleAdminOverview(env);
     }
 
-    // 2. Algorithme de Matching (Top 3 Sitters)
+    // 2. Algorithme de Matching (Top 3 Sitters & Roster complet)
     if (path === '/api/admin/match' && method === 'GET') {
       return handleMatchAlgorithm(url, env);
     }
@@ -65,7 +65,7 @@ async function handleAdminOverview(env) {
     const totalUsers = users.length;
     const totalOwners = users.filter(u => u.role && u.role.toLowerCase() === 'owner').length;
     
-    // Tous les utilisateurs inscrits sont inclus pour permettre la sélection manuelle complète
+    // Inclut tous les utilisateurs (y compris 'pet_sitter')
     const sittersList = users;
 
     return new Response(JSON.stringify({
@@ -89,11 +89,13 @@ async function handleMatchAlgorithm(url, env) {
     }
 
     const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests WHERE id = ?").bind(requestId).first();
+    
+    // Récupère l'intégralité des profils pour alimenter la modale admin sans restriction de rôle
     const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users").all();
     const sitters = sittersRes.results || [];
 
     const scoredSitters = sitters.map(sitter => {
-      let score = 80; // Score de base par défaut
+      let score = 85; // Score de base par défaut
       if (sitter.rating) {
         score += Math.round(parseFloat(sitter.rating) * 3);
       }
