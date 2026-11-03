@@ -9,17 +9,27 @@ export default {
       return handleAdminOverview(env);
     }
 
-    // 2. Création de demande (supporte toutes les variantes possibles du front-end)
+    // 2. Algorithme de Matching (Top 3 Sitters)
+    if (path === '/api/admin/match' && method === 'GET') {
+      return handleMatchAlgorithm(url, env);
+    }
+
+    // 3. Envoi de la proposition au propriétaire
+    if (path === '/api/admin/propose' && method === 'POST') {
+      return handleSendProposal(request, env);
+    }
+
+    // 4. Création de demande (supporte toutes les variantes possibles du front-end)
     if ((path === '/api/requests' || path === '/api/client-requests' || path === '/api/bookings') && method === 'POST') {
       return handleCreateRequest(request, env);
     }
 
-    // 3. Récupération des demandes du propriétaire
+    // 5. Récupération des demandes du propriétaire
     if ((path === '/api/owner/requests' || path === '/api/client-requests') && method === 'GET') {
       return handleOwnerRequests(url, env);
     }
 
-    // 4. Fichiers statiques du dossier public/
+    // 6. Fichiers statiques du dossier public/
     return env.ASSETS.fetch(request);
   }
 };
@@ -33,7 +43,7 @@ async function handleAdminOverview(env) {
 
     let users = [];
     try {
-      const uRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role FROM users").all();
+      const uRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role, location, rating FROM users").all();
       if (uRes && uRes.results) users = uRes.results;
     } catch (e) {}
 
@@ -55,6 +65,60 @@ async function handleAdminOverview(env) {
     }), { status: 200, headers });
   } catch (err) {
     return new Response(JSON.stringify({ ...fallbackData, error: err.message }), { status: 200, headers });
+  }
+}
+
+async function handleMatchAlgorithm(url, env) {
+  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  const requestId = url.searchParams.get('requestId');
+
+  try {
+    if (!env || !env.zoelys_db) {
+      return new Response(JSON.stringify({ success: false, error: 'Database binding missing' }), { status: 500, headers });
+    }
+
+    const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests WHERE id = ?").bind(requestId).first();
+    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users WHERE role LIKE '%sitter%' OR role LIKE '%pet_sitter%'").all();
+    const sitters = sittersRes.results || [];
+
+    const scoredSitters = sitters.map(sitter => {
+      let score = 80; // Score de base par défaut
+      if (sitter.rating) {
+        score += Math.round(parseFloat(sitter.rating) * 3);
+      }
+      return {
+        ...sitter,
+        matchScore: Math.min(score, 99)
+      };
+    });
+
+    // Tri par score décroissant
+    scoredSitters.sort((a, b) => b.matchScore - a.matchScore);
+
+    return new Response(JSON.stringify({
+      success: true,
+      request: reqRes,
+      topMatches: scoredSitters
+    }), { status: 200, headers });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
+  }
+}
+
+async function handleSendProposal(request, env) {
+  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  try {
+    const body = await request.json();
+    const { requestId } = body;
+
+    await env.zoelys_db.prepare(
+      "UPDATE client_requests SET status = 'proposed' WHERE id = ?"
+    ).bind(requestId).run();
+
+    return new Response(JSON.stringify({ success: true, message: 'Proposal sent to owner successfully!' }), { status: 200, headers });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
   }
 }
 
