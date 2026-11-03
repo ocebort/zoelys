@@ -92,7 +92,6 @@
             alert('Please enter a message before sending.');
         }
     },
-    // Multi-Step Concierge Intake Form State
     matchStep: 1,
     matchData: {
         fullName: 'Océane',
@@ -125,36 +124,36 @@
         finalNotes: ''
     },
     async submitBookingRequest() {
-    console.log('--> Début de submitBookingRequest');
-    try {
-        const response = await fetch('/api/requests', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: this.matchData.email,
-                full_name: this.matchData.fullName,
-                pet_name: this.matchData.petName,
-                pet_type: this.matchData.animalType,
-                service_type: this.matchData.serviceType
-            })
-        });
+        console.log('--> Sending booking request for:', this.matchData.petName, 'by', this.matchData.email);
+        try {
+            const response = await fetch('/api/requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: this.matchData.email,
+                    full_name: this.matchData.fullName,
+                    pet_name: this.matchData.petName,
+                    pet_type: this.matchData.animalType,
+                    service_type: this.matchData.serviceType
+                })
+            });
 
-        const result = await response.json();
-        console.log('--> Réponse de l\'API :', result);
+            const result = await response.json();
+            console.log('--> Server response:', result);
 
-        if (response.ok && result.success) {
-            alert('SUCCÈS API : Demande enregistrée avec ID ' + result.requestId);
-            this.showMatchModal = false;
-            this.matchStep = 1;
-            await this.fetchOwnerRequests();
-        } else {
-            alert('ERREUR API : ' + (result.error || 'Inconnue'));
+            if (response.ok && result.success) {
+                alert(`Booking request successfully submitted for ${this.matchData.petName}! It is now visible in the admin overview.`);
+                this.showMatchModal = false;
+                this.matchStep = 1;
+                await this.fetchOwnerRequests();
+            } else {
+                alert('Error: ' + (result.error || 'Could not submit booking.'));
+            }
+        } catch (err) {
+            console.error('--> Network error:', err);
+            alert('Network connection error while submitting booking.');
         }
-    } catch (err) {
-        console.error('--> Erreur critique fetch :', err);
-        alert('Erreur réseau critique : ' + err.message);
-    }
-}
+    },
     async fetchOwnerRequests() {
         try {
             const res = await fetch(`/api/owner/requests?email=${encodeURIComponent(this.matchData.email)}`);
