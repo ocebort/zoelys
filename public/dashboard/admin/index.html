@@ -44,7 +44,7 @@
     .loading { text-align: center; color: #666; padding: 20px; }
     
     .modal-backdrop { position: fixed; inset: 0; background: rgba(25, 21, 18, 0.4); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 50; }
-    .modal-card { background: #FAF8F5; border: 1px solid #EBE6DF; border-radius: 12px; padding: 30px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 28px 52px rgba(25,21,18,0.22); }
+    .modal-card { background: #FAF8F5; border: 1px solid #EBE6DF; border-radius: 12px; padding: 30px; max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 28px 52px rgba(25,21,18,0.22); }
   </style>
 </head>
 <body x-data="{ 
@@ -59,6 +59,7 @@
     allSitters: [],
     selectedSitterIds: [],
     isCalculating: false,
+    showBackupCatalog: false,
     sitterSearchQuery: '',
 
     async loadAdminData() {
@@ -93,17 +94,16 @@
         this.topMatches = [];
         this.allSitters = [];
         this.selectedSitterIds = [];
+        this.showBackupCatalog = false;
         this.sitterSearchQuery = '';
 
         try {
-            // Appel direct à l'API de matching qui interroge la base de données
             const res = await fetch(`/api/admin/match?requestId=` + encodeURIComponent(req.id));
             const data = await res.json();
             if (data.success) {
                 this.topMatches = data.topMatches || [];
-                // Tous les sitters renvoyés par l'API sont stockés ici pour la recherche et la sélection
                 this.allSitters = data.topMatches || [];
-                // Pré-sélectionne le Top 3 par défaut
+                // Sélectionne par défaut le Top 3 algorithmique
                 this.selectedSitterIds = this.topMatches.slice(0, 3).map(s => s.email || s.id);
             } else {
                 alert('Error running algorithm: ' + (data.error || 'Unknown'));
@@ -124,7 +124,7 @@
         }
     },
 
-    filteredSitters() {
+    filteredBackupSitters() {
         if (!this.sitterSearchQuery.trim()) return this.allSitters;
         const q = this.sitterSearchQuery.toLowerCase();
         return this.allSitters.filter(s => 
@@ -296,60 +296,82 @@
     </section>
   </div>
 
-  <!-- ADVANCED REVIEW & FILTER MODAL -->
+  <!-- ALGORITHM & BACKUP MODAL -->
   <div x-show="showMatchModal" class="modal-backdrop" style="display: none;">
     <div @click.away="showMatchModal = false" class="modal-card">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EBE6DF; padding-bottom: 15px; margin-bottom: 20px;">
         <div>
           <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #666;">Concierge Control Center</span>
-          <h3 style="font-family: 'Baskerville', serif; font-size: 20px; margin: 4px 0 0 0;" x-text="'Select Caregivers for ' + (selectedRequest ? selectedRequest.pet_name : '')"></h3>
+          <h3 style="font-family: 'Baskerville', serif; font-size: 20px; margin: 4px 0 0 0;" x-text="'Algorithm Recommendations for ' + (selectedRequest ? selectedRequest.pet_name : '')"></h3>
         </div>
         <button @click="showMatchModal = false" style="background: none; border: none; font-size: 14px; cursor: pointer; color: #666;">Close ✕</button>
       </div>
 
       <template x-if="isCalculating">
-        <div class="loading" style="padding: 40px 0;">Loading caregivers registry...</div>
+        <div class="loading" style="padding: 40px 0;">Running recommendation algorithm...</div>
       </template>
 
       <template x-if="!isCalculating">
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
-          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-            <input type="text" x-model="sitterSearchQuery" placeholder="Filter sitters by name, city, or email..." style="flex: 1; padding: 8px 12px; border: 1px solid #EBE6DF; border-radius: 6px; font-size: 13px; background: #FFFFFF; outline: none;">
-            <button @click="runMatchingAlgorithm(selectedRequest)" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF; font-size: 11px; white-space: nowrap;">Refresh List ⟳</button>
-          </div>
+          <!-- 1. TOP MATCHES DE L'ALGORITHME -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h4 style="margin: 0; font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 0.05em;">Top Algorithm Recommendations</h4>
+              <button @click="runMatchingAlgorithm(selectedRequest)" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF; font-size: 11px;">Re-run Algorithm ⟳</button>
+            </div>
 
-          <p style="margin: 0; font-size: 12px; color: #666;">
-            Check or uncheck any caregiver below to include them in the proposal sent to the owner.
-          </p>
-
-          <div style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;">
-            <template x-for="sitter in filteredSitters()" :key="sitter.email">
-              <div @click="toggleSitterSelection(sitter.email || sitter.id)" 
-                   style="border: 1px solid #EBE6DF; background: #FFFFFF; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s;"
-                   :style="selectedSitterIds.includes(sitter.email || sitter.id) ? 'border-color: #191512; background: #FDFBF7;' : ''">
-                
-                <div style="display: flex; align-items: center; gap: 12px;">
-                  <input type="checkbox" :checked="selectedSitterIds.includes(sitter.email || sitter.id)" @click.stop="toggleSitterSelection(sitter.email || sitter.id)" style="width: 16px; height: 16px; cursor: pointer;">
-                  <div>
-                    <h4 style="margin: 0; font-size: 14px; font-weight: 600;" x-text="sitter.full_name || sitter.email"></h4>
-                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #666;" x-text="(sitter.location || 'Lisbon') + ' • ' + (sitter.role || 'pet_sitter')"></p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <template x-for="(sitter, index) in topMatches.slice(0, 3)" :key="sitter.email">
+                <div style="border: 1px solid #EBE6DF; background: #FFFFFF; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <input type="checkbox" :checked="selectedSitterIds.includes(sitter.email || sitter.id)" @change="toggleSitterSelection(sitter.email || sitter.id)" style="width: 16px; height: 16px; cursor: pointer;">
+                    <div>
+                      <span style="font-size: 10px; font-weight: bold; background: #FAF8F5; border: 1px solid #EBE6DF; padding: 2px 5px; border-radius: 3px;" x-text="'Rank #' + (index + 1)"></span>
+                      <h4 style="margin: 4px 0 0 0; font-size: 14px; font-weight: 600;" x-text="sitter.full_name || sitter.email"></h4>
+                      <p style="margin: 2px 0 0 0; font-size: 11px; color: #666;" x-text="(sitter.location || 'Lisbon') + ' • ' + (sitter.role || 'pet_sitter')"></p>
+                    </div>
                   </div>
+                  <span style="font-size: 14px; font-family: 'Baskerville', serif; color: #2E5A34; font-weight: bold;" x-text="(sitter.matchScore || 85) + '% Match'"></span>
                 </div>
+              </template>
 
-                <div>
-                  <span style="font-size: 13px; font-family: 'Baskerville', serif; color: #2E5A34; font-weight: bold;" 
-                        x-text="(sitter.matchScore || 85) + '% Match'"></span>
-                </div>
-
-              </div>
-            </template>
+              <template x-if="topMatches.length === 0">
+                <p style="text-align: center; color: #666; font-style: italic; padding: 15px 0;">No automatic matches found by algorithm.</p>
+              </template>
+            </div>
           </div>
 
-          <template x-if="filteredSitters().length === 0">
-            <p style="text-align: center; color: #666; font-style: italic; padding: 15px 0;">No sitters found matching your search.</p>
-          </template>
+          <!-- 2. BOUTON DE SECOURS (BACKUP CATALOG) -->
+          <div style="border-top: 1px dashed #EBE6DF; padding-top: 15px;">
+            <button @click="showBackupCatalog = !showBackupCatalog" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF; width: 100%; text-align: center; padding: 10px; font-size: 12px;">
+              <span x-text="showBackupCatalog ? '▲ Hide Backup Sitter Catalog' : '▼ Backup Plan: Browse & Add Any Sitter from Platform'"></span>
+            </button>
 
+            <!-- Catalogue de secours filtrable -->
+            <div x-show="showBackupCatalog" style="margin-top: 12px; background: #FFF; border: 1px solid #EBE6DF; border-radius: 8px; padding: 16px;">
+              <input type="text" x-model="sitterSearchQuery" placeholder="Search by name (e.g. Test Sitter) or city..." style="width: 100%; padding: 8px 12px; border: 1px solid #EBE6DF; border-radius: 6px; font-size: 13px; background: #FAF8F5; outline: none; margin-bottom: 12px; box-sizing: border-box;">
+
+              <div style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+                <template x-for="sitter in filteredBackupSitters()" :key="sitter.email">
+                  <div @click="toggleSitterSelection(sitter.email || sitter.id)" 
+                       style="border: 1px solid #EBE6DF; background: #FAF8F5; border-radius: 6px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;"
+                       :style="selectedSitterIds.includes(sitter.email || sitter.id) ? 'border-color: #191512; background: #FDFBF7;' : ''">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <input type="checkbox" :checked="selectedSitterIds.includes(sitter.email || sitter.id)" @click.stop="toggleSitterSelection(sitter.email || sitter.id)" style="width: 15px; height: 15px; cursor: pointer;">
+                      <div>
+                        <strong style="font-size: 13px;" x-text="sitter.full_name || sitter.email"></strong>
+                        <span style="font-size: 11px; color: #666; display: block;" x-text="(sitter.location || 'Lisbon') + ' • ' + sitter.role"></span>
+                      </div>
+                    </div>
+                    <span style="font-size: 11px; color: #666; font-style: italic;">Manual Add</span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions de fin de modale -->
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; border-top: 1px solid #EBE6DF; padding-top: 15px;">
             <button @click="showMatchModal = false" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF;">Cancel</button>
             <button @click="sendProposalToOwner()" class="action-btn" :disabled="selectedSitterIds.length === 0">Send Selected Proposal to Owner →</button>
