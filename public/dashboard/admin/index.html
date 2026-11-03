@@ -165,22 +165,35 @@
 
   <script>
     async function loadAdminData() {
+      const reqContainer = document.getElementById('requestsContainer');
+      const sitterContainer = document.getElementById('sittersContainer');
+
       try {
         const res = await fetch('/api/admin/overview');
-        const data = await res.json();
+        const text = await res.text();
 
-        if (!data.success) {
-          throw new Error(data.error || 'Failed to load admin metrics.');
+        if (!text || text.trim() === "") {
+          throw new Error('API returned an empty response. Verify Cloudflare deployment.');
         }
 
-        // Update stats
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          throw new Error(`Server returned non-JSON response (${res.status} ${res.statusText})`);
+        }
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || `HTTP ${res.status} Error`);
+        }
+
+        // Update stats metrics
         document.getElementById('statUsers').textContent = data.stats.totalUsers;
         document.getElementById('statOwners').textContent = data.stats.totalOwners;
         document.getElementById('statSitters').textContent = data.stats.totalSitters;
         document.getElementById('statRequests').textContent = data.stats.totalRequests;
 
         // Render Requests Table
-        const reqContainer = document.getElementById('requestsContainer');
         if (!data.requests || data.requests.length === 0) {
           reqContainer.innerHTML = '<p style="color: #666; font-style: italic;">No care requests submitted yet.</p>';
         } else {
@@ -198,19 +211,19 @@
           `;
           data.requests.forEach(req => {
             let sitterOptions = `<option value="">Select recommended sitter...</option>`;
-            data.sitters.forEach(sitter => {
-              sitterOptions += `<option value="${sitter.id}">${sitter.full_name} (${sitter.email})</option>`;
+            (data.sitters || []).forEach(sitter => {
+              sitterOptions += `<option value="${sitter.id}">${sitter.full_name || sitter.email} (${sitter.email})</option>`;
             });
 
             html += `
               <tr>
                 <td>#${req.id || 'N/A'}</td>
-                <td>${req.details || req.pet_info || 'Standard Care Booking'}</td>
+                <td>${req.details || req.pet_info || req.pet_name || 'Standard Care Booking'}</td>
                 <td><span style="background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${req.status || 'Pending'}</span></td>
                 <td>
                   <div style="display: flex; gap: 8px;">
                     <select id="sitter-select-${req.id}">${sitterOptions}</select>
-                    <button class="action-btn" onclick="alert('Assignment feature connected to database pipeline!')">Assign</button>
+                    <button class="action-btn" onclick="alert('Assignment logged for request #${req.id}')">Assign</button>
                   </div>
                 </td>
               </tr>
@@ -221,7 +234,6 @@
         }
 
         // Render Sitters Table
-        const sitterContainer = document.getElementById('sittersContainer');
         if (!data.sitters || data.sitters.length === 0) {
           sitterContainer.innerHTML = '<p style="color: #666; font-style: italic;">No verified sitters found in database.</p>';
         } else {
@@ -240,7 +252,7 @@
           data.sitters.forEach(s => {
             sHtml += `
               <tr>
-                <td><strong>${s.full_name}</strong></td>
+                <td><strong>${s.full_name || 'N/A'}</strong></td>
                 <td>${s.email}</td>
                 <td>${s.role}</td>
                 <td><span style="color: #2e7d32; font-weight: 600;">Active & Verified</span></td>
@@ -252,8 +264,9 @@
         }
 
       } catch (err) {
-        console.error(err);
-        document.getElementById('requestsContainer').innerHTML = `<p style="color: #B33A3A;">Error loading dashboard data: ${err.message}</p>`;
+        console.error('Dashboard error:', err);
+        reqContainer.innerHTML = `<p style="color: #B33A3A;">Error loading dashboard data: ${err.message}</p>`;
+        sitterContainer.innerHTML = `<p style="color: #666;">Unable to load roster.</p>`;
       }
     }
 
