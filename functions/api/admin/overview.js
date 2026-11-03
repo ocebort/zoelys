@@ -1,69 +1,38 @@
 export async function onRequestGet(context) {
   const { env } = context;
 
-  // Default fallback payload
-  const fallbackPayload = {
-    success: true,
-    stats: { totalUsers: 0, totalOwners: 0, totalSitters: 0, totalRequests: 0 },
-    requests: [],
-    sitters: []
-  };
-
-  if (!env || !env.zoelys_db) {
-    return new Response(JSON.stringify(fallbackPayload), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
   try {
-    // 1. User stats from D1
-    let userStats = { total_users: 0, total_owners: 0, total_sitters: 0 };
-    try {
-      const statsRes = await env.zoelys_db.prepare(
-        `SELECT 
-           COUNT(*) as total_users,
-           SUM(CASE WHEN LOWER(role) = 'owner' THEN 1 ELSE 0 END) as total_owners,
-           SUM(CASE WHEN LOWER(role) LIKE '%sitter%' OR LOWER(role) = 'pet_sitter' THEN 1 ELSE 0 END) as total_sitters
-         FROM users`
-      ).first();
-      if (statsRes) userStats = statsRes;
-    } catch (e) {
-      console.warn('User stats warning:', e.message);
+    if (!env || !env.zoelys_db) {
+      return new Response(JSON.stringify({ success: false, error: 'Database connection missing' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    // 2. Fetch requests from client_requests table
-    let requests = [];
-    try {
-      const reqRes = await env.zoelys_db.prepare(
-        `SELECT * FROM client_requests ORDER BY id DESC`
-      ).all();
-      if (reqRes && reqRes.results) requests = reqRes.results;
-    } catch (e) {
-      console.warn('Client requests warning:', e.message);
-    }
+    // Récupération de tous les utilisateurs
+    const usersRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role FROM users").all();
+    const users = usersRes.results || [];
 
-    // 3. Fetch sitters roster
-    let sitters = [];
-    try {
-      const sittersRes = await env.zoelys_db.prepare(
-        `SELECT id, full_name, email, role FROM users WHERE LOWER(role) LIKE '%sitter%' OR LOWER(role) = 'pet_sitter'`
-      ).all();
-      if (sittersRes && sittersRes.results) sitters = sittersRes.results;
-    } catch (e) {
-      console.warn('Sitters warning:', e.message);
-    }
+    // Récupération de toutes les demandes de clients
+    const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests ORDER BY id DESC").all();
+    const requests = reqRes.results || [];
+
+    // Calcul des statistiques
+    const totalUsers = users.length;
+    const totalOwners = users.filter(u => u.role && u.role.toLowerCase() === 'owner').length;
+    const totalSitters = users.filter(u => u.role && (u.role.toLowerCase().includes('sitter') || u.role.toLowerCase() === 'pet_sitter')).length;
+    const sittersList = users.filter(u => u.role && (u.role.toLowerCase().includes('sitter') || u.role.toLowerCase() === 'pet_sitter'));
 
     return new Response(JSON.stringify({
       success: true,
       stats: {
-        totalUsers: userStats.total_users || 0,
-        totalOwners: userStats.total_owners || 0,
-        totalSitters: userStats.total_sitters || 0,
+        totalUsers,
+        totalOwners,
+        totalSitters,
         totalRequests: requests.length
       },
       requests: requests,
-      sitters: sitters
+      sitters: sittersList
     }), {
       status: 200,
       headers: { 
@@ -73,11 +42,8 @@ export async function onRequestGet(context) {
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({
-      ...fallbackPayload,
-      error: err.message
-    }), {
-      status: 200,
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }
