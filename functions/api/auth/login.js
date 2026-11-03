@@ -29,12 +29,22 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ success: false, error: 'Incorrect password. Please try again.' }), { status: 401 });
     }
 
-    // Détermination dynamique de l'URL de redirection en gérant 'pet_sitter', 'sitter', etc.
+    // Role-based redirection logic
     let redirectUrl = '/dashboard/owner/';
+    const emailLower = user.email ? user.email.trim().toLowerCase() : '';
     const userRole = user.role ? user.role.toLowerCase() : '';
-    
-    if (userRole.includes('sitter') || userRole.includes('caregiver') || userRole === 'pet_sitter') {
+
+    // 1. Restrict Admin dashboard strictly to designated admin emails
+    if (emailLower === 'admin@test.local' || emailLower === 'ocebort@gmail.com') {
+      redirectUrl = '/dashboard/admin/';
+    } 
+    // 2. Redirect caregivers / sitters
+    else if (userRole.includes('sitter') || userRole.includes('caregiver') || userRole === 'pet_sitter') {
       redirectUrl = '/dashboard/sitters/';
+    } 
+    // 3. Fallback for pet owners
+    else {
+      redirectUrl = '/dashboard/owner/';
     }
 
     return new Response(JSON.stringify({ 
