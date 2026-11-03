@@ -9,7 +9,7 @@ export default {
       return handleAdminOverview(env);
     }
 
-    // 2. Algorithme de Matching (Top 3 Sitters & Roster complet ciblé pet_sitter)
+    // 2. Algorithme de Matching intelligent avec explications détaillées
     if (path === '/api/admin/match' && method === 'GET') {
       return handleMatchAlgorithm(url, env);
     }
@@ -19,12 +19,12 @@ export default {
       return handleSendProposal(request, env);
     }
 
-    // 4. Annulation d'une proposition (remise en statut 'pending')
+    // 4. Annulation d'une proposition
     if (path === '/api/admin/cancel-proposal' && method === 'POST') {
       return handleCancelProposal(request, env);
     }
 
-    // 5. Création de demande (supporte toutes les variantes du front-end)
+    // 5. Création de demande
     if ((path === '/api/requests' || path === '/api/client-requests' || path === '/api/bookings') && method === 'POST') {
       return handleCreateRequest(request, env);
     }
@@ -34,7 +34,7 @@ export default {
       return handleOwnerRequests(url, env);
     }
 
-    // 7. Fichiers statiques du dossier public/
+    // 7. Fichiers statiques
     return env.ASSETS.fetch(request);
   }
 };
@@ -50,17 +50,13 @@ async function handleAdminOverview(env) {
     try {
       const uRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role, location, rating FROM users").all();
       if (uRes && uRes.results) users = uRes.results;
-    } catch (e) {
-      console.error("Erreur lecture users:", e);
-    }
+    } catch (e) {}
 
     let requests = [];
     try {
       const rRes = await env.zoelys_db.prepare("SELECT * FROM client_requests ORDER BY id DESC").all();
       if (rRes && rRes.results) requests = rRes.results;
-    } catch (e) {
-      console.error("Erreur lecture requests:", e);
-    }
+    } catch (e) {}
 
     const totalUsers = users.length;
     const totalOwners = users.filter(u => u.role && u.role.toLowerCase() === 'owner').length;
@@ -70,7 +66,7 @@ async function handleAdminOverview(env) {
       success: true,
       stats: { totalUsers, totalOwners, totalSitters: sittersList.length, totalRequests: requests.length },
       requests,
-      sitters: users // Inclut tous les utilisateurs pour le choix manuel si besoin
+      sitters: users
     }), { status: 200, headers });
   } catch (err) {
     return new Response(JSON.stringify({ ...fallbackData, error: err.message }), { status: 200, headers });
@@ -87,19 +83,65 @@ async function handleMatchAlgorithm(url, env) {
     }
 
     const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests WHERE id = ?").bind(requestId).first();
-    
-    // Requête ciblée sur les pet_sitters de la base de données
-    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users WHERE role = 'pet_sitter' OR role LIKE '%sitter%'").all();
+    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users").all();
     const sitters = sittersRes.results || [];
 
+    const reqService = (reqRes && reqRes.service_type) ? reqRes.service_type.toLowerCase() : '';
+    const reqPetType = (reqRes && reqRes.pet_type) ? reqRes.pet_type.toLowerCase() : '';
+
     const scoredSitters = sitters.map(sitter => {
-      let score = 85; // Score de base par défaut
-      if (sitter.rating) {
-        score += Math.round(parseFloat(sitter.rating) * 3);
+      let score = 50; // Score de départ neutre
+      let reasons = [];
+
+      const sitterRole = (sitter.role || '').toLowerCase();
+      const sitterBio = (sitter.bio || sitter.description || '').toLowerCase();
+      const sitterLocation = (sitter.location || 'Lisbon').toLowerCase();
+
+      // 1. Vérification du rôle Sitter / Pet Sitter
+      if (sitterRole.includes('sitter') || sitterRole.includes('pet_sitter')) {
+        score += 25;
+        reasons.push("Verified professional pet sitter profile (+25%).");
+      } else {
+        reasons.push("Standard user profile (not explicitly a primary sitter) (-15%).");
+        score -= 15;
       }
+
+      // 2. Vérification de la compétence Vétérinaire / Médicale si requise ou valorisée
+      if (reqService.includes('vet') || reqService.includes('medical') || sitterBio.includes('vet') || sitterBio.includes('medical') || sitterRole.includes('vet')) {
+        if (sitterBio.includes('vet') || sitterBio.includes('medical') || sitterRole.includes('vet')) {
+          score += 20;
+          reasons.push("Matches specialized veterinary/medical care requirements (+20%).");
+        } else {
+          reasons.push("Does not highlight explicit veterinary background for specialized care.");
+        }
+      }
+
+      // 3. Localisation (Bonus si même zone, ex: Lisbon)
+      if (sitterLocation.includes('lisbon')) {
+        score += 15;
+        reasons.push("Located in the same service region (Lisbon) (+15%).");
+      } else {
+        reasons.push("Different geographical location zone.");
+      }
+
+      // 4. Note (Rating)
+      if (sitter.rating) {
+        const ratingNum = parseFloat(sitter.rating);
+        const ratingBonus = Math.round(ratingNum * 3);
+        score += ratingBonus;
+        reasons.push(`Strong platform rating of ${sitter.rating} / 5 (+${ratingBonus}%).`);
+      } else {
+        score += 5;
+        reasons.push("New profile with baseline trust score (+5%).");
+      }
+
+      // Plage finale entre 15% et 98%
+      const finalScore = Math.max(15, Math.min(score, 98));
+
       return {
         ...sitter,
-        matchScore: Math.min(score, 99)
+        matchScore: finalScore,
+        matchReasons: reasons
       };
     });
 
@@ -121,7 +163,7 @@ async function handleSendProposal(request, env) {
   const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
   try {
     const body = await request.json();
-    const { requestId, selectedSitterIds } = body;
+    const { requestId } = body;
 
     await env.zoelys_db.prepare(
       "UPDATE client_requests SET status = 'proposed' WHERE id = ?"
