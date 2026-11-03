@@ -71,9 +71,8 @@
         { name: 'Sarah M.', rating: '4.98', location: 'Chiado, Lisbon', experience: '3 years with Zoélys' }
     ],
     chatMessages: [
-        { sender: 'Sarah M.', text: 'Hello Océane! Luna had a wonderful walk this morning along the river path.', time: '10:15 AM' },
-        { sender: 'You', text: 'That is wonderful to hear, thank you Sarah! Did she finish her morning water?', time: '10:20 AM' },
-        { sender: 'Sarah M.', text: 'Yes, she drank right after we came back. Everything is going perfectly!', time: '10:22 AM' }
+        { sender: 'Sarah M.', text: 'Hello! Your companion had a wonderful walk this morning along the river path.', time: '10:15 AM' },
+        { sender: 'You', text: 'That is wonderful to hear, thank you Sarah!', time: '10:20 AM' }
     ],
     newChatMessage: '',
     sendChatMessage() {
@@ -96,12 +95,12 @@
     // Dynamic Concierge Intake Form State
     matchStep: 1,
     matchData: {
-        fullName: 'Océane',
-        email: 'owner@zoelys.local',
+        fullName: 'Sophie Martin',
+        email: 'sophie@owner.test',
         phone: '+351 91 000 0000',
         neighbourhood: 'Chiado, Lisbon',
         animalType: 'Dog',
-        petName: 'Luna',
+        petName: 'Milo',
         breed: 'Golden Retriever',
         petAge: '3',
         petSize: '28 kg',
@@ -113,7 +112,7 @@
         vaccination: 'Up to date',
         diet: 'Kibble',
         outdoorSpace: 'Yes',
-        serviceType: 'Residential Boarding',
+        serviceType: 'Overnight Care',
         serviceDesc: 'Full-time residential care at the caregiver’s private home with continuous presence and elite oversight.',
         startDate: '2026-11-01',
         endDate: '2026-11-05',
@@ -126,7 +125,7 @@
         finalNotes: ''
     },
     async submitBookingRequest() {
-        console.log("--> Tentative d'envoi du formulaire avec :", this.matchData);
+        console.log('--> Sending booking request for:', this.matchData.petName, 'by', this.matchData.email);
         try {
             const response = await fetch('/api/requests', {
                 method: 'POST',
@@ -139,20 +138,19 @@
                     service_type: this.matchData.serviceType
                 })
             });
-            
-            console.log("--> Statut HTTP reçu :", response.status);
+
             const result = await response.json();
-            console.log("--> Résultat JSON reçu :", result);
+            console.log('--> Server response:', result);
 
             if (response.ok && result.success) {
-                alert('Booking request successfully submitted!');
+                alert(`Booking request successfully submitted for ${this.matchData.petName}!`);
                 this.showMatchModal = false;
-                this.fetchOwnerRequests();
+                await this.fetchOwnerRequests();
             } else {
                 alert('Error: ' + (result.error || 'Could not submit booking.'));
             }
         } catch (err) {
-            console.error('--> Erreur réseau attrapée :', err);
+            console.error('--> Network error:', err);
             alert('Network connection error while submitting booking.');
         }
     },
@@ -193,7 +191,7 @@
         }
     },
     requestInstantUpdate() {
-        alert('Instant check-in request sent to Sarah M. It is now visible on the petsitter\'s live interface.');
+        alert('Instant check-in request sent to caregiver.');
     },
     removeFavorite(index) {
         this.favorites.splice(index, 1);
@@ -201,7 +199,7 @@
     confirmCancellation() {
         this.subscriptionActive = false;
         this.creditBalance = 0;
-        alert('Your subscription has been canceled. All unused credits have been permanently forfeited according to membership policy.');
+        alert('Your subscription has been canceled.');
         this.showCancelModal = false;
         this.cancelStep = 1;
     }
@@ -244,7 +242,7 @@
             <div class="border-b border-[#E8E2D5] pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div class="space-y-2">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Active Stay Status</span>
-                    <h2 class="text-3xl font-serif text-[#2C2A29]">Luna is currently with Sarah M.</h2>
+                    <h2 class="text-3xl font-serif text-[#2C2A29]">Care Log & Live Updates</h2>
                     <p class="text-xs text-[#6C6255] tracking-wide">Care log updated 15 minutes ago • Walk track & photos logged securely.</p>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -262,7 +260,7 @@
                 <div @click="matchStep = 1; showMatchModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 01</span>
                     <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Book a Stay →</h4>
-                    <p class="text-xs text-[#6C6255]">Open concierge intake desk pre-filled with pet profile.</p>
+                    <p class="text-xs text-[#6C6255]">Open concierge intake desk pre-filled with companion profile.</p>
                 </div>
                 <div @click="showPetModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 02</span>
@@ -291,7 +289,7 @@
                             <div class="space-y-1">
                                 <span class="text-[10px] uppercase tracking-widest font-mono text-[#8C8275]" x-text="req.id"></span>
                                 <h4 class="font-serif text-base text-[#2C2A29]" x-text="'Pet: ' + req.pet_name + ' (' + (req.pet_type || 'Dog') + ')'"></h4>
-                                <p class="text-xs text-[#6C6255]" x-text="'Service: ' + (req.service_type || 'Care')"></p>
+                                <p class="text-xs text-[#6C6255]" x-text="'Service: ' + (req.service_type || 'Care') + ' • Owner: ' + req.full_name + ' (' + req.email + ')'"></p>
                             </div>
                             <div>
                                 <span class="text-[10px] uppercase tracking-widest px-3 py-1 border border-[#2C2A29]" :class="req.status === 'pending' ? 'bg-[#F4EFE6]' : 'bg-green-50'" x-text="req.status"></span>
@@ -484,7 +482,7 @@
         <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
             <div class="w-screen max-w-md bg-[#FDFBF7] border-l border-[#E8E2D5] shadow-2xl flex flex-col">
                 <div class="p-6 border-b border-[#E8E2D5] flex justify-between items-center bg-[#FDFBF7]">
-                    <h3 class="font-serif text-lg text-[#2C2A29]">Chat with Sarah M.</h3>
+                    <h3 class="font-serif text-lg text-[#2C2A29]">Chat with Caregiver</h3>
                     <button @click="showChatDrawer = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
                 </div>
                 <div class="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
