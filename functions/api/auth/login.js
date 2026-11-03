@@ -29,8 +29,17 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ success: false, error: 'Incorrect password. Please try again.' }), { status: 401 });
     }
 
+    // Détermination dynamique de l'URL de redirection en gérant 'pet_sitter', 'sitter', etc.
+    let redirectUrl = '/dashboard/owner/';
+    const userRole = user.role ? user.role.toLowerCase() : '';
+    
+    if (userRole.includes('sitter') || userRole.includes('caregiver') || userRole === 'pet_sitter') {
+      redirectUrl = '/dashboard/sitters/';
+    }
+
     return new Response(JSON.stringify({ 
       success: true, 
+      redirectUrl: redirectUrl,
       user: { id: user.id, email: user.email, role: user.role, full_name: user.full_name } 
     }), {
       headers: { 'Content-Type': 'application/json' }
