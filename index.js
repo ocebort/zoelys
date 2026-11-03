@@ -9,7 +9,7 @@ export default {
       return handleAdminOverview(env);
     }
 
-    // 2. Algorithme de Matching (Top 3 Sitters & Roster complet)
+    // 2. Algorithme de Matching (Top 3 Sitters & Roster complet ciblé pet_sitter)
     if (path === '/api/admin/match' && method === 'GET') {
       return handleMatchAlgorithm(url, env);
     }
@@ -64,15 +64,13 @@ async function handleAdminOverview(env) {
 
     const totalUsers = users.length;
     const totalOwners = users.filter(u => u.role && u.role.toLowerCase() === 'owner').length;
-    
-    // Inclut tous les utilisateurs (y compris 'pet_sitter')
-    const sittersList = users;
+    const sittersList = users.filter(u => u.role && (u.role.toLowerCase() === 'pet_sitter' || u.role.toLowerCase().includes('sitter')));
 
     return new Response(JSON.stringify({
       success: true,
       stats: { totalUsers, totalOwners, totalSitters: sittersList.length, totalRequests: requests.length },
       requests,
-      sitters: sittersList
+      sitters: users // Inclut tous les utilisateurs pour le choix manuel si besoin
     }), { status: 200, headers });
   } catch (err) {
     return new Response(JSON.stringify({ ...fallbackData, error: err.message }), { status: 200, headers });
@@ -90,8 +88,8 @@ async function handleMatchAlgorithm(url, env) {
 
     const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests WHERE id = ?").bind(requestId).first();
     
-    // Récupère l'intégralité des profils pour alimenter la modale admin sans restriction de rôle
-    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users").all();
+    // Requête ciblée sur les pet_sitters de la base de données
+    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users WHERE role = 'pet_sitter' OR role LIKE '%sitter%'").all();
     const sitters = sittersRes.results || [];
 
     const scoredSitters = sitters.map(sitter => {
