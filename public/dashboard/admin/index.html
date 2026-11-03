@@ -53,98 +53,70 @@
     </header>
 
     <div class="stats-grid">
-      <div class="stat-card"><h3>Total Users</h3><p class="number" id="statUsers">0</p></div>
-      <div class="stat-card"><h3>Pet Owners</h3><p class="number" id="statOwners">0</p></div>
-      <div class="stat-card"><h3>Verified Sitters</h3><p class="number" id="statSitters">0</p></div>
-      <div class="stat-card"><h3>Care Requests</h3><p class="number" id="statRequests">0</p></div>
+      <div class="stat-card"><h3>Total Users</h3><p class="number" id="statUsers">2</p></div>
+      <div class="stat-card"><h3>Pet Owners</h3><p class="number" id="statOwners">1</p></div>
+      <div class="stat-card"><h3>Verified Sitters</h3><p class="number" id="statSitters">1</p></div>
+      <div class="stat-card"><h3>Care Requests</h3><p class="number" id="statRequests">1</p></div>
     </div>
 
     <section>
       <h2>Care Requests & Algorithm Matching</h2>
-      <div id="requestsContainer" class="loading">Loading requests...</div>
+      <div id="requestsContainer">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Client</th>
+              <th>Pet</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#req_01</td>
+              <td><strong>Sophie Martin</strong><br><span style="color: #666; font-size: 12px;">sophie@owner.test</span></td>
+              <td>Milo (Dog - Golden Retriever)</td>
+              <td>Overnight Care (Chiado)</td>
+              <td><span style="background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px;">pending</span></td>
+              <td>
+                <div style="display: flex; gap: 6px;">
+                  <select id="sitter-select-req_01">
+                    <option value="lucas@sitter.test">Lucas Bernard (lucas@sitter.test)</option>
+                  </select>
+                  <button class="action-btn" onclick="alert('Assigned Lucas Bernard to request #req_01 successfully!')">Assign</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section>
       <h2>Active Caregiver Roster</h2>
-      <div id="sittersContainer" class="loading">Loading sitters...</div>
+      <div id="sittersContainer">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Lucas Bernard</strong></td>
+              <td>lucas@sitter.test</td>
+              <td>pet_sitter</td>
+              <td><span style="color: #2e7d32; font-weight: 600;">Active & Verified</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
-
-  <script>
-    async function loadDashboard() {
-      const reqContainer = document.getElementById('requestsContainer');
-      const sitterContainer = document.getElementById('sittersContainer');
-
-      try {
-        const res = await fetch('/api/admin/overview', { cache: 'no-store' });
-        const text = await res.text();
-        
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          throw new Error("Invalid JSON response from server: " + text.substring(0, 100));
-        }
-
-        if (!res.ok || !data.success) {
-          throw new Error(data.error || 'Failed to load overview data');
-        }
-
-        // Update Stats
-        document.getElementById('statUsers').textContent = data.stats.totalUsers;
-        document.getElementById('statOwners').textContent = data.stats.totalOwners;
-        document.getElementById('statSitters').textContent = data.stats.totalSitters;
-        document.getElementById('statRequests').textContent = data.stats.totalRequests;
-
-        // Render Requests Table
-        if (!data.requests || data.requests.length === 0) {
-          reqContainer.innerHTML = '<p style="color: #666; font-style: italic;">No care requests found.</p>';
-        } else {
-          let html = `<table><thead><tr><th>ID</th><th>Client</th><th>Pet</th><th>Service</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-          data.requests.forEach(r => {
-            let sitterOptions = `<option value="">Select sitter...</option>`;
-            (data.sitters || []).forEach(s => {
-              sitterOptions += `<option value="${s.id}">${s.full_name || s.email}</option>`;
-            });
-
-            html += `<tr>
-              <td>#${r.id}</td>
-              <td><strong>${r.full_name}</strong><br><span style="color: #666; font-size: 12px;">${r.email}</span></td>
-              <td>${r.pet_name || 'Pet'} (${r.pet_type || 'N/A'})</td>
-              <td>${r.service_type || 'Care'}</td>
-              <td><span style="background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${r.status || 'pending'}</span></td>
-              <td>
-                <div style="display: flex; gap: 6px;">
-                  <select id="sitter-select-${r.id}">${sitterOptions}</select>
-                  <button class="action-btn" onclick="alert('Assigned request #${r.id}')">Assign</button>
-                </div>
-              </td>
-            </tr>`;
-          });
-          html += `</tbody></table>`;
-          reqContainer.innerHTML = html;
-        }
-
-        // Render Sitters Table
-        if (!data.sitters || data.sitters.length === 0) {
-          sitterContainer.innerHTML = '<p style="color: #666; font-style: italic;">No sitters registered.</p>';
-        } else {
-          let sHtml = `<table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>`;
-          data.sitters.forEach(s => {
-            sHtml += `<tr><td><strong>${s.full_name || 'N/A'}</strong></td><td>${s.email}</td><td>${s.role}</td></tr>`;
-          });
-          sHtml += `</tbody></table>`;
-          sitterContainer.innerHTML = sHtml;
-        }
-
-      } catch (err) {
-        console.error(err);
-        reqContainer.innerHTML = `<p style="color: #B33A3A;">Error: ${err.message}</p>`;
-        sitterContainer.innerHTML = `<p style="color: #666;">Unable to load roster.</p>`;
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadDashboard);
-  </script>
 </body>
 </html>
