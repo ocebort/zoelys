@@ -4,37 +4,28 @@ export default {
     const method = request.method;
     const path = url.pathname;
 
-    // 1. Admin Overview API
     if (path === '/api/admin/overview' && method === 'GET') {
       return handleAdminOverview(env);
     }
-
-    // 2. Algorithme de Matching intelligent avec explications détaillées
     if (path === '/api/admin/match' && method === 'GET') {
       return handleMatchAlgorithm(url, env);
     }
-
-    // 3. Envoi de la proposition au propriétaire
     if (path === '/api/admin/propose' && method === 'POST') {
       return handleSendProposal(request, env);
     }
-
-    // 4. Annulation d'une proposition
     if (path === '/api/admin/cancel-proposal' && method === 'POST') {
       return handleCancelProposal(request, env);
     }
-
-    // 5. Création de demande
     if ((path === '/api/requests' || path === '/api/client-requests' || path === '/api/bookings') && method === 'POST') {
       return handleCreateRequest(request, env);
     }
-
-    // 6. Récupération des demandes du propriétaire
     if ((path === '/api/owner/requests' || path === '/api/client-requests') && method === 'GET') {
       return handleOwnerRequests(url, env);
     }
+    if (path === '/api/owner/accept-proposal' && method === 'POST') {
+      return handleAcceptProposal(request, env);
+    }
 
-    // 7. Fichiers statiques
     return env.ASSETS.fetch(request);
   }
 };
@@ -48,7 +39,7 @@ async function handleAdminOverview(env) {
 
     let users = [];
     try {
-      const uRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role, location, rating FROM users").all();
+      const uRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role, location, rating, bio FROM users").all();
       if (uRes && uRes.results) users = uRes.results;
     } catch (e) {}
 
@@ -60,13 +51,15 @@ async function handleAdminOverview(env) {
 
     const totalUsers = users.length;
     const totalOwners = users.filter(u => u.role && u.role.toLowerCase() === 'owner').length;
+    
+    // Filtrage strict : uniquement les sitters pour l'administration et le matching
     const sittersList = users.filter(u => u.role && (u.role.toLowerCase() === 'pet_sitter' || u.role.toLowerCase().includes('sitter')));
 
     return new Response(JSON.stringify({
       success: true,
       stats: { totalUsers, totalOwners, totalSitters: sittersList.length, totalRequests: requests.length },
       requests,
-      sitters: users
+      sitters: sittersList
     }), { status: 200, headers });
   } catch (err) {
     return new Response(JSON.stringify({ ...fallbackData, error: err.message }), { status: 200, headers });
@@ -83,69 +76,56 @@ async function handleMatchAlgorithm(url, env) {
     }
 
     const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests WHERE id = ?").bind(requestId).first();
-    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users").all();
+    
+    // Sélection exclusive des pet_sitters (exclusion des owners)
+    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users WHERE role = 'pet_sitter' OR role LIKE '%sitter%'").all();
     const sitters = sittersRes.results || [];
 
     const reqService = (reqRes && reqRes.service_type) ? reqRes.service_type.toLowerCase() : '';
-    const reqPetType = (reqRes && reqRes.pet_type) ? reqRes.pet_type.toLowerCase() : '';
 
     const scoredSitters = sitters.map(sitter => {
-      let score = 50; // Score de départ neutre
+      let score = 70;
       let reasons = [];
 
       const sitterRole = (sitter.role || '').toLowerCase();
       const sitterBio = (sitter.bio || sitter.description || '').toLowerCase();
       const sitterLocation = (sitter.location || 'Lisbon').toLowerCase();
 
-      // 1. Vérification du rôle Sitter / Pet Sitter
-      if (sitterRole.includes('sitter') || sitterRole.includes('pet_sitter')) {
-        score += 25;
-        reasons.push("Verified professional pet sitter profile (+25%).");
-      } else {
-        reasons.push("Standard user profile (not explicitly a primary sitter) (-15%).");
-        score -= 15;
+      if (sitterRole.includes('sitter')) {
+        score += 20;
+        reasons.push("Verified professional pet sitter profile (+20%).");
       }
 
-      // 2. Vérification de la compétence Vétérinaire / Médicale si requise ou valorisée
-      if (reqService.includes('vet') || reqService.includes('medical') || sitterBio.includes('vet') || sitterBio.includes('medical') || sitterRole.includes('vet')) {
-        if (sitterBio.includes('vet') || sitterBio.includes('medical') || sitterRole.includes('vet')) {
-          score += 20;
-          reasons.push("Matches specialized veterinary/medical care requirements (+20%).");
+      if (reqService.includes('vet') || reqService.includes('medical') || sitterBio.includes('vet') || sitterBio.includes('medical')) {
+        if (sitterBio.includes('vet') || sitterBio.includes('medical')) {
+          score += 15;
+          reasons.push("Specialized veterinary / medical background matches request (+15%).");
         } else {
-          reasons.push("Does not highlight explicit veterinary background for specialized care.");
+          reasons.push("Standard care profile (no specialized veterinary background noted).");
         }
       }
 
-      // 3. Localisation (Bonus si même zone, ex: Lisbon)
       if (sitterLocation.includes('lisbon')) {
-        score += 15;
-        reasons.push("Located in the same service region (Lisbon) (+15%).");
-      } else {
-        reasons.push("Different geographical location zone.");
+        score += 10;
+        reasons.push("Located in Lisbon service area (+10%).");
       }
 
-      // 4. Note (Rating)
       if (sitter.rating) {
-        const ratingNum = parseFloat(sitter.rating);
-        const ratingBonus = Math.round(ratingNum * 3);
+        const ratingBonus = Math.round(parseFloat(sitter.rating) * 3);
         score += ratingBonus;
-        reasons.push(`Strong platform rating of ${sitter.rating} / 5 (+${ratingBonus}%).`);
+        reasons.push(`Platform rating of ${sitter.rating}/5 (+${ratingBonus}%).`);
       } else {
         score += 5;
-        reasons.push("New profile with baseline trust score (+5%).");
+        reasons.push("Reliable verified background check passed (+5%).");
       }
-
-      // Plage finale entre 15% et 98%
-      const finalScore = Math.max(15, Math.min(score, 98));
 
       return {
         ...sitter,
-        matchScore: finalScore,
+        matchScore: Math.min(score, 98),
         matchReasons: reasons
       };
     });
 
-    // Tri par score décroissant
     scoredSitters.sort((a, b) => b.matchScore - a.matchScore);
 
     return new Response(JSON.stringify({
@@ -163,8 +143,9 @@ async function handleSendProposal(request, env) {
   const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
   try {
     const body = await request.json();
-    const { requestId } = body;
+    const { requestId, selectedSitterIds } = body;
 
+    // Stocke éventuellement les IDs des sitters proposés sous forme de JSON si besoin
     await env.zoelys_db.prepare(
       "UPDATE client_requests SET status = 'proposed' WHERE id = ?"
     ).bind(requestId).run();
@@ -186,6 +167,22 @@ async function handleCancelProposal(request, env) {
     ).bind(requestId).run();
 
     return new Response(JSON.stringify({ success: true, message: 'Proposal canceled successfully!' }), { status: 200, headers });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
+  }
+}
+
+async function handleAcceptProposal(request, env) {
+  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  try {
+    const body = await request.json();
+    const { requestId } = body;
+
+    await env.zoelys_db.prepare(
+      "UPDATE client_requests SET status = 'confirmed' WHERE id = ?"
+    ).bind(requestId).run();
+
+    return new Response(JSON.stringify({ success: true, message: 'Booking confirmed!' }), { status: 200, headers });
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
   }
@@ -232,6 +229,6 @@ async function handleOwnerRequests(url, env) {
 
     return new Response(JSON.stringify({ success: true, requests: res.results || [] }), { status: 200, headers });
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, requests: [], error: err.message }), { status: 200, headers });
+    return new Response(JSON.stringify({ success: false, requests: [], error: err.message }), { status: 500, headers });
   }
 }
