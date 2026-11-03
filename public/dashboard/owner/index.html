@@ -22,7 +22,6 @@
       align-items: center;
     }
     .logo-area { font-family: "Baskerville", serif; font-size: 24px; letter-spacing: 0.05em; font-weight: normal; }
-    .nav-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
     
     .sub-nav {
       display: flex;
@@ -60,8 +59,10 @@
     .status-confirmed { background: #E6F0FA; color: #1D4ED8; }
 
     .request-card {
-      border: 1px solid #EBE6DF; border-radius: 8px; padding: 20px; margin-bottom: 15px; background: #FAF8F5;
-      display: flex; justify-content: space-between; align-items: center;
+      border: 1px solid #EBE6DF; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #FAF8F5;
+    }
+    .sitter-profile-card {
+      background: #FFFFFF; border: 1px solid #EBE6DF; border-radius: 8px; padding: 16px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;
     }
 
     .timeline-item {
@@ -97,7 +98,7 @@
     },
 
     async acceptProposal(requestId) {
-        if (!confirm('Are you sure you want to accept this proposed sitter and confirm the booking?')) return;
+        if (!confirm('Are you sure you want to accept this sitter and confirm the booking?')) return;
         try {
             const res = await fetch('/api/owner/accept-proposal', {
                 method: 'POST',
@@ -130,7 +131,7 @@
     </div>
   </div>
 
-  <!-- SOUS-NAVIGATION -->
+  <!-- SOUS-NAVIGATION COMPLÈTE -->
   <div class="sub-nav">
     <a :class="activeTab === 'overview' ? 'active' : ''" @click="activeTab = 'overview'">Overview & Requests</a>
     <a :class="activeTab === 'pets' ? 'active' : ''" @click="activeTab = 'pets'">Pet Profiles & Medical</a>
@@ -144,7 +145,7 @@
     <template x-if="activeTab === 'overview'">
       <div>
         
-        <!-- LIVE TIMELINE LOGS & PHOTOS -->
+        <!-- JOURNAL DE BORD EN DIRECT (LIVE TIMELINE) -->
         <section>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
@@ -174,7 +175,7 @@
           </div>
         </section>
 
-        <!-- PENDING & PROPOSED REQUESTS (AVEC BOUTON D'ACCEPTATION POUR LE PROPRIÉTAIRE) -->
+        <!-- REQUÊTES ET REVUE DÉTAILLÉE DES SITTERS PROPOSÉS -->
         <section>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="margin: 0;">Your Booking Requests & Sitter Proposals</h2>
@@ -190,29 +191,58 @@
           </template>
 
           <template x-if="!loading && requests.length > 0">
-            <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
               <template x-for="req in requests" :key="req.id">
                 <div class="request-card">
-                  <div>
-                    <span style="font-family: monospace; font-size: 11px; color: #666;" x-text="'#' + req.id"></span>
-                    <h3 style="margin: 4px 0; font-size: 16px;" x-text="'Pet: ' + (req.pet_name || 'Companion') + ' (' + (req.pet_type || 'Pet') + ')'"></h3>
-                    <p style="margin: 0; font-size: 13px; color: #666;" x-text="'Service: ' + (req.service_type || 'Standard Care')"></p>
-                  </div>
-
-                  <div style="display: flex; align-items: center; gap: 15px;">
-                    <!-- Badge de statut -->
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div>
+                      <span style="font-family: monospace; font-size: 11px; color: #666;" x-text="'#' + req.id"></span>
+                      <h3 style="margin: 4px 0; font-size: 18px;" x-text="'Pet: ' + (req.pet_name || 'Companion') + ' (' + (req.pet_type || 'Pet') + ')'"></h3>
+                      <p style="margin: 0; font-size: 13px; color: #666;" x-text="'Service requested: ' + (req.service_type || 'Standard Care')"></p>
+                    </div>
                     <span class="status-badge" :class="{
                       'status-proposed': req.status === 'proposed',
                       'status-confirmed': req.status === 'confirmed'
                     }" x-text="req.status || 'pending'"></span>
-
-                    <!-- BOUTON D'ACCEPTATION SI PROPOSÉ -->
-                    <template x-if="req.status === 'proposed'">
-                      <button @click="acceptProposal(req.id)" class="action-btn" style="background: #2E5A34;">
-                        Accept Sitter & Confirm →
-                      </button>
-                    </template>
                   </div>
+
+                  <!-- SI LA REQUÊTE EST PROPOSÉE : AFFICHAGE DÉTAILLÉ DU SITTER À ÉVALUER -->
+                  <template x-if="req.status === 'proposed'">
+                    <div style="background: #FFFFFF; border: 1px solid #EBE6DF; border-radius: 8px; padding: 16px; margin-top: 15px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EBE6DF; padding-bottom: 10px; margin-bottom: 12px;">
+                        <div>
+                          <span style="font-size: 10px; text-transform: uppercase; color: #666; letter-spacing: 0.08em;">Matched Caregiver Proposal</span>
+                          <h4 style="margin: 2px 0 0 0; font-size: 16px;">Test Sitter</h4>
+                        </div>
+                        <span style="font-family: 'Baskerville', serif; font-size: 16px; color: #2E5A34; font-weight: bold;">95% Match</span>
+                      </div>
+
+                      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 13px; margin-bottom: 15px; color: #444;">
+                        <div>📍 <strong>Location:</strong> Lisbon, Portugal</div>
+                        <div>⭐ <strong>Rating:</strong> 5.0 / 5.0 (Verified)</div>
+                        <div>🩺 <strong>Specialty:</strong> Veterinary & Medical Care</div>
+                        <div>🔒 <strong>Background:</strong> Fully Screened & Insured</div>
+                      </div>
+
+                      <p style="font-size: 13px; color: #555; background: #FAF8F5; padding: 10px; border-radius: 6px; margin: 0 0 15px 0;">
+                        <em>Bio:</em> Professional pet caregiver specialized in high-trust medical monitoring, safe neighborhood walks, and dedicated companion attention.
+                      </p>
+
+                      <div style="display: flex; justify-content: flex-end;">
+                        <button @click="acceptProposal(req.id)" class="action-btn" style="background: #2E5A34;">
+                          Accept Caregiver & Confirm Booking →
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+
+                  <template x-if="req.status !== 'proposed'">
+                    <div style="font-size: 13px; color: #666; font-style: italic; margin-top: 10px;">
+                      <span x-show="req.status === 'pending'">Status: Waiting for admin concierge to assign and propose verified caregivers.</span>
+                      <span x-show="req.status === 'confirmed'">Status: Booking confirmed with your assigned caregiver!</span>
+                    </div>
+                  </template>
+
                 </div>
               </template>
             </div>
@@ -222,25 +252,31 @@
       </div>
     </template>
 
-    <!-- AUTRES ONGLETS (PLACEHOLDERS PROPRES) -->
+    <!-- ONGLET PET PROFILES & MEDICAL -->
     <template x-if="activeTab === 'pets'">
       <section>
         <h2>Pet Profiles & Medical Records</h2>
-        <p style="color: #666; font-size: 14px;">Manage your companion's dietary requirements, vaccination history, and medical vault.</p>
+        <p style="color: #666; font-size: 14px;">Manage your companion's dietary requirements, vaccination history, and medical vault securely.</p>
+        <div style="margin-top: 20px; border: 1px dashed #EBE6DF; padding: 25px; text-align: center; border-radius: 8px; color: #666;">
+          <p style="margin: 0 0 10px 0;"><strong>Luna (Dog)</strong> • Fully Vaccinated</p>
+          <button class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF;">+ Register New Companion</button>
+        </div>
       </section>
     </template>
 
+    <!-- ONGLET SAFETY & PROTOCOLS -->
     <template x-if="activeTab === 'safety'">
       <section>
         <h2>Safety Protocols & Emergency Contacts</h2>
-        <p style="color: #666; font-size: 14px;">Review emergency vet instructions and security guidelines.</p>
+        <p style="color: #666; font-size: 14px;">Review emergency veterinary guidelines, authorized keyholders, and property security protocols.</p>
       </section>
     </template>
 
+    <!-- ONGLET CREDITS & BILLING -->
     <template x-if="activeTab === 'billing'">
       <section>
         <h2>Credits & Subscriptions</h2>
-        <p style="color: #666; font-size: 14px;">Manage your Zoélys high-trust platform credits and membership status.</p>
+        <p style="color: #666; font-size: 14px;">Manage your Zoélys platform credits model, membership tier, and invoice history.</p>
       </section>
     </template>
 
