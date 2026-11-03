@@ -91,20 +91,26 @@
         this.isCalculating = true;
         this.showMatchModal = true;
         this.topMatches = [];
-        this.allSitters = this.sitters;
+        this.allSitters = [];
         this.selectedSitterIds = [];
         this.sitterSearchQuery = '';
 
         try {
+            // Appel direct à l'API de matching qui interroge la base de données
             const res = await fetch(`/api/admin/match?requestId=` + encodeURIComponent(req.id));
             const data = await res.json();
             if (data.success) {
                 this.topMatches = data.topMatches || [];
+                // Tous les sitters renvoyés par l'API sont stockés ici pour la recherche et la sélection
+                this.allSitters = data.topMatches || [];
                 // Pré-sélectionne le Top 3 par défaut
                 this.selectedSitterIds = this.topMatches.slice(0, 3).map(s => s.email || s.id);
+            } else {
+                alert('Error running algorithm: ' + (data.error || 'Unknown'));
             }
         } catch (err) {
             console.error('Matching error:', err);
+            alert('Network error while running algorithm.');
         } finally {
             this.isCalculating = false;
         }
@@ -124,7 +130,8 @@
         return this.allSitters.filter(s => 
             (s.full_name && s.full_name.toLowerCase().includes(q)) ||
             (s.email && s.email.toLowerCase().includes(q)) ||
-            (s.location && s.location.toLowerCase().includes(q))
+            (s.location && s.location.toLowerCase().includes(q)) ||
+            (s.role && s.role.toLowerCase().includes(q))
         );
     },
 
@@ -240,11 +247,9 @@
                 <td x-text="req.service_type || 'Care'"></td>
                 <td><span class="status-badge" x-text="req.status || 'pending'"></span></td>
                 <td>
-                  <!-- Si en attente : Lancer le matching -->
                   <button x-show="req.status === 'pending'" @click="runMatchingAlgorithm(req)" class="action-btn" style="font-size: 11px;">
                     Review & Match ⚡
                   </button>
-                  <!-- Si déjà proposé : Possibilité d'annuler la proposition -->
                   <button x-show="req.status === 'proposed'" @click="cancelProposal(req)" class="action-btn" style="font-size: 11px; background: #B33A3A;">
                     Cancel Proposal ✕
                   </button>
@@ -303,23 +308,21 @@
       </div>
 
       <template x-if="isCalculating">
-        <div class="loading" style="padding: 40px 0;">Running recommendation engine...</div>
+        <div class="loading" style="padding: 40px 0;">Loading caregivers registry...</div>
       </template>
 
       <template x-if="!isCalculating">
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
-          <!-- Contrôles et filtres -->
           <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
             <input type="text" x-model="sitterSearchQuery" placeholder="Filter sitters by name, city, or email..." style="flex: 1; padding: 8px 12px; border: 1px solid #EBE6DF; border-radius: 6px; font-size: 13px; background: #FFFFFF; outline: none;">
-            <button @click="runMatchingAlgorithm(selectedRequest)" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF; font-size: 11px; white-space: nowrap;">Re-run Algorithm ⟳</button>
+            <button @click="runMatchingAlgorithm(selectedRequest)" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF; font-size: 11px; white-space: nowrap;">Refresh List ⟳</button>
           </div>
 
           <p style="margin: 0; font-size: 12px; color: #666;">
-            The algorithm provides automated recommendations, but you have full manual control. Check or uncheck any caregiver below.
+            Check or uncheck any caregiver below to include them in the proposal sent to the owner.
           </p>
 
-          <!-- Liste filtrée des sitters -->
           <div style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;">
             <template x-for="sitter in filteredSitters()" :key="sitter.email">
               <div @click="toggleSitterSelection(sitter.email || sitter.id)" 
@@ -330,19 +333,13 @@
                   <input type="checkbox" :checked="selectedSitterIds.includes(sitter.email || sitter.id)" @click.stop="toggleSitterSelection(sitter.email || sitter.id)" style="width: 16px; height: 16px; cursor: pointer;">
                   <div>
                     <h4 style="margin: 0; font-size: 14px; font-weight: 600;" x-text="sitter.full_name || sitter.email"></h4>
-                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #666;" x-text="(sitter.location || 'Lisbon') + ' • ' + (sitter.role || 'Verified Caregiver')"></p>
+                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #666;" x-text="(sitter.location || 'Lisbon') + ' • ' + (sitter.role || 'pet_sitter')"></p>
                   </div>
                 </div>
 
-                <!-- Score algorithmique ou indicateur manuel -->
                 <div>
-                  <template x-if="topMatches.find(m => (m.email || m.id) === (sitter.email || sitter.id))">
-                    <span style="font-size: 13px; font-family: 'Baskerville', serif; color: #2E5A34; font-weight: bold;" 
-                          x-text="(topMatches.find(m => (m.email || m.id) === (sitter.email || sitter.id)).matchScore) + '% Match'"></span>
-                  </template>
-                  <template x-if="!topMatches.find(m => (m.email || m.id) === (sitter.email || sitter.id))">
-                    <span style="font-size: 10px; color: #666; font-style: italic; background: #FAF8F5; padding: 2px 6px; border: 1px solid #EBE6DF; border-radius: 4px;">Manual Choice</span>
-                  </template>
+                  <span style="font-size: 13px; font-family: 'Baskerville', serif; color: #2E5A34; font-weight: bold;" 
+                        x-text="(sitter.matchScore || 85) + '% Match'"></span>
                 </div>
 
               </div>
@@ -350,7 +347,7 @@
           </div>
 
           <template x-if="filteredSitters().length === 0">
-            <p style="text-align: center; color: #666; font-style: italic; padding: 15px 0;">No sitters found matching your filter.</p>
+            <p style="text-align: center; color: #666; font-style: italic; padding: 15px 0;">No sitters found matching your search.</p>
           </template>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; border-top: 1px solid #EBE6DF; padding-top: 15px;">
