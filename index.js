@@ -19,17 +19,22 @@ export default {
       return handleSendProposal(request, env);
     }
 
-    // 4. Création de demande (supporte toutes les variantes possibles du front-end)
+    // 4. Annulation d'une proposition (remise en statut 'pending')
+    if (path === '/api/admin/cancel-proposal' && method === 'POST') {
+      return handleCancelProposal(request, env);
+    }
+
+    // 5. Création de demande (supporte toutes les variantes du front-end)
     if ((path === '/api/requests' || path === '/api/client-requests' || path === '/api/bookings') && method === 'POST') {
       return handleCreateRequest(request, env);
     }
 
-    // 5. Récupération des demandes du propriétaire
+    // 6. Récupération des demandes du propriétaire
     if ((path === '/api/owner/requests' || path === '/api/client-requests') && method === 'GET') {
       return handleOwnerRequests(url, env);
     }
 
-    // 6. Fichiers statiques du dossier public/
+    // 7. Fichiers statiques du dossier public/
     return env.ASSETS.fetch(request);
   }
 };
@@ -110,13 +115,29 @@ async function handleSendProposal(request, env) {
   const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
   try {
     const body = await request.json();
-    const { requestId } = body;
+    const { requestId, selectedSitterIds } = body;
 
     await env.zoelys_db.prepare(
       "UPDATE client_requests SET status = 'proposed' WHERE id = ?"
     ).bind(requestId).run();
 
     return new Response(JSON.stringify({ success: true, message: 'Proposal sent to owner successfully!' }), { status: 200, headers });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
+  }
+}
+
+async function handleCancelProposal(request, env) {
+  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  try {
+    const body = await request.json();
+    const { requestId } = body;
+
+    await env.zoelys_db.prepare(
+      "UPDATE client_requests SET status = 'pending' WHERE id = ?"
+    ).bind(requestId).run();
+
+    return new Response(JSON.stringify({ success: true, message: 'Proposal canceled successfully!' }), { status: 200, headers });
   } catch (err) {
     return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
   }
