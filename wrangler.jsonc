@@ -2,7 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zoelys",
   "compatibility_date": "2026-03-01",
-  "pages_build_output_dir": "./public",
+  "main": "index.js",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
   "d1_databases": [
     {
       "binding": "zoelys_db",
