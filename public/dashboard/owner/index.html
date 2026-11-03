@@ -92,7 +92,7 @@
             alert('Please enter a message before sending.');
         }
     },
-    // Dynamic Concierge Intake Form State
+    // Multi-Step Concierge Intake Form State
     matchStep: 1,
     matchData: {
         fullName: 'Océane',
@@ -145,6 +145,7 @@
             if (response.ok && result.success) {
                 alert(`Booking request successfully submitted for ${this.matchData.petName}! It is now visible in the admin overview.`);
                 this.showMatchModal = false;
+                this.matchStep = 1;
                 await this.fetchOwnerRequests();
             } else {
                 alert('Error: ' + (result.error || 'Could not submit booking.'));
@@ -434,44 +435,100 @@
 
     </main>
 
-    <!-- ================= CONCIERGE MATCHING MODAL (BOOK A STAY) ================= -->
+    <!-- ================= MULTI-STEP CONCIERGE MATCHING MODAL (BOOK A STAY) ================= -->
     <div x-show="showMatchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
         <div @click="showMatchModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
         <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
             <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Concierge Booking Intake</h3>
+                <h3 class="font-serif text-xl text-[#2C2A29]" x-text="'Concierge Intake – Step ' + matchStep + ' of 7'"></h3>
                 <button @click="showMatchModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
             </div>
+
             <div class="space-y-4 text-xs">
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Owner Email</label>
-                    <input type="email" x-model="matchData.email" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                <!-- STEP 1: Owner Info -->
+                <div x-show="matchStep === 1" class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Owner Email</label>
+                        <input type="email" x-model="matchData.email" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Owner Full Name</label>
+                        <input type="text" x-model="matchData.fullName" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
                 </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Owner Full Name</label>
-                    <input type="text" x-model="matchData.fullName" class="w-full border border-[#E8E2D5] p-3 bg-white">
+
+                <!-- STEP 2: Pet Info -->
+                <div x-show="matchStep === 2" class="space-y-4" style="display: none;">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
+                        <input type="text" x-model="matchData.petName" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Pet Type (e.g. Dog, Cat)</label>
+                        <input type="text" x-model="matchData.animalType" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
                 </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
-                    <input type="text" x-model="matchData.petName" class="w-full border border-[#E8E2D5] p-3 bg-white">
+
+                <!-- STEP 3: Breed & Age -->
+                <div x-show="matchStep === 3" class="space-y-4" style="display: none;">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
+                        <input type="text" x-model="matchData.breed" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Pet Age</label>
+                        <input type="text" x-model="matchData.petAge" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
                 </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Pet Type (e.g. Dog, Cat)</label>
-                    <input type="text" x-model="matchData.animalType" class="w-full border border-[#E8E2D5] p-3 bg-white">
+
+                <!-- STEP 4: Service Type -->
+                <div x-show="matchStep === 4" class="space-y-4" style="display: none;">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Service Type</label>
+                        <select x-model="matchData.serviceType" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                            <option value="Residential Boarding">Residential Boarding</option>
+                            <option value="Overnight Care">Overnight Care</option>
+                            <option value="Home visit">Home visit</option>
+                            <option value="Daily Walk">Daily Walk</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Service Type</label>
-                    <select x-model="matchData.serviceType" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                        <option value="Residential Boarding">Residential Boarding</option>
-                        <option value="Overnight Care">Overnight Care</option>
-                        <option value="Home visit">Home visit</option>
-                        <option value="Daily Walk">Daily Walk</option>
-                    </select>
+
+                <!-- STEP 5: Dates -->
+                <div x-show="matchStep === 5" class="space-y-4" style="display: none;">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Start Date</label>
+                        <input type="date" x-model="matchData.startDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">End Date</label>
+                        <input type="date" x-model="matchData.endDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
                 </div>
-                <div class="pt-4 flex justify-end space-x-4">
-                    <button @click="showMatchModal = false" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">Cancel</button>
-                    <!-- BOUTON DE SOUMISSION CONNECTÉ À L'API D1 -->
-                    <button @click="submitBookingRequest()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">SEND REQUEST →</button>
+
+                <!-- STEP 6: Budget & Preferences -->
+                <div x-show="matchStep === 6" class="space-y-4" style="display: none;">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Budget Range</label>
+                        <input type="text" x-model="matchData.budget" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                </div>
+
+                <!-- STEP 7: Final Details & Submission -->
+                <div x-show="matchStep === 7" class="space-y-4" style="display: none;">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Final Notes for Concierge</label>
+                        <textarea x-model="matchData.finalNotes" rows="3" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Special requirements..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Navigation buttons for steps -->
+                <div class="pt-4 flex justify-between space-x-4 border-t border-[#E8E2D5]">
+                    <button type="button" x-show="matchStep > 1" @click="matchStep--" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">← Back</button>
+                    <div class="flex-1"></div>
+                    <button type="button" x-show="matchStep < 7" @click="matchStep++" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Next →</button>
+                    <!-- Final Submit Button at Step 7 -->
+                    <button type="button" x-show="matchStep === 7" @click="submitBookingRequest()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">SEND REQUEST →</button>
                 </div>
             </div>
         </div>
