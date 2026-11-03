@@ -42,6 +42,7 @@
     button.action-btn:hover { opacity: 0.9; }
     .status-badge { background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
     .status-assigned { background: #e8f5e9; color: #2e7d32; font-weight: 600; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    .loading { text-align: center; color: #666; padding: 20px; }
   </style>
 </head>
 <body>
@@ -58,79 +59,113 @@
     </header>
 
     <div class="stats-grid">
-      <div class="stat-card"><h3>Total Users</h3><p class="number" id="statUsers">2</p></div>
-      <div class="stat-card"><h3>Pet Owners</h3><p class="number" id="statOwners">1</p></div>
-      <div class="stat-card"><h3>Verified Sitters</h3><p class="number" id="statSitters">1</p></div>
-      <div class="stat-card"><h3>Care Requests</h3><p class="number" id="statRequests">1</p></div>
+      <div class="stat-card"><h3>Total Users</h3><p class="number" id="statUsers">0</p></div>
+      <div class="stat-card"><h3>Pet Owners</h3><p class="number" id="statOwners">0</p></div>
+      <div class="stat-card"><h3>Verified Sitters</h3><p class="number" id="statSitters">0</p></div>
+      <div class="stat-card"><h3>Care Requests</h3><p class="number" id="statRequests">0</p></div>
     </div>
 
     <section>
       <h2>Care Requests & Algorithm Matching</h2>
-      <div id="requestsContainer">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Client</th>
-              <th>Pet</th>
-              <th>Service</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#req_01</td>
-              <td><strong>Sophie Martin</strong><br><span style="color: #666; font-size: 12px;">sophie@owner.test</span></td>
-              <td>Milo (Dog - Golden Retriever)</td>
-              <td>Overnight Care (Chiado)</td>
-              <td><span id="status-req_01" class="status-badge">pending</span></td>
-              <td>
-                <div style="display: flex; gap: 6px;">
-                  <select id="sitter-select-req_01">
-                    <option value="lucas@sitter.test">Lucas Bernard (lucas@sitter.test)</option>
-                  </select>
-                  <button class="action-btn" onclick="assignSitter('req_01', 'Sophie Martin', 'Milo (Dog - Golden Retriever)', 'Overnight Care (Chiado)')">Assign</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div id="requestsContainer" class="loading">Loading requests from database...</div>
     </section>
 
     <section>
       <h2>Active Caregiver Roster</h2>
-      <div id="sittersContainer">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Lucas Bernard</strong></td>
-              <td>lucas@sitter.test</td>
-              <td>pet_sitter</td>
-              <td><span style="color: #2e7d32; font-weight: 600;">Active & Verified</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div id="sittersContainer" class="loading">Loading sitters from database...</div>
     </section>
   </div>
 
   <script>
+    async function loadAdminData() {
+      const reqContainer = document.getElementById('requestsContainer');
+      const sitterContainer = document.getElementById('sittersContainer');
+
+      try {
+        const res = await fetch('/api/admin/overview', { cache: 'no-store' });
+        const text = await res.text();
+        
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          throw new Error("Réponse de l'API non valide (JSON attendu).");
+        }
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Erreur lors de la récupération des données.');
+        }
+
+        // 1. Mise à jour des compteurs statistiques
+        document.getElementById('statUsers').textContent = data.stats.totalUsers || 0;
+        document.getElementById('statOwners').textContent = data.stats.totalOwners || 0;
+        document.getElementById('statSitters').textContent = data.stats.totalSitters || 0;
+        document.getElementById('statRequests').textContent = data.stats.totalRequests || 0;
+
+        // 2. Rendu dynamique du tableau des requêtes
+        if (!data.requests || data.requests.length === 0) {
+          reqContainer.innerHTML = '<p style="color: #666; font-style: italic; padding: 10px;">Aucune demande de soin active dans la base de données.</p>';
+        } else {
+          let html = `<table><thead><tr><th>ID</th><th>Client</th><th>Pet</th><th>Service</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+          
+          data.requests.forEach(r => {
+            let sitterOptions = `<option value="">Sélectionner un sitter...</option>`;
+            (data.sitters || []).forEach(s => {
+              sitterOptions += `<option value="${s.email}">${s.full_name || s.email}</option>`;
+            });
+
+            html += `<tr>
+              <td>#${r.id}</td>
+              <td><strong>${r.full_name || 'Client'}</strong><br><span style="color: #666; font-size: 12px;">${r.email || ''}</span></td>
+              <td>${r.pet_name || 'Animal'} (${r.pet_type || 'N/A'} - ${r.breed || 'Standard'})</td>
+              <td>${r.service_type || 'Garde'} (${r.neighbourhood || 'Lisbonne'})</td>
+              <td><span id="status-${r.id}" class="status-badge">${r.status || 'pending'}</span></td>
+              <td>
+                <div style="display: flex; gap: 6px;">
+                  <select id="sitter-select-${r.id}">${sitterOptions}</select>
+                  <button class="action-btn" onclick="assignSitter('${r.id}', '${r.full_name || 'Client'}', '${r.pet_name || 'Animal'}', '${r.service_type || 'Garde'}')">Assigner</button>
+                </div>
+              </td>
+            </tr>`;
+          });
+          html += `</tbody></table>`;
+          reqContainer.innerHTML = html;
+        }
+
+        // 3. Rendu dynamique du roster des sitters
+        if (!data.sitters || data.sitters.length === 0) {
+          sitterContainer.innerHTML = '<p style="color: #666; font-style: italic; padding: 10px;">Aucun sitter enregistré dans la base de données.</p>';
+        } else {
+          let sHtml = `<table><thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th></tr></thead><tbody>`;
+          data.sitters.forEach(s => {
+            sHtml += `<tr>
+              <td><strong>${s.full_name || 'N/A'}</strong></td>
+              <td>${s.email}</td>
+              <td>${s.role}</td>
+              <td><span style="color: #2e7d32; font-weight: 600;">Actif & Vérifié</span></td>
+            </tr>`;
+          });
+          sHtml += `</tbody></table>`;
+          sitterContainer.innerHTML = sHtml;
+        }
+
+      } catch (err) {
+        console.error(err);
+        reqContainer.innerHTML = `<p style="color: #B33A3A; padding: 10px;">Erreur de chargement : ${err.message}</p>`;
+        sitterContainer.innerHTML = `<p style="color: #666; padding: 10px;">Impossible de charger les données distantes.</p>`;
+      }
+    }
+
     function assignSitter(reqId, clientName, petInfo, serviceInfo) {
       const select = document.getElementById(`sitter-select-${reqId}`);
       const sitterEmail = select.value;
       const sitterName = select.options[select.selectedIndex].text;
 
-      // Enregistrement de l'assignation dans le localStorage partagé
+      if (!sitterEmail) {
+        alert("Veuillez sélectionner un sitter avant d'assigner.");
+        return;
+      }
+
       const assignment = {
         id: reqId,
         clientName: clientName,
@@ -143,12 +178,16 @@
 
       localStorage.setItem('zoelys_assigned_request', JSON.stringify(assignment));
 
-      // Mise à jour visuelle du statut dans le tableau admin
-      document.getElementById(`status-${reqId}`).textContent = 'Assigned to Lucas';
-      document.getElementById(`status-${reqId}`).className = 'status-assigned';
+      const statusEl = document.getElementById(`status-${reqId}`);
+      if (statusEl) {
+        statusEl.textContent = 'Assigné';
+        statusEl.className = 'status-assigned';
+      }
 
-      alert(`Succès : La demande #${reqId} a été assignée à ${sitterName}. Elle est maintenant visible sur son tableau de bord !`);
+      alert(`Succès : Demande #${reqId} assignée à ${sitterName} !`);
     }
+
+    document.addEventListener('DOMContentLoaded', loadAdminData);
   </script>
 </body>
 </html>
