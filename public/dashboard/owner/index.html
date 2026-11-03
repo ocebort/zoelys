@@ -68,9 +68,6 @@
         { time: '15 minutes ago', title: 'Park Walk Completed (4.2 km)', desc: 'Superb leash discipline along the river path. High energy and playful mood.', photo: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80' },
         { time: '3 hours ago', title: 'Feeding Confirmation', desc: 'Full bowl consumed. Added omega-3 joint supplement as specified in vault.', photo: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80' }
     ],
-    favorites: [
-        { name: 'Sarah M.', rating: '4.98', location: 'Chiado, Lisbon', experience: '3 years with Zoélys' }
-    ],
     chatMessages: [
         { sender: 'Sarah M.', text: 'Hello! Your companion had a wonderful walk this morning along the river path.', time: '10:15 AM' },
         { sender: 'You', text: 'That is wonderful to hear, thank you Sarah!', time: '10:20 AM' }
@@ -93,39 +90,56 @@
             alert('Please enter a message before sending.');
         }
     },
+
+    // FULL COMPREHENSIVE 7-STEP INTAKE STATE
     matchStep: 1,
     matchData: {
+        // Step 1: Owner Info & Contact
         fullName: 'Océane',
         email: 'owner@zoelys.local',
         phone: '+351 91 000 0000',
         neighbourhood: 'Chiado, Lisbon',
-        animalType: 'Dog',
+
+        // Step 2: Companion Profile & Temperament
         petName: 'Luna',
+        animalType: 'Dog',
         breed: 'Golden Retriever',
         petAge: '3',
         petSize: '28 kg',
         sex: 'Female',
-        temperament: 'Energetic',
+        temperament: 'Friendly & Energetic',
         houseTrained: 'Yes',
-        behavioralTraits: 'Separation anxiety',
-        medicalConditions: 'Yes',
-        vaccination: 'Up to date',
-        diet: 'Kibble',
-        outdoorSpace: 'Yes',
+
+        // Step 3: Health, Routine & Behavioral Traits
+        behavioralTraits: 'Mild separation anxiety when left > 4 hours alone.',
+        medicalConditions: 'Joint supplement with evening meal.',
+        vaccination: 'Up to date (Rabies & Distemper)',
+        diet: 'Kibble + Salmon Oil',
+        outdoorSpace: 'Prefers garden or 3+ walks daily',
+
+        // Step 4: Service Type & Scheduling
         serviceType: 'Residential Boarding',
-        serviceDesc: 'Full-time residential care at the caregiver’s private home with continuous presence and elite oversight.',
+        serviceDesc: 'Full-time residential care at caregiver private home with continuous oversight.',
         startDate: '2026-11-01',
         endDate: '2026-11-05',
+
+        // Step 5: Sitter Experience & Requirements
         expLevel: 'Professional 5+ years',
-        otherQualities: '',
+        otherQualities: 'Experience with high-energy dogs, first-aid certified',
         meetGreet: true,
-        budget: '€100-149',
+
+        // Step 6: Budget & Platform History
+        budget: '€100-149 / night',
         usedSitterBefore: 'Yes',
-        hearAbout: 'Google',
-        finalNotes: ''
+        hearAbout: 'Word of mouth / Personal Recommendation',
+
+        // Step 7: Final Detailed Notes for Concierge
+        specialInstructions: 'Must be fed strictly at 19:00. Please avoid dog parks with untreated gravel.',
+        finalNotes: 'Looking forward to meeting our assigned concierge caregiver.'
     },
+
     async submitBookingRequest() {
-        console.log('--> Sending booking request for:', this.matchData.petName, 'by', this.matchData.email);
+        console.log('--> Sending full booking request for:', this.matchData.petName, 'by', this.matchData.email);
         try {
             const response = await fetch('/api/requests', {
                 method: 'POST',
@@ -135,7 +149,25 @@
                     full_name: this.matchData.fullName,
                     pet_name: this.matchData.petName,
                     pet_type: this.matchData.animalType,
-                    service_type: this.matchData.serviceType
+                    service_type: this.matchData.serviceType,
+                    details: {
+                        phone: this.matchData.phone,
+                        neighbourhood: this.matchData.neighbourhood,
+                        breed: this.matchData.breed,
+                        petAge: this.matchData.petAge,
+                        petSize: this.matchData.petSize,
+                        temperament: this.matchData.temperament,
+                        behavioralTraits: this.matchData.behavioralTraits,
+                        medicalConditions: this.matchData.medicalConditions,
+                        diet: this.matchData.diet,
+                        startDate: this.matchData.startDate,
+                        endDate: this.matchData.endDate,
+                        expLevel: this.matchData.expLevel,
+                        meetGreet: this.matchData.meetGreet,
+                        budget: this.matchData.budget,
+                        specialInstructions: this.matchData.specialInstructions,
+                        finalNotes: this.matchData.finalNotes
+                    }
                 })
             });
 
@@ -143,7 +175,7 @@
             console.log('--> Server response:', result);
 
             if (response.ok && result.success) {
-                alert(`Booking request successfully submitted for ${this.matchData.petName}! It is now visible in the admin overview.`);
+                alert(`Booking request successfully submitted for ${this.matchData.petName}! Our concierge team will review all notes and confirm your match.`);
                 this.showMatchModal = false;
                 this.matchStep = 1;
                 await this.fetchOwnerRequests();
@@ -155,6 +187,7 @@
             alert('Network connection error while submitting booking.');
         }
     },
+
     async fetchOwnerRequests() {
         try {
             const res = await fetch(`/api/owner/requests?email=${encodeURIComponent(this.matchData.email)}`);
@@ -166,9 +199,11 @@
             console.error('Could not fetch owner requests:', err);
         }
     },
+
     init() {
         this.fetchOwnerRequests();
     },
+
     addPet() {
         if(this.newPet.name) {
             this.pets.push({...this.newPet});
@@ -198,9 +233,6 @@
     },
     requestInstantUpdate() {
         alert('Instant check-in request sent to caregiver.');
-    },
-    removeFavorite(index) {
-        this.favorites.splice(index, 1);
     },
     confirmCancellation() {
         this.subscriptionActive = false;
@@ -400,7 +432,7 @@
             </div>
         </div>
 
-        <!-- ================= TAB 5: CREDITS, BILLING & SUBSCRIPTIONS ================= -->
+        <!-- ================= TAB 5: CREDITS & BILLING ================= -->
         <div x-show="activeTab === 'wallet'" class="space-y-12" style="display: none;">
             <div class="border-b border-[#E8E2D5] pb-8">
                 <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Membership & Billing</span>
@@ -419,17 +451,6 @@
                     <p class="text-xs text-[#6C6255]">Redeemable for priority concierge matching and verified residential stays.</p>
                 </div>
             </div>
-            <div class="border-t border-[#E8E2D5] pt-8 space-y-6">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Saved Payment Methods</h3>
-                <div class="space-y-4">
-                    <template x-for="card in savedCards">
-                        <div class="border border-[#E8E2D5] bg-white p-4 flex justify-between items-center text-xs">
-                            <span class="font-medium" x-text="card.brand + ' ending in ' + card.last4 + ' (Expires ' + card.expiry + ')'"></span>
-                            <span class="text-[10px] uppercase tracking-widest px-2 py-1 border border-[#2C2A29]" x-text="card.default ? 'Default' : 'Alternative'"></span>
-                        </div>
-                    </template>
-                </div>
-            </div>
         </div>
 
         <!-- ================= TAB 6: SETTINGS & GDPR ================= -->
@@ -442,87 +463,14 @@
                 <h3 class="font-serif text-xl text-[#2C2A29]">Data Protection & Vault Portability</h3>
                 <p>Under GDPR regulations, you have full ownership over your medical records, chat history, and companion vaults stored within Zoélys.</p>
                 <div class="pt-4 flex space-x-4">
-                    <button @click="alert('GDPR Data Archive export requested. You will receive an encrypted JSON file via email.')" class="border border-[#2C2A29] text-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Export Vault Data (GDPR)</button>
-                    <button @click="alert('Account deletion request initiated securely. Our compliance team will review within 48 hours.')" class="border border-red-800 text-red-800 px-5 py-3 uppercase tracking-widest font-medium hover:bg-red-800 hover:text-white transition">Delete Account & Vault</button>
+                    <button @click="alert('GDPR Data Archive export requested.')" class="border border-[#2C2A29] text-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Export Vault Data (GDPR)</button>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- ================= MODAL 1: ADD PET ================= -->
-    <div x-show="showPetModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
-        <div @click="showPetModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
-        <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
-            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Register New Companion</h3>
-                <button @click="showPetModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
-            </div>
-            <div class="space-y-4 text-xs">
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
-                    <input type="text" x-model="newPet.name" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. Max">
-                </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
-                    <input type="text" x-model="newPet.breed" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. French Bulldog">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Age (years)</label>
-                        <input type="text" x-model="newPet.age" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="2">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Weight (kg)</label>
-                        <input type="text" x-model="newPet.weight" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="12">
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Microchip Number</label>
-                    <input type="text" x-model="newPet.microchip" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="250269...">
-                </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Medication & Special Needs</label>
-                    <input type="text" x-model="newPet.medicationType" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="None or specific medicine">
-                </div>
-                <div class="pt-4 flex justify-end space-x-4">
-                    <button @click="showPetModal = false" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">Cancel</button>
-                    <button @click="addPet()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Save Pet to Vault</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MODAL 2: EMERGENCY PROTOCOL ================= -->
-    <div x-show="showEmergencyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
-        <div @click="showEmergencyModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
-        <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
-            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Emergency Protocols & Authorizations</h3>
-                <button @click="showEmergencyModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
-            </div>
-            <div class="space-y-4 text-xs">
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Veterinary Clinic / Contact Name</label>
-                    <input type="text" x-model="emergencyContact.name" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Emergency Phone Number</label>
-                    <input type="text" x-model="emergencyContact.phone" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                </div>
-                <div class="space-y-1">
-                    <label class="block uppercase tracking-widest text-[#8C8275]">Pre-Authorization Spending Limit (€)</label>
-                    <input type="text" x-model="emergencyContact.limit" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                </div>
-                <div class="pt-4 flex justify-end space-x-4">
-                    <button @click="showEmergencyModal = false" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">Cancel</button>
-                    <button @click="showEmergencyModal = false; alert('Emergency protocol updated successfully.')" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Save Protocol</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MODAL 3: MULTI-STEP CONCIERGE MATCHING (BOOK A STAY) ================= -->
+    <!-- ================= MODAL: 7-STEP COMPREHENSIVE CONCIERGE INTAKE ================= -->
     <div x-show="showMatchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
         <div @click="showMatchModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
         <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
@@ -532,46 +480,82 @@
             </div>
 
             <div class="space-y-4 text-xs">
-                <!-- STEP 1 -->
+                <!-- STEP 1: Owner Information -->
                 <div x-show="matchStep === 1" class="space-y-4">
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Owner Email</label>
-                        <input type="email" x-model="matchData.email" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 1. Contact & Location</span>
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Owner Full Name</label>
                         <input type="text" x-model="matchData.fullName" class="w-full border border-[#E8E2D5] p-3 bg-white">
                     </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Email Address</label>
+                        <input type="email" x-model="matchData.email" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Phone Number</label>
+                        <input type="text" x-model="matchData.phone" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Neighbourhood / City</label>
+                        <input type="text" x-model="matchData.neighbourhood" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                    </div>
                 </div>
 
-                <!-- STEP 2 -->
+                <!-- STEP 2: Companion Specs -->
                 <div x-show="matchStep === 2" class="space-y-4" style="display: none;">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 2. Companion Overview</span>
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
                         <input type="text" x-model="matchData.petName" class="w-full border border-[#E8E2D5] p-3 bg-white">
                     </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block uppercase tracking-widest text-[#8C8275]">Animal Type</label>
+                            <input type="text" x-model="matchData.animalType" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Dog, Cat...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
+                            <input type="text" x-model="matchData.breed" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block uppercase tracking-widest text-[#8C8275]">Age</label>
+                            <input type="text" x-model="matchData.petAge" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block uppercase tracking-widest text-[#8C8275]">Weight / Size</label>
+                            <input type="text" x-model="matchData.petSize" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        </div>
+                    </div>
                     <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Pet Type (e.g. Dog, Cat)</label>
-                        <input type="text" x-model="matchData.animalType" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Temperament & Personality</label>
+                        <input type="text" x-model="matchData.temperament" class="w-full border border-[#E8E2D5] p-3 bg-white">
                     </div>
                 </div>
 
-                <!-- STEP 3 -->
+                <!-- STEP 3: Health, Habits & Behavioral Quirks -->
                 <div x-show="matchStep === 3" class="space-y-4" style="display: none;">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 3. Health, Routine & Quirks</span>
                     <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
-                        <input type="text" x-model="matchData.breed" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Behavioral Traits & Quirks</label>
+                        <textarea x-model="matchData.behavioralTraits" rows="2" class="w-full border border-[#E8E2D5] p-3 bg-white"></textarea>
                     </div>
                     <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Pet Age</label>
-                        <input type="text" x-model="matchData.petAge" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Medical Conditions / Medication Notes</label>
+                        <textarea x-model="matchData.medicalConditions" rows="2" class="w-full border border-[#E8E2D5] p-3 bg-white"></textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Diet & Feeding Requirements</label>
+                        <input type="text" x-model="matchData.diet" class="w-full border border-[#E8E2D5] p-3 bg-white">
                     </div>
                 </div>
 
-                <!-- STEP 4 -->
+                <!-- STEP 4: Service Type & Scheduling -->
                 <div x-show="matchStep === 4" class="space-y-4" style="display: none;">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 4. Service Selection & Dates</span>
                     <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Service Type</label>
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Service Category</label>
                         <select x-model="matchData.serviceType" class="w-full border border-[#E8E2D5] p-3 bg-white">
                             <option value="Residential Boarding">Residential Boarding</option>
                             <option value="Overnight Care">Overnight Care</option>
@@ -579,48 +563,81 @@
                             <option value="Daily Walk">Daily Walk</option>
                         </select>
                     </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block uppercase tracking-widest text-[#8C8275]">Start Date</label>
+                            <input type="date" x-model="matchData.startDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block uppercase tracking-widest text-[#8C8275]">End Date</label>
+                            <input type="date" x-model="matchData.endDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- STEP 5 -->
+                <!-- STEP 5: Sitter Qualifications & Meet & Greet -->
                 <div x-show="matchStep === 5" class="space-y-4" style="display: none;">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 5. Caregiver Preferences</span>
                     <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Start Date</label>
-                        <input type="date" x-model="matchData.startDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Minimum Experience Level</label>
+                        <select x-model="matchData.expLevel" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                            <option value="Professional 5+ years">Professional 5+ years</option>
+                            <option value="Intermediate 2+ years">Intermediate 2+ years</option>
+                            <option value="Any Verified Caregiver">Any Verified Caregiver</option>
+                        </select>
                     </div>
                     <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">End Date</label>
-                        <input type="date" x-model="matchData.endDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Special Skills Requested</label>
+                        <input type="text" x-model="matchData.otherQualities" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. CPR Certified, First Aid...">
+                    </div>
+                    <div class="flex items-center space-x-3 pt-2">
+                        <input type="checkbox" id="meetGreetCheck" x-model="matchData.meetGreet" class="border-[#E8E2D5]">
+                        <label for="meetGreetCheck" class="uppercase tracking-widest text-[#8C8275]">Request prior Video / In-Person Meet & Greet</label>
                     </div>
                 </div>
 
-                <!-- STEP 6 -->
+                <!-- STEP 6: Budget & Platform Experience -->
                 <div x-show="matchStep === 6" class="space-y-4" style="display: none;">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 6. Budget & History</span>
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Budget Range</label>
-                        <input type="text" x-model="matchData.budget" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                        <input type="text" x-model="matchData.budget" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. €100-149 / night">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Have you used professional sitters before?</label>
+                        <select x-model="matchData.usedSitterBefore" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- STEP 7 -->
+                <!-- STEP 7: Final Detailed Notes & Concierge Instructions -->
                 <div x-show="matchStep === 7" class="space-y-4" style="display: none;">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 7. Special Notes & Submission</span>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Special Instructions for Caregiver</label>
+                        <textarea x-model="matchData.specialInstructions" rows="3" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Specific feeding times, walk routes, quirks..."></textarea>
+                    </div>
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Final Notes for Concierge</label>
-                        <textarea x-model="matchData.finalNotes" rows="3" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Special requirements..."></textarea>
+                        <textarea x-model="matchData.finalNotes" rows="2" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Additional match requests..."></textarea>
                     </div>
                 </div>
 
-                <!-- Navigation buttons -->
+                <!-- Navigation Buttons -->
                 <div class="pt-4 flex justify-between space-x-4 border-t border-[#E8E2D5]">
                     <button type="button" x-show="matchStep > 1" @click="matchStep--" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">← Back</button>
                     <div class="flex-1"></div>
                     <button type="button" x-show="matchStep < 7" @click="matchStep++" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Next →</button>
+                    <!-- Final Submission Trigger -->
                     <button type="button" x-show="matchStep === 7" @click="submitBookingRequest()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">SEND REQUEST →</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ================= SLIDE-OVER RIGHT SIDEBAR: SITTER CHAT ================= -->
+    <!-- ================= SLIDE-OVER SITTER CHAT ================= -->
     <div x-show="showChatDrawer" class="fixed inset-0 z-50 overflow-hidden" style="display: none;">
         <div @click="showChatDrawer = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
         <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
