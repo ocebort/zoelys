@@ -43,9 +43,8 @@
     .status-badge { background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px; text-transform: uppercase; }
     .loading { text-align: center; color: #666; padding: 20px; }
     
-    /* Modal styles */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(25, 21, 18, 0.4); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 50; }
-    .modal-card { background: #FAF8F5; border: 1px solid #EBE6DF; border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 28px 52px rgba(25,21,18,0.22); }
+    .modal-card { background: #FAF8F5; border: 1px solid #EBE6DF; border-radius: 12px; padding: 30px; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 28px 52px rgba(25,21,18,0.22); }
   </style>
 </head>
 <body x-data="{ 
@@ -57,6 +56,8 @@
     showMatchModal: false,
     selectedRequest: null,
     topMatches: [],
+    allSitters: [],
+    selectedSitterIds: [],
     isCalculating: false,
 
     async loadAdminData() {
@@ -89,32 +90,48 @@
         this.isCalculating = true;
         this.showMatchModal = true;
         this.topMatches = [];
+        this.allSitters = this.sitters; // Copie de tous les sitters disponibles
+        this.selectedSitterIds = [];
 
         try {
             const res = await fetch(`/api/admin/match?requestId=` + encodeURIComponent(req.id));
             const data = await res.json();
             if (data.success) {
                 this.topMatches = data.topMatches || [];
+                // Pré-sélectionner les IDs du top 3 par défaut
+                this.selectedSitterIds = this.topMatches.map(s => s.email || s.id);
             } else {
-                alert('Error running algorithm: ' + (data.error || 'Unknown error'));
+                console.warn('Algorithm warning: ' + (data.error || 'Unknown'));
             }
         } catch (err) {
             console.error('Matching error:', err);
-            alert('Network error while running algorithm.');
         } finally {
             this.isCalculating = false;
         }
     },
 
+    toggleSitterSelection(id) {
+        if (this.selectedSitterIds.includes(id)) {
+            this.selectedSitterIds = this.selectedSitterIds.filter(item => item !== id);
+        } else {
+            this.selectedSitterIds.push(id);
+        }
+    },
+
     async sendProposalToOwner() {
         if (!this.selectedRequest) return;
+        if (this.selectedSitterIds.length === 0) {
+            alert('Please select at least one caregiver to propose.');
+            return;
+        }
+
         try {
             const res = await fetch('/api/admin/propose', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     requestId: this.selectedRequest.id,
-                    selectedSitterIds: this.topMatches.map(s => s.id)
+                    selectedSitterIds: this.selectedSitterIds
                 })
             });
             const data = await res.json();
@@ -143,7 +160,6 @@
       </div>
     </header>
 
-    <!-- Error Banner if routing fails -->
     <template x-if="loadError">
       <div style="padding: 15px; background: #FFF8F6; border: 1px solid #F0C4B8; border-radius: 6px; color: #B33A3A; margin-bottom: 25px;" x-text="loadError"></div>
     </template>
@@ -195,7 +211,7 @@
                 <td><span class="status-badge" x-text="req.status || 'pending'"></span></td>
                 <td>
                   <button x-show="req.status === 'pending'" @click="runMatchingAlgorithm(req)" class="action-btn" style="font-size: 11px;">
-                    Run Algorithm ⚡
+                    Review & Match ⚡
                   </button>
                   <span x-show="req.status !== 'pending'" style="font-size: 12px; color: #666; font-style: italic;" x-text="req.status"></span>
                 </td>
@@ -238,46 +254,63 @@
     </section>
   </div>
 
-  <!-- ALGORITHM MATCHING MODAL -->
+  <!-- REVIEW & MANUAL SELECTION MODAL -->
   <div x-show="showMatchModal" class="modal-backdrop" style="display: none;">
     <div @click.away="showMatchModal = false" class="modal-card">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EBE6DF; padding-bottom: 15px; margin-bottom: 20px;">
         <div>
-          <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #666;">Algorithm Output</span>
-          <h3 style="font-family: 'Baskerville', serif; font-size: 20px; margin: 4px 0 0 0;" x-text="'Top Matches for ' + (selectedRequest ? selectedRequest.pet_name : '')"></h3>
+          <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #666;">Concierge Review & Selection</span>
+          <h3 style="font-family: 'Baskerville', serif; font-size: 20px; margin: 4px 0 0 0;" x-text="'Select Caregivers for ' + (selectedRequest ? selectedRequest.pet_name : '')"></h3>
         </div>
         <button @click="showMatchModal = false" style="background: none; border: none; font-size: 14px; cursor: pointer; color: #666;">Close ✕</button>
       </div>
 
       <template x-if="isCalculating">
-        <div class="loading" style="padding: 40px 0;">Running compatibility algorithm across verified caregiver roster...</div>
+        <div class="loading" style="padding: 40px 0;">Running recommendation engine...</div>
       </template>
 
       <template x-if="!isCalculating">
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <template x-for="(sitter, index) in topMatches" :key="sitter.email">
-            <div style="border: 1px solid #EBE6DF; background: #FFFFFF; border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                  <span style="font-size: 11px; font-weight: bold; background: #FAF8F5; border: 1px solid #EBE6DF; padding: 2px 6px; border-radius: 4px;" x-text="'#' + (index + 1)"></span>
-                  <h4 style="margin: 0; font-size: 16px; font-family: 'Baskerville', serif;" x-text="sitter.full_name || sitter.email"></h4>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <p style="margin: 0; font-size: 13px; color: #666;">
+            The algorithm highlights recommendations based on score, but you have full oversight. Check any caregiver you wish to include in the proposal sent to the owner.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto;">
+            <template x-for="sitter in allSitters" :key="sitter.email">
+              <div @click="toggleSitterSelection(sitter.email || sitter.id)" 
+                   style="border: 1px solid #EBE6DF; background: #FFFFFF; border-radius: 8px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s;"
+                   :style="selectedSitterIds.includes(sitter.email || sitter.id) ? 'border-color: #191512; background: #FDFBF7;' : ''">
+                
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <input type="checkbox" :checked="selectedSitterIds.includes(sitter.email || sitter.id)" @click.stop="toggleSitterSelection(sitter.email || sitter.id)" style="width: 16px; height: 16px; cursor: pointer;">
+                  <div>
+                    <h4 style="margin: 0; font-size: 15px; font-weight: 600;" x-text="sitter.full_name || sitter.email"></h4>
+                    <p style="margin: 2px 0 0 0; font-size: 12px; color: #666;" x-text="(sitter.location || 'Lisbon') + ' • ' + (sitter.role || 'Verified Caregiver')"></p>
+                  </div>
                 </div>
-                <p style="margin: 0; font-size: 12px; color: #666;" x-text="(sitter.location || 'Lisbon') + ' • ' + (sitter.role || 'Verified Caregiver')"></p>
+
+                <!-- Affiche le score si l'algorithme l'a calculé -->
+                <div>
+                  <template x-if="topMatches.find(m => (m.email || m.id) === (sitter.email || sitter.id))">
+                    <span style="font-size: 14px; font-family: 'Baskerville', serif; color: #2E5A34; font-weight: bold;" 
+                          x-text="(topMatches.find(m => (m.email || m.id) === (sitter.email || sitter.id)).matchScore) + '% Match'"></span>
+                  </template>
+                  <template x-if="!topMatches.find(m => (m.email || m.id) === (sitter.email || sitter.id))">
+                    <span style="font-size: 11px; color: #666; font-style: italic;">Manual Choice</span>
+                  </template>
+                </div>
+
               </div>
-              <div style="text-align: right;">
-                <span style="font-size: 20px; font-family: 'Baskerville', serif; color: #2E5A34; font-weight: bold;" x-text="sitter.matchScore + '%'"></span>
-                <span style="display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #666;">Match Score</span>
-              </div>
-            </div>
+            </template>
+          </div>
+
+          <template x-if="allSitters.length === 0">
+            <p style="text-align: center; color: #666; font-style: italic; padding: 20px 0;">No sitters registered in the system registry.</p>
           </template>
 
-          <template x-if="topMatches.length === 0">
-            <p style="text-align: center; color: #666; font-style: italic; padding: 20px 0;">No matching sitters found in the registry.</p>
-          </template>
-
-          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; border-top: 1px solid #EBE6DF; padding-top: 20px;">
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; border-top: 1px solid #EBE6DF; padding-top: 20px;">
             <button @click="showMatchModal = false" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF;">Cancel</button>
-            <button @click="sendProposalToOwner()" class="action-btn" :disabled="topMatches.length === 0">Send Top 3 Proposal to Owner →</button>
+            <button @click="sendProposalToOwner()" class="action-btn" :disabled="selectedSitterIds.length === 0">Send Selected Proposal to Owner →</button>
           </div>
         </div>
       </template>
