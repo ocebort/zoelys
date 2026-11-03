@@ -126,6 +126,7 @@
         finalNotes: ''
     },
     async submitBookingRequest() {
+        console.log("--> Tentative d'envoi du formulaire avec :", this.matchData);
         try {
             const response = await fetch('/api/requests', {
                 method: 'POST',
@@ -138,16 +139,20 @@
                     service_type: this.matchData.serviceType
                 })
             });
+            
+            console.log("--> Statut HTTP reçu :", response.status);
             const result = await response.json();
+            console.log("--> Résultat JSON reçu :", result);
+
             if (response.ok && result.success) {
-                alert('Booking request successfully submitted! It is now visible in the admin overview.');
+                alert('Booking request successfully submitted!');
                 this.showMatchModal = false;
                 this.fetchOwnerRequests();
             } else {
                 alert('Error: ' + (result.error || 'Could not submit booking.'));
             }
         } catch (err) {
-            console.error('Network error:', err);
+            console.error('--> Erreur réseau attrapée :', err);
             alert('Network connection error while submitting booking.');
         }
     },
