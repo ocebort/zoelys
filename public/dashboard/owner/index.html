@@ -125,7 +125,8 @@
         finalNotes: ''
     },
     async submitBookingRequest() {
-        console.log('--> Sending booking request for:', this.matchData.petName, 'by', this.matchData.email);
+        alert("Le bouton a bien déclenché la fonction !"); // <--- Ajoutez ceci temporairement
+        console.log('--> Sending booking request for:', this.matchData.petName);
         try {
             const response = await fetch('/api/requests', {
                 method: 'POST',
