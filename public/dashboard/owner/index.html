@@ -1,666 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoélys — Owner Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        body { background-color: #FDFBF7; color: #2C2A29; font-family: system-ui, -apple-system, sans-serif; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Portal — Zoélys</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #FAF8F5;
+      color: #191512;
+      margin: 0;
+      padding: 0;
+    }
+    .top-bar {
+      background: #FFFFFF;
+      border-bottom: 1px solid #EBE6DF;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-area { font-family: "Baskerville", serif; font-size: 24px; letter-spacing: 0.05em; font-weight: normal; }
+    .nav-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    
+    .sub-nav {
+      display: flex;
+      gap: 30px;
+      border-bottom: 1px solid #EBE6DF;
+      background: #FFFFFF;
+      padding: 0 40px;
+    }
+    .sub-nav a {
+      padding: 15px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+    .sub-nav a.active {
+      color: #191512;
+      border-bottom-color: #191512;
+      font-weight: 600;
+    }
+
+    .main-content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    section { background: #FFFFFF; border: 1px solid #EBE6DF; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 24px rgba(25, 21, 18, 0.02); }
+    h2 { font-family: "Baskerville", serif; font-size: 24px; margin-top: 0; margin-bottom: 15px; }
+    
+    .action-btn {
+      padding: 8px 16px; border-radius: 6px; border: none; font-size: 13px; background: #191512; color: #FAF8F5; cursor: pointer; font-weight: 600;
+    }
+    .action-btn:hover { background: #332B26; }
+    .status-badge { background: #EBE6DF; padding: 4px 10px; border-radius: 4px; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.05em; }
+    .status-proposed { background: #E8F4EC; color: #2E5A34; }
+    .status-confirmed { background: #E6F0FA; color: #1D4ED8; }
+
+    .request-card {
+      border: 1px solid #EBE6DF; border-radius: 8px; padding: 20px; margin-bottom: 15px; background: #FAF8F5;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .timeline-item {
+      display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px solid #EBE6DF; align-items: flex-start;
+    }
+    .timeline-time { font-size: 12px; color: #666; width: 80px; flex-shrink: 0; font-family: monospace; }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col relative overflow-x-hidden" x-data="{ 
-    activeTab: 'overview', 
-    showPetModal: false, 
-    showEditPetModal: false,
-    showEmergencyModal: false,
-    showMatchModal: false,
-    showTimelineModal: false,
-    showAiGuideModal: false,
-    showCancelModal: false,
-    showSupportModal: false,
-    showChatDrawer: false,
-    cancelStep: 1,
-    cancelReason: '',
-    editingPetIndex: null,
-    subscriptionActive: true,
-    ownerRequests: [],
-    pets: [
-        { 
-          name: 'Luna', 
-          breed: 'Golden Retriever', 
-          age: '3', 
-          weight: '28', 
-          microchip: '250269608472910', 
-          medicationType: 'Joint supplement & Daily vitamins',
-          medicationSchedule: 'Evening with dinner',
-          medicationDosage: '1 tablet (500mg)',
-          routineWalks: 'Morning (08:00) & Evening (19:00)',
-          routineFeeding: 'Strictly specified brand kibble + omega oil',
-          behaviorQuirks: 'Friendly with dogs, mild separation anxiety > 4 hours',
-          houseRules: 'No sofas, crate trained for sleeping' 
-        }
+<body x-data="{ 
+    ownerEmail: 'owner@zoelys.local',
+    requests: [],
+    loading: true,
+    activeTab: 'overview',
+    liveLogs: [
+      { time: '14:30', title: 'Walk Completed', desc: 'Sunny 45-minute walk around the park. Hydrated well.', photo: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=150&q=80' },
+      { time: '11:00', title: 'Morning Feeding & Medication', desc: 'Ate full bowl of prescribed food calmly.', photo: null },
+      { time: '09:15', title: 'Check-in & Settled In', desc: 'Safe arrival at sitter residence. Relaxing on the couch.', photo: null }
     ],
-    newPet: { 
-        name: '', breed: '', age: '', weight: '', microchip: '', 
-        medicationType: 'None', medicationSchedule: 'Morning with breakfast', medicationDosage: '1 tablet (500mg)', 
-        routineWalks: 'Morning (08:00) & Evening (19:00)', routineFeeding: 'Strictly specified brand kibble + omega oil', 
-        behaviorQuirks: '', houseRules: '' 
-    },
-    editPetData: { 
-        name: '', breed: '', age: '', weight: '', microchip: '', 
-        medicationType: 'None', medicationSchedule: 'Morning with breakfast', medicationDosage: '1 tablet (500mg)', 
-        routineWalks: 'Morning (08:00) & Evening (19:00)', routineFeeding: 'Strictly specified brand kibble + omega oil', 
-        behaviorQuirks: '', houseRules: '' 
-    },
-    emergencyDoc: 'signed_emergency_authorization_2026.pdf',
-    emergencyContact: { name: 'Dr. Silva (Lisbon Vet Clinic)', phone: '+351 21 000 0000', limit: '300' },
-    creditBalance: 52,
-    membershipTier: 'Platinum',
-    membershipPrice: '€249 / month',
-    membershipRollover: '120-day credit rollover window',
-    savedCards: [
-        { brand: 'Visa', last4: '4242', expiry: '08/28', default: true },
-        { brand: 'Mastercard', last4: '8810', expiry: '12/27', default: false }
-    ],
-    timelineEvents: [
-        { time: '15 minutes ago', title: 'Park Walk Completed (4.2 km)', desc: 'Superb leash discipline along the river path. High energy and playful mood.', photo: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80' },
-        { time: '3 hours ago', title: 'Feeding Confirmation', desc: 'Full bowl consumed. Added omega-3 joint supplement as specified in vault.', photo: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80' }
-    ],
-    chatMessages: [
-        { sender: 'Sarah M.', text: 'Hello! Your companion had a wonderful walk this morning along the river path.', time: '10:15 AM' },
-        { sender: 'You', text: 'That is wonderful to hear, thank you Sarah!', time: '10:20 AM' }
-    ],
-    newChatMessage: '',
-    sendChatMessage() {
-        if(this.newChatMessage.trim() !== '') {
-            this.chatMessages.push({ sender: 'You', text: this.newChatMessage, time: 'Just now' });
-            this.newChatMessage = '';
-        }
-    },
-    supportTopic: 'Booking Support',
-    supportMessage: '',
-    sendSupportTicket() {
-        if(this.supportMessage.trim() !== '') {
-            alert('Your message has been securely sent to the Zoélys team. We will get back to you shortly.');
-            this.supportMessage = '';
-            this.showSupportModal = false;
-        } else {
-            alert('Please enter a message before sending.');
-        }
-    },
 
-    // FULL COMPREHENSIVE 7-STEP INTAKE STATE
-    matchStep: 1,
-    matchData: {
-        // Step 1: Owner Info & Contact
-        fullName: 'Océane',
-        email: 'owner@zoelys.local',
-        phone: '+351 91 000 0000',
-        neighbourhood: 'Chiado, Lisbon',
-
-        // Step 2: Companion Profile & Temperament
-        petName: 'Luna',
-        animalType: 'Dog',
-        breed: 'Golden Retriever',
-        petAge: '3',
-        petSize: '28 kg',
-        sex: 'Female',
-        temperament: 'Friendly & Energetic',
-        houseTrained: 'Yes',
-
-        // Step 3: Health, Routine & Behavioral Traits
-        behavioralTraits: 'Mild separation anxiety when left > 4 hours alone.',
-        medicalConditions: 'Joint supplement with evening meal.',
-        vaccination: 'Up to date (Rabies & Distemper)',
-        diet: 'Kibble + Salmon Oil',
-        outdoorSpace: 'Prefers garden or 3+ walks daily',
-
-        // Step 4: Service Type & Scheduling
-        serviceType: 'Residential Boarding',
-        serviceDesc: 'Full-time residential care at caregiver private home with continuous oversight.',
-        startDate: '2026-11-01',
-        endDate: '2026-11-05',
-
-        // Step 5: Sitter Experience & Requirements
-        expLevel: 'Professional 5+ years',
-        otherQualities: 'Experience with high-energy dogs, first-aid certified',
-        meetGreet: true,
-
-        // Step 6: Budget & Platform History
-        budget: '€100-149 / night',
-        usedSitterBefore: 'Yes',
-        hearAbout: 'Word of mouth / Personal Recommendation',
-
-        // Step 7: Final Detailed Notes for Concierge
-        specialInstructions: 'Must be fed strictly at 19:00. Please avoid dog parks with untreated gravel.',
-        finalNotes: 'Looking forward to meeting our assigned concierge caregiver.'
-    },
-
-    async submitBookingRequest() {
-        console.log('--> Sending full booking request for:', this.matchData.petName, 'by', this.matchData.email);
+    async loadOwnerData() {
+        this.loading = true;
         try {
-            const response = await fetch('/api/requests', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: this.matchData.email,
-                    full_name: this.matchData.fullName,
-                    pet_name: this.matchData.petName,
-                    pet_type: this.matchData.animalType,
-                    service_type: this.matchData.serviceType,
-                    details: {
-                        phone: this.matchData.phone,
-                        neighbourhood: this.matchData.neighbourhood,
-                        breed: this.matchData.breed,
-                        petAge: this.matchData.petAge,
-                        petSize: this.matchData.petSize,
-                        temperament: this.matchData.temperament,
-                        behavioralTraits: this.matchData.behavioralTraits,
-                        medicalConditions: this.matchData.medicalConditions,
-                        diet: this.matchData.diet,
-                        startDate: this.matchData.startDate,
-                        endDate: this.matchData.endDate,
-                        expLevel: this.matchData.expLevel,
-                        meetGreet: this.matchData.meetGreet,
-                        budget: this.matchData.budget,
-                        specialInstructions: this.matchData.specialInstructions,
-                        finalNotes: this.matchData.finalNotes
-                    }
-                })
-            });
-
-            const result = await response.json();
-            console.log('--> Server response:', result);
-
-            if (response.ok && result.success) {
-                alert(`Booking request successfully submitted for ${this.matchData.petName}! Our concierge team will review all notes and confirm your match.`);
-                this.showMatchModal = false;
-                this.matchStep = 1;
-                await this.fetchOwnerRequests();
-            } else {
-                alert('Error: ' + (result.error || 'Could not submit booking.'));
-            }
-        } catch (err) {
-            console.error('--> Network error:', err);
-            alert('Network connection error while submitting booking.');
-        }
-    },
-
-    async fetchOwnerRequests() {
-        try {
-            const res = await fetch(`/api/owner/requests?email=${encodeURIComponent(this.matchData.email)}`);
+            const res = await fetch(`/api/owner/requests?email=` + encodeURIComponent(this.ownerEmail));
             const data = await res.json();
             if (data.success) {
-                this.ownerRequests = data.requests || [];
+                this.requests = data.requests || [];
             }
         } catch (err) {
-            console.error('Could not fetch owner requests:', err);
+            console.error('Error loading owner requests:', err);
+        } finally {
+            this.loading = false;
         }
     },
 
-    init() {
-        this.fetchOwnerRequests();
-    },
-
-    addPet() {
-        if(this.newPet.name) {
-            this.pets.push({...this.newPet});
-            this.newPet = { name: '', breed: '', age: '', weight: '', microchip: '', medicationType: 'None', medicationSchedule: 'Morning', medicationDosage: '1 tablet', routineWalks: 'Standard', routineFeeding: 'Kibble', behaviorQuirks: '', houseRules: '' };
-            this.showPetModal = false;
-            alert('Pet profile successfully added to your vault.');
-        } else {
-            alert('Please enter at least the pet name.');
+    async acceptProposal(requestId) {
+        if (!confirm('Are you sure you want to accept this proposed sitter and confirm the booking?')) return;
+        try {
+            const res = await fetch('/api/owner/accept-proposal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestId })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Booking successfully confirmed!');
+                await this.loadOwnerData();
+            } else {
+                alert('Error: ' + (data.error || 'Could not confirm booking'));
+            }
+        } catch (err) {
+            alert('Network error while accepting proposal.');
         }
-    },
-    openEditPet(index) {
-        this.editingPetIndex = index;
-        this.editPetData = {...this.pets[index]};
-        this.showEditPetModal = true;
-    },
-    updatePet() {
-        if(this.editingPetIndex !== null) {
-            this.pets[this.editingPetIndex] = {...this.editPetData};
-            this.showEditPetModal = false;
-            alert('Pet profile updated successfully.');
-        }
-    },
-    deletePet(index) {
-        if(confirm('Are you sure you want to remove this pet profile from your vault?')) {
-            this.pets.splice(index, 1);
-        }
-    },
-    requestInstantUpdate() {
-        alert('Instant check-in request sent to caregiver.');
-    },
-    confirmCancellation() {
-        this.subscriptionActive = false;
-        this.creditBalance = 0;
-        alert('Your subscription has been canceled.');
-        this.showCancelModal = false;
-        this.cancelStep = 1;
     }
-}" x-init="init()">
+}" x-init="loadOwnerData()">
 
-    <!-- Top Navigation -->
-    <header class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 py-5 flex justify-between items-center sticky top-0 z-40">
-        <div class="flex items-center space-x-12">
-            <button @click="activeTab = 'overview'" class="text-xs uppercase tracking-widest text-[#8C8275] hover:text-[#2C2A29] transition flex items-center space-x-2 bg-transparent border-none cursor-pointer">
-                <span>← Back to Dashboard Home</span>
-            </button>
-            <span class="text-xl font-serif tracking-widest text-[#2C2A29] uppercase border-l border-[#E8E2D5] pl-6">Zoélys</span>
-            <span class="text-xs uppercase tracking-widest text-[#8C8275] font-medium border-l border-[#E8E2D5] pl-6">Owner Portal</span>
-        </div>
-        <div class="flex items-center space-x-6">
-            <span class="text-xs tracking-wider text-[#6C6255]" x-text="matchData.email"></span>
-            <button @click="showSupportModal = true" class="border border-[#2C2A29] text-[#2C2A29] text-[11px] uppercase tracking-widest px-4 py-2 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
-                Contact Zoélys Team
-            </button>
-            <button onclick="alert('Signed out.')" class="text-xs uppercase tracking-widest text-[#2C2A29] hover:opacity-60 transition font-medium">Sign out</button>
-        </div>
-    </header>
-
-    <!-- Navigation Bar -->
-    <nav class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 flex space-x-10 overflow-x-auto items-center">
-        <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Overview</button>
-        <button @click="activeTab = 'pets'" :class="activeTab === 'pets' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Pet Profiles & Medical</button>
-        <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Bookings & Sitter Overview</button>
-        <button @click="activeTab = 'safety'" :class="activeTab === 'safety' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Safety & Protocols</button>
-        <button @click="activeTab = 'wallet'" :class="activeTab === 'wallet' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Credits, Billing & Subscriptions</button>
-        <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'border-[#2C2A29] text-[#2C2A29]' : 'border-transparent text-[#8C8275] hover:text-[#2C2A29]'" class="py-4 border-b-2 text-xs uppercase tracking-widest font-medium transition whitespace-nowrap">Settings & GDPR</button>
-    </nav>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-6xl w-full mx-auto px-10 py-12 space-y-16">
-
-        <!-- ================= TAB 1: OVERVIEW ================= -->
-        <div x-show="activeTab === 'overview'" class="space-y-12">
-            <div class="border-b border-[#E8E2D5] pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                <div class="space-y-2">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Active Stay Status</span>
-                    <h2 class="text-3xl font-serif text-[#2C2A29]">Care Log & Live Updates</h2>
-                    <p class="text-xs text-[#6C6255] tracking-wide">Care log updated 15 minutes ago • Walk track & photos logged securely.</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button @click="requestInstantUpdate()" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-5 py-3 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
-                        Request Instant Update
-                    </button>
-                    <button @click="showChatDrawer = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-5 py-3 hover:opacity-90 transition font-medium flex items-center space-x-2">
-                        <span>Message Sitter 💬</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div @click="matchStep = 1; showMatchModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 01</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Book a Stay →</h4>
-                    <p class="text-xs text-[#6C6255]">Open concierge intake desk pre-filled with companion profile.</p>
-                </div>
-                <div @click="showPetModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 02</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Add a Pet →</h4>
-                    <p class="text-xs text-[#6C6255]">Register a new companion into your medical vault.</p>
-                </div>
-                <div @click="showEmergencyModal = true" class="group space-y-2 cursor-pointer border-t border-[#E8E2D5] pt-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Action 03</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29] group-hover:underline">Emergency Protocol →</h4>
-                    <p class="text-xs text-[#6C6255]">Upload signed authorization documents & emergency contacts.</p>
-                </div>
-            </div>
-
-            <!-- Pending Requests -->
-            <div class="space-y-6 border-t border-[#E8E2D5] pt-10">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-serif text-xl text-[#2C2A29]">Your Pending & Active Requests</h3>
-                    <button @click="fetchOwnerRequests()" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">Refresh Requests</button>
-                </div>
-                <div class="bg-white border border-[#E8E2D5] p-6 space-y-4">
-                    <template x-if="ownerRequests.length === 0">
-                        <p class="text-xs text-[#6C6255]">You have no active or pending requests at the moment. Click "Book a Stay" above to initiate a match.</p>
-                    </template>
-                    <template x-for="req in ownerRequests" :key="req.id">
-                        <div class="border-b border-[#E8E2D5] pb-4 last:border-none last:pb-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div class="space-y-1">
-                                <span class="text-[10px] uppercase tracking-widest font-mono text-[#8C8275]" x-text="req.id"></span>
-                                <h4 class="font-serif text-base text-[#2C2A29]" x-text="'Pet: ' + req.pet_name + ' (' + (req.pet_type || 'Dog') + ')'"></h4>
-                                <p class="text-xs text-[#6C6255]" x-text="'Service: ' + (req.service_type || 'Care') + ' • Owner: ' + req.full_name + ' (' + req.email + ')'"></p>
-                            </div>
-                            <div>
-                                <span class="text-[10px] uppercase tracking-widest px-3 py-1 border border-[#2C2A29]" :class="req.status === 'pending' ? 'bg-[#F4EFE6]' : 'bg-green-50'" x-text="req.status"></span>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= TAB 2: PET PROFILES & MEDICAL ================= -->
-        <div x-show="activeTab === 'pets'" class="space-y-12" style="display: none;">
-            <div class="flex justify-between items-end border-b border-[#E8E2D5] pb-8">
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Vault & Records</span>
-                    <h2 class="text-3xl font-serif text-[#2C2A29]">Pet Profiles & Medical Records</h2>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button @click="showPetModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Add New Pet</button>
-                </div>
-            </div>
-
-            <div class="space-y-10">
-                <template x-for="(pet, index) in pets">
-                    <div class="border-b border-[#E8E2D5] pb-10 space-y-6">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="font-serif text-2xl text-[#2C2A29]" x-text="pet.name"></h3>
-                                <p class="text-xs text-[#6C6255] mt-1" x-text="pet.breed + ' • ' + pet.age + ' years • ' + pet.weight + ' kg'"></p>
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <button @click="openEditPet(index)" class="text-xs uppercase tracking-widest text-[#2C2A29] hover:underline">Edit</button>
-                                <button @click="deletePet(index)" class="text-xs uppercase tracking-widest text-red-800 hover:underline">Delete</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs pt-4">
-                            <div class="space-y-3">
-                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Detailed Medication Specs</span>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Type:</strong> <span x-text="pet.medicationType"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Schedule:</strong> <span x-text="pet.medicationSchedule"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Dosage:</strong> <span x-text="pet.medicationDosage"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Microchip:</strong> <span class="font-mono" x-text="pet.microchip"></span></p>
-                            </div>
-                            <div class="space-y-3">
-                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block font-semibold">Detailed Routine & Quirks</span>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Walks:</strong> <span x-text="pet.routineWalks"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Feeding:</strong> <span x-text="pet.routineFeeding"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">Behavior:</strong> <span x-text="pet.behaviorQuirks"></span></p>
-                                <p class="text-[#2C2A29]"><strong class="text-[#8C8275]">House Rules:</strong> <span x-text="pet.houseRules"></span></p>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-        </div>
-
-        <!-- ================= TAB 3: BOOKINGS ================= -->
-        <div x-show="activeTab === 'bookings'" class="space-y-12" style="display: none;">
-            <div class="border-b border-[#E8E2D5] pb-8 flex justify-between items-end">
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Sitter Management & History</span>
-                    <h2 class="text-3xl font-serif text-[#2C2A29]">Bookings & Current Sitter Overview</h2>
-                </div>
-                <button @click="matchStep = 1; showMatchModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">New Booking Request</button>
-            </div>
-
-            <div class="space-y-6">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Current Sitter in Charge</h3>
-                <div class="border-t border-b border-[#E8E2D5] py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div class="space-y-2">
-                        <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1">Active Assignment</span>
-                        <h4 class="font-serif text-2xl text-[#2C2A29]">Sarah M.</h4>
-                        <p class="text-xs text-[#6C6255]">Residential Boarding • Nov 01 – Nov 05, 2026 • Chiado, Lisbon</p>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button @click="showChatDrawer = true" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Message Sitter 💬</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= TAB 4: SAFETY & PROTOCOLS ================= -->
-        <div x-show="activeTab === 'safety'" class="space-y-12" style="display: none;">
-            <div class="border-b border-[#E8E2D5] pb-8 flex justify-between items-end">
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Emergency Protocols</span>
-                    <h2 class="text-3xl font-serif text-[#2C2A29]">Safety & Medical Authorizations</h2>
-                </div>
-                <button @click="showEmergencyModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Edit Emergency Settings</button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Pre-Authorization Limit</span>
-                    <div class="text-4xl font-serif text-[#2C2A29]">€<span x-text="emergencyContact.limit"></span> <span class="text-xs font-sans uppercase tracking-widest text-[#8C8275]">/ Incident</span></div>
-                    <p class="text-xs text-[#6C6255]">Max veterinary expense approved without prior owner confirmation during acute emergencies.</p>
-                </div>
-                <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Emergency Veterinarian Contact</span>
-                    <h4 class="font-serif text-lg text-[#2C2A29]" x-text="emergencyContact.name"></h4>
-                    <p class="text-xs font-mono text-[#6C6255]" x-text="emergencyContact.phone"></p>
-                    <p class="text-xs text-[#6C6255]">Signed medical authorization document: <strong x-text="emergencyDoc"></strong></p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= TAB 5: CREDITS & BILLING ================= -->
-        <div x-show="activeTab === 'wallet'" class="space-y-12" style="display: none;">
-            <div class="border-b border-[#E8E2D5] pb-8">
-                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Membership & Billing</span>
-                <h2 class="text-3xl font-serif text-[#2C2A29]">Credits, Subscriptions & Payment Methods</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12" x-show="subscriptionActive">
-                <div class="space-y-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Current Membership Tier</span>
-                    <h3 class="text-2xl font-serif text-[#2C2A29]" x-text="membershipTier + ' (' + membershipPrice + ')'"></h3>
-                    <p class="text-xs text-[#6C6255]" x-text="membershipRollover"></p>
-                    <button @click="showCancelModal = true" class="text-xs uppercase tracking-widest text-red-800 underline pt-4 block">Cancel Subscription</button>
-                </div>
-                <div class="space-y-4 border-l border-[#E8E2D5] pl-12">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Strategic Credits Balance</span>
-                    <div class="text-5xl font-serif text-[#2C2A29]"><span x-text="creditBalance"></span> <span class="text-sm font-sans uppercase tracking-widest text-[#8C8275]">Credits</span></div>
-                    <p class="text-xs text-[#6C6255]">Redeemable for priority concierge matching and verified residential stays.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= TAB 6: SETTINGS & GDPR ================= -->
-        <div x-show="activeTab === 'settings'" class="space-y-12" style="display: none;">
-            <div class="border-b border-[#E8E2D5] pb-8">
-                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Governance & Privacy</span>
-                <h2 class="text-3xl font-serif text-[#2C2A29]">Settings & GDPR Compliance</h2>
-            </div>
-            <div class="space-y-6 text-xs text-[#6C6255] max-w-2xl">
-                <h3 class="font-serif text-xl text-[#2C2A29]">Data Protection & Vault Portability</h3>
-                <p>Under GDPR regulations, you have full ownership over your medical records, chat history, and companion vaults stored within Zoélys.</p>
-                <div class="pt-4 flex space-x-4">
-                    <button @click="alert('GDPR Data Archive export requested.')" class="border border-[#2C2A29] text-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Export Vault Data (GDPR)</button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- ================= MODAL: 7-STEP COMPREHENSIVE CONCIERGE INTAKE ================= -->
-    <div x-show="showMatchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
-        <div @click="showMatchModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
-        <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
-            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
-                <h3 class="font-serif text-xl text-[#2C2A29]" x-text="'Concierge Intake – Step ' + matchStep + ' of 7'"></h3>
-                <button @click="showMatchModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
-            </div>
-
-            <div class="space-y-4 text-xs">
-                <!-- STEP 1: Owner Information -->
-                <div x-show="matchStep === 1" class="space-y-4">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 1. Contact & Location</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Owner Full Name</label>
-                        <input type="text" x-model="matchData.fullName" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Email Address</label>
-                        <input type="email" x-model="matchData.email" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Phone Number</label>
-                        <input type="text" x-model="matchData.phone" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Neighbourhood / City</label>
-                        <input type="text" x-model="matchData.neighbourhood" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                </div>
-
-                <!-- STEP 2: Companion Specs -->
-                <div x-show="matchStep === 2" class="space-y-4" style="display: none;">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 2. Companion Overview</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
-                        <input type="text" x-model="matchData.petName" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <label class="block uppercase tracking-widest text-[#8C8275]">Animal Type</label>
-                            <input type="text" x-model="matchData.animalType" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Dog, Cat...">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
-                            <input type="text" x-model="matchData.breed" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <label class="block uppercase tracking-widest text-[#8C8275]">Age</label>
-                            <input type="text" x-model="matchData.petAge" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block uppercase tracking-widest text-[#8C8275]">Weight / Size</label>
-                            <input type="text" x-model="matchData.petSize" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Temperament & Personality</label>
-                        <input type="text" x-model="matchData.temperament" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                </div>
-
-                <!-- STEP 3: Health, Habits & Behavioral Quirks -->
-                <div x-show="matchStep === 3" class="space-y-4" style="display: none;">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 3. Health, Routine & Quirks</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Behavioral Traits & Quirks</label>
-                        <textarea x-model="matchData.behavioralTraits" rows="2" class="w-full border border-[#E8E2D5] p-3 bg-white"></textarea>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Medical Conditions / Medication Notes</label>
-                        <textarea x-model="matchData.medicalConditions" rows="2" class="w-full border border-[#E8E2D5] p-3 bg-white"></textarea>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Diet & Feeding Requirements</label>
-                        <input type="text" x-model="matchData.diet" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                    </div>
-                </div>
-
-                <!-- STEP 4: Service Type & Scheduling -->
-                <div x-show="matchStep === 4" class="space-y-4" style="display: none;">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 4. Service Selection & Dates</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Service Category</label>
-                        <select x-model="matchData.serviceType" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                            <option value="Residential Boarding">Residential Boarding</option>
-                            <option value="Overnight Care">Overnight Care</option>
-                            <option value="Home visit">Home visit</option>
-                            <option value="Daily Walk">Daily Walk</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <label class="block uppercase tracking-widest text-[#8C8275]">Start Date</label>
-                            <input type="date" x-model="matchData.startDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block uppercase tracking-widest text-[#8C8275]">End Date</label>
-                            <input type="date" x-model="matchData.endDate" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 5: Sitter Qualifications & Meet & Greet -->
-                <div x-show="matchStep === 5" class="space-y-4" style="display: none;">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 5. Caregiver Preferences</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Minimum Experience Level</label>
-                        <select x-model="matchData.expLevel" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                            <option value="Professional 5+ years">Professional 5+ years</option>
-                            <option value="Intermediate 2+ years">Intermediate 2+ years</option>
-                            <option value="Any Verified Caregiver">Any Verified Caregiver</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Special Skills Requested</label>
-                        <input type="text" x-model="matchData.otherQualities" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. CPR Certified, First Aid...">
-                    </div>
-                    <div class="flex items-center space-x-3 pt-2">
-                        <input type="checkbox" id="meetGreetCheck" x-model="matchData.meetGreet" class="border-[#E8E2D5]">
-                        <label for="meetGreetCheck" class="uppercase tracking-widest text-[#8C8275]">Request prior Video / In-Person Meet & Greet</label>
-                    </div>
-                </div>
-
-                <!-- STEP 6: Budget & Platform Experience -->
-                <div x-show="matchStep === 6" class="space-y-4" style="display: none;">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 6. Budget & History</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Budget Range</label>
-                        <input type="text" x-model="matchData.budget" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. €100-149 / night">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Have you used professional sitters before?</label>
-                        <select x-model="matchData.usedSitterBefore" class="w-full border border-[#E8E2D5] p-3 bg-white">
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- STEP 7: Final Detailed Notes & Concierge Instructions -->
-                <div x-show="matchStep === 7" class="space-y-4" style="display: none;">
-                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Step 7. Special Notes & Submission</span>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Special Instructions for Caregiver</label>
-                        <textarea x-model="matchData.specialInstructions" rows="3" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Specific feeding times, walk routes, quirks..."></textarea>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block uppercase tracking-widest text-[#8C8275]">Final Notes for Concierge</label>
-                        <textarea x-model="matchData.finalNotes" rows="2" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="Additional match requests..."></textarea>
-                    </div>
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="pt-4 flex justify-between space-x-4 border-t border-[#E8E2D5]">
-                    <button type="button" x-show="matchStep > 1" @click="matchStep--" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">← Back</button>
-                    <div class="flex-1"></div>
-                    <button type="button" x-show="matchStep < 7" @click="matchStep++" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Next →</button>
-                    <!-- Final Submission Trigger -->
-                    <button type="button" x-show="matchStep === 7" @click="submitBookingRequest()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">SEND REQUEST →</button>
-                </div>
-            </div>
-        </div>
+  <!-- TOP BAR CENTRÉE ET HARMONIEUSE -->
+  <div class="top-bar">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <a href="/dashboard/owner/" style="color: #191512; text-decoration: none;" class="logo-area">ZOÉLYS</a>
+      <span style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.1em; border-left: 1px solid #EBE6DF; padding-left: 20px;">Owner Portal</span>
     </div>
-
-    <!-- ================= SLIDE-OVER SITTER CHAT ================= -->
-    <div x-show="showChatDrawer" class="fixed inset-0 z-50 overflow-hidden" style="display: none;">
-        <div @click="showChatDrawer = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
-        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-screen max-w-md bg-[#FDFBF7] border-l border-[#E8E2D5] shadow-2xl flex flex-col">
-                <div class="p-6 border-b border-[#E8E2D5] flex justify-between items-center bg-[#FDFBF7]">
-                    <h3 class="font-serif text-lg text-[#2C2A29]">Chat with Caregiver</h3>
-                    <button @click="showChatDrawer = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
-                    <template x-for="msg in chatMessages">
-                        <div class="flex flex-col" :class="msg.sender === 'You' ? 'items-end' : 'items-start'">
-                            <span class="text-[9px] uppercase tracking-widest text-[#8C8275] mb-1" x-text="msg.sender"></span>
-                            <div class="p-3 text-xs max-w-[80%]" :class="msg.sender === 'You' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'bg-[#F4EFE6] text-[#2C2A29]'" x-text="msg.text"></div>
-                        </div>
-                    </template>
-                </div>
-                <div class="p-4 border-t border-[#E8E2D5] bg-[#FDFBF7] flex space-x-2">
-                    <input type="text" x-model="newChatMessage" @keydown.enter="sendChatMessage()" placeholder="Type a message..." class="flex-1 border border-[#E8E2D5] p-3 text-xs bg-white">
-                    <button @click="sendChatMessage()" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-4 py-3">Send</button>
-                </div>
-            </div>
-        </div>
+    <div style="display: flex; align-items: center; gap: 25px; font-size: 13px;">
+      <span style="color: #666;" x-text="ownerEmail"></span>
+      <a href="#" style="color: #191512; text-decoration: underline;">Contact Team</a>
+      <a href="/" style="color: #191512; text-decoration: none; font-weight: 600;">Sign Out</a>
     </div>
+  </div>
+
+  <!-- SOUS-NAVIGATION -->
+  <div class="sub-nav">
+    <a :class="activeTab === 'overview' ? 'active' : ''" @click="activeTab = 'overview'">Overview & Requests</a>
+    <a :class="activeTab === 'pets' ? 'active' : ''" @click="activeTab = 'pets'">Pet Profiles & Medical</a>
+    <a :class="activeTab === 'safety' ? 'active' : ''" @click="activeTab = 'safety'">Safety & Protocols</a>
+    <a :class="activeTab === 'billing' ? 'active' : ''" @click="activeTab = 'billing'">Credits & Subscriptions</a>
+  </div>
+
+  <div class="main-content">
+
+    <!-- TAB OVERVIEW -->
+    <template x-if="activeTab === 'overview'">
+      <div>
+        
+        <!-- LIVE TIMELINE LOGS & PHOTOS -->
+        <section>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+              <span class="status-badge" style="background: #E8F4EC; color: #2E5A34;">Live Stay Active</span>
+              <h2 style="margin: 6px 0 0 0;">Care Log & Live Updates</h2>
+            </div>
+            <button @click="alert('Instant update requested from sitter.')" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF;">Request Instant Update ⚡</button>
+          </div>
+
+          <p style="color: #666; font-size: 13px; margin-bottom: 20px;">Real-time timeline logs, walk tracking, and photos securely uploaded by your verified sitter.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <template x-for="log in liveLogs">
+              <div class="timeline-item">
+                <div class="timeline-time" x-text="log.time"></div>
+                <div style="flex: 1;">
+                  <h4 style="margin: 0 0 4px 0; font-size: 14px;" x-text="log.title"></h4>
+                  <p style="margin: 0; font-size: 13px; color: #555;" x-text="log.desc"></p>
+                  <template x-if="log.photo">
+                    <div style="margin-top: 10px;">
+                      <img :src="log.photo" style="width: 120px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #EBE6DF;">
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </section>
+
+        <!-- PENDING & PROPOSED REQUESTS (AVEC BOUTON D'ACCEPTATION POUR LE PROPRIÉTAIRE) -->
+        <section>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Your Booking Requests & Sitter Proposals</h2>
+            <button @click="loadOwnerData()" class="action-btn" style="background: #FAF8F5; color: #191512; border: 1px solid #EBE6DF; font-size: 11px; text-transform: uppercase;">Refresh Requests</button>
+          </div>
+
+          <template x-if="loading">
+            <div style="text-align: center; color: #666; padding: 20px;">Loading your requests...</div>
+          </template>
+
+          <template x-if="!loading && requests.length === 0">
+            <p style="color: #666; font-style: italic;">No active booking requests found. Use the concierge intake to book a stay.</p>
+          </template>
+
+          <template x-if="!loading && requests.length > 0">
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+              <template x-for="req in requests" :key="req.id">
+                <div class="request-card">
+                  <div>
+                    <span style="font-family: monospace; font-size: 11px; color: #666;" x-text="'#' + req.id"></span>
+                    <h3 style="margin: 4px 0; font-size: 16px;" x-text="'Pet: ' + (req.pet_name || 'Companion') + ' (' + (req.pet_type || 'Pet') + ')'"></h3>
+                    <p style="margin: 0; font-size: 13px; color: #666;" x-text="'Service: ' + (req.service_type || 'Standard Care')"></p>
+                  </div>
+
+                  <div style="display: flex; align-items: center; gap: 15px;">
+                    <!-- Badge de statut -->
+                    <span class="status-badge" :class="{
+                      'status-proposed': req.status === 'proposed',
+                      'status-confirmed': req.status === 'confirmed'
+                    }" x-text="req.status || 'pending'"></span>
+
+                    <!-- BOUTON D'ACCEPTATION SI PROPOSÉ -->
+                    <template x-if="req.status === 'proposed'">
+                      <button @click="acceptProposal(req.id)" class="action-btn" style="background: #2E5A34;">
+                        Accept Sitter & Confirm →
+                      </button>
+                    </template>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
+        </section>
+
+      </div>
+    </template>
+
+    <!-- AUTRES ONGLETS (PLACEHOLDERS PROPRES) -->
+    <template x-if="activeTab === 'pets'">
+      <section>
+        <h2>Pet Profiles & Medical Records</h2>
+        <p style="color: #666; font-size: 14px;">Manage your companion's dietary requirements, vaccination history, and medical vault.</p>
+      </section>
+    </template>
+
+    <template x-if="activeTab === 'safety'">
+      <section>
+        <h2>Safety Protocols & Emergency Contacts</h2>
+        <p style="color: #666; font-size: 14px;">Review emergency vet instructions and security guidelines.</p>
+      </section>
+    </template>
+
+    <template x-if="activeTab === 'billing'">
+      <section>
+        <h2>Credits & Subscriptions</h2>
+        <p style="color: #666; font-size: 14px;">Manage your Zoélys high-trust platform credits and membership status.</p>
+      </section>
+    </template>
+
+  </div>
 
 </body>
 </html>
