@@ -50,17 +50,23 @@ async function handleAdminOverview(env) {
     try {
       const uRes = await env.zoelys_db.prepare("SELECT id, full_name, email, role, location, rating FROM users").all();
       if (uRes && uRes.results) users = uRes.results;
-    } catch (e) {}
+    } catch (e) {
+      console.error("Erreur lecture users:", e);
+    }
 
     let requests = [];
     try {
       const rRes = await env.zoelys_db.prepare("SELECT * FROM client_requests ORDER BY id DESC").all();
       if (rRes && rRes.results) requests = rRes.results;
-    } catch (e) {}
+    } catch (e) {
+      console.error("Erreur lecture requests:", e);
+    }
 
     const totalUsers = users.length;
     const totalOwners = users.filter(u => u.role && u.role.toLowerCase() === 'owner').length;
-    const sittersList = users.filter(u => u.role && (u.role.toLowerCase().includes('sitter') || u.role.toLowerCase() === 'pet_sitter'));
+    
+    // Tous les utilisateurs inscrits sont inclus pour permettre la sélection manuelle complète
+    const sittersList = users;
 
     return new Response(JSON.stringify({
       success: true,
@@ -83,7 +89,7 @@ async function handleMatchAlgorithm(url, env) {
     }
 
     const reqRes = await env.zoelys_db.prepare("SELECT * FROM client_requests WHERE id = ?").bind(requestId).first();
-    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users WHERE role LIKE '%sitter%' OR role LIKE '%pet_sitter%'").all();
+    const sittersRes = await env.zoelys_db.prepare("SELECT * FROM users").all();
     const sitters = sittersRes.results || [];
 
     const scoredSitters = sitters.map(sitter => {
@@ -184,6 +190,6 @@ async function handleOwnerRequests(url, env) {
 
     return new Response(JSON.stringify({ success: true, requests: res.results || [] }), { status: 200, headers });
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, requests: [], error: err.message }), { status: 500, headers });
+    return new Response(JSON.stringify({ success: false, requests: [], error: err.message }), { status: 200, headers });
   }
 }
