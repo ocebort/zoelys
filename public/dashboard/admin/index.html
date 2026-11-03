@@ -39,9 +39,7 @@
       padding: 6px 12px; border-radius: 6px; border: 1px solid #EBE6DF; font-size: 13px; background: #FAF8F5; cursor: pointer;
     }
     button.action-btn { background: #191512; color: #FAF8F5; border: none; font-weight: 600; }
-    button.action-btn:hover { opacity: 0.9; }
     .status-badge { background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-    .status-assigned { background: #e8f5e9; color: #2e7d32; font-weight: 600; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
     .loading { text-align: center; color: #666; padding: 20px; }
   </style>
 </head>
@@ -67,12 +65,12 @@
 
     <section>
       <h2>Care Requests & Algorithm Matching</h2>
-      <div id="requestsContainer" class="loading">Loading requests from database...</div>
+      <div id="requestsContainer" class="loading">Loading requests...</div>
     </section>
 
     <section>
       <h2>Active Caregiver Roster</h2>
-      <div id="sittersContainer" class="loading">Loading sitters from database...</div>
+      <div id="sittersContainer" class="loading">Loading sitters...</div>
     </section>
   </div>
 
@@ -85,65 +83,46 @@
         const res = await fetch('/api/admin/overview', { cache: 'no-store' });
         const text = await res.text();
         
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          throw new Error("Réponse de l'API non valide (JSON attendu).");
+        // Check if response is HTML (Cloudflare Pages routing fallback) instead of JSON
+        if (!text || text.trim().startsWith('<') || !text.trim().startsWith('{')) {
+          reqContainer.innerHTML = `<div style="padding: 15px; background: #FFF8F6; border: 1px solid #F0C4B8; border-radius: 6px; color: #B33A3A;">
+            <strong>Cloudflare Function Routing Notice:</strong> The API endpoint <code>/api/admin/overview</code> is currently being treated as a static page. 
+            Make sure your Cloudflare Pages project root directory is set to root (<code>/</code>) and build output is set to <code>public</code>.
+          </div>`;
+          sitterContainer.innerHTML = `<p style="color: #666; font-style: italic;">Roster unavailable until worker route resolves.</p>`;
+          return;
         }
 
-        if (!res.ok || !data.success) {
-          throw new Error(data.error || 'Erreur lors de la récupération des données.');
-        }
+        const data = JSON.parse(text);
 
-        // 1. Mise à jour des compteurs statistiques
         document.getElementById('statUsers').textContent = data.stats.totalUsers || 0;
         document.getElementById('statOwners').textContent = data.stats.totalOwners || 0;
         document.getElementById('statSitters').textContent = data.stats.totalSitters || 0;
         document.getElementById('statRequests').textContent = data.stats.totalRequests || 0;
 
-        // 2. Rendu dynamique du tableau des requêtes
         if (!data.requests || data.requests.length === 0) {
-          reqContainer.innerHTML = '<p style="color: #666; font-style: italic; padding: 10px;">Aucune demande de soin active dans la base de données.</p>';
+          reqContainer.innerHTML = '<p style="color: #666; font-style: italic;">No care requests found in database.</p>';
         } else {
-          let html = `<table><thead><tr><th>ID</th><th>Client</th><th>Pet</th><th>Service</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-          
+          let html = `<table><thead><tr><th>ID</th><th>Client</th><th>Pet</th><th>Service</th><th>Status</th></tr></thead><tbody>`;
           data.requests.forEach(r => {
-            let sitterOptions = `<option value="">Sélectionner un sitter...</option>`;
-            (data.sitters || []).forEach(s => {
-              sitterOptions += `<option value="${s.email}">${s.full_name || s.email}</option>`;
-            });
-
             html += `<tr>
               <td>#${r.id}</td>
               <td><strong>${r.full_name || 'Client'}</strong><br><span style="color: #666; font-size: 12px;">${r.email || ''}</span></td>
-              <td>${r.pet_name || 'Animal'} (${r.pet_type || 'N/A'} - ${r.breed || 'Standard'})</td>
-              <td>${r.service_type || 'Garde'} (${r.neighbourhood || 'Lisbonne'})</td>
-              <td><span id="status-${r.id}" class="status-badge">${r.status || 'pending'}</span></td>
-              <td>
-                <div style="display: flex; gap: 6px;">
-                  <select id="sitter-select-${r.id}">${sitterOptions}</select>
-                  <button class="action-btn" onclick="assignSitter('${r.id}', '${r.full_name || 'Client'}', '${r.pet_name || 'Animal'}', '${r.service_type || 'Garde'}')">Assigner</button>
-                </div>
-              </td>
+              <td>${r.pet_name || 'Pet'} (${r.pet_type || 'N/A'})</td>
+              <td>${r.service_type || 'Care'}</td>
+              <td><span class="status-badge">${r.status || 'pending'}</span></td>
             </tr>`;
           });
           html += `</tbody></table>`;
           reqContainer.innerHTML = html;
         }
 
-        // 3. Rendu dynamique du roster des sitters
         if (!data.sitters || data.sitters.length === 0) {
-          sitterContainer.innerHTML = '<p style="color: #666; font-style: italic; padding: 10px;">Aucun sitter enregistré dans la base de données.</p>';
+          sitterContainer.innerHTML = '<p style="color: #666; font-style: italic;">No sitters registered.</p>';
         } else {
-          let sHtml = `<table><thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th></tr></thead><tbody>`;
+          let sHtml = `<table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>`;
           data.sitters.forEach(s => {
-            sHtml += `<tr>
-              <td><strong>${s.full_name || 'N/A'}</strong></td>
-              <td>${s.email}</td>
-              <td>${s.role}</td>
-              <td><span style="color: #2e7d32; font-weight: 600;">Actif & Vérifié</span></td>
-            </tr>`;
+            sHtml += `<tr><td><strong>${s.full_name || 'N/A'}</strong></td><td>${s.email}</td><td>${s.role}</td></tr>`;
           });
           sHtml += `</tbody></table>`;
           sitterContainer.innerHTML = sHtml;
@@ -151,40 +130,8 @@
 
       } catch (err) {
         console.error(err);
-        reqContainer.innerHTML = `<p style="color: #B33A3A; padding: 10px;">Erreur de chargement : ${err.message}</p>`;
-        sitterContainer.innerHTML = `<p style="color: #666; padding: 10px;">Impossible de charger les données distantes.</p>`;
+        reqContainer.innerHTML = `<p style="color: #B33A3A;">Error loading data: ${err.message}</p>`;
       }
-    }
-
-    function assignSitter(reqId, clientName, petInfo, serviceInfo) {
-      const select = document.getElementById(`sitter-select-${reqId}`);
-      const sitterEmail = select.value;
-      const sitterName = select.options[select.selectedIndex].text;
-
-      if (!sitterEmail) {
-        alert("Veuillez sélectionner un sitter avant d'assigner.");
-        return;
-      }
-
-      const assignment = {
-        id: reqId,
-        clientName: clientName,
-        petInfo: petInfo,
-        serviceInfo: serviceInfo,
-        sitterEmail: sitterEmail,
-        sitterName: sitterName,
-        assignedAt: new Date().toLocaleTimeString()
-      };
-
-      localStorage.setItem('zoelys_assigned_request', JSON.stringify(assignment));
-
-      const statusEl = document.getElementById(`status-${reqId}`);
-      if (statusEl) {
-        statusEl.textContent = 'Assigné';
-        statusEl.className = 'status-assigned';
-      }
-
-      alert(`Succès : Demande #${reqId} assignée à ${sitterName} !`);
     }
 
     document.addEventListener('DOMContentLoaded', loadAdminData);
