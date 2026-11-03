@@ -1,17 +1,23 @@
 export async function onRequestGet(context) {
   const { env } = context;
 
-  try {
-    if (!env || !env.zoelys_db) {
-      return new Response(JSON.stringify({
-        success: true,
-        stats: { totalUsers: 0, totalOwners: 0, totalSitters: 0, totalRequests: 0 },
-        requests: [],
-        sitters: []
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-    }
+  // Default fallback payload
+  const fallbackPayload = {
+    success: true,
+    stats: { totalUsers: 0, totalOwners: 0, totalSitters: 0, totalRequests: 0 },
+    requests: [],
+    sitters: []
+  };
 
-    // 1. User Stats
+  if (!env || !env.zoelys_db) {
+    return new Response(JSON.stringify(fallbackPayload), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  try {
+    // 1. User stats from D1
     let userStats = { total_users: 0, total_owners: 0, total_sitters: 0 };
     try {
       const statsRes = await env.zoelys_db.prepare(
@@ -23,10 +29,10 @@ export async function onRequestGet(context) {
       ).first();
       if (statsRes) userStats = statsRes;
     } catch (e) {
-      console.warn('User stats error:', e.message);
+      console.warn('User stats warning:', e.message);
     }
 
-    // 2. Client Requests (using your actual table name: client_requests)
+    // 2. Fetch requests from client_requests table
     let requests = [];
     try {
       const reqRes = await env.zoelys_db.prepare(
@@ -34,10 +40,10 @@ export async function onRequestGet(context) {
       ).all();
       if (reqRes && reqRes.results) requests = reqRes.results;
     } catch (e) {
-      console.warn('Client requests error:', e.message);
+      console.warn('Client requests warning:', e.message);
     }
 
-    // 3. Sitters Roster
+    // 3. Fetch sitters roster
     let sitters = [];
     try {
       const sittersRes = await env.zoelys_db.prepare(
@@ -45,7 +51,7 @@ export async function onRequestGet(context) {
       ).all();
       if (sittersRes && sittersRes.results) sitters = sittersRes.results;
     } catch (e) {
-      console.warn('Sitters error:', e.message);
+      console.warn('Sitters warning:', e.message);
     }
 
     return new Response(JSON.stringify({
@@ -60,15 +66,15 @@ export async function onRequestGet(context) {
       sitters: sitters
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store'
+      }
     });
 
   } catch (err) {
     return new Response(JSON.stringify({
-      success: true,
-      stats: { totalUsers: 0, totalOwners: 0, totalSitters: 0, totalRequests: 0 },
-      requests: [],
-      sitters: [],
+      ...fallbackPayload,
       error: err.message
     }), {
       status: 200,
