@@ -39,7 +39,9 @@
       padding: 6px 12px; border-radius: 6px; border: 1px solid #EBE6DF; font-size: 13px; background: #FAF8F5; cursor: pointer;
     }
     button.action-btn { background: #191512; color: #FAF8F5; border: none; font-weight: 600; }
-    .loading { text-align: center; color: #666; padding: 20px; }
+    button.action-btn:hover { opacity: 0.9; }
+    .status-badge { background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    .status-assigned { background: #e8f5e9; color: #2e7d32; font-weight: 600; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -49,7 +51,10 @@
         <h1>Zoélys Command Center</h1>
         <p style="color: #666; margin: 4px 0 0 0; font-size: 14px;">Platform oversight, matching engine, and user operations.</p>
       </div>
-      <div class="badge">Admin Portal</div>
+      <div style="display: flex; gap: 15px; align-items: center;">
+        <a href="/dashboard/sitters/" target="_blank" style="font-size: 13px; color: #191512; text-decoration: underline; font-weight: 500;">View Sitter Dashboard ↗</a>
+        <div class="badge">Admin Portal</div>
+      </div>
     </header>
 
     <div class="stats-grid">
@@ -79,13 +84,13 @@
               <td><strong>Sophie Martin</strong><br><span style="color: #666; font-size: 12px;">sophie@owner.test</span></td>
               <td>Milo (Dog - Golden Retriever)</td>
               <td>Overnight Care (Chiado)</td>
-              <td><span style="background: #EBE6DF; padding: 4px 8px; border-radius: 4px; font-size: 12px;">pending</span></td>
+              <td><span id="status-req_01" class="status-badge">pending</span></td>
               <td>
                 <div style="display: flex; gap: 6px;">
                   <select id="sitter-select-req_01">
                     <option value="lucas@sitter.test">Lucas Bernard (lucas@sitter.test)</option>
                   </select>
-                  <button class="action-btn" onclick="alert('Assigned Lucas Bernard to request #req_01 successfully!')">Assign</button>
+                  <button class="action-btn" onclick="assignSitter('req_01', 'Sophie Martin', 'Milo (Dog - Golden Retriever)', 'Overnight Care (Chiado)')">Assign</button>
                 </div>
               </td>
             </tr>
@@ -118,5 +123,32 @@
       </div>
     </section>
   </div>
+
+  <script>
+    function assignSitter(reqId, clientName, petInfo, serviceInfo) {
+      const select = document.getElementById(`sitter-select-${reqId}`);
+      const sitterEmail = select.value;
+      const sitterName = select.options[select.selectedIndex].text;
+
+      // Enregistrement de l'assignation dans le localStorage partagé
+      const assignment = {
+        id: reqId,
+        clientName: clientName,
+        petInfo: petInfo,
+        serviceInfo: serviceInfo,
+        sitterEmail: sitterEmail,
+        sitterName: sitterName,
+        assignedAt: new Date().toLocaleTimeString()
+      };
+
+      localStorage.setItem('zoelys_assigned_request', JSON.stringify(assignment));
+
+      // Mise à jour visuelle du statut dans le tableau admin
+      document.getElementById(`status-${reqId}`).textContent = 'Assigned to Lucas';
+      document.getElementById(`status-${reqId}`).className = 'status-assigned';
+
+      alert(`Succès : La demande #${reqId} a été assignée à ${sitterName}. Elle est maintenant visible sur son tableau de bord !`);
+    }
+  </script>
 </body>
 </html>
