@@ -168,8 +168,10 @@
           // Save active user profile session to localStorage
           localStorage.setItem('zoelys_user', JSON.stringify(data.user));
 
-          // Redirect to the correct dashboard based on user role (using 'sitters' with an 's')
-          if (data.user.isSitter || data.user.role === 'sitter') {
+          // Correctly handle database roles ('pet_sitter' or 'sitter') and fallback to backend redirectUrl
+          if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+          } else if (data.user.isSitter || data.user.role === 'pet_sitter' || data.user.role === 'sitter') {
             window.location.href = '/dashboard/sitters/';
           } else {
             window.location.href = '/dashboard/owner/';
