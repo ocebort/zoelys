@@ -55,6 +55,7 @@
         behaviorQuirks: '', houseRules: '' 
     },
     emergencyDoc: 'signed_emergency_authorization_2026.pdf',
+    emergencyContact: { name: 'Dr. Silva (Lisbon Vet Clinic)', phone: '+351 21 000 0000', limit: '300' },
     creditBalance: 52,
     membershipTier: 'Platinum',
     membershipPrice: '€249 / month',
@@ -171,7 +172,11 @@
     addPet() {
         if(this.newPet.name) {
             this.pets.push({...this.newPet});
+            this.newPet = { name: '', breed: '', age: '', weight: '', microchip: '', medicationType: 'None', medicationSchedule: 'Morning', medicationDosage: '1 tablet', routineWalks: 'Standard', routineFeeding: 'Kibble', behaviorQuirks: '', houseRules: '' };
             this.showPetModal = false;
+            alert('Pet profile successfully added to your vault.');
+        } else {
+            alert('Please enter at least the pet name.');
         }
     },
     openEditPet(index) {
@@ -183,6 +188,7 @@
         if(this.editingPetIndex !== null) {
             this.pets[this.editingPetIndex] = {...this.editPetData};
             this.showEditPetModal = false;
+            alert('Pet profile updated successfully.');
         }
     },
     deletePet(index) {
@@ -238,7 +244,6 @@
 
         <!-- ================= TAB 1: OVERVIEW ================= -->
         <div x-show="activeTab === 'overview'" class="space-y-12">
-            <!-- Active Stay Banner -->
             <div class="border-b border-[#E8E2D5] pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div class="space-y-2">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Active Stay Status</span>
@@ -274,7 +279,7 @@
                 </div>
             </div>
 
-            <!-- Pending & Active Requests Section for Owner -->
+            <!-- Pending Requests -->
             <div class="space-y-6 border-t border-[#E8E2D5] pt-10">
                 <div class="flex justify-between items-center">
                     <h3 class="font-serif text-xl text-[#2C2A29]">Your Pending & Active Requests</h3>
@@ -298,29 +303,9 @@
                     </template>
                 </div>
             </div>
-
-            <!-- Timeline Care Feed Preview with Pictures -->
-            <div class="space-y-6 border-t border-[#E8E2D5] pt-10">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-serif text-xl text-[#2C2A29]">Live Care Feed & Photos</h3>
-                    <button @click="showTimelineModal = true" class="text-xs uppercase tracking-widest text-[#2C2A29] underline">View Full Timeline →</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <template x-for="event in timelineEvents">
-                        <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
-                            <img :src="event.photo" alt="Care photo" class="w-full h-48 object-cover border border-[#E8E2D5]">
-                            <div class="space-y-1">
-                                <span class="text-[10px] uppercase tracking-widest text-[#8C8275]" x-text="event.time"></span>
-                                <h4 class="font-serif text-base text-[#2C2A29]" x-text="event.title"></h4>
-                                <p class="text-xs text-[#6C6255]" x-text="event.desc"></p>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
         </div>
 
-        <!-- ================= TAB 2: PET PROFILES ================= -->
+        <!-- ================= TAB 2: PET PROFILES & MEDICAL ================= -->
         <div x-show="activeTab === 'pets'" class="space-y-12" style="display: none;">
             <div class="flex justify-between items-end border-b border-[#E8E2D5] pb-8">
                 <div>
@@ -328,7 +313,6 @@
                     <h2 class="text-3xl font-serif text-[#2C2A29]">Pet Profiles & Medical Records</h2>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button @click="showAiGuideModal = true" class="border border-[#2C2A29] text-[#2C2A29] text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Review AI Sitter Guide</button>
                     <button @click="showPetModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Add New Pet</button>
                 </div>
             </div>
@@ -392,21 +376,31 @@
             </div>
         </div>
 
-        <!-- ================= TAB 4: SAFETY ================= -->
+        <!-- ================= TAB 4: SAFETY & PROTOCOLS ================= -->
         <div x-show="activeTab === 'safety'" class="space-y-12" style="display: none;">
-            <div class="border-b border-[#E8E2D5] pb-8">
-                <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Emergency Protocols</span>
-                <h2 class="text-3xl font-serif text-[#2C2A29]">Safety & Medical Authorizations</h2>
+            <div class="border-b border-[#E8E2D5] pb-8 flex justify-between items-end">
+                <div>
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Emergency Protocols</span>
+                    <h2 class="text-3xl font-serif text-[#2C2A29]">Safety & Medical Authorizations</h2>
+                </div>
+                <button @click="showEmergencyModal = true" class="bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest px-6 py-3 font-medium">Edit Emergency Settings</button>
             </div>
-            <div class="space-y-8">
-                <div class="space-y-3">
-                    <h4 class="font-serif text-xl text-[#2C2A29]">Veterinary Care Pre-Authorization Limit</h4>
-                    <div class="text-4xl font-serif text-[#2C2A29] pt-2">€300 <span class="text-xs font-sans uppercase tracking-widest text-[#8C8275] font-normal">/ Incident limit</span></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Pre-Authorization Limit</span>
+                    <div class="text-4xl font-serif text-[#2C2A29]">€<span x-text="emergencyContact.limit"></span> <span class="text-xs font-sans uppercase tracking-widest text-[#8C8275]">/ Incident</span></div>
+                    <p class="text-xs text-[#6C6255]">Max veterinary expense approved without prior owner confirmation during acute emergencies.</p>
+                </div>
+                <div class="border border-[#E8E2D5] bg-white p-6 space-y-4">
+                    <span class="text-[10px] uppercase tracking-widest text-[#8C8275]">Emergency Veterinarian Contact</span>
+                    <h4 class="font-serif text-lg text-[#2C2A29]" x-text="emergencyContact.name"></h4>
+                    <p class="text-xs font-mono text-[#6C6255]" x-text="emergencyContact.phone"></p>
+                    <p class="text-xs text-[#6C6255]">Signed medical authorization document: <strong x-text="emergencyDoc"></strong></p>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 5: WALLET ================= -->
+        <!-- ================= TAB 5: CREDITS, BILLING & SUBSCRIPTIONS ================= -->
         <div x-show="activeTab === 'wallet'" class="space-y-12" style="display: none;">
             <div class="border-b border-[#E8E2D5] pb-8">
                 <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Membership & Billing</span>
@@ -416,25 +410,119 @@
                 <div class="space-y-4">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Current Membership Tier</span>
                     <h3 class="text-2xl font-serif text-[#2C2A29]" x-text="membershipTier + ' (' + membershipPrice + ')'"></h3>
+                    <p class="text-xs text-[#6C6255]" x-text="membershipRollover"></p>
+                    <button @click="showCancelModal = true" class="text-xs uppercase tracking-widest text-red-800 underline pt-4 block">Cancel Subscription</button>
                 </div>
                 <div class="space-y-4 border-l border-[#E8E2D5] pl-12">
                     <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Strategic Credits Balance</span>
                     <div class="text-5xl font-serif text-[#2C2A29]"><span x-text="creditBalance"></span> <span class="text-sm font-sans uppercase tracking-widest text-[#8C8275]">Credits</span></div>
+                    <p class="text-xs text-[#6C6255]">Redeemable for priority concierge matching and verified residential stays.</p>
+                </div>
+            </div>
+            <div class="border-t border-[#E8E2D5] pt-8 space-y-6">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Saved Payment Methods</h3>
+                <div class="space-y-4">
+                    <template x-for="card in savedCards">
+                        <div class="border border-[#E8E2D5] bg-white p-4 flex justify-between items-center text-xs">
+                            <span class="font-medium" x-text="card.brand + ' ending in ' + card.last4 + ' (Expires ' + card.expiry + ')'"></span>
+                            <span class="text-[10px] uppercase tracking-widest px-2 py-1 border border-[#2C2A29]" x-text="card.default ? 'Default' : 'Alternative'"></span>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 6: SETTINGS ================= -->
+        <!-- ================= TAB 6: SETTINGS & GDPR ================= -->
         <div x-show="activeTab === 'settings'" class="space-y-12" style="display: none;">
             <div class="border-b border-[#E8E2D5] pb-8">
                 <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Governance & Privacy</span>
                 <h2 class="text-3xl font-serif text-[#2C2A29]">Settings & GDPR Compliance</h2>
             </div>
+            <div class="space-y-6 text-xs text-[#6C6255] max-w-2xl">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Data Protection & Vault Portability</h3>
+                <p>Under GDPR regulations, you have full ownership over your medical records, chat history, and companion vaults stored within Zoélys.</p>
+                <div class="pt-4 flex space-x-4">
+                    <button @click="alert('GDPR Data Archive export requested. You will receive an encrypted JSON file via email.')" class="border border-[#2C2A29] text-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition">Export Vault Data (GDPR)</button>
+                    <button @click="alert('Account deletion request initiated securely. Our compliance team will review within 48 hours.')" class="border border-red-800 text-red-800 px-5 py-3 uppercase tracking-widest font-medium hover:bg-red-800 hover:text-white transition">Delete Account & Vault</button>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <!-- ================= MULTI-STEP CONCIERGE MATCHING MODAL (BOOK A STAY) ================= -->
+    <!-- ================= MODAL 1: ADD PET ================= -->
+    <div x-show="showPetModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div @click="showPetModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
+        <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Register New Companion</h3>
+                <button @click="showPetModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
+                    <input type="text" x-model="newPet.name" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. Max">
+                </div>
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
+                    <input type="text" x-model="newPet.breed" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="e.g. French Bulldog">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Age (years)</label>
+                        <input type="text" x-model="newPet.age" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="2">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block uppercase tracking-widest text-[#8C8275]">Weight (kg)</label>
+                        <input type="text" x-model="newPet.weight" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="12">
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Microchip Number</label>
+                    <input type="text" x-model="newPet.microchip" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="250269...">
+                </div>
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Medication & Special Needs</label>
+                    <input type="text" x-model="newPet.medicationType" class="w-full border border-[#E8E2D5] p-3 bg-white" placeholder="None or specific medicine">
+                </div>
+                <div class="pt-4 flex justify-end space-x-4">
+                    <button @click="showPetModal = false" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">Cancel</button>
+                    <button @click="addPet()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Save Pet to Vault</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 2: EMERGENCY PROTOCOL ================= -->
+    <div x-show="showEmergencyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div @click="showEmergencyModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
+        <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
+            <div class="flex justify-between items-center border-b border-[#E8E2D5] pb-4">
+                <h3 class="font-serif text-xl text-[#2C2A29]">Emergency Protocols & Authorizations</h3>
+                <button @click="showEmergencyModal = false" class="text-xs uppercase tracking-widest text-[#8C8275]">Close ✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Veterinary Clinic / Contact Name</label>
+                    <input type="text" x-model="emergencyContact.name" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                </div>
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Emergency Phone Number</label>
+                    <input type="text" x-model="emergencyContact.phone" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                </div>
+                <div class="space-y-1">
+                    <label class="block uppercase tracking-widest text-[#8C8275]">Pre-Authorization Spending Limit (€)</label>
+                    <input type="text" x-model="emergencyContact.limit" class="w-full border border-[#E8E2D5] p-3 bg-white">
+                </div>
+                <div class="pt-4 flex justify-end space-x-4">
+                    <button @click="showEmergencyModal = false" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">Cancel</button>
+                    <button @click="showEmergencyModal = false; alert('Emergency protocol updated successfully.')" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Save Protocol</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 3: MULTI-STEP CONCIERGE MATCHING (BOOK A STAY) ================= -->
     <div x-show="showMatchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
         <div @click="showMatchModal = false" class="absolute inset-0 bg-[#2C2A29]/40 backdrop-blur-xs"></div>
         <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl z-10">
@@ -444,7 +532,7 @@
             </div>
 
             <div class="space-y-4 text-xs">
-                <!-- STEP 1: Owner Info -->
+                <!-- STEP 1 -->
                 <div x-show="matchStep === 1" class="space-y-4">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Owner Email</label>
@@ -456,7 +544,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 2: Pet Info -->
+                <!-- STEP 2 -->
                 <div x-show="matchStep === 2" class="space-y-4" style="display: none;">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Pet Name</label>
@@ -468,7 +556,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: Breed & Age -->
+                <!-- STEP 3 -->
                 <div x-show="matchStep === 3" class="space-y-4" style="display: none;">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Breed</label>
@@ -480,7 +568,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 4: Service Type -->
+                <!-- STEP 4 -->
                 <div x-show="matchStep === 4" class="space-y-4" style="display: none;">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Service Type</label>
@@ -493,7 +581,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 5: Dates -->
+                <!-- STEP 5 -->
                 <div x-show="matchStep === 5" class="space-y-4" style="display: none;">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Start Date</label>
@@ -505,7 +593,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 6: Budget & Preferences -->
+                <!-- STEP 6 -->
                 <div x-show="matchStep === 6" class="space-y-4" style="display: none;">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Budget Range</label>
@@ -513,7 +601,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 7: Final Details & Submission -->
+                <!-- STEP 7 -->
                 <div x-show="matchStep === 7" class="space-y-4" style="display: none;">
                     <div class="space-y-1">
                         <label class="block uppercase tracking-widest text-[#8C8275]">Final Notes for Concierge</label>
@@ -521,12 +609,11 @@
                     </div>
                 </div>
 
-                <!-- Navigation buttons for steps -->
+                <!-- Navigation buttons -->
                 <div class="pt-4 flex justify-between space-x-4 border-t border-[#E8E2D5]">
                     <button type="button" x-show="matchStep > 1" @click="matchStep--" class="border border-[#2C2A29] px-5 py-3 uppercase tracking-widest font-medium">← Back</button>
                     <div class="flex-1"></div>
                     <button type="button" x-show="matchStep < 7" @click="matchStep++" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">Next →</button>
-                    <!-- Final Submit Button at Step 7 -->
                     <button type="button" x-show="matchStep === 7" @click="submitBookingRequest()" class="bg-[#2C2A29] text-[#FDFBF7] px-6 py-3 uppercase tracking-widest font-medium">SEND REQUEST →</button>
                 </div>
             </div>
