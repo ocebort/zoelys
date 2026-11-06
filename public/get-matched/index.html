@@ -277,19 +277,19 @@
     function chipVal(groupId) { const g = document.getElementById(groupId); const sel = g && g.querySelector('.chip.selected'); return sel ? sel.textContent : ''; }
     function chipsVal(groupId) { const g = document.getElementById(groupId); return g ? [...g.querySelectorAll('.chip.selected')].map(c => c.textContent).join(', ') : ''; }
     
+    // Fonction utilitaire pour récupérer l'ID membre depuis zoelys_user ou zoelys_user_id
+    function getStoredMemberId() {
+      try {
+        const userObj = JSON.parse(localStorage.getItem('zoelys_user'));
+        if (userObj && userObj.id) return userObj.id;
+      } catch (e) {}
+      return localStorage.getItem('zoelys_user_id') || '';
+    }
+
     async function handleFormSubmit(e) {
       e.preventDefault();
       
-      // Récupération sécurisée de l'ID membre (ou fallback testeur)
-      let memberId = 'guest_tester';
-try {
-  const userObj = JSON.parse(localStorage.getItem('zoelys_user'));
-  if (userObj && userObj.id) {
-    memberId = userObj.id;
-  }
-} catch (e) {
-  memberId = localStorage.getItem('zoelys_user_id') || 'guest_tester';
-}
+      const memberId = getStoredMemberId() || 'guest_tester';
       
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
@@ -342,7 +342,7 @@ try {
     }
 
     async function prefillMember() {
-      const memberId = localStorage.getItem('zoelys_user_id');
+      const memberId = getStoredMemberId();
       if (!memberId) {
         const hint = document.getElementById('signinHint');
         if (hint) hint.style.display = 'block';
