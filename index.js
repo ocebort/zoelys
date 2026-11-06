@@ -4,6 +4,26 @@ export default {
     const method = request.method;
     const path = url.pathname;
 
+    // Gestion des prévolts CORS (OPTIONS)
+    if (method === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      });
+    }
+
+    // --- ENDPOINTS WAITLIST & GÉOLOCALISATION MIAMI ---
+    if (path === '/api/waitlist' && method === 'POST') {
+      return handleWaitlistPost(request, env);
+    }
+    if (path === '/api/admin/waitlist' && method === 'GET') {
+      return handleGetWaitlist(env);
+    }
+
+    // --- ENDPOINTS EXISTANTS ---
     if (path === '/api/admin/overview' && method === 'GET') {
       return handleAdminOverview(env);
     }
@@ -29,6 +49,59 @@ export default {
     return env.ASSETS.fetch(request);
   }
 };
+
+// --- GESTION DE LA LISTE D'ATTENTE (WAITLIST) ---
+
+async function handleWaitlistPost(request, env) {
+  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  try {
+    const body = await request.json();
+    const { email, full_name, user_type, city, pet_notes } = body;
+
+    if (!email || !email.includes('@')) {
+      return new Response(JSON.stringify({ success: false, error: 'Please provide a valid email address.' }), { status: 400, headers });
+    }
+
+    if (!env || !env.zoelys_db) {
+      return new Response(JSON.stringify({ success: false, error: 'Database binding missing' }), { status: 500, headers });
+    }
+
+    await env.zoelys_db.prepare(
+      `INSERT INTO waitlist (email, full_name, user_type, city, pet_notes) VALUES (?, ?, ?, ?, ?)`
+    ).bind(
+      email,
+      full_name || '',
+      user_type || 'owner',
+      city || 'Miami, FL',
+      pet_notes || ''
+    ).run();
+
+    return new Response(JSON.stringify({ success: true, message: 'Successfully registered to waitlist.' }), { status: 200, headers });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
+  }
+}
+
+async function handleGetWaitlist(env) {
+  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  try {
+    if (!env || !env.zoelys_db) {
+      return new Response(JSON.stringify({ success: false, error: 'Database binding missing' }), { status: 500, headers });
+    }
+
+    const res = await env.zoelys_db.prepare("SELECT * FROM waitlist ORDER BY created_at DESC").all();
+
+    return new Response(JSON.stringify({
+      success: true,
+      count: (res.results || []).length,
+      waitlist: res.results || []
+    }), { status: 200, headers });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers });
+  }
+}
+
+// --- FONCTIONS EXISTANTES ---
 
 async function handleAdminOverview(env) {
   const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
@@ -89,7 +162,7 @@ async function handleMatchAlgorithm(url, env) {
 
       const sitterRole = (sitter.role || '').toLowerCase();
       const sitterBio = (sitter.bio || sitter.description || '').toLowerCase();
-      const sitterLocation = (sitter.location || 'Lisbon').toLowerCase();
+      const sitterLocation = (sitter.location || 'Miami').toLowerCase();
 
       if (sitterRole.includes('sitter')) {
         score += 20;
@@ -105,9 +178,9 @@ async function handleMatchAlgorithm(url, env) {
         }
       }
 
-      if (sitterLocation.includes('lisbon')) {
+      if (sitterLocation.includes('miami')) {
         score += 10;
-        reasons.push("Located in Lisbon service area (+10%).");
+        reasons.push("Located in Miami service area (+10%).");
       }
 
       if (sitter.rating) {
@@ -145,7 +218,6 @@ async function handleSendProposal(request, env) {
     const body = await request.json();
     const { requestId, selectedSitterIds } = body;
 
-    // Stocke éventuellement les IDs des sitters proposés sous forme de JSON si besoin
     await env.zoelys_db.prepare(
       "UPDATE client_requests SET status = 'proposed' WHERE id = ?"
     ).bind(requestId).run();
