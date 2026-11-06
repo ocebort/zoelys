@@ -279,7 +279,10 @@
     
     async function handleFormSubmit(e) {
       e.preventDefault();
+      
+      // Récupération sécurisée de l'ID membre (ou fallback testeur)
       const memberId = localStorage.getItem('zoelys_user_id') || 'guest_tester';
+      
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.innerText = 'SENDING TO YOUR CONCIERGE...';
@@ -304,6 +307,7 @@
       };
 
       try {
+        // Envoi à l'API en rattachant le userId pour que la requête soit liée au compte
         const res = await fetch('/api/requests?userId=' + encodeURIComponent(memberId), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -311,7 +315,7 @@
         });
         const data = await res.json();
         
-        // Affichage du message de succès et de phase de test directement dans la carte du formulaire
+        // Affichage du message de confirmation de test directement dans la carte du formulaire
         const formCard = document.querySelector('.form-card');
         formCard.innerHTML = `
           <div style="text-align: center; padding: 2rem 1rem;">
