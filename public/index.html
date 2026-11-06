@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys — Concierge Pet Care</title>
+  <title>Zoélys. Concierge Pet Care.</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,7 +135,7 @@
       color: var(--ink-muted, #8C8275);
     }
 
-    /* ============ CARE STANDARDS (INFO CARDS ONLY) ============ */
+    /* ============ CARE STANDARDS ============ */
     .pillars {
       padding: 7rem 4.5rem;
       max-width: 1320px;
@@ -188,7 +188,7 @@
       margin: 0;
     }
 
-    /* ============ VETTING & HOW IT WORKS (WITH ADDED SPACING) ============ */
+    /* ============ VETTING & HOW IT WORKS ============ */
     .standard {
       background: var(--bg-cream-soft, #FDFBF7);
       border-top: 1px solid var(--hairline, #E8E2D5);
@@ -240,7 +240,7 @@
       font-weight: 400;
       font-size: clamp(2.2rem, 3.5vw, 3rem);
       line-height: 1.15;
-      margin-bottom: 1.8rem; /* Espace sous le titre augmenté */
+      margin-bottom: 1.8rem;
     }
 
     .standard-sub {
@@ -248,19 +248,18 @@
       font-weight: 300;
       font-size: 0.95rem;
       line-height: 1.85;
-      margin-bottom: 3.2rem; /* Espace supplémentaire avant les étapes */
+      margin-bottom: 3.2rem;
     }
 
     .standard-stages {
       display: flex;
       flex-direction: column;
-      gap: 2.2rem; /* Plus d'espace vertical entre chaque étape */
+      gap: 2.2rem;
     }
 
-    /* Espacement renforcé entre les lignes et le contenu de la Phase/Stage */
     .stage {
       display: grid;
-      grid-template-columns: 60px 1fr; /* Espace élargi pour le numéro Phase/Stage */
+      grid-template-columns: 60px 1fr;
       gap: 1.8rem;
       align-items: baseline;
       padding-top: 1.2rem;
@@ -269,7 +268,7 @@
     }
 
     .stage:first-child {
-      border-top: 1px solid var(--hairline, #E8E2D5); /* Ligne supérieure pour encadrer proprement */
+      border-top: 1px solid var(--hairline, #E8E2D5);
     }
 
     .stage-num {
@@ -284,7 +283,7 @@
       font-family: var(--font-serif, 'Cormorant Garamond', serif);
       font-size: 1.45rem;
       font-weight: 500;
-      margin: 0 0 0.6rem; /* Espace sous le titre d'étape */
+      margin: 0 0 0.6rem;
       color: var(--ink, #2C2A29);
     }
 
@@ -325,7 +324,7 @@
     /* ============ CTA ============ */
     .cta {
       text-align: center;
-      padding: 7rem 2rem 9rem;
+      padding: 7rem 2rem 5rem;
       background: var(--bg-cream-soft, #FDFBF7);
     }
 
@@ -365,6 +364,8 @@
     userType: 'owner',
     planPreference: 'Platinum (€249/mo)',
     city: 'Lisbon',
+    neighbourhood: '',
+    petNotes: '',
     isSubmitted: false,
     errorMessage: '',
 
@@ -381,8 +382,9 @@
                 body: JSON.stringify({
                     email: this.email,
                     full_name: this.fullName,
-                    user_type: this.userType + ' (' + this.planPreference + ')',
-                    city: this.city
+                    user_type: this.userType + (this.userType === 'owner' ? ' [' + this.planPreference + ']' : ''),
+                    city: this.city + (this.neighbourhood ? ' (' + this.neighbourhood + ')' : ''),
+                    pet_notes: this.petNotes
                 })
             });
             const data = await res.json();
@@ -398,7 +400,7 @@
     }
 }">
 
-  <!-- NAVIGATION BAR AVEC ACCÈS PRIVATE BETA -->
+  <!-- NAVIGATION HEADER -->
   <header class="bg-[#FDFBF7] border-b border-[#E8E2D5] px-10 py-5 flex justify-between items-center sticky top-0 z-40">
     <div class="flex items-center space-x-6">
       <a href="/" class="brand-logo flex items-center space-x-3">
@@ -407,9 +409,12 @@
       </a>
       <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1 hidden md:inline-block">Private Concierge Beta</span>
     </div>
-    <div class="flex items-center space-x-6 text-xs uppercase tracking-widest">
+    <div class="flex items-center space-x-8 text-xs uppercase tracking-widest">
+      <button @click="showLoginModal = true" class="hover:text-[#8C8275] transition">Find a Sitter</button>
+      <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#8C8275] transition">How it Works</button>
+      <button @click="showLoginModal = true" class="hover:text-[#8C8275] transition">Pricing</button>
       <button @click="showLoginModal = true" class="border border-[#2C2A29] text-[#2C2A29] px-4 py-2 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
-        Member Log In
+        Member Portal
       </button>
     </div>
   </header>
@@ -433,66 +438,6 @@
       <div class="hero-img-box hero-img-secondary">
         <img src="https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&q=80&w=600" alt="Dog running on beach during daytime">
       </div>
-    </div>
-  </section>
-
-  <!-- FORMULAIRE DE WAITLIST PRINCIPAL (EARLY ACCESS) -->
-  <section id="waitlist-section" class="py-12 bg-[#FDFBF7] border-t border-b border-[#E8E2D5]">
-    <div class="max-w-lg mx-auto bg-white border border-[#E8E2D5] p-8 md:p-10 shadow-sm text-left">
-      <template x-if="!isSubmitted">
-        <form @submit.prevent="submitWaitlist()" class="space-y-5">
-          <div class="border-b border-[#E8E2D5] pb-4">
-            <h3 class="font-serif text-2xl text-[#2C2A29]">Request Private Beta Access</h3>
-            <p class="text-xs text-[#8C8275] mt-1">Join our private waiting list to receive priority matching and lock in initial membership privileges upon launch.</p>
-          </div>
-
-          <div class="space-y-1">
-            <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">I am registering as a...</label>
-            <div class="grid grid-cols-2 gap-3 text-xs">
-              <button type="button" @click="userType = 'owner'" :class="userType === 'owner' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-2.5 uppercase tracking-widest font-medium transition">Pet Owner</button>
-              <button type="button" @click="userType = 'pet_sitter'" :class="userType === 'pet_sitter' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-2.5 uppercase tracking-widest font-medium transition">Caregiver / Sitter</button>
-            </div>
-          </div>
-
-          <template x-if="userType === 'owner'">
-            <div class="space-y-1">
-              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Preferred Membership Tier</label>
-              <select x-model="planPreference" class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
-                <option value="Platinum (€249/mo)">Platinum Membership (€249 / month — Priority Concierge & Rollover Credits)</option>
-                <option value="Essential (Pay-per-stay)">Essential Membership (Pay per stay + Medical Vault Access)</option>
-              </select>
-            </div>
-          </template>
-
-          <div class="space-y-1">
-            <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Full Name</label>
-            <input type="text" x-model="fullName" placeholder="Océane..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
-          </div>
-
-          <div class="space-y-1">
-            <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Email Address *</label>
-            <input type="email" x-model="email" required placeholder="name@example.com" class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
-          </div>
-
-          <template x-if="errorMessage">
-            <p class="text-xs text-red-800" x-text="errorMessage"></p>
-          </template>
-
-          <button type="submit" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3.5 font-medium hover:opacity-90 transition">
-            Join Zoélys Private Waitlist →
-          </button>
-        </form>
-      </template>
-
-      <template x-if="isSubmitted">
-        <div class="text-center py-6 space-y-4">
-          <span class="text-3xl">✨</span>
-          <h3 class="font-serif text-2xl text-[#2C2A29]">You're on the private list!</h3>
-          <p class="text-xs text-[#6C6255] leading-relaxed">
-            Thank you for joining Zoélys. We have reserved your priority placement. We will reach out to you personally as soon as our next concierge cohort opens in Lisbon.
-          </p>
-        </div>
-      </template>
     </div>
   </section>
 
@@ -531,7 +476,7 @@
     </div>
   </section>
 
-  <!-- VETTING & HOW IT WORKS SECTION (WITH ADDED SPACING & PADDING) -->
+  <!-- VETTING & HOW IT WORKS SECTION -->
   <section id="vetting-section" class="standard">
     <div class="standard-inner">
       <div class="standard-left reveal">
@@ -590,31 +535,126 @@
     <button @click="showLoginModal = true" class="btn btn-ink reveal cursor-pointer">Get matched <span class="arrow">&rarr;</span></button>
   </section>
 
-  <!-- MODAL: NOT PUBLIC YET POP-UP -->
+  <!-- FORMULAIRE DE WAITLIST & ÉTUDE DE MARCHÉ (SECTIONS BAS DE PAGE) -->
+  <section id="waitlist-section" class="py-16 bg-[#FDFBF7] border-t border-[#E8E2D5]">
+    <div class="max-w-xl mx-auto bg-white border border-[#E8E2D5] p-8 md:p-12 shadow-sm text-left space-y-6">
+      
+      <template x-if="!isSubmitted">
+        <form @submit.prevent="submitWaitlist()" class="space-y-6">
+          <div class="border-b border-[#E8E2D5] pb-4">
+            <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Early Concierge Access</span>
+            <h3 class="font-serif text-3xl text-[#2C2A29] mt-1">Join the Private Waiting List</h3>
+            <p class="text-xs text-[#6C6255] mt-2 leading-relaxed">
+              We are opening Zoélys selectively in targeted neighborhoods. Register your profile to help us prioritize your area and lock in initial membership privileges.
+            </p>
+          </div>
+
+          <!-- RÔLE : OWNER OU SITTER -->
+          <div class="space-y-1.5">
+            <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">I am registering as a...</label>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <button type="button" @click="userType = 'owner'" :class="userType === 'owner' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-3 uppercase tracking-widest font-medium transition">Pet Owner</button>
+              <button type="button" @click="userType = 'pet_sitter'" :class="userType === 'pet_sitter' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-3 uppercase tracking-widest font-medium transition">Caregiver / Sitter</button>
+            </div>
+          </div>
+
+          <!-- OPTION D'ABONNEMENT PREFÉRÉE (NON ENGAEANTE) -->
+          <template x-if="userType === 'owner'">
+            <div class="space-y-1.5 bg-[#FDFBF7] p-4 border border-[#E8E2D5]">
+              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Preferred Membership Plan</label>
+              <select x-model="planPreference" class="w-full border border-[#E8E2D5] p-3 text-xs bg-white outline-none">
+                <option value="Platinum (€249/mo)">Platinum Membership (€249 / month — Priority Concierge & Rollover Credits)</option>
+                <option value="Gold (€149/mo)">Gold Membership (€149 / month — Standard Concierge Matching)</option>
+                <option value="Essential (Pay-per-stay)">Essential Membership (Pay per stay + Medical Vault Access)</option>
+              </select>
+              <p class="text-[11px] text-[#8C8275] italic pt-1">
+                * Note: Selecting a preference does NOT commit you to any payment today. We will confirm your preferred option with you personally when your private invitation is issued.
+              </p>
+            </div>
+          </template>
+
+          <!-- INFORMATIONS DE CONTACT -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Full Name</label>
+              <input type="text" x-model="fullName" placeholder="Océane..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
+            </div>
+
+            <div class="space-y-1">
+              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Email Address *</label>
+              <input type="email" x-model="email" required placeholder="name@example.com" class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
+            </div>
+          </div>
+
+          <!-- ÉTUDE DE MARCHÉ ET GÉOGRAPHIE -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">City / Region</label>
+              <input type="text" x-model="city" placeholder="e.g. Lisbon, Cascais, Porto..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
+            </div>
+
+            <div class="space-y-1">
+              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Neighbourhood / Area</label>
+              <input type="text" x-model="neighbourhood" placeholder="e.g. Chiado, Principe Real, Estoril..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
+            </div>
+          </div>
+
+          <!-- PRÉFÉRENCES DE SOINS / ANIMAUX -->
+          <div class="space-y-1">
+            <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Pet Details or Special Requirements (Optional)</label>
+            <textarea x-model="petNotes" rows="2" placeholder="e.g. Golden Retriever 3yo, needs daily medication or specific boarding..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none"></textarea>
+          </div>
+
+          <template x-if="errorMessage">
+            <p class="text-xs text-red-800" x-text="errorMessage"></p>
+          </template>
+
+          <button type="submit" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-4 font-medium hover:opacity-90 transition">
+            Join Zoélys Private Waitlist →
+          </button>
+        </form>
+      </template>
+
+      <template x-if="isSubmitted">
+        <div class="text-center py-8 space-y-4">
+          <span class="text-4xl">✨</span>
+          <h3 class="font-serif text-3xl text-[#2C2A29]">You're on the private list!</h3>
+          <p class="text-xs text-[#6C6255] leading-relaxed max-w-md mx-auto">
+            Thank you for joining Zoélys. Your location and preferences have been registered. We will reach out to you personally as soon as our concierge services open in your neighborhood.
+          </p>
+        </div>
+      </template>
+
+    </div>
+  </section>
+
+  <!-- MODAL POP-UP (NOT PUBLIC YET) -->
   <div x-show="showLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
     <div @click="showLoginModal = false" class="absolute inset-0 bg-[#2C2A29]/50 backdrop-blur-xs"></div>
-    <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 max-w-md w-full space-y-6 shadow-2xl z-10 text-center">
+    <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 md:p-10 max-w-md w-full space-y-6 shadow-2xl z-10 text-center">
+      
       <div class="space-y-2">
         <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1">Private Access Only</span>
-        <h3 class="font-serif text-2xl text-[#2C2A29] pt-2">Zoélys Platform Not Public Yet</h3>
+        <h3 class="font-serif text-2xl text-[#2C2A29] pt-2">Platform Not Public Yet</h3>
         <p class="text-xs text-[#6C6255] leading-relaxed">
-          The member portal and direct concierge bookings are currently reserved for our private beta cohort in Lisbon. Public registration opens soon.
+          The member portal, instant bookings, and paid subscriptions are currently restricted to our private beta cohort.
         </p>
       </div>
 
       <div class="bg-white border border-[#E8E2D5] p-4 text-xs text-left space-y-2">
-        <p class="font-semibold text-[#2C2A29]">Want priority onboarding?</p>
-        <p class="text-[#6C6255]">Join our waitlist to receive your personal invitation code and locked-in membership privileges upon launch.</p>
+        <p class="font-semibold text-[#2C2A29]">Want priority onboarding in your area?</p>
+        <p class="text-[#6C6255]">Register for our waiting list below. Selecting a preferred tier gives us market insights and secures your priority invite without any payment today.</p>
       </div>
 
       <div class="space-y-3">
         <button @click="showLoginModal = false; document.getElementById('waitlist-section').scrollIntoView({ behavior: 'smooth' })" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3 font-medium">
-          Join Private Waitlist Now →
+          Join Private Waitlist →
         </button>
         <button @click="showLoginModal = false" class="text-xs uppercase tracking-widest text-[#8C8275] hover:underline block w-full">
-          Close ✕
+          Close Window ✕
         </button>
       </div>
+
     </div>
   </div>
 
