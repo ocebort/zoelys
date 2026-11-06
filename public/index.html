@@ -339,21 +339,6 @@
 
     .cta-sub { color: var(--ink-muted, #6C6255); font-weight: 300; margin-bottom: 2.5rem; font-size: 1rem; }
 
-    /* ============ POPPER / POPOVER API OVERRIDE ============ -->
-    [popover] {
-      margin: auto;
-      border: 1px solid #E8E2D5;
-      background: #FDFBF7;
-      padding: 0;
-      max-width: 450px;
-      width: 90%;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-    [popover]::backdrop {
-      background: rgba(44, 42, 41, 0.5);
-      backdrop-filter: blur(4px);
-    }
-
     @media (max-width: 1020px) {
       .hero { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.75rem 4rem; }
       .hero-media-collage { max-width: 600px; }
@@ -383,8 +368,6 @@
     errorMessage: '',
 
     scrollToWaitlist() {
-      const popover = document.getElementById('private-beta-popover');
-      if (popover) popover.hidePopover();
       const target = document.getElementById('waitlist-section');
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
@@ -431,11 +414,11 @@
       <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1 hidden md:inline-block">Launching in Miami</span>
     </div>
     <div class="flex items-center space-x-8 text-xs uppercase tracking-widest">
-      <button popovertarget="private-beta-popover" class="hover:text-[#8C8275] transition cursor-pointer">Find a Sitter</button>
+      <button @click="scrollToWaitlist()" class="hover:text-[#8C8275] transition cursor-pointer">Find a Sitter</button>
       <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#8C8275] transition cursor-pointer">How it Works</button>
-      <button popovertarget="private-beta-popover" class="hover:text-[#8C8275] transition cursor-pointer">Pricing</button>
-      <button popovertarget="private-beta-popover" class="border border-[#2C2A29] text-[#2C2A29] px-4 py-2 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium cursor-pointer">
-        Member Portal
+      <button @click="scrollToWaitlist()" class="hover:text-[#8C8275] transition cursor-pointer">Pricing</button>
+      <button @click="scrollToWaitlist()" class="bg-[#2C2A29] text-[#FDFBF7] px-5 py-2.5 hover:opacity-90 transition font-medium cursor-pointer shadow-sm">
+        Join the Waitlist
       </button>
     </div>
   </header>
@@ -446,7 +429,9 @@
       <h1 class="hero-title reveal">Your pet, <em>cared for</em><br>like family.</h1>
       <p class="hero-lead reveal">Share your pet&rsquo;s routine, your travel plans, and your preferences with your dedicated concierge. We get to know your pet first, curate caregivers who feel like a natural extension of home, and present you with choices you can trust.</p>
       <div class="hero-actions reveal">
-        <button popovertarget="private-beta-popover" class="btn btn-ink cursor-pointer">Find a sitter <span class="arrow">&rarr;</span></button>
+        <button @click="scrollToWaitlist()" class="btn btn-ink cursor-pointer bg-[#2C2A29] text-[#FDFBF7] px-6 py-3.5 uppercase tracking-widest text-xs font-medium flex items-center space-x-2">
+          <span>Join the Waitlist</span> <span class="arrow">&rarr;</span>
+        </button>
         <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="link-underline cursor-pointer">How it works</button>
       </div>
     </div>
@@ -553,7 +538,9 @@
   <section class="cta">
     <h2 class="cta-title reveal">The moment you walk out the door.</h2>
     <p class="cta-sub reveal">Your pet&rsquo;s care, handled by a concierge who knows them by name.</p>
-    <button popovertarget="private-beta-popover" class="btn btn-ink reveal cursor-pointer">Get matched <span class="arrow">&rarr;</span></button>
+    <button @click="scrollToWaitlist()" class="btn btn-ink reveal cursor-pointer bg-[#2C2A29] text-[#FDFBF7] px-8 py-4 uppercase tracking-widest text-xs font-medium inline-flex items-center space-x-2">
+      <span>Join the Waitlist</span> <span class="arrow">&rarr;</span>
+    </button>
   </section>
 
   <!-- FORMULAIRE DE WAITLIST & ÉTUDE DE MARCHÉ MIAMI -->
@@ -574,8 +561,8 @@
           <div class="space-y-1.5">
             <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">I am registering as a...</label>
             <div class="grid grid-cols-2 gap-3 text-xs">
-              <button type="button" @click="userType = 'owner'" :class="userType === 'owner' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-3 uppercase tracking-widest font-medium transition">Pet Owner</button>
-              <button type="button" @click="userType = 'pet_sitter'" :class="userType === 'pet_sitter' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-3 uppercase tracking-widest font-medium transition">Caregiver / Sitter</button>
+              <button type="button" @click="userType = 'owner'" :class="userType === 'owner' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-3 uppercase tracking-widest font-medium transition cursor-pointer">Pet Owner</button>
+              <button type="button" @click="userType = 'pet_sitter'" :class="userType === 'pet_sitter' ? 'bg-[#2C2A29] text-[#FDFBF7]' : 'border border-[#E8E2D5] bg-[#FDFBF7] text-[#2C2A29]'" class="py-3 uppercase tracking-widest font-medium transition cursor-pointer">Caregiver / Sitter</button>
             </div>
           </div>
 
@@ -631,7 +618,7 @@
             <p class="text-xs text-red-800" x-text="errorMessage"></p>
           </template>
 
-          <button type="submit" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-4 font-medium hover:opacity-90 transition">
+          <button type="submit" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-4 font-medium hover:opacity-90 transition cursor-pointer">
             Join Zoélys Private Waitlist →
           </button>
         </form>
@@ -650,31 +637,6 @@
     </div>
   </section>
 
-  <!-- NATIVE HTML POPOVER API MODAL -->
-  <div id="private-beta-popover" popover class="p-8 space-y-6 text-center">
-    <div class="space-y-2">
-      <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1">Private Beta Access — Miami</span>
-      <h3 class="font-serif text-2xl text-[#2C2A29] pt-2">Platform Launching Soon</h3>
-      <p class="text-xs text-[#6C6255] leading-relaxed">
-        The Zoélys member portal and direct bookings are currently operating on invitation-only access during our Miami launch phase.
-      </p>
-    </div>
-
-    <div class="bg-white border border-[#E8E2D5] p-4 text-xs text-left space-y-2">
-      <p class="font-semibold text-[#2C2A29]">Request Early Access & Priority Placement</p>
-      <p class="text-[#6C6255]">Register your profile on our private waitlist below. Indicating your preferred tier helps us analyze neighborhood demand with no payment required today.</p>
-    </div>
-
-    <div class="space-y-3">
-      <button @click="scrollToWaitlist()" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3 font-medium cursor-pointer">
-        Join Waitlist Now →
-      </button>
-      <button popovertarget="private-beta-popover" popovertargetaction="hide" class="text-xs uppercase tracking-widest text-[#8C8275] hover:underline block w-full cursor-pointer">
-        Close Window ✕
-      </button>
-    </div>
-  </div>
-
   <!-- FOOTER -->
   <footer class="master-footer">
     <div class="footer-inner">
@@ -686,9 +648,9 @@
       <div>
         <h5>Explore</h5>
         <ul>
-          <li><button popovertarget="private-beta-popover" class="text-left hover:underline cursor-pointer">Find a Sitter</button></li>
+          <li><button @click="scrollToWaitlist()" class="text-left hover:underline cursor-pointer">Find a Sitter</button></li>
           <li><a href="#vetting-section">Trust & Safety</a></li>
-          <li><button popovertarget="private-beta-popover" class="text-left hover:underline cursor-pointer">Pricing</button></li>
+          <li><button @click="scrollToWaitlist()" class="text-left hover:underline cursor-pointer">Pricing</button></li>
         </ul>
       </div>
 
@@ -696,7 +658,7 @@
         <h5>Zoélys</h5>
         <ul>
           <li><a href="#vetting-section">How It Works</a></li>
-          <li><button popovertarget="private-beta-popover" class="text-left hover:underline cursor-pointer">Member Portal</button></li>
+          <li><button @click="scrollToWaitlist()" class="text-left hover:underline cursor-pointer">Member Portal</button></li>
         </ul>
       </div>
 
