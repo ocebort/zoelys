@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoélys. Concierge Pet Care.</title>
+  <title>Zoélys — Concierge Pet Care Miami</title>
   <link rel="icon" type="image/png" href="/assets/logo-paw.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -362,12 +362,24 @@
     email: '',
     fullName: '',
     userType: 'owner',
-    planPreference: 'Platinum (€249/mo)',
-    city: 'Lisbon',
+    planPreference: 'Platinum ($249/mo)',
+    city: 'Miami, FL',
     neighbourhood: '',
     petNotes: '',
     isSubmitted: false,
     errorMessage: '',
+
+    openModal() {
+      this.showLoginModal = true;
+    },
+
+    scrollToWaitlist() {
+      this.showLoginModal = false;
+      const target = document.getElementById('waitlist-section');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    },
 
     async submitWaitlist() {
         this.errorMessage = '';
@@ -407,13 +419,13 @@
         <img class="w-6 h-6" src="/assets/logo-paw.png" alt="Zoélys">
         <span class="font-serif text-xl tracking-widest text-[#2C2A29] uppercase">ZOÉLYS</span>
       </a>
-      <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1 hidden md:inline-block">Private Concierge Beta</span>
+      <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1 hidden md:inline-block">Launching in Miami</span>
     </div>
     <div class="flex items-center space-x-8 text-xs uppercase tracking-widest">
-      <button @click="showLoginModal = true" class="hover:text-[#8C8275] transition">Find a Sitter</button>
+      <button @click="openModal()" class="hover:text-[#8C8275] transition">Find a Sitter</button>
       <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#8C8275] transition">How it Works</button>
-      <button @click="showLoginModal = true" class="hover:text-[#8C8275] transition">Pricing</button>
-      <button @click="showLoginModal = true" class="border border-[#2C2A29] text-[#2C2A29] px-4 py-2 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
+      <button @click="openModal()" class="hover:text-[#8C8275] transition">Pricing</button>
+      <button @click="openModal()" class="border border-[#2C2A29] text-[#2C2A29] px-4 py-2 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium">
         Member Portal
       </button>
     </div>
@@ -425,7 +437,7 @@
       <h1 class="hero-title reveal">Your pet, <em>cared for</em><br>like family.</h1>
       <p class="hero-lead reveal">Share your pet&rsquo;s routine, your travel plans, and your preferences with your dedicated concierge. We get to know your pet first, curate caregivers who feel like a natural extension of home, and present you with choices you can trust.</p>
       <div class="hero-actions reveal">
-        <button @click="showLoginModal = true" class="btn btn-ink cursor-pointer">Find a sitter <span class="arrow">&rarr;</span></button>
+        <button @click="openModal()" class="btn btn-ink cursor-pointer">Find a sitter <span class="arrow">&rarr;</span></button>
         <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="link-underline cursor-pointer">How it works</button>
       </div>
     </div>
@@ -481,7 +493,7 @@
     <div class="standard-inner">
       <div class="standard-left reveal">
         <div class="standard-single-frame">
-          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=1000" alt="Border collie holding wildflowers in Berchtesgaden mountains">
+          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=1000" alt="Border collie holding wildflowers">
         </div>
       </div>
 
@@ -532,20 +544,20 @@
   <section class="cta">
     <h2 class="cta-title reveal">The moment you walk out the door.</h2>
     <p class="cta-sub reveal">Your pet&rsquo;s care, handled by a concierge who knows them by name.</p>
-    <button @click="showLoginModal = true" class="btn btn-ink reveal cursor-pointer">Get matched <span class="arrow">&rarr;</span></button>
+    <button @click="openModal()" class="btn btn-ink reveal cursor-pointer">Get matched <span class="arrow">&rarr;</span></button>
   </section>
 
-  <!-- FORMULAIRE DE WAITLIST & ÉTUDE DE MARCHÉ (SECTIONS BAS DE PAGE) -->
+  <!-- FORMULAIRE DE WAITLIST & ÉTUDE DE MARCHÉ MIAMI -->
   <section id="waitlist-section" class="py-16 bg-[#FDFBF7] border-t border-[#E8E2D5]">
     <div class="max-w-xl mx-auto bg-white border border-[#E8E2D5] p-8 md:p-12 shadow-sm text-left space-y-6">
       
       <template x-if="!isSubmitted">
         <form @submit.prevent="submitWaitlist()" class="space-y-6">
           <div class="border-b border-[#E8E2D5] pb-4">
-            <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Early Concierge Access</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#8C8275] block">Early Concierge Access — Miami, FL</span>
             <h3 class="font-serif text-3xl text-[#2C2A29] mt-1">Join the Private Waiting List</h3>
             <p class="text-xs text-[#6C6255] mt-2 leading-relaxed">
-              We are opening Zoélys selectively in targeted neighborhoods. Register your profile to help us prioritize your area and lock in initial membership privileges.
+              We are opening Zoélys selectively in key Miami neighborhoods. Register your profile to help us prioritize your neighborhood and lock in initial membership privileges.
             </p>
           </div>
 
@@ -558,13 +570,14 @@
             </div>
           </div>
 
-          <!-- OPTION D'ABONNEMENT PREFÉRÉE (NON ENGAEANTE) -->
+          <!-- OPTION D'ABONNEMENT AVEC TOUTES LES FORMULES -->
           <template x-if="userType === 'owner'">
             <div class="space-y-1.5 bg-[#FDFBF7] p-4 border border-[#E8E2D5]">
-              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Preferred Membership Plan</label>
+              <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Preferred Membership Tier</label>
               <select x-model="planPreference" class="w-full border border-[#E8E2D5] p-3 text-xs bg-white outline-none">
-                <option value="Platinum (€249/mo)">Platinum Membership (€249 / month — Priority Concierge & Rollover Credits)</option>
-                <option value="Gold (€149/mo)">Gold Membership (€149 / month — Standard Concierge Matching)</option>
+                <option value="Diamond Concierge ($499/mo)">Diamond Concierge ($499 / month — Dedicated 24/7 Concierge & Unlimited Rollover)</option>
+                <option value="Platinum ($249/mo)">Platinum Membership ($249 / month — Priority Concierge & Rollover Credits)</option>
+                <option value="Gold ($149/mo)">Gold Membership ($149 / month — Standard Concierge Matching)</option>
                 <option value="Essential (Pay-per-stay)">Essential Membership (Pay per stay + Medical Vault Access)</option>
               </select>
               <p class="text-[11px] text-[#8C8275] italic pt-1">
@@ -573,7 +586,7 @@
             </div>
           </template>
 
-          <!-- INFORMATIONS DE CONTACT -->
+          <!-- CONTACT -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-1">
               <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Full Name</label>
@@ -586,20 +599,20 @@
             </div>
           </div>
 
-          <!-- ÉTUDE DE MARCHÉ ET GÉOGRAPHIE -->
+          <!-- LOCALISATION EXEMPLES MIAMI -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-1">
               <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">City / Region</label>
-              <input type="text" x-model="city" placeholder="e.g. Lisbon, Cascais, Porto..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
+              <input type="text" x-model="city" placeholder="Miami, FL" class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
             </div>
 
             <div class="space-y-1">
               <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Neighbourhood / Area</label>
-              <input type="text" x-model="neighbourhood" placeholder="e.g. Chiado, Principe Real, Estoril..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
+              <input type="text" x-model="neighbourhood" placeholder="e.g. Brickell, Coconut Grove, South Beach..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none">
             </div>
           </div>
 
-          <!-- PRÉFÉRENCES DE SOINS / ANIMAUX -->
+          <!-- PRÉFÉRENCES DE SOINS -->
           <div class="space-y-1">
             <label class="block text-[10px] uppercase tracking-widest text-[#8C8275]">Pet Details or Special Requirements (Optional)</label>
             <textarea x-model="petNotes" rows="2" placeholder="e.g. Golden Retriever 3yo, needs daily medication or specific boarding..." class="w-full border border-[#E8E2D5] p-3 text-xs bg-[#FDFBF7] outline-none"></textarea>
@@ -620,7 +633,7 @@
           <span class="text-4xl">✨</span>
           <h3 class="font-serif text-3xl text-[#2C2A29]">You're on the private list!</h3>
           <p class="text-xs text-[#6C6255] leading-relaxed max-w-md mx-auto">
-            Thank you for joining Zoélys. Your location and preferences have been registered. We will reach out to you personally as soon as our concierge services open in your neighborhood.
+            Thank you for joining Zoélys Miami. Your neighborhood preferences have been recorded. We will reach out to you personally as soon as our concierge team launches in your area.
           </p>
         </div>
       </template>
@@ -628,27 +641,27 @@
     </div>
   </section>
 
-  <!-- MODAL POP-UP (NOT PUBLIC YET) -->
+  <!-- MODAL POP-UP DYNAMIQUE (BRING DOWN TO WAITLIST) -->
   <div x-show="showLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
     <div @click="showLoginModal = false" class="absolute inset-0 bg-[#2C2A29]/50 backdrop-blur-xs"></div>
     <div class="relative bg-[#FDFBF7] border border-[#E8E2D5] p-8 md:p-10 max-w-md w-full space-y-6 shadow-2xl z-10 text-center">
       
       <div class="space-y-2">
-        <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1">Private Access Only</span>
-        <h3 class="font-serif text-2xl text-[#2C2A29] pt-2">Platform Not Public Yet</h3>
+        <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1">Private Beta Access — Miami</span>
+        <h3 class="font-serif text-2xl text-[#2C2A29] pt-2">Platform Launching Soon</h3>
         <p class="text-xs text-[#6C6255] leading-relaxed">
-          The member portal, instant bookings, and paid subscriptions are currently restricted to our private beta cohort.
+          The Zoélys member portal and direct bookings are currently operating on invitation-only access during our Miami launch phase.
         </p>
       </div>
 
       <div class="bg-white border border-[#E8E2D5] p-4 text-xs text-left space-y-2">
-        <p class="font-semibold text-[#2C2A29]">Want priority onboarding in your area?</p>
-        <p class="text-[#6C6255]">Register for our waiting list below. Selecting a preferred tier gives us market insights and secures your priority invite without any payment today.</p>
+        <p class="font-semibold text-[#2C2A29]">Request Early Access & Priority Placement</p>
+        <p class="text-[#6C6255]">Register your profile on our private waitlist below. Indicating your preferred tier helps us analyze neighborhood demand with no payment required today.</p>
       </div>
 
       <div class="space-y-3">
-        <button @click="showLoginModal = false; document.getElementById('waitlist-section').scrollIntoView({ behavior: 'smooth' })" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3 font-medium">
-          Join Private Waitlist →
+        <button @click="scrollToWaitlist()" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-3 font-medium">
+          Join Waitlist Now →
         </button>
         <button @click="showLoginModal = false" class="text-xs uppercase tracking-widest text-[#8C8275] hover:underline block w-full">
           Close Window ✕
@@ -669,9 +682,9 @@
       <div>
         <h5>Explore</h5>
         <ul>
-          <li><button @click="showLoginModal = true" class="text-left hover:underline">Find a Sitter</button></li>
+          <li><button @click="openModal()" class="text-left hover:underline">Find a Sitter</button></li>
           <li><a href="#vetting-section">Trust & Safety</a></li>
-          <li><button @click="showLoginModal = true" class="text-left hover:underline">Pricing</button></li>
+          <li><button @click="openModal()" class="text-left hover:underline">Pricing</button></li>
         </ul>
       </div>
 
@@ -679,7 +692,7 @@
         <h5>Zoélys</h5>
         <ul>
           <li><a href="#vetting-section">How It Works</a></li>
-          <li><button @click="showLoginModal = true" class="text-left hover:underline">Member Portal</button></li>
+          <li><button @click="openModal()" class="text-left hover:underline">Member Portal</button></li>
         </ul>
       </div>
 
@@ -693,7 +706,7 @@
     </div>
 
     <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys. Crafted with care.</div>
+      <div>&copy; 2026 Zoélys Miami. Crafted with care.</div>
       <div>Premium pet care, redefined.</div>
     </div>
   </footer>
