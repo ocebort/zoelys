@@ -1,17 +1,17 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "zoelys",
-  "compatibility_date": "2026-03-01",
-  "main": "index.js",
-  "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
-  },
-  "d1_databases": [
-    {
-      "binding": "zoelys_db",
-      "database_name": "zoelys_db",
-      "database_id": "972d367b-c471-43f7-ac27-2290b414cb6a"
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "zoelys",
+	"compatibility_date": "2026-03-01",
+	"main": "index.js",
+	"assets": {
+		"directory": "./public",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "zoelys_db",
+			"database_name": "zoelys_db",
+			"database_id": "0b748e22-dae6-4ad9-8b3f-2da0b51ce837"
+		}
+	]
 }
