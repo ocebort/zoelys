@@ -346,18 +346,19 @@
       if (!memberId) {
         const hint = document.getElementById('signinHint');
         if (hint) hint.style.display = 'block';
-        const emailEl = document.getElementById('email');
-        if (emailEl) emailEl.readOnly = false;
         return;
       }
-      const el = document.getElementById('email');
-      if (el) el.readOnly = true;
+      
+      // Champ e-mail laissé modifiable explicitement
+      const emailEl = document.getElementById('email');
+      if (emailEl) emailEl.readOnly = false;
+
       try {
         const res = await fetch('/api/user/profile?userId=' + encodeURIComponent(memberId));
         const data = await res.json();
         const user = data.user || {};
         if (user.full_name) document.getElementById('fullName').value = user.full_name;
-        if (user.email) { const emailEl = document.getElementById('email'); if (emailEl) emailEl.value = user.email; }
+        if (user.email && emailEl && !emailEl.value) emailEl.value = user.email;
         if (typeof user.credit_balance === 'number') {
           memberBalance = user.credit_balance;
         } else {
