@@ -281,7 +281,15 @@
       e.preventDefault();
       
       // Récupération sécurisée de l'ID membre (ou fallback testeur)
-      const memberId = localStorage.getItem('zoelys_user_id') || 'guest_tester';
+      let memberId = 'guest_tester';
+try {
+  const userObj = JSON.parse(localStorage.getItem('zoelys_user'));
+  if (userObj && userObj.id) {
+    memberId = userObj.id;
+  }
+} catch (e) {
+  memberId = localStorage.getItem('zoelys_user_id') || 'guest_tester';
+}
       
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
