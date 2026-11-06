@@ -28,6 +28,9 @@
     .chip-group { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.45rem; }
     .chip { background: var(--bg-card); border: 1px solid var(--hairline); padding: 0.55rem 1.1rem; border-radius: 6px; font-size: 0.76rem; cursor: pointer; user-select: none; color: var(--ink); transition: all 0.25s var(--ease); }
     .chip.selected { background: var(--ink); color: var(--bg-cream); border-color: var(--ink); }
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.45rem; }
+    .checkbox-grid label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 400; cursor: pointer; background: var(--bg-card); border: 1px solid var(--hairline); padding: 0.6rem 0.8rem; border-radius: 6px; }
+    .checkbox-grid input[type="checkbox"] { width: auto; margin: 0; }
     .grid-2-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2.25rem; }
     .btn-back-text { background: none; border: none; color: var(--ink-muted); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
@@ -36,8 +39,8 @@
     .btn-continue:hover { background: var(--accent); transform: translateY(-1px); }
     .btn-coral-submit { background: var(--accent); color: #FFFFFF; border: none; padding: 0.9rem 2rem; border-radius: 6px; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; cursor: pointer; transition: background 0.35s var(--ease), transform 0.35s var(--ease); }
     .btn-coral-submit:hover { background: var(--accent-deep); transform: translateY(-1px); }
-    .credit-note { background: #F2F8F3; border: 1px solid #9FCFA6; border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.8rem; line-height: 1.6; margin-bottom: 1.35rem; color: #2E5A34; }
-    .credit-note strong { color: #1F4026; }
+    .policy-notice-box { background: #F2F8F3; border: 1px solid #9FCFA6; border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.8rem; line-height: 1.6; margin-bottom: 1.35rem; color: #2E5A34; }
+    .policy-notice-box strong { color: #1F4026; }
   </style>
 </head>
 <body>
@@ -51,10 +54,10 @@
   <main class="form-container">
     <div class="progress-bar-container">
       <div class="progress-text">
-        <span id="stepLabel">STEP 1 OF 7</span>
+        <span id="stepLabel">STEP 1 OF 6</span>
         <span id="stepTitle">ABOUT YOU</span>
       </div>
-      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width: 14.28%;"></div></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width: 16.66%;"></div></div>
     </div>
 
     <div class="form-card">
@@ -66,9 +69,31 @@
           <div class="form-group"><label>Full name</label><input type="text" id="fullName" required></div>
           <div class="form-group"><label>Email</label><input type="email" id="email" required></div>
           <div class="form-group"><label>Phone</label><input type="tel" id="phone" required></div>
+          
+          <div class="form-group">
+            <label>City</label>
+            <select id="citySelect" name="city" required>
+              <option value="Miami, FL" selected>Miami, FL</option>
+              <option value="Other">Other City (Coming Soon)</option>
+            </select>
+          </div>
+
           <div class="form-group">
             <label>Neighbourhood / area</label>
-            <input type="text" id="neighbourhood" placeholder="e.g. Brickell, Miami">
+            <select id="neighbourhood" required>
+              <option value="">Select your neighborhood...</option>
+              <option value="Brickell">Brickell</option>
+              <option value="Downtown Miami">Downtown Miami</option>
+              <option value="Edgewater">Edgewater</option>
+              <option value="Wynwood / Midtown">Wynwood / Midtown</option>
+              <option value="Design District">Design District</option>
+              <option value="Coconut Grove">Coconut Grove</option>
+              <option value="Coral Gables">Coral Gables</option>
+              <option value="South Beach">South Beach</option>
+              <option value="Mid-Beach / North Beach">Mid-Beach / North Beach</option>
+              <option value="Key Biscayne">Key Biscayne</option>
+              <option value="Aventura / Sunny Isles">Aventura / Sunny Isles</option>
+            </select>
             <div class="field-hint">We use this to tailor your match to sitters in your area.</div>
           </div>
           <div class="btn-row">
@@ -80,31 +105,64 @@
         <!-- STEP 2 -->
         <div class="step-panel" id="step2">
           <h2>Step 2. Your Pet</h2>
-          <div class="form-group"><label>Animal type</label><select id="animalType"><option value="">Select...</option><option value="Dog">Dog</option><option value="Cat">Cat</option><option value="Bird">Bird</option><option value="Rabbit">Rabbit</option><option value="Fish">Fish</option><option value="Reptile">Reptile</option><option value="Other">Other</option></select></div>
+          <div class="form-group">
+            <label>Animal type</label>
+            <select id="animalType" onchange="toggleCustomPet()">
+              <option value="">Select...</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Bird">Bird</option>
+              <option value="Rabbit">Rabbit</option>
+              <option value="Fish">Fish</option>
+              <option value="Reptile">Reptile</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group" id="customPetGroup" style="display:none;">
+            <label>Specify animal type</label>
+            <input type="text" id="customPetType" placeholder="e.g. Ferret, Hedgehog...">
+          </div>
           <div class="grid-2-fields">
             <div class="form-group"><label>Breed</label><input type="text" id="breed"></div>
-            <div class="form-group"><label>Pet name</label><input type="text" id="petName"></div>
+            <div class="form-group"><label>Pet name</label><input type="text" id="petName" required></div>
           </div>
           <div class="grid-2-fields">
             <div class="form-group"><label>Age</label><input type="text" id="petAge"></div>
             <div class="form-group"><label>Size / weight</label><input type="text" id="petSize"></div>
           </div>
           <div class="form-group">
-            <label>Sex</label>
-            <div class="chip-group"><span class="chip" onclick="selectChip(this)">Male</span><span class="chip" onclick="selectChip(this)">Female</span></div>
+            <label>Sex of the animal</label>
+            <select id="petSex" required>
+              <option value="">Select sex...</option>
+              <option value="Male (Neutered)">Male (Neutered)</option>
+              <option value="Male (Intact)">Male (Intact)</option>
+              <option value="Female (Spayed)">Female (Spayed)</option>
+              <option value="Female (Intact)">Female (Intact)</option>
+              <option value="Unknown">Unknown / Not Applicable</option>
+            </select>
           </div>
-          <div class="form-group"><label>Temperament</label><select id="temperament"><option value="">Select...</option><option value="Calm">Calm</option><option value="Energetic">Energetic</option><option value="Playful">Playful</option><option value="Anxious">Anxious</option><option value="Shy">Shy</option><option value="Guarded">Guarded</option><option value="Independent">Independent</option></select></div>
           <div class="form-group">
-            <label>House-trained</label>
-            <div class="chip-group"><span class="chip" onclick="selectChip(this)">Yes</span><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">In progress</span></div>
-          </div>
-          <div class="form-group">
-            <label>Behavioural traits</label>
-            <div class="chip-group" id="behaviouralGroup">
-              <span class="chip" onclick="toggleMultiChip(this)">Pulls on lead</span>
-              <span class="chip" onclick="toggleMultiChip(this)">Separation anxiety</span>
-              <span class="chip" onclick="toggleMultiChip(this)">Good with kids</span>
+            <label>Behavioural traits (Select all that apply)</label>
+            <div class="checkbox-grid" id="behaviouralGroup">
+              <label><input type="checkbox" value="Calm & Senior"> Calm / Senior</label>
+              <label><input type="checkbox" value="High Energy"> High Energy / Playful</label>
+              <label><input type="checkbox" value="Friendly with Strangers"> Friendly with Strangers</label>
+              <label><input type="checkbox" value="Shy or Anxious"> Shy or Anxious</label>
+              <label><input type="checkbox" value="Leash Trained"> Leash Trained</label>
+              <label><input type="checkbox" value="Crate Trained"> Crate Trained</label>
+              <label><input type="checkbox" value="Needs Training Support"> Needs Training Support</label>
+              <label><input type="checkbox" value="Good with other pets"> Good with other pets</label>
             </div>
+          </div>
+          <div class="form-group">
+            <label>How comfortable is your pet interacting with new caregivers or strangers?</label>
+            <select id="strangerComfort" required>
+              <option value="">Select comfort level...</option>
+              <option value="Extremely friendly">Extremely friendly and welcomes everyone instantly</option>
+              <option value="Cautious at first">Cautious at first, but warms up quickly with patience</option>
+              <option value="Independent">Independent; prefers respectful space initially</option>
+              <option value="Structured introductions">Requires slow, structured introductions with experienced handlers</option>
+            </select>
           </div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(1)">&larr; Back</button>
@@ -116,17 +174,29 @@
         <div class="step-panel" id="step3">
           <h2>Step 3. Health & Care</h2>
           <div class="form-group">
-            <label>Medical conditions</label>
-            <div class="chip-group" id="medicalGroup"><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">Yes</span></div>
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="hasMedicalCondition" style="width:auto;" onchange="toggleMedicalBox()"> Does your pet have any medical conditions, allergies, or require regular medication?
+            </label>
+          </div>
+          <div class="form-group" id="medicalDetailsGroup" style="display:none;">
+            <label>Please explain medical requirements or medications:</label>
+            <textarea id="medicalDetails" rows="3" placeholder="Detail medications, dosage schedules, or specific health needs..."></textarea>
           </div>
           <div class="form-group"><label>Vaccination status</label><select id="vaccination"><option value="">Select...</option><option value="Up to date">Up to date</option><option value="In progress">In progress</option><option value="Not yet">Not yet</option><option value="Not applicable">Not applicable</option></select></div>
-          <div class="form-group"><label>Diet type</label><select id="diet"><option value="">Select...</option><option value="Kibble">Kibble</option><option value="Wet food">Wet food</option><option value="Raw">Raw</option><option value="Home-cooked">Home-cooked</option><option value="Mixed / other">Mixed / other</option></select></div>
           <div class="form-group">
-            <label>Is there a private outdoor space available at your home?</label>
-            <div class="chip-group" id="outdoorGroup">
-              <span class="chip" onclick="selectChip(this)">No</span>
-              <span class="chip" onclick="selectChip(this)">Yes</span>
-            </div>
+            <label>Diet type</label>
+            <select id="diet" onchange="toggleCustomDiet()">
+              <option value="">Select...</option>
+              <option value="Standard Commercial Food">Standard Commercial Food</option>
+              <option value="Grain-Free / Special Formula">Grain-Free / Special Formula</option>
+              <option value="Raw Diet / Fresh Home-Cooked">Raw Diet / Fresh Home-Cooked</option>
+              <option value="Prescription / Veterinary Diet">Prescription / Veterinary Diet</option>
+              <option value="Other Custom Diet">Other (Specify below)</option>
+            </select>
+          </div>
+          <div class="form-group" id="customDietGroup" style="display:none;">
+            <label>Specify dietary requirements</label>
+            <input type="text" id="customDiet" placeholder="Describe brand, feeding frequency, or specific restrictions...">
           </div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(2)">&larr; Back</button>
@@ -137,9 +207,33 @@
         <!-- STEP 4 -->
         <div class="step-panel" id="step4">
           <h2>Step 4. Service Needed</h2>
+          <div class="policy-notice-box">
+            <p><strong>⚠️ Concierge Service Policy:</strong> Zoélys focuses exclusively on premium, unhurried care. We do not offer short 1-hour walks. All bookings require a <strong>minimum duration of 4 hours</strong> or <strong>overnight stays</strong>.</p>
+          </div>
           <div class="form-group">
-            <label>Service type</label>
-            <div class="chip-group" id="serviceGroup"><span class="chip" onclick="selectChip(this)">Home visit</span><span class="chip" onclick="selectChip(this)">Overnight stay</span><span class="chip" onclick="selectChip(this)">Dog walking</span><span class="chip" onclick="selectChip(this)">Live-in care</span><span class="chip" onclick="selectChip(this)">Boarding at sitter&rsquo;s home</span><span class="chip" onclick="selectChip(this)">Cat sitting</span><span class="chip" onclick="selectChip(this)">Airport pickup</span><span class="chip" onclick="selectChip(this)">Other</span></div>
+            <label>Care location setting</label>
+            <select id="serviceLocation" onchange="toggleOutdoorSpace()" required>
+              <option value="">Select location setting...</option>
+              <option value="At Pet Sitter's House">At the Pet Sitter&rsquo;s House (Boarding)</option>
+              <option value="At Owner's House">At the Owner&rsquo;s House (House Sitting)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Service duration & type</label>
+            <select id="serviceType" required>
+              <option value="">Select service type...</option>
+              <option value="Overnight Stay / Boarding">Overnight Stay / Boarding (Multi-night)</option>
+              <option value="Extended Pet Sitting (4h+)">Extended Pet Sitting (4 hours or more)</option>
+              <option value="24/7 Dedicated Concierge Watch">24/7 Dedicated Concierge Watch</option>
+            </select>
+          </div>
+          <div class="form-group" id="outdoorSpaceGroup" style="display:none;">
+            <label>Do you require the pet sitter&rsquo;s home to feature a private outdoor space (e.g., fenced yard, secure terrace)?</label>
+            <select id="outdoorSpace">
+              <option value="No strict requirement">No strict requirement (Regular walks outside are fine)</option>
+              <option value="Preferred but optional">Preferred, but optional if regular walks are provided</option>
+              <option value="Strictly required">Strictly required (Private fenced yard or secure terrace mandatory)</option>
+            </select>
           </div>
           <div class="grid-2-fields">
             <div class="form-group"><label>Start date</label><input type="date" id="startDate"></div>
@@ -154,8 +248,18 @@
         <!-- STEP 5 -->
         <div class="step-panel" id="step5">
           <h2>Step 5. Sitter Preferences</h2>
-          <div class="form-group"><label>Experience level preferred</label><select id="expLevel"><option value="">Select...</option><option value="Vet Tech">Vet tech / medical</option><option value="Professional">Professional 5+ years</option><option value="Professional">Professional caregiver</option></select></div>
-          <div class="form-group"><label>Special notes</label><textarea id="otherQualities" rows="3"></textarea></div>
+          <div class="form-group">
+            <label>Minimum sitter experience level required</label>
+            <select id="expLevel" required>
+              <option value="">Select experience level...</option>
+              <option value="Any / No Preference">I don&rsquo;t care / Any qualified level accepted</option>
+              <option value="Verified Experienced Pet Owner">Experienced Pet Owner (Verified background check)</option>
+              <option value="Professional Pet Sitter (1+ years)">Professional Full-Time Sitter (1+ years verified experience)</option>
+              <option value="Specialized Medical / Veterinary Background">Specialized Veterinary Technician / Medical Care Background</option>
+              <option value="Elite Master Concierge Sitter">Elite Master Concierge Sitter (Top-tier luxury provider)</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Special notes</label><textarea id="otherQualities" rows="3" placeholder="Any additional instructions or nuances for your concierge..."></textarea></div>
           <div class="form-group" style="margin-top:0.2rem;">
             <label style="display:flex; gap:0.7rem; align-items:flex-start; cursor:pointer;">
               <input type="checkbox" id="meetGreet" style="width:auto; margin-top:0.25rem; flex:none;">
@@ -170,37 +274,11 @@
 
         <!-- STEP 6 -->
         <div class="step-panel" id="step6">
-          <h2>Step 6. Budget & Credits</h2>
-          <div class="form-group">
-            <label>What is your nightly care budget?</label>
-            <select id="budget" onchange="updateCreditNote()">
-              <option value="">Select your range...</option>
-              <option value="Under €50">Under €50 / night</option>
-              <option value="€50-99">€50 to €99 / night</option>
-              <option value="€100-149">€100 to €149 / night</option>
-              <option value="€150+">€150+ / night</option>
-            </select>
-            <div class="field-hint">Your budget shapes the caregivers your concierge proposes. It also sets how many Strategic Credits this request uses.</div>
-          </div>
-          <div class="credit-note" id="creditNote">This request will cost <strong>2 Strategic Credits</strong>. Sign in to see your balance.</div>
-          <div class="form-group">
-            <label>Have you used a pet sitter before?</label>
-            <div class="chip-group"><span class="chip" onclick="selectChip(this)">No</span><span class="chip" onclick="selectChip(this)">Yes</span></div>
-          </div>
-          <p class="field-hint">Strategic Credits are your membership currency. The budget you set decides how many credits each sitting costs, and your concierge knows your pet by name.</p>
+          <h2>Step 6. Final Details</h2>
+          <div class="form-group"><label>How did you hear about Zoélys?</label><select id="hearAbout"><option value="">Select...</option><option value="Instagram">Instagram</option><option value="Friends & family">Friends &amp; family</option><option value="Google">Google</option><option value="Journal">Journal / Blog</option><option value="Event">Event</option><option value="Other">Other</option></select></div>
+          <div class="form-group"><label>Anything else you&rsquo;d like to share</label><textarea id="finalNotes" rows="3"></textarea></div>
           <div class="btn-row">
             <button type="button" class="btn-back-text" onclick="nextStep(5)">&larr; Back</button>
-            <button type="button" class="btn-continue" onclick="nextStep(7)">CONTINUE &rarr;</button>
-          </div>
-        </div>
-
-        <!-- STEP 7 -->
-        <div class="step-panel" id="step7">
-          <h2>Step 7. Final Details</h2>
-          <div class="form-group"><label>How did you hear about Zoélys?</label><select id="hearAbout"><option value="">Select...</option><option value="Instagram">Instagram</option><option value="Friends & family">Friends &amp; family</option><option value="Google">Google</option><option value="Journal">Journal / Blog</option><option value="Event">Event</option><option value="Other">Other</option></select></div>
-          <div class="form-group"><label>Anything else you'd like to share</label><textarea id="finalNotes" rows="3"></textarea></div>
-          <div class="btn-row">
-            <button type="button" class="btn-back-text" onclick="nextStep(6)">&larr; Back</button>
             <button type="submit" id="submitBtn" class="btn-coral-submit">SEND MY REQUEST &rarr;</button>
           </div>
           <p class="field-hint signin-hint" id="signinHint" style="text-align:center; display:none;">Sign in to send your request. It lets you track your match in the portal.</p>
@@ -246,38 +324,46 @@
   </footer>
 
   <script>
-    const stepTitles = ["ABOUT YOU", "YOUR PET", "HEALTH & CARE", "SERVICE NEEDED", "SITTER PREFERENCES", "BUDGET & CREDITS", "FINAL DETAILS"];
-    const CREDIT_COST = { "Under $50": 1, "$50-$99": 2, "$100-$149": 2, "$150+": 3 };
-    let memberBalance = null;
-    function updateCreditNote() {
-      const budget = fieldVal('budget');
-      const note = document.getElementById('creditNote');
-      if (!note) return;
-      if (!budget) { note.innerHTML = 'This request will cost <strong>2 Strategic Credits</strong>. Sign in to see your balance.'; return; }
-      const cost = CREDIT_COST[budget] || 2;
-      if (memberBalance === null) {
-        note.innerHTML = `This request will cost <strong>${cost} Strategic Credit${cost > 1 ? 's' : ''}</strong>. Sign in to see your balance.`;
-      } else if (memberBalance >= cost) {
-        note.innerHTML = `This request will cost <strong>${cost} Strategic Credit${cost > 1 ? 's' : ''}</strong> and your balance is <strong>${memberBalance}</strong>. You're covered.`;
-      } else {
-        note.innerHTML = `This request will cost <strong>${cost} Strategic Credit${cost > 1 ? 's' : ''}</strong> but your balance is <strong>${memberBalance}</strong>. <a href="/join" style="color:#2E5A34; font-weight:600;">Top up with your concierge</a> before sending.`;
-      }
-    }
+    const stepTitles = ["ABOUT YOU", "YOUR PET", "HEALTH & CARE", "SERVICE NEEDED", "SITTER PREFERENCES", "FINAL DETAILS"];
+    
     function nextStep(step) {
       document.querySelectorAll('.step-panel').forEach(el => el.classList.remove('active'));
       document.getElementById('step' + step).classList.add('active');
-      document.getElementById('stepLabel').innerText = `STEP ${step} OF 7`;
+      document.getElementById('stepLabel').innerText = `STEP ${step} OF 6`;
       document.getElementById('stepTitle').innerText = stepTitles[step - 1];
-      document.getElementById('progressFill').style.width = ((step / 7) * 100) + '%';
+      document.getElementById('progressFill').style.width = ((step / 6) * 100) + '%';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    function selectChip(el) { el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); }
-    function toggleMultiChip(el) { el.classList.toggle('selected'); }
+
+    function toggleCustomPet() {
+      const type = document.getElementById('animalType').value;
+      document.getElementById('customPetGroup').style.display = type === 'Other' ? 'block' : 'none';
+    }
+
+    function toggleMedicalBox() {
+      const isChecked = document.getElementById('hasMedicalCondition').checked;
+      document.getElementById('medicalDetailsGroup').style.display = isChecked ? 'block' : 'none';
+    }
+
+    function toggleCustomDiet() {
+      const diet = document.getElementById('diet').value;
+      document.getElementById('customDietGroup').style.display = diet === 'Other Custom Diet' ? 'block' : 'none';
+    }
+
+    function toggleOutdoorSpace() {
+      const location = document.getElementById('serviceLocation').value;
+      document.getElementById('outdoorSpaceGroup').style.display = location.includes("Sitter&rsquo;s House") ? 'block' : 'none';
+    }
+
     function fieldVal(id) { return (document.getElementById(id).value || '').trim(); }
-    function chipVal(groupId) { const g = document.getElementById(groupId); const sel = g && g.querySelector('.chip.selected'); return sel ? sel.textContent : ''; }
-    function chipsVal(groupId) { const g = document.getElementById(groupId); return g ? [...g.querySelectorAll('.chip.selected')].map(c => c.textContent).join(', ') : ''; }
     
-    // Fonction utilitaire pour récupérer l'ID membre depuis zoelys_user ou zoelys_user_id
+    function checkedCheckboxes(groupId) {
+      const container = document.getElementById(groupId);
+      if (!container) return '';
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+      return Array.from(checkboxes).map(cb => cb.value).join(', ');
+    }
+    
     function getStoredMemberId() {
       try {
         const userObj = JSON.parse(localStorage.getItem('zoelys_user'));
@@ -298,24 +384,33 @@
       const payload = {
         full_name: fieldVal('fullName'),
         email: fieldVal('email'),
+        phone: fieldVal('phone'),
+        city: fieldVal('citySelect'),
         neighbourhood: fieldVal('neighbourhood'),
-        pet_type: fieldVal('animalType'),
+        pet_type: fieldVal('animalType') === 'Other' ? fieldVal('customPetType') : fieldVal('animalType'),
         pet_name: fieldVal('petName'),
         breed: fieldVal('breed'),
-        behavioral_traits: chipsVal('behaviouralGroup'),
-        medical_conditions: chipVal('medicalGroup'),
-        exercise_needs: fieldVal('temperament') === 'Energetic' ? 'High' : (fieldVal('temperament') === 'Calm' ? 'Low' : ''),
-        outdoor_space: chipVal('outdoorGroup'),
-        service_type: chipVal('serviceGroup'),
+        pet_age: fieldVal('petAge'),
+        pet_size: fieldVal('petSize'),
+        pet_sex: fieldVal('petSex'),
+        behavioral_traits: checkedCheckboxes('behaviouralGroup'),
+        stranger_comfort: fieldVal('strangerComfort'),
+        medical_conditions: document.getElementById('hasMedicalCondition').checked ? ('Yes: ' + fieldVal('medicalDetails')) : 'None',
+        vaccination_status: fieldVal('vaccination'),
+        diet_type: fieldVal('diet') === 'Other Custom Diet' ? fieldVal('customDiet') : fieldVal('diet'),
+        service_location: fieldVal('serviceLocation'),
+        service_type: fieldVal('serviceType'),
+        outdoor_space_requirement: fieldVal('serviceLocation').includes("Sitter&rsquo;s House") ? fieldVal('outdoorSpace') : 'N/A (At owner home)',
         start_date: fieldVal('startDate'),
         end_date: fieldVal('endDate'),
         experience_level: fieldVal('expLevel'),
-        budget_range: fieldVal('budget'),
-        meet_greet_required: !!document.getElementById('meetGreet').checked
+        special_notes: fieldVal('otherQualities'),
+        meet_greet_required: !!document.getElementById('meetGreet').checked,
+        hear_about: fieldVal('hearAbout'),
+        final_notes: fieldVal('finalNotes')
       };
 
       try {
-        // Envoi à l'API en rattachant le userId pour que la requête soit liée au compte
         const res = await fetch('/api/requests?userId=' + encodeURIComponent(memberId), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -323,7 +418,6 @@
         });
         const data = await res.json();
         
-        // Affichage du message de confirmation de test directement dans la carte du formulaire
         const formCard = document.querySelector('.form-card');
         formCard.innerHTML = `
           <div style="text-align: center; padding: 2rem 1rem;">
@@ -349,7 +443,6 @@
         return;
       }
       
-      // Champ e-mail laissé modifiable explicitement
       const emailEl = document.getElementById('email');
       if (emailEl) emailEl.readOnly = false;
 
@@ -359,15 +452,6 @@
         const user = data.user || {};
         if (user.full_name) document.getElementById('fullName').value = user.full_name;
         if (user.email && emailEl && !emailEl.value) emailEl.value = user.email;
-        if (typeof user.credit_balance === 'number') {
-          memberBalance = user.credit_balance;
-        } else {
-          try {
-            const cr = await (await fetch('/api/credits?userId=' + encodeURIComponent(memberId))).json();
-            if (cr.credits && typeof cr.credits.credit_balance === 'number') memberBalance = cr.credits.credit_balance;
-          } catch (e) { /* ignore */ }
-        }
-        updateCreditNote();
       } catch (err) { /* keep manual entry */ }
     }
     prefillMember();
