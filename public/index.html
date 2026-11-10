@@ -414,13 +414,10 @@
       <span class="text-[10px] uppercase tracking-widest border border-[#2C2A29] px-2.5 py-1 hidden md:inline-block">Launching in Miami</span>
     </div>
     <div class="flex items-center space-x-8 text-xs uppercase tracking-widest">
-      <button @click="scrollToWaitlist()" class="hover:text-[#8C8275] transition cursor-pointer">Join the Waitlist</button>
-      <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="hover:text-[#8C8275] transition cursor-pointer">How it Works</button>
-      <button @click="scrollToWaitlist()" class="hover:text-[#8C8275] transition cursor-pointer">Pricing</button>
-      <!-- MEMBER PORTAL REDIRECTS TO WAITLIST -->
-      <button @click="scrollToWaitlist()" class="border border-[#2C2A29] text-[#2C2A29] px-4 py-2 hover:bg-[#2C2A29] hover:text-[#FDFBF7] transition font-medium cursor-pointer">
-        Member Portal
-      </button>
+      <a href="/get-matched" class="hover:text-[#8C8275] transition cursor-pointer">Find a Sitter</a>
+      <a href="/how-it-works" class="hover:text-[#8C8275] transition cursor-pointer">How it Works</a>
+      <a href="/pricing" class="hover:text-[#8C8275] transition cursor-pointer">Pricing</a>
+      <a href="/trust" class="hover:text-[#8C8275] transition cursor-pointer">Trust &amp; Safety</a>
       <button @click="scrollToWaitlist()" class="bg-[#2C2A29] text-[#FDFBF7] px-5 py-2.5 hover:opacity-90 transition font-medium cursor-pointer shadow-sm">
         Join the Waitlist
       </button>
@@ -436,7 +433,7 @@
         <button @click="scrollToWaitlist()" class="btn btn-ink cursor-pointer bg-[#2C2A29] text-[#FDFBF7] px-6 py-3.5 uppercase tracking-widest text-xs font-medium flex items-center space-x-2">
           <span>Join the Waitlist</span> <span class="arrow">&rarr;</span>
         </button>
-        <button @click="document.getElementById('vetting-section').scrollIntoView({ behavior: 'smooth' })" class="link-underline cursor-pointer">How it works</button>
+        <a href="/how-it-works" class="link-underline cursor-pointer">How it works</a>
       </div>
     </div>
     
@@ -619,6 +616,11 @@
             <p class="text-xs text-red-800" x-text="errorMessage"></p>
           </template>
 
+          <!-- WAITLIST LEGAL CONSENT NOTICE -->
+          <p class="text-[11px] text-[#8C8275] text-center leading-relaxed">
+            By submitting this request, you agree to our <a href="/terms" class="underline text-[#2C2A29]">Terms of Use</a> and <a href="/privacy" class="underline text-[#2C2A29]">Privacy Policy</a>. Joining our waitlist does not constitute a binding care contract or guaranteed sitter placement.
+          </p>
+
           <button type="submit" class="w-full bg-[#2C2A29] text-[#FDFBF7] text-xs uppercase tracking-widest py-4 font-medium hover:opacity-90 transition cursor-pointer">
             Join Zoélys Private Waitlist →
           </button>
@@ -649,31 +651,31 @@
       <div>
         <h5>Explore</h5>
         <ul>
-          <li><button @click="scrollToWaitlist()" class="text-left hover:underline cursor-pointer">Join the Waitlist</button></li>
-          <li><a href="#vetting-section">Trust & Safety</a></li>
-          <li><button @click="scrollToWaitlist()" class="text-left hover:underline cursor-pointer">Pricing</button></li>
+          <li><a href="/get-matched">Find a Sitter</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/contact">Contact Us</a></li>
         </ul>
       </div>
 
       <div>
         <h5>Zoélys</h5>
         <ul>
-          <li><a href="#vetting-section">How It Works</a></li>
-          <li><button @click="scrollToWaitlist()" class="text-left hover:underline cursor-pointer">Member Portal</button></li>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/trust">Trust &amp; Safety</a></li>
+          <li><a href="/join">Member Portal</a></li>
         </ul>
       </div>
 
       <div>
-        <h5>Internal Demos</h5>
-        <ul>
-          <li><a href="/dashboard/owner/" class="hover:underline opacity-50 hover:opacity-100">Owner Demo Access</a></li>
-          <li><a href="/dashboard/admin/" class="hover:underline opacity-50 hover:opacity-100">Admin Demo Access</a></li>
-        </ul>
+        <h5>Stay Close</h5>
+        <p class="footer-note">Quiet letters, real care. No spam, ever. The first note arrives with our welcome briefing.</p>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div>&copy; 2026 Zoélys Miami. Crafted with care.</div>
+      <div>&copy; 2026 Zoélys. Crafted with care in Miami.</div>
       <div>Premium pet care, redefined.</div>
     </div>
   </footer>
