@@ -382,7 +382,7 @@
         <div>
           <span class="tag">Mandatory</span>
           <h3>Caregiver Insurance</h3>
-          <p>Every Zoélys Authorized Caregiver must hold active Professional Pet Sitting &amp; Commercial Liability Insurance (minimum $1,000,000 coverage). Proof is verified prior to authorization and audited periodically.</p>
+          <p>Every Zoélys Authorized Caregiver operates as an independent business entity holding active Professional Pet Sitting &amp; Commercial Liability Insurance (minimum $1,000,000 coverage). Credentials and proof of policy are verified prior to authorization and audited periodically.</p>
         </div>
       </div>
 
@@ -390,15 +390,15 @@
         <div>
           <span class="tag">Member Partner</span>
           <h3>Pet Owner Protection</h3>
-          <p>While our baseline care includes 24/7 vet triage, members are encouraged to maintain active Pet Health Insurance. For owners without coverage, we partner directly with licensed Florida pet insurance providers at setup.</p>
+          <p>While baseline care includes 24/7 digital vet triage, members are encouraged to maintain active Pet Health Insurance. For owners seeking coverage, we connect you directly with licensed Florida pet insurance specialists during onboarding.</p>
         </div>
       </div>
 
       <div class="info-card">
         <div>
           <span class="tag">Platform Backstop</span>
-          <h3>Platform Liability</h3>
-          <p>Zoélys maintains commercial general liability coverage as the platform concierge. Our team personally coordinates documentation and stays with you from initial report through claim settlement.</p>
+          <h3>Platform Liability &amp; Support</h3>
+          <p>Zoélys maintains platform commercial general liability coverage as an additional safeguard. In the rare event of an incident, our concierge desk personally assists with documentation coordination from initial report through resolution.</p>
         </div>
       </div>
 
@@ -525,6 +525,7 @@
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
+          entry.target.classList.is-visible = true; // safe fallback
           entry.target.classList.add('is-visible');
         }
       });
