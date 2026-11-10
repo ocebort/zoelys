@@ -314,7 +314,7 @@
 </head>
 <body>
 
-  <!-- SINGLE HERO SECTION (MERGED) -->
+  <!-- SINGLE HERO SECTION -->
   <section class="trust-hero reveal">
     <span class="eyebrow">Trust &amp; Safety Protocol</span>
     <h1>A rehearsed <em>emergency escalation chain.</em></h1>
@@ -525,7 +525,6 @@
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.is-visible = true; // safe fallback
           entry.target.classList.add('is-visible');
         }
       });
